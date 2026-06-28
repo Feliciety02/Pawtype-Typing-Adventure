@@ -7,6 +7,7 @@ import { PixelPet } from "@/components/PixelPet";
 import { WorldSwitcher } from "@/components/WorldSwitcher";
 import { AdventureMap } from "@/components/AdventureMap";
 import { Shop } from "@/components/Shop";
+import { StatsView } from "@/components/StatsView";
 import { useWorld, WORLDS } from "@/components/WorldTheme";
 import { useGame } from "@/lib/game/store";
 import { xpForLevel, getDailyReward } from "@/lib/game/types";
@@ -83,7 +84,7 @@ function Index() {
       )}
       {view === "stats" && (
         <section className="mt-8">
-          <StatsPlaceholder />
+          <StatsView />
         </section>
       )}
 
@@ -404,15 +405,4 @@ function AchievementsCard() {
   );
 }
 
-function StatsPlaceholder() {
-  return (
-    <div className="pixel-card p-8 text-center">
-      <span className="text-5xl">📊</span>
-      <h2 className="text-3xl mt-4 mb-2">Your Statistics</h2>
-      <p className="font-pixel text-[0.65rem] text-muted-foreground max-w-md mx-auto">
-        Detailed stats — finger heatmaps, weak bigrams, speed graphs, and more — are coming soon.
-        Every typing session is already being tracked.
-      </p>
-    </div>
-  );
-}
+

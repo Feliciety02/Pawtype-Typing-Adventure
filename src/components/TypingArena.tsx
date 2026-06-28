@@ -3,6 +3,7 @@ import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
 import { PixelPet } from "./PixelPet";
 import { useGame } from "../lib/game/store";
+import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
@@ -40,6 +41,8 @@ export function TypingArena() {
   const [combo, setCombo] = useState(0);
   const [bestCombo, setBestCombo] = useState(0);
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [keystrokes, setKeystrokes] = useState<KeystrokeEvent[]>([]);
+  const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const sparkId = useRef(0);
 
@@ -59,7 +62,7 @@ export function TypingArena() {
     return () => clearInterval(t);
   }, [startedAt, duration, finished]);
 
-  // Grant rewards when test finishes
+  // Grant rewards & save session when test finishes
   useEffect(() => {
     if (!finished) return;
     const xp = Math.round(wpm * 1.5);
@@ -68,6 +71,17 @@ export function TypingArena() {
     dispatch({ type: "ADD_XP", amount: xp });
     dispatch({ type: "ADD_PET_XP", amount: Math.max(1, Math.round(correctChars / 10)) });
     dispatch({ type: "LOG_TYPING_TEST", correctChars, mistakes });
+
+    saveSession({
+      timestamp: Date.now(),
+      duration: elapsed,
+      wpm,
+      accuracy,
+      correctChars,
+      mistakes,
+      bestCombo,
+      keystrokes,
+    }).catch(console.warn);
   }, [finished]);
 
   // Idle → sleep after a while
@@ -88,6 +102,7 @@ export function TypingArena() {
     setCombo(0);
     setBestCombo(0);
     setMood("idle");
+    setKeystrokes([]);
     if (newDuration) setDuration(newDuration);
     setTimeout(() => inputRef.current?.focus(), 0);
   }, []);
@@ -95,14 +110,28 @@ export function TypingArena() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (finished) return;
     const next = e.target.value;
-    if (!startedAt && next.length > 0) setStartedAt(Date.now());
+    if (!startedAt && next.length > 0) {
+      setStartedAt(Date.now());
+      startOffset.current = Date.now();
+    }
 
     const lastIdx = next.length - 1;
     if (next.length > typed.length) {
       const ch = next[lastIdx];
       setActiveKey(ch);
       const expected = target[lastIdx];
-      if (ch === expected) {
+      const isCorrect = ch === expected;
+      setKeystrokes((prev) => [
+        ...prev,
+        {
+          charIndex: lastIdx,
+          char: ch,
+          target: expected,
+          correct: isCorrect,
+          timestamp: Date.now() - startOffset.current,
+        },
+      ]);
+      if (isCorrect) {
         setCorrectChars((c) => c + 1);
         setCombo((c) => {
           const nc = c + 1;
