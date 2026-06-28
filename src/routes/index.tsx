@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TypingArena } from "@/components/TypingArena";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PixelMascot } from "@/components/PixelMascot";
+import { PixelPet } from "@/components/PixelPet";
 import { WorldSwitcher } from "@/components/WorldSwitcher";
 import { AdventureMap } from "@/components/AdventureMap";
 import { Shop } from "@/components/Shop";
@@ -177,21 +178,32 @@ function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
       <div className="grid lg:grid-cols-[280px_1fr] gap-6">
         {/* Pet card */}
         <div className="pixel-card p-5 flex flex-col items-center gap-2">
-          <div className="font-pixel text-[0.6rem] text-muted-foreground uppercase">
-            {activePet ? `Lv ${activePet.level} ${activePet.name}` : "Your Companion"}
-          </div>
-          <PixelMascot mood="idle" size={120} />
-          {activePet && (
-            <div className="pixel-bar w-full max-w-[120px]" style={{ height: 8 }}>
-              <div
-                className="h-full"
-                style={{ width: `${Math.min((activePet.xp / 100) * 100, 100)}%`, background: "var(--coin)" }}
-              />
-            </div>
+          {activePet ? (
+            <>
+              <PixelPet pet={activePet} size={100} />
+              {inventory.pets.length > 1 && (
+                <div className="flex gap-1 mt-1">
+                  {inventory.pets.map((p) => (
+                    <button
+                      key={p.type}
+                      className={`pixel-btn pixel-btn-secondary ${p.type === activePet.type ? "opacity-100" : "opacity-50"}`}
+                      style={{ padding: "2px 6px", fontSize: "0.7rem" }}
+                      onClick={() => dispatch({ type: "SET_ACTIVE_PET", petType: p.type })}
+                    >
+                      {p.type === "cat" ? "🐱" : p.type === "dog" ? "🐶" : p.type === "fox" ? "🦊" : p.type === "rabbit" ? "🐰" : p.type === "panda" ? "🐼" : p.type === "penguin" ? "🐧" : "🐉"}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <PixelMascot mood="idle" size={100} />
+              <p className="font-pixel text-[0.6rem] text-muted-foreground text-center">
+                Adopt a pet in the shop!
+              </p>
+            </>
           )}
-          <p className="font-pixel text-[0.6rem] text-muted-foreground text-center">
-            {activePet ? `${activePet.name} is ready to type!` : "Adopt a pet in the shop!"}
-          </p>
         </div>
 
         {/* Player stats card */}

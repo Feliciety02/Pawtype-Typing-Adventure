@@ -79,6 +79,29 @@ export function xpForLevel(level: number): number {
   return level * 100;
 }
 
+export function petXpForLevel(level: number): number {
+  return level * 50;
+}
+
+export type EvolutionStage = "baby" | "adult" | "evolved" | "legendary";
+
+export function petEvolutionStage(level: number): EvolutionStage {
+  if (level >= 10) return "legendary";
+  if (level >= 6) return "evolved";
+  if (level >= 3) return "adult";
+  return "baby";
+}
+
+export const PET_NAMES: Record<PetType, string> = {
+  cat: "Whiskers",
+  dog: "Barkley",
+  fox: "Sly",
+  rabbit: "Flopsy",
+  panda: "Bamboo",
+  penguin: "Chilly",
+  dragon: "Ember",
+};
+
 export function getDailyReward(streakDay: number): DailyReward {
   const idx = ((streakDay - 1) % DAILY_REWARDS.length);
   return DAILY_REWARDS[idx];

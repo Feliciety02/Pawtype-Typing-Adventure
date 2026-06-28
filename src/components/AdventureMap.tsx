@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { PixelMascot } from "./PixelMascot";
 import { useWorld } from "./WorldTheme";
 import { useGame } from "../lib/game/store";
+import { PixelPet } from "./PixelPet";
 
 type Stage = {
   id: number;
@@ -122,6 +123,7 @@ export function AdventureMap() {
             dispatch({ type: "COMPLETE_STAGE", world, stageId: active.id });
             dispatch({ type: "ADD_XP", amount: active.goal * 3 });
             dispatch({ type: "EARN_COINS", amount: active.goal });
+            dispatch({ type: "ADD_PET_XP", amount: active.goal });
           }}
         />
       )}

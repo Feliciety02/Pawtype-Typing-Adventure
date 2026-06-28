@@ -5,6 +5,7 @@ import {
   type PetType,
   DEFAULT_GAME_STATE,
   xpForLevel,
+  petXpForLevel,
   getDailyReward,
 } from "./types";
 import { persistence } from "./persistence";
@@ -19,6 +20,7 @@ export type GameAction =
   | { type: "SET_ACTIVE_PET"; petType: PetType | null }
   | { type: "ADD_ITEM"; itemId: string }
   | { type: "REMOVE_ITEM"; itemId: string }
+  | { type: "ADD_PET_XP"; amount: number }
   | { type: "LOG_TYPING_TEST"; correctChars: number; mistakes: number }
   | { type: "RESET" };
 
@@ -142,6 +144,23 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           items: state.inventory.items.filter((i) => i !== action.itemId),
         },
       };
+
+    case "ADD_PET_XP": {
+      if (!state.inventory.activePet) return state;
+      const pets = state.inventory.pets.map((p) => {
+        if (p.type !== state.inventory.activePet) return p;
+        let { xp, level } = p;
+        xp += action.amount;
+        let needed = petXpForLevel(level);
+        while (xp >= needed) {
+          xp -= needed;
+          level++;
+          needed = petXpForLevel(level);
+        }
+        return { ...p, xp, level };
+      });
+      return { ...state, inventory: { ...state.inventory, pets } };
+    }
 
     case "LOG_TYPING_TEST":
       return {

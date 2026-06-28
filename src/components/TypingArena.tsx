@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
+import { PixelPet } from "./PixelPet";
 import { useGame } from "../lib/game/store";
 
 const WORD_BANK = [
@@ -22,7 +23,10 @@ type Mood = "idle" | "happy" | "oops" | "sleep";
 const DURATIONS = [15, 30, 60] as const;
 
 export function TypingArena() {
-  const { dispatch } = useGame();
+  const { state, dispatch } = useGame();
+  const activePet = state.inventory.activePet
+    ? state.inventory.pets.find((p) => p.type === state.inventory.activePet)
+    : null;
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
   const [words, setWords] = useState<string[]>(() => makeWords());
   const [typed, setTyped] = useState("");
@@ -62,6 +66,7 @@ export function TypingArena() {
     const coins = Math.round(wpm / 2);
     dispatch({ type: "EARN_COINS", amount: coins });
     dispatch({ type: "ADD_XP", amount: xp });
+    dispatch({ type: "ADD_PET_XP", amount: Math.max(1, Math.round(correctChars / 10)) });
     dispatch({ type: "LOG_TYPING_TEST", correctChars, mistakes });
   }, [finished]);
 
@@ -291,17 +296,32 @@ export function TypingArena() {
         )}
       </div>
 
-      {/* Side: keyboard + mascot */}
+      {/* Side: keyboard + pet */}
       <div className="flex flex-col gap-4">
         <div className="pixel-card p-4 flex flex-col items-center gap-2">
-          <span className="font-pixel text-[0.65rem] text-muted-foreground">Whiskers, your buddy</span>
-          <PixelMascot mood={mood} size={120} />
-          <p className="font-pixel text-[0.65rem] text-center max-w-[200px]" style={{ color: "var(--muted-foreground)" }}>
-            {mood === "happy" && "Nice rhythm! Keep going."}
-            {mood === "oops" && "Oops — slow down a bit."}
-            {mood === "sleep" && "Zzz... start typing to wake me!"}
-            {mood === "idle" && "Press any key to begin."}
-          </p>
+          {activePet ? (
+            <>
+              <span className="font-pixel text-[0.6rem] text-muted-foreground uppercase">{activePet.name}</span>
+              <PixelPet pet={activePet} size={100} showDetails={false} />
+              <p className="font-pixel text-[0.6rem] text-center max-w-[200px]" style={{ color: "var(--muted-foreground)" }}>
+                {mood === "happy" && "✦ Great typing! +1 love."}
+                {mood === "oops" && "✧ Oops — stay calm!"}
+                {mood === "sleep" && "Zzz... wake me up!"}
+                {mood === "idle" && "Ready when you are!"}
+              </p>
+            </>
+          ) : (
+            <>
+              <PixelMascot mood={mood} size={100} />
+              <p className="font-pixel text-[0.6rem] text-center max-w-[200px]" style={{ color: "var(--muted-foreground)" }}>
+                {mood === "happy" && "Nice rhythm! Keep going."}
+                {mood === "oops" && "Oops — slow down a bit."}
+                {mood === "sleep" && "Zzz... start typing to wake me!"}
+                {mood === "idle" && "Press any key to begin."}
+              </p>
+              <p className="font-pixel text-[0.5rem] text-muted-foreground">Adopt a pet in the shop!</p>
+            </>
+          )}
         </div>
         <PixelKeyboard active={activeKey} />
       </div>
