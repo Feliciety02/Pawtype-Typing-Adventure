@@ -55,6 +55,10 @@ function Index() {
         <TypingArena />
       </section>
 
+      <section className="mt-12">
+        <AdventureMap />
+      </section>
+
       <section className="mt-12 grid lg:grid-cols-[1.4fr_1fr] gap-6">
         <LessonsCard />
         <AchievementsCard />
@@ -98,6 +102,7 @@ function Header() {
       <div className="flex items-center gap-2">
         <div className="pixel-chip" title="Coins">🪙 1,284</div>
         <div className="pixel-chip" title="Streak">🔥 7</div>
+        <WorldSwitcher />
         <ThemeToggle />
       </div>
     </header>
@@ -105,6 +110,8 @@ function Header() {
 }
 
 function Hero() {
+  const { world } = useWorld();
+  const current = WORLDS.find((w) => w.id === world)!;
   return (
     <div className="pixel-card p-6 sm:p-8 relative overflow-hidden">
       <div className="absolute -right-2 -bottom-2 opacity-90 hidden sm:block">
