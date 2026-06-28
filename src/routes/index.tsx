@@ -117,7 +117,7 @@ function Hero() {
       <div className="absolute -right-2 -bottom-2 opacity-90 hidden sm:block">
         <PixelMascot mood="idle" size={140} />
       </div>
-      <div className="pixel-chip mb-3">🌸 New Adventure Available</div>
+      <div className="pixel-chip mb-3">{current.emoji} Now exploring · {current.name}</div>
       <h2 className="text-4xl sm:text-5xl max-w-[20ch] leading-[1.05]">
         Learn to type inside a cozy pixel world.
       </h2>
