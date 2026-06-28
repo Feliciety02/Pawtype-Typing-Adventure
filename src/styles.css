@@ -368,3 +368,27 @@
 .animate-pixel-pop { animation: pixel-pop 360ms cubic-bezier(.2,1.4,.4,1); }
 .animate-sparkle { animation: sparkle 1.8s ease-in-out infinite; }
 .animate-blink { animation: pixel-blink 4s infinite; transform-origin: center; }
+
+/* CRT mode: full-page scanline overlay */
+.crt-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 1px,
+    rgba(0,0,0,0.08) 1px 2px
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.crt-mode main {
+  filter: contrast(1.05) brightness(0.95);
+}
+
+/* Time-of-day subtle background shifts */
+html[data-time-of-day="dawn"] main { background: color-mix(in oklab, var(--background) 95%, #f5a623); }
+html[data-time-of-day="dusk"] main { background: color-mix(in oklab, var(--background) 92%, #7b4397); }
+html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--background) 88%, #1a1a2e); }

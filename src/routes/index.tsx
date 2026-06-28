@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { TypingArena } from "@/components/TypingArena";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -100,6 +100,11 @@ function Index() {
 function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) => void }) {
   const { state } = useGame();
   const { player } = state;
+  const [crt, setCrt] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("crt-mode", crt);
+  }, [crt]);
 
   const NAV_ITEMS: { label: string; view: View }[] = [
     { label: "🏠 Hub", view: "hub" },
@@ -143,6 +148,15 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
         <div className="hidden sm:block pixel-chip" title="Streak">🔥 {player.streak}</div>
         <WorldSwitcher />
         <ThemeToggle />
+        <button
+          className="pixel-btn pixel-btn-secondary"
+          onClick={() => setCrt((c) => !c)}
+          aria-label="Toggle CRT effect"
+          title="CRT shader"
+          style={{ fontSize: "0.7rem", padding: "4px 8px" }}
+        >
+          {crt ? "📺 ON" : "📺 OFF"}
+        </button>
       </div>
     </header>
   );

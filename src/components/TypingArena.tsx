@@ -4,6 +4,7 @@ import { PixelMascot } from "./PixelMascot";
 import { PixelPet } from "./PixelPet";
 import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
+import { Confetti } from "./Confetti";
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
@@ -42,6 +43,7 @@ export function TypingArena() {
   const [bestCombo, setBestCombo] = useState(0);
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
   const [keystrokes, setKeystrokes] = useState<KeystrokeEvent[]>([]);
+  const [showConfetti, setShowConfetti] = useState(false);
   const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const sparkId = useRef(0);
@@ -71,6 +73,8 @@ export function TypingArena() {
     dispatch({ type: "ADD_XP", amount: xp });
     dispatch({ type: "ADD_PET_XP", amount: Math.max(1, Math.round(correctChars / 10)) });
     dispatch({ type: "LOG_TYPING_TEST", correctChars, mistakes });
+
+    if (accuracy === 100) setShowConfetti(true);
 
     saveSession({
       timestamp: Date.now(),
@@ -354,6 +358,8 @@ export function TypingArena() {
         </div>
         <PixelKeyboard active={activeKey} />
       </div>
+
+      <Confetti active={showConfetti} onFinish={() => setShowConfetti(false)} />
     </div>
   );
 }

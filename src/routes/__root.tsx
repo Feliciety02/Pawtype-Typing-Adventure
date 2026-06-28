@@ -124,6 +124,16 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const hour = new Date().getHours();
+    const period =
+      hour < 6 ? "night" :
+      hour < 8 ? "dawn" :
+      hour < 18 ? "day" :
+      hour < 20 ? "dusk" : "night";
+    document.documentElement.setAttribute("data-time-of-day", period);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <GameProvider>
