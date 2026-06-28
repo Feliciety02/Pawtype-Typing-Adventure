@@ -120,10 +120,11 @@ export function AdventureMap() {
           world={world}
           onClose={() => setActive(null)}
           onWin={() => {
+            const isBoss = active.difficulty === "Boss";
             dispatch({ type: "COMPLETE_STAGE", world, stageId: active.id });
-            dispatch({ type: "ADD_XP", amount: active.goal * 3 });
-            dispatch({ type: "EARN_COINS", amount: active.goal });
-            dispatch({ type: "ADD_PET_XP", amount: active.goal });
+            dispatch({ type: "ADD_XP", amount: isBoss ? active.goal * 6 : active.goal * 3 });
+            dispatch({ type: "EARN_COINS", amount: isBoss ? active.goal * 2 : active.goal });
+            dispatch({ type: "ADD_PET_XP", amount: isBoss ? active.goal * 2 : active.goal });
           }}
         />
       )}
@@ -172,21 +173,46 @@ function StageNode({
   );
 }
 
-/* ---------- Stage runner: a focused typing mini-test ---------- */
+/* ---------- Stage runner: focused typing mini-test with boss support ---------- */
+
+const BOSS_PHASE_EMOJIS: Record<string, [string, string, string]> = {
+  "👑": ["👑", "⚔", "✨"],
+  "🐺": ["🐺", "🐾", "🌕"],
+  "🐳": ["🐳", "🌊", "💫"],
+  "👘": ["👘", "🎀", "🌸"],
+  "🐉": ["🐉", "🔥", "⚡"],
+  "👾": ["👾", "💥", "☄"],
+};
+
+function bossEmojis(emoji: string): [string, string, string] {
+  return BOSS_PHASE_EMOJIS[emoji] ?? [emoji, "💢", "💫"];
+}
 
 function StageRunner({
   stage, world, onClose, onWin,
 }: { stage: Stage; world: string; onClose: () => void; onWin: () => void }) {
   const target = useMemo(() => stage.words.join(" "), [stage]);
+  const isBoss = stage.difficulty === "Boss";
+  const minAcc = isBoss ? 85 : 80;
+  const phaseEmojis = useMemo(() => bossEmojis(stage.emoji), [stage.emoji]);
+
   const [typed, setTyped] = useState("");
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [now, setNow] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
   const [done, setDone] = useState<null | "win" | "lose">(null);
+  const [bossIntro, setBossIntro] = useState(isBoss);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { inputRef.current?.focus(); }, []);
+  useEffect(() => {
+    inputRef.current?.focus();
+    if (isBoss) {
+      const t = setTimeout(() => setBossIntro(false), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [isBoss]);
+
   useEffect(() => {
     if (!startedAt || done) return;
     const t = setInterval(() => setNow(Date.now()), 100);
@@ -197,24 +223,72 @@ function StageRunner({
   const wpm = Math.round((correct / 5) / Math.max(elapsed / 60, 1 / 60));
   const acc = correct + wrong === 0 ? 100 : Math.round((correct / (correct + wrong)) * 100);
 
+  const totalTarget = target.length;
+  const typedLen = typed.length;
+  const bossHp = isBoss && totalTarget > 0 ? Math.max(0, ((totalTarget - typedLen) / totalTarget) * 100) : 0;
+  const hpLevel = bossHp > 66 ? "high" : bossHp > 33 ? "mid" : "low";
+  const hpColor = hpLevel === "high" ? "var(--leaf)" : hpLevel === "mid" ? "var(--coin)" : "var(--color-destructive)";
+
+  const currentPhase = isBoss && totalTarget > 0 ? Math.min(Math.floor(typedLen / (totalTarget / 3)), 2) : 0;
+  const currentBossEmoji = phaseEmojis[currentPhase];
+
+  // Boss time limit: (wordCount / goal) * 60 * 1.5 — at least 30s
+  const timeLimit = isBoss ? Math.max(30, Math.ceil((stage.words.length / stage.goal) * 60 * 1.5)) : Infinity;
+  const timeElapsed = isBoss ? elapsed : 0;
+
+  useEffect(() => {
+    if (!isBoss || !startedAt || done) return;
+    if (elapsed >= timeLimit) {
+      setDone("lose");
+    }
+  }, [elapsed, isBoss, startedAt, done, timeLimit]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (done) return;
+    if (bossIntro) return;
     const next = e.target.value;
     if (!startedAt && next.length > 0) { setStartedAt(Date.now()); setNow(Date.now()); }
-    if (next.length > typed.length) {
+    if (next.length > typedLen) {
       const ch = next[next.length - 1];
       const expected = target[next.length - 1];
       if (ch === expected) setCorrect((c) => c + 1);
       else setWrong((w) => w + 1);
     }
-    setTyped(next.slice(0, target.length));
-    if (next.length >= target.length) {
+    setTyped(next.slice(0, totalTarget));
+    if (next.length >= totalTarget) {
       const finalWpm = Math.round((correct / 5) / Math.max(elapsed / 60, 1 / 60));
-      const passed = finalWpm >= stage.goal && acc >= 80;
+      const passed = finalWpm >= stage.goal && acc >= minAcc;
       setDone(passed ? "win" : "lose");
       if (passed) onWin();
     }
   };
+
+  const xpReward = isBoss ? stage.goal * 6 : stage.goal * 3;
+  const coinReward = isBoss ? stage.goal * 2 : stage.goal;
+
+  if (bossIntro) {
+    return (
+      <div
+        className="fixed inset-0 z-40 grid place-items-center p-4"
+        style={{ background: "color-mix(in oklab, var(--color-background) 85%, transparent)", backdropFilter: "blur(4px)" }}
+        onClick={onClose}
+      >
+        <div className="pixel-card p-8 text-center animate-pixel-pop" onClick={(e) => e.stopPropagation()}>
+          <span className="text-6xl block mb-4">{stage.emoji}</span>
+          <div className="font-display text-4xl mb-2">{stage.name}</div>
+          <div className="font-pixel text-[0.65rem] text-muted-foreground mb-4">A fearsome foe appears!</div>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <MiniStat label="WPM" value={`≥${stage.goal}`} accent="var(--color-primary)" />
+            <MiniStat label="Acc" value={`≥${minAcc}%`} accent="var(--leaf)" />
+            <MiniStat label="Time" value={`≤${timeLimit}s`} accent="var(--coin)" />
+          </div>
+          <button className="pixel-btn" onClick={() => { setBossIntro(false); inputRef.current?.focus(); }}>
+            ⚔ Fight!
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -226,40 +300,103 @@ function StageRunner({
         className="pixel-card p-5 sm:p-6 max-w-2xl w-full"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{stage.emoji}</span>
+            <span className="text-2xl">{isBoss ? currentBossEmoji : stage.emoji}</span>
             <div>
               <div className="font-display text-2xl leading-none">{stage.name}</div>
               <div className="font-pixel text-[0.6rem] text-muted-foreground mt-1">
-                Goal: {stage.goal} WPM · 80%+ accuracy
+                {isBoss
+                  ? `⚔ Boss · Phase ${currentPhase + 1}/3`
+                  : `Goal: ${stage.goal} WPM · ${minAcc}%+ accuracy`}
               </div>
             </div>
           </div>
           <button className="pixel-btn pixel-btn-secondary" onClick={onClose}>✕</button>
         </div>
 
+        {/* Boss HP bar */}
+        {isBoss && (
+          <div className="mb-4">
+            <div className="flex justify-between font-pixel text-[0.55rem] mb-1">
+              <span style={{ color: "var(--muted-foreground)" }}>BOSS HP</span>
+              <span style={{ color: hpColor }}>{Math.round(bossHp)}%</span>
+            </div>
+            <div className="pixel-bar" style={{ height: 12 }}>
+              <div
+                className="h-full transition-all duration-200"
+                style={{
+                  width: `${bossHp}%`,
+                  background: hpColor,
+                  boxShadow: hpLevel === "low" ? "0 0 8px var(--color-destructive)" : "none",
+                }}
+              />
+            </div>
+            {/* Phase indicators */}
+            <div className="flex gap-1 mt-1.5 justify-center">
+              {[0, 1, 2].map((p) => (
+                <span
+                  key={p}
+                  className="font-pixel text-[0.6rem]"
+                  style={{
+                    color: currentPhase >= p ? "var(--color-foreground)" : "var(--muted-foreground)",
+                    opacity: currentPhase >= p ? 1 : 0.4,
+                  }}
+                >
+                  {phaseEmojis[p]}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Timer bar (boss only) */}
+        {isBoss && (
+          <div className="mb-3">
+            <div className="pixel-bar" style={{ height: 6 }}>
+              <div
+                className="h-full"
+                style={{
+                  width: `${Math.max(0, (1 - timeElapsed / timeLimit) * 100)}%`,
+                  background: timeElapsed > timeLimit * 0.8 ? "var(--color-destructive)" : "var(--color-primary)",
+                  transition: "width 100ms linear",
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Words display */}
         <div
-          className="font-mono text-xl sm:text-2xl leading-[1.7] tracking-wide scanlines rounded-md p-4 cursor-text"
-          style={{ background: "color-mix(in oklab, var(--color-muted) 60%, transparent)" }}
+          className="relative font-mono text-xl sm:text-2xl leading-[1.7] tracking-wide scanlines rounded-md p-4 cursor-text"
+          style={{
+            background: "color-mix(in oklab, var(--color-muted) 60%, transparent)",
+            border: isBoss ? `2px solid ${hpColor}` : "none",
+            transition: "border-color 200ms",
+          }}
           onClick={() => inputRef.current?.focus()}
         >
           {target.split("").map((ch, i) => {
             const t = typed[i];
-            const state = t == null ? "pending" : t === ch ? "correct" : "wrong";
-            const isCursor = i === typed.length;
+            const charState = t == null ? "pending" : t === ch ? "correct" : "wrong";
+            const isCursor = i === typedLen;
+            // Phase highlight
+            const charPhase = isBoss ? Math.floor(i / (totalTarget / 3)) : -1;
             return (
               <span
                 key={i}
                 style={{
                   color:
-                    state === "correct" ? "var(--color-foreground)" :
-                    state === "wrong"   ? "var(--color-destructive)" : "var(--muted-foreground)",
+                    charState === "correct" ? "var(--color-foreground)" :
+                    charState === "wrong"   ? "var(--color-destructive)" : "var(--muted-foreground)",
                   background: isCursor
                     ? "color-mix(in oklab, var(--color-primary) 35%, transparent)"
-                    : state === "wrong"
+                    : charState === "wrong"
                       ? "color-mix(in oklab, var(--color-destructive) 18%, transparent)"
-                      : "transparent",
+                      : isBoss && charPhase === currentPhase && charState === "pending"
+                        ? "color-mix(in oklab, var(--coin) 8%, transparent)"
+                        : "transparent",
                   borderRadius: 2, padding: "0 1px",
                 }}
               >
@@ -282,24 +419,32 @@ function StageRunner({
           className="absolute opacity-0 pointer-events-none"
         />
 
+        {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mt-4">
           <MiniStat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
           <MiniStat label="Acc" value={`${acc}%`} accent="var(--leaf)" />
-          <MiniStat label="Goal" value={`${stage.goal}`} accent="var(--coin)" />
+          {isBoss ? (
+            <MiniStat label="Time" value={`${Math.ceil(timeElapsed)}s`} accent="var(--coin)" />
+          ) : (
+            <MiniStat label="Goal" value={`${stage.goal}`} accent="var(--coin)" />
+          )}
         </div>
 
+        {/* Result overlay */}
         {done && (
           <div className="mt-5 pixel-card-sm p-4 text-center">
             <div className="flex justify-center mb-2">
-              <PixelMascot mood={done === "win" ? "happy" : "oops"} size={64} />
+              <span className="text-4xl">
+                {done === "win" ? (isBoss ? "🏆" : "⭐") : "💔"}
+              </span>
             </div>
             <div className="font-display text-2xl mb-1">
-              {done === "win" ? "Stage Cleared!" : "So close — try again!"}
+              {done === "win" ? (isBoss ? "Boss Defeated!" : "Stage Cleared!") : "So close — try again!"}
             </div>
             <p className="font-pixel text-[0.65rem] text-muted-foreground mb-3">
               {done === "win"
-                ? `+ ${stage.goal * 3} XP · +${stage.goal} 🪙`
-                : `Need ${stage.goal} WPM at 80%+ accuracy.`}
+                ? `+ ${xpReward} XP · +${coinReward} 🪙`
+                : `Need ${stage.goal} WPM at ${minAcc}%+ accuracy.${isBoss ? ` Time limit: ${timeLimit}s` : ""}`}
             </p>
             <div className="flex gap-2 justify-center">
               <button className="pixel-btn pixel-btn-secondary" onClick={onClose}>Map</button>
