@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TypingArena } from "@/components/TypingArena";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PixelMascot } from "@/components/PixelMascot";
+import { WorldSwitcher } from "@/components/WorldSwitcher";
+import { AdventureMap } from "@/components/AdventureMap";
+import { useWorld, WORLDS } from "@/components/WorldTheme";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,6 +55,10 @@ function Index() {
         <TypingArena />
       </section>
 
+      <section className="mt-12">
+        <AdventureMap />
+      </section>
+
       <section className="mt-12 grid lg:grid-cols-[1.4fr_1fr] gap-6">
         <LessonsCard />
         <AchievementsCard />
@@ -95,6 +102,7 @@ function Header() {
       <div className="flex items-center gap-2">
         <div className="pixel-chip" title="Coins">🪙 1,284</div>
         <div className="pixel-chip" title="Streak">🔥 7</div>
+        <WorldSwitcher />
         <ThemeToggle />
       </div>
     </header>
@@ -102,12 +110,14 @@ function Header() {
 }
 
 function Hero() {
+  const { world } = useWorld();
+  const current = WORLDS.find((w) => w.id === world)!;
   return (
     <div className="pixel-card p-6 sm:p-8 relative overflow-hidden">
       <div className="absolute -right-2 -bottom-2 opacity-90 hidden sm:block">
         <PixelMascot mood="idle" size={140} />
       </div>
-      <div className="pixel-chip mb-3">🌸 New Adventure Available</div>
+      <div className="pixel-chip mb-3">{current.emoji} Now exploring · {current.name}</div>
       <h2 className="text-4xl sm:text-5xl max-w-[20ch] leading-[1.05]">
         Learn to type inside a cozy pixel world.
       </h2>
