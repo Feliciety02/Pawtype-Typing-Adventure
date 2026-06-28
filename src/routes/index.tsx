@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TypingArena } from "@/components/TypingArena";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PixelMascot } from "@/components/PixelMascot";
+import { WorldSwitcher } from "@/components/WorldSwitcher";
+import { AdventureMap } from "@/components/AdventureMap";
+import { useWorld, WORLDS } from "@/components/WorldTheme";
 
 export const Route = createFileRoute("/")({
   head: () => ({

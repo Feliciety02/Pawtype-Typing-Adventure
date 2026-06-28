@@ -111,6 +111,113 @@
   --cream: oklch(0.95 0.02 80);
 }
 
+/* ===== World palettes — override on :root, also work in .dark ===== */
+
+.world-forest:not(.dark) {
+  --background: oklch(0.96 0.03 140);
+  --card: oklch(0.99 0.02 140);
+  --primary: oklch(0.55 0.16 150);
+  --primary-foreground: oklch(0.98 0.02 140);
+  --accent: oklch(0.78 0.14 140);
+  --muted: oklch(0.92 0.04 140);
+  --border: oklch(0.22 0.05 145);
+  --leaf: oklch(0.62 0.18 145);
+  --sakura: oklch(0.85 0.08 100);
+  --coin: oklch(0.82 0.16 95);
+}
+.world-forest.dark {
+  --background: oklch(0.22 0.04 150);
+  --card: oklch(0.27 0.05 150);
+  --primary: oklch(0.78 0.16 145);
+  --primary-foreground: oklch(0.18 0.04 150);
+  --accent: oklch(0.7 0.15 140);
+  --muted: oklch(0.31 0.04 150);
+  --border: oklch(0.13 0.03 150);
+}
+
+.world-ocean:not(.dark) {
+  --background: oklch(0.96 0.025 230);
+  --card: oklch(0.99 0.02 220);
+  --primary: oklch(0.6 0.14 235);
+  --primary-foreground: oklch(0.98 0.02 220);
+  --accent: oklch(0.78 0.12 200);
+  --muted: oklch(0.92 0.035 220);
+  --border: oklch(0.22 0.05 240);
+  --sky: oklch(0.75 0.14 230);
+  --leaf: oklch(0.72 0.12 195);
+  --sakura: oklch(0.85 0.07 220);
+}
+.world-ocean.dark {
+  --background: oklch(0.22 0.04 240);
+  --card: oklch(0.27 0.05 240);
+  --primary: oklch(0.75 0.14 220);
+  --primary-foreground: oklch(0.18 0.04 240);
+  --accent: oklch(0.7 0.13 200);
+  --muted: oklch(0.3 0.04 240);
+  --border: oklch(0.13 0.03 240);
+}
+
+.world-sakura:not(.dark) {
+  --background: oklch(0.97 0.03 10);
+  --card: oklch(0.99 0.02 10);
+  --primary: oklch(0.7 0.15 0);
+  --primary-foreground: oklch(0.98 0.02 10);
+  --accent: oklch(0.82 0.1 5);
+  --muted: oklch(0.93 0.035 10);
+  --border: oklch(0.25 0.06 10);
+  --sakura: oklch(0.82 0.12 5);
+  --coin: oklch(0.85 0.14 70);
+}
+.world-sakura.dark {
+  --background: oklch(0.24 0.05 350);
+  --card: oklch(0.3 0.05 350);
+  --primary: oklch(0.78 0.13 5);
+  --primary-foreground: oklch(0.2 0.04 350);
+  --muted: oklch(0.33 0.05 350);
+  --border: oklch(0.15 0.04 350);
+}
+
+.world-castle:not(.dark) {
+  --background: oklch(0.96 0.025 300);
+  --card: oklch(0.99 0.02 300);
+  --primary: oklch(0.55 0.18 295);
+  --primary-foreground: oklch(0.98 0.02 300);
+  --accent: oklch(0.78 0.14 295);
+  --muted: oklch(0.92 0.035 300);
+  --border: oklch(0.22 0.06 295);
+  --coin: oklch(0.82 0.17 85);
+  --sakura: oklch(0.8 0.12 320);
+}
+.world-castle.dark {
+  --background: oklch(0.22 0.05 295);
+  --card: oklch(0.27 0.05 295);
+  --primary: oklch(0.78 0.16 295);
+  --primary-foreground: oklch(0.18 0.04 295);
+  --muted: oklch(0.3 0.05 295);
+  --border: oklch(0.13 0.04 295);
+}
+
+.world-space:not(.dark) {
+  --background: oklch(0.96 0.02 270);
+  --card: oklch(0.99 0.015 270);
+  --primary: oklch(0.55 0.2 295);
+  --primary-foreground: oklch(0.98 0.02 270);
+  --accent: oklch(0.72 0.16 185);
+  --muted: oklch(0.92 0.03 270);
+  --border: oklch(0.2 0.05 280);
+  --sky: oklch(0.7 0.16 220);
+  --leaf: oklch(0.72 0.16 185);
+}
+.world-space.dark {
+  --background: oklch(0.18 0.04 270);
+  --card: oklch(0.24 0.05 275);
+  --primary: oklch(0.78 0.18 295);
+  --primary-foreground: oklch(0.16 0.04 275);
+  --accent: oklch(0.78 0.16 185);
+  --muted: oklch(0.28 0.05 275);
+  --border: oklch(0.1 0.03 275);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
