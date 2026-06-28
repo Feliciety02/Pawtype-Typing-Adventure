@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { TypingArena } from "@/components/TypingArena";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PixelMascot } from "@/components/PixelMascot";
 import { WorldSwitcher } from "@/components/WorldSwitcher";
 import { AdventureMap } from "@/components/AdventureMap";
+import { Shop } from "@/components/Shop";
 import { useWorld, WORLDS } from "@/components/WorldTheme";
+import { useGame } from "@/lib/game/store";
+import { xpForLevel, getDailyReward } from "@/lib/game/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,11 +22,18 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const QUESTS = [
-  { icon: "🔥", title: "Daily Streak", value: "7 days", bar: 70, color: "var(--color-primary)" },
-  { icon: "🪙", title: "Coins", value: "1,284", bar: 60, color: "var(--coin)" },
-  { icon: "⭐", title: "Level 12", value: "320 / 500 XP", bar: 64, color: "var(--leaf)" },
-];
+type View = "hub" | "practice" | "adventure" | "lessons" | "shop" | "stats";
+
+function useQuests() {
+  const { state } = useGame();
+  const { player } = state;
+  const needed = xpForLevel(player.level);
+  return [
+    { icon: "🔥", title: "Daily Streak", value: `${player.streak} days`, bar: Math.min(player.streak * 14, 100), color: "var(--color-primary)" },
+    { icon: "🪙", title: "Coins", value: player.coins.toLocaleString(), bar: Math.min(player.coins / 20, 100), color: "var(--coin)" },
+    { icon: "⭐", title: `Level ${player.level}`, value: `${player.xp} / ${needed} XP`, bar: needed > 0 ? Math.round((player.xp / needed) * 100) : 0, color: "var(--leaf)" },
+  ];
+}
 
 const LESSONS = [
   { emoji: "🌱", title: "Home Row Basics", meta: "Beginner · 4 min", stars: 3, locked: false },
@@ -41,28 +52,39 @@ const ACHIEVEMENTS = [
 ];
 
 function Index() {
+  const [view, setView] = useState<View>("hub");
+
   return (
     <main className="min-h-dvh px-4 sm:px-6 lg:px-10 py-6 max-w-[1400px] mx-auto">
-      <Header />
+      <Header view={view} onViewChange={setView} />
 
-      <section className="grid lg:grid-cols-[1fr_280px] gap-6 mt-8">
-        <Hero />
-        <QuestsCard />
-      </section>
-
-      <section className="mt-10">
-        <SectionHeader title="Today's Quest" subtitle="Type, earn coins, level up your kitty." />
-        <TypingArena />
-      </section>
-
-      <section className="mt-12">
-        <AdventureMap />
-      </section>
-
-      <section className="mt-12 grid lg:grid-cols-[1.4fr_1fr] gap-6">
-        <LessonsCard />
-        <AchievementsCard />
-      </section>
+      {view === "hub" && <Hub onViewChange={setView} />}
+      {view === "practice" && (
+        <section className="mt-8">
+          <TypingArena />
+        </section>
+      )}
+      {view === "adventure" && (
+        <section className="mt-8">
+          <AdventureMap />
+        </section>
+      )}
+      {view === "lessons" && (
+        <section className="mt-8 grid lg:grid-cols-[1.4fr_1fr] gap-6">
+          <LessonsCard />
+          <AchievementsCard />
+        </section>
+      )}
+      {view === "shop" && (
+        <section className="mt-8">
+          <Shop />
+        </section>
+      )}
+      {view === "stats" && (
+        <section className="mt-8">
+          <StatsPlaceholder />
+        </section>
+      )}
 
       <footer className="mt-16 mb-6 text-center font-pixel text-[0.65rem] text-muted-foreground">
         Made with 🌸 in a cozy pixel cabin · Pawtype v0.1
@@ -71,7 +93,21 @@ function Index() {
   );
 }
 
-function Header() {
+/* ─── Header ─── */
+
+function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) => void }) {
+  const { state } = useGame();
+  const { player } = state;
+
+  const NAV_ITEMS: { label: string; view: View }[] = [
+    { label: "🏠 Hub", view: "hub" },
+    { label: "⌨ Practice", view: "practice" },
+    { label: "🗺 Adventure", view: "adventure" },
+    { label: "📖 Lessons", view: "lessons" },
+    { label: "🛒 Shop", view: "shop" },
+    { label: "📊 Stats", view: "stats" },
+  ];
+
   return (
     <header className="flex items-center justify-between gap-4 flex-wrap">
       <div className="flex items-center gap-3">
@@ -88,20 +124,21 @@ function Header() {
       </div>
 
       <nav className="hidden md:flex items-center gap-1">
-        {["Practice", "Adventure", "Lessons", "Stats", "Shop"].map((n, i) => (
+        {NAV_ITEMS.map((item) => (
           <button
-            key={n}
+            key={item.view}
             className="pixel-btn pixel-btn-ghost"
-            style={i === 0 ? { background: "var(--color-card)", boxShadow: "var(--shadow-pixel-sm)" } : undefined}
+            style={view === item.view ? { background: "var(--color-card)", boxShadow: "var(--shadow-pixel-sm)" } : undefined}
+            onClick={() => onViewChange(item.view)}
           >
-            {n}
+            {item.label}
           </button>
         ))}
       </nav>
 
       <div className="flex items-center gap-2">
-        <div className="pixel-chip" title="Coins">🪙 1,284</div>
-        <div className="pixel-chip" title="Streak">🔥 7</div>
+        <div className="hidden sm:block pixel-chip" title="Coins">🪙 {player.coins.toLocaleString()}</div>
+        <div className="hidden sm:block pixel-chip" title="Streak">🔥 {player.streak}</div>
         <WorldSwitcher />
         <ThemeToggle />
       </div>
@@ -109,74 +146,165 @@ function Header() {
   );
 }
 
-function Hero() {
+/* ─── Hub View ─── */
+
+function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
+  const { state, dispatch } = useGame();
   const { world } = useWorld();
-  const current = WORLDS.find((w) => w.id === world)!;
+  const { player, inventory } = state;
+  const currentWorld = WORLDS.find((w) => w.id === world)!;
+  const quests = useQuests();
+  const needed = xpForLevel(player.level);
+
+  const canClaim = !player.dailyRewardClaimed;
+  const reward = canClaim ? getDailyReward(player.streak + 1) : null;
+
+  const activePet = inventory.activePet
+    ? inventory.pets.find((p) => p.type === inventory.activePet)
+    : null;
+
+  const QUICK_ACTIONS: { label: string; view: View; emoji: string }[] = [
+    { label: "Practice", view: "practice", emoji: "⌨" },
+    { label: "Adventure", view: "adventure", emoji: "🗺" },
+    { label: "Lessons", view: "lessons", emoji: "📖" },
+    { label: "Shop", view: "shop", emoji: "🛒" },
+    { label: "Stats", view: "stats", emoji: "📊" },
+  ];
+
   return (
-    <div className="pixel-card p-6 sm:p-8 relative overflow-hidden">
-      <div className="absolute -right-2 -bottom-2 opacity-90 hidden sm:block">
-        <PixelMascot mood="idle" size={140} />
-      </div>
-      <div className="pixel-chip mb-3">{current.emoji} Now exploring · {current.name}</div>
-      <h2 className="text-4xl sm:text-5xl max-w-[20ch] leading-[1.05]">
-        Learn to type inside a cozy pixel world.
-      </h2>
-      <p className="mt-3 max-w-[48ch] text-muted-foreground">
-        Practice with adventures, quests, and a sleepy pixel cat. Beautiful retro
-        stats, dozens of themes, and lessons from beginner to pro.
-      </p>
-      <div className="flex flex-wrap gap-2 mt-5">
-        <button className="pixel-btn">▶ Start Quest</button>
-        <button className="pixel-btn pixel-btn-secondary">🗺 Adventure Map</button>
+    <div className="mt-8 space-y-6">
+      {/* Character + Pet row */}
+      <div className="grid lg:grid-cols-[280px_1fr] gap-6">
+        {/* Pet card */}
+        <div className="pixel-card p-5 flex flex-col items-center gap-2">
+          <div className="font-pixel text-[0.6rem] text-muted-foreground uppercase">
+            {activePet ? `Lv ${activePet.level} ${activePet.name}` : "Your Companion"}
+          </div>
+          <PixelMascot mood="idle" size={120} />
+          {activePet && (
+            <div className="pixel-bar w-full max-w-[120px]" style={{ height: 8 }}>
+              <div
+                className="h-full"
+                style={{ width: `${Math.min((activePet.xp / 100) * 100, 100)}%`, background: "var(--coin)" }}
+              />
+            </div>
+          )}
+          <p className="font-pixel text-[0.6rem] text-muted-foreground text-center">
+            {activePet ? `${activePet.name} is ready to type!` : "Adopt a pet in the shop!"}
+          </p>
+        </div>
+
+        {/* Player stats card */}
+        <div className="pixel-card p-5 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-display text-3xl leading-none">Level {player.level}</div>
+              <p className="font-pixel text-[0.6rem] text-muted-foreground mt-1">
+                {currentWorld.emoji} Exploring · {currentWorld.name}
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="font-pixel text-[0.65rem] uppercase" style={{ color: "var(--muted-foreground)" }}>Typist</div>
+              <div className="font-pixel text-sm">Rank #{player.totalTestsCompleted > 0 ? Math.max(1, 100 - player.totalTestsCompleted) : "-"}</div>
+            </div>
+          </div>
+
+          {/* XP bar */}
+          <div>
+            <div className="flex justify-between font-pixel text-[0.6rem] mb-1">
+              <span style={{ color: "var(--muted-foreground)" }}>XP to next level</span>
+              <span>{player.xp} / {needed}</span>
+            </div>
+            <div className="pixel-bar">
+              <div
+                className="h-full transition-all"
+                style={{ width: `${needed > 0 ? Math.round((player.xp / needed) * 100) : 0}%`, background: "var(--leaf)" }}
+              />
+            </div>
+          </div>
+
+          {/* Stats row */}
+          <div className="grid grid-cols-3 gap-3 mt-1">
+            <div className="pixel-card-sm p-2 text-center">
+              <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase">Tests</div>
+              <div className="font-display text-lg" style={{ color: "var(--color-primary)" }}>{player.totalTestsCompleted}</div>
+            </div>
+            <div className="pixel-card-sm p-2 text-center">
+              <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase">Accuracy</div>
+              <div className="font-display text-lg" style={{ color: "var(--leaf)" }}>
+                {player.totalCorrectChars + player.totalMistakes > 0
+                  ? `${Math.round((player.totalCorrectChars / (player.totalCorrectChars + player.totalMistakes)) * 100)}%`
+                  : "-"}
+              </div>
+            </div>
+            <div className="pixel-card-sm p-2 text-center">
+              <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase">Streak</div>
+              <div className="font-display text-lg" style={{ color: "var(--coin)" }}>🔥 {player.streak}</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* floating pixel particles */}
-      {[...Array(6)].map((_, i) => (
-        <span
-          key={i}
-          className="absolute font-pixel text-xs animate-sparkle"
-          style={{
-            left: `${10 + i * 14}%`,
-            top: `${20 + (i % 3) * 18}%`,
-            color: i % 2 ? "var(--coin)" : "var(--sakura)",
-            animationDelay: `${i * 0.25}s`,
-            textShadow: "1px 1px 0 var(--color-border)",
-          }}
-        >
-          {i % 2 ? "✦" : "❀"}
-        </span>
-      ))}
+      {/* Daily reward card */}
+      <div
+        className="pixel-card p-4 flex items-center justify-between cursor-pointer transition-opacity"
+        style={{
+          border: `2px dashed ${canClaim ? "var(--coin)" : "var(--color-border)"}`,
+          opacity: canClaim ? 1 : 0.6,
+        }}
+        onClick={() => canClaim && dispatch({ type: "CLAIM_DAILY_REWARD" })}
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{canClaim ? "🎁" : "✅"}</span>
+          <div>
+            <div className="font-pixel text-sm">
+              {canClaim ? "Daily Reward Available!" : "Daily Reward Claimed"}
+            </div>
+            <p className="font-pixel text-[0.6rem] text-muted-foreground">
+              {canClaim
+                ? `Day ${player.streak + 1} — ${reward?.label}`
+                : `Streak: ${player.streak} days — Come back tomorrow!`}
+            </p>
+          </div>
+        </div>
+        <div className="font-pixel text-[0.65rem]" style={{ color: "var(--coin)" }}>
+          🪙 {reward?.coins ?? 0}
+        </div>
+      </div>
+
+      {/* Quest stats row */}
+      <div className="grid grid-cols-3 gap-4">
+        {quests.map((q) => (
+          <div key={q.title} className="pixel-card-sm p-3">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="font-pixel text-[0.65rem]">{q.icon} {q.title}</span>
+              <span className="font-pixel text-[0.6rem] text-muted-foreground">{q.value}</span>
+            </div>
+            <div className="pixel-bar">
+              <div className="h-full transition-all" style={{ width: `${q.bar}%`, background: q.color }} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick action grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        {QUICK_ACTIONS.map((action) => (
+          <button
+            key={action.view}
+            onClick={() => onViewChange(action.view)}
+            className="pixel-card-sm p-4 text-center flex flex-col items-center gap-2 transition-transform hover:-translate-y-1"
+          >
+            <span className="text-3xl">{action.emoji}</span>
+            <span className="font-pixel text-[0.7rem]">{action.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-function QuestsCard() {
-  return (
-    <aside className="pixel-card p-5 flex flex-col gap-4">
-      <h3 className="text-2xl">Today</h3>
-      {QUESTS.map((q) => (
-        <div key={q.title}>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="font-pixel text-[0.7rem]">{q.icon} {q.title}</span>
-            <span className="font-pixel text-[0.65rem] text-muted-foreground">{q.value}</span>
-          </div>
-          <div className="pixel-bar">
-            <div
-              className="h-full transition-all"
-              style={{ width: `${q.bar}%`, background: q.color }}
-            />
-          </div>
-        </div>
-      ))}
-      <div
-        className="mt-2 p-3 rounded-md font-pixel text-[0.65rem] leading-relaxed"
-        style={{ background: "color-mix(in oklab, var(--accent) 30%, transparent)", border: "2px dashed var(--color-border)" }}
-      >
-        🎁 Daily reward in <b>3h 21m</b>. Don't break the streak!
-      </div>
-    </aside>
-  );
-}
+/* ─── Shared components ─── */
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
@@ -260,6 +388,19 @@ function AchievementsCard() {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function StatsPlaceholder() {
+  return (
+    <div className="pixel-card p-8 text-center">
+      <span className="text-5xl">📊</span>
+      <h2 className="text-3xl mt-4 mb-2">Your Statistics</h2>
+      <p className="font-pixel text-[0.65rem] text-muted-foreground max-w-md mx-auto">
+        Detailed stats — finger heatmaps, weak bigrams, speed graphs, and more — are coming soon.
+        Every typing session is already being tracked.
+      </p>
     </div>
   );
 }

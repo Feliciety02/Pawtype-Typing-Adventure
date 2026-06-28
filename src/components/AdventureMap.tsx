@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { PixelMascot } from "./PixelMascot";
 import { useWorld } from "./WorldTheme";
+import { useGame } from "../lib/game/store";
 
 type Stage = {
   id: number;
@@ -54,28 +55,10 @@ type Status = "locked" | "available" | "complete";
 
 export function AdventureMap() {
   const { world } = useWorld();
+  const { state, dispatch } = useGame();
   const stages = STAGES_BY_WORLD[world] ?? STAGES_BY_WORLD.cafe;
-  const storageKey = `pawtype-progress-${world}`;
-
-  const [completed, setCompleted] = useState<number[]>([]);
+  const completed = state.adventures[world] ?? [];
   const [active, setActive] = useState<Stage | null>(null);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      setCompleted(raw ? JSON.parse(raw) : []);
-    } catch {
-      setCompleted([]);
-    }
-  }, [storageKey]);
-
-  const markComplete = (id: number) => {
-    setCompleted((prev) => {
-      const next = prev.includes(id) ? prev : [...prev, id];
-      try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch {}
-      return next;
-    });
-  };
 
   const statusOf = (s: Stage, idx: number): Status => {
     if (completed.includes(s.id)) return "complete";
@@ -133,8 +116,13 @@ export function AdventureMap() {
       {active && (
         <StageRunner
           stage={active}
+          world={world}
           onClose={() => setActive(null)}
-          onWin={() => { markComplete(active.id); }}
+          onWin={() => {
+            dispatch({ type: "COMPLETE_STAGE", world, stageId: active.id });
+            dispatch({ type: "ADD_XP", amount: active.goal * 3 });
+            dispatch({ type: "EARN_COINS", amount: active.goal });
+          }}
         />
       )}
     </div>
@@ -185,8 +173,8 @@ function StageNode({
 /* ---------- Stage runner: a focused typing mini-test ---------- */
 
 function StageRunner({
-  stage, onClose, onWin,
-}: { stage: Stage; onClose: () => void; onWin: () => void }) {
+  stage, world, onClose, onWin,
+}: { stage: Stage; world: string; onClose: () => void; onWin: () => void }) {
   const target = useMemo(() => stage.words.join(" "), [stage]);
   const [typed, setTyped] = useState("");
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -308,7 +296,7 @@ function StageRunner({
             </div>
             <p className="font-pixel text-[0.65rem] text-muted-foreground mb-3">
               {done === "win"
-                ? `+ ${stage.goal * 3} XP · + ${stage.goal} 🪙`
+                ? `+ ${stage.goal * 3} XP · +${stage.goal} 🪙`
                 : `Need ${stage.goal} WPM at 80%+ accuracy.`}
             </p>
             <div className="flex gap-2 justify-center">

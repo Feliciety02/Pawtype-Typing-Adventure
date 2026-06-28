@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
+import { useGame } from "../lib/game/store";
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
@@ -21,6 +22,7 @@ type Mood = "idle" | "happy" | "oops" | "sleep";
 const DURATIONS = [15, 30, 60] as const;
 
 export function TypingArena() {
+  const { dispatch } = useGame();
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
   const [words, setWords] = useState<string[]>(() => makeWords());
   const [typed, setTyped] = useState("");
@@ -52,6 +54,16 @@ export function TypingArena() {
     }, 100);
     return () => clearInterval(t);
   }, [startedAt, duration, finished]);
+
+  // Grant rewards when test finishes
+  useEffect(() => {
+    if (!finished) return;
+    const xp = Math.round(wpm * 1.5);
+    const coins = Math.round(wpm / 2);
+    dispatch({ type: "EARN_COINS", amount: coins });
+    dispatch({ type: "ADD_XP", amount: xp });
+    dispatch({ type: "LOG_TYPING_TEST", correctChars, mistakes });
+  }, [finished]);
 
   // Idle → sleep after a while
   useEffect(() => {
