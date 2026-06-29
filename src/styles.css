@@ -255,6 +255,462 @@
   }
 }
 
+/* ===== Game HUD navigation ===== */
+.game-hud {
+  --hud-trim: var(--color-primary);
+  --hud-glow: color-mix(in oklab, var(--color-primary) 26%, transparent);
+  --hud-surface: color-mix(in oklab, var(--color-card) 88%, transparent);
+  --hud-decoration: "✦";
+  position: sticky;
+  top: 0.75rem;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(420px, 1.7fr) minmax(280px, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.6rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 16%, transparent), transparent 54%),
+    radial-gradient(circle at 20% 0%, var(--hud-glow), transparent 36%),
+    var(--hud-surface);
+  box-shadow: var(--shadow-pixel), 0 0 24px var(--hud-glow);
+  overflow: visible;
+}
+
+/* Corner decorations */
+.game-hud .hud-corner {
+  position: absolute;
+  width: 8px; height: 8px;
+  border: 2px solid var(--hud-trim);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+.game-hud .hud-corner-tl { top: -4px; left: -4px; border-right: none; border-bottom: none; }
+.game-hud .hud-corner-tr { top: -4px; right: -4px; border-left: none; border-bottom: none; }
+.game-hud .hud-corner-bl { bottom: -4px; left: -4px; border-right: none; border-top: none; }
+.game-hud .hud-corner-br { bottom: -4px; right: -4px; border-left: none; border-top: none; }
+
+/* Top decoration line with world accent */
+.game-hud .hud-crest {
+  position: absolute;
+  top: -1px; left: 20%; right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--hud-trim), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.game-hud::before,
+.game-hud::after {
+  content: var(--hud-decoration);
+  position: absolute;
+  top: -0.45rem;
+  color: var(--hud-trim);
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+  text-shadow: 1px 1px 0 var(--color-border);
+  animation: hud-particle-drift 3.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.game-hud::before { left: 1.5rem; }
+.game-hud::after {
+  right: 1.5rem;
+  animation-delay: 1.2s;
+}
+
+.world-cafe .game-hud {
+  --hud-trim: var(--coin);
+  --hud-decoration: "☕";
+  background:
+    repeating-linear-gradient(90deg, transparent 0 52px, color-mix(in oklab, var(--coin) 6%, transparent) 52px 54px, transparent 54px 74px),
+    linear-gradient(180deg, color-mix(in oklab, var(--coin) 10%, transparent) 0 4px, transparent 8px),
+    linear-gradient(90deg, color-mix(in oklab, var(--coin) 18%, transparent), transparent 24% 76%, color-mix(in oklab, var(--primary) 14%, transparent)),
+    var(--hud-surface);
+}
+.world-cafe .hud-crest { background: linear-gradient(90deg, transparent, var(--coin), transparent); }
+
+.world-forest .game-hud {
+  --hud-trim: var(--leaf);
+  --hud-decoration: "✿";
+  background:
+    repeating-linear-gradient(135deg, color-mix(in oklab, var(--leaf) 10%, transparent) 0 8px, transparent 8px 18px),
+    linear-gradient(180deg, color-mix(in oklab, var(--leaf) 8%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+.world-forest .hud-crest { background: linear-gradient(90deg, transparent, var(--leaf), transparent); }
+
+.world-ocean .game-hud {
+  --hud-trim: var(--sky);
+  --hud-decoration: "○";
+  background:
+    radial-gradient(circle at 12% 40%, color-mix(in oklab, var(--sky) 26%, transparent) 0 5px, transparent 6px),
+    radial-gradient(circle at 88% 58%, color-mix(in oklab, var(--sky) 22%, transparent) 0 4px, transparent 5px),
+    linear-gradient(180deg, color-mix(in oklab, var(--sky) 8%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+.world-ocean .hud-crest { background: linear-gradient(90deg, transparent, var(--sky), transparent); }
+
+.world-sakura .game-hud {
+  --hud-trim: var(--sakura);
+  --hud-decoration: "✿";
+  background:
+    linear-gradient(110deg, color-mix(in oklab, var(--sakura) 22%, transparent), transparent 32%),
+    linear-gradient(180deg, color-mix(in oklab, var(--sakura) 10%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+.world-sakura .hud-crest { background: linear-gradient(90deg, transparent, var(--sakura), transparent); }
+
+.world-castle .game-hud {
+  --hud-trim: var(--coin);
+  --hud-decoration: "◆";
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--coin) 18%, transparent), transparent 42%),
+    linear-gradient(90deg, transparent 0 12%, color-mix(in oklab, var(--primary) 16%, transparent) 12% 14%, transparent 14% 86%, color-mix(in oklab, var(--primary) 16%, transparent) 86% 88%, transparent 88%),
+    linear-gradient(180deg, color-mix(in oklab, var(--coin) 8%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+.world-castle .hud-crest { background: linear-gradient(90deg, transparent, var(--coin), transparent); }
+
+.world-space .game-hud {
+  --hud-trim: var(--accent);
+  --hud-decoration: "✦";
+  background:
+    radial-gradient(circle at 16% 35%, color-mix(in oklab, var(--coin) 44%, transparent) 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 28%, color-mix(in oklab, var(--accent) 42%, transparent) 0 2px, transparent 3px),
+    radial-gradient(circle at 50% 90%, color-mix(in oklab, var(--primary) 20%, transparent), transparent 38%),
+    linear-gradient(180deg, color-mix(in oklab, var(--accent) 8%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+.world-space .hud-crest { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+
+.hud-brand,
+.hud-menu,
+.hud-player {
+  min-width: 0;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--color-card) 82%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.hud-brand {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0.65rem;
+}
+
+.hud-logo,
+.hud-avatar {
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  background: var(--hud-trim);
+  color: var(--color-primary-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-pixel);
+}
+
+.hud-logo {
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+}
+
+.hud-title {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  line-height: 1;
+  color: var(--color-foreground);
+  white-space: nowrap;
+}
+
+.hud-subtitle,
+.hud-control-label {
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+}
+
+.hud-world-mark {
+  font-size: 1.25rem;
+  filter: drop-shadow(1px 1px 0 var(--color-border));
+}
+
+.hud-menu {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.4rem;
+}
+
+.hud-menu::after {
+  content: "";
+  position: absolute;
+  inset: 0.25rem;
+  border: 1px dashed color-mix(in oklab, var(--hud-trim) 36%, transparent);
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.hud-nav-item {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 42px;
+  padding: 0.45rem 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--color-foreground);
+  font-family: var(--font-pixel);
+  font-size: clamp(0.52rem, 0.62vw, 0.66rem);
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+}
+
+.hud-nav-item::after {
+  content: "";
+  position: absolute;
+  top: -1px; left: 30%; right: 30%;
+  height: 2px;
+  background: var(--hud-trim);
+  border-radius: 1px;
+  opacity: 0;
+  transition: opacity 0.15s, left 0.15s, right 0.15s;
+}
+
+.hud-nav-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--hud-trim);
+  background: color-mix(in oklab, var(--hud-trim) 14%, var(--color-card));
+  box-shadow: 0 0 12px var(--hud-glow);
+}
+
+.hud-nav-item:hover::after {
+  opacity: 1;
+  left: 25%;
+  right: 25%;
+}
+
+.hud-nav-item:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.hud-nav-item.is-active {
+  border-color: var(--color-border);
+  background: var(--hud-trim);
+  color: var(--color-primary-foreground);
+  box-shadow: var(--shadow-pixel-sm), 0 0 16px var(--hud-glow);
+  animation: hud-active-idle 2.4s ease-in-out infinite;
+}
+
+.hud-nav-item.is-active::after {
+  opacity: 1;
+  left: 18%;
+  right: 18%;
+  bottom: -5px;
+  top: auto;
+  height: 3px;
+  border: 1px solid var(--color-border);
+  background: var(--coin);
+}
+
+.hud-nav-icon {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.hud-player {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: 0.45rem;
+}
+
+.hud-avatar {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  background: var(--hud-trim);
+  color: var(--color-primary-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+}
+
+/* Compact stat bar — combines level, coins, streak in one container */
+.hud-stat-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--color-muted) 52%, transparent);
+  box-shadow: 2px 2px 0 0 var(--color-border);
+  overflow: hidden;
+}
+.hud-stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.45rem;
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+}
+.hud-stat-item strong {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+}
+.hud-stat-icon { font-size: 0.7rem; line-height: 1; }
+.hud-stat-divider {
+  width: 1px;
+  height: 20px;
+  background: color-mix(in oklab, var(--color-border) 50%, transparent);
+}
+
+.hud-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  min-height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--color-muted) 52%, transparent);
+  box-shadow: 2px 2px 0 0 var(--color-border);
+  font-family: var(--font-pixel);
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition: transform 100ms ease, background 100ms ease;
+}
+
+.hud-icon-btn {
+  width: 34px;
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition: transform 100ms ease, background 100ms ease;
+}
+
+.hud-icon-btn:hover,
+.hud-icon-btn.is-active {
+  transform: translateY(-1px);
+  background: color-mix(in oklab, var(--hud-trim) 24%, var(--color-card));
+}
+
+.hud-controls {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 128px;
+}
+
+.hud-control-row {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.game-hud .pixel-btn {
+  min-height: 32px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.56rem;
+}
+
+/* View transition animation */
+.view-enter {
+  animation: view-fade-in 300ms ease-out both;
+}
+@keyframes view-fade-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Hover sparkle particles for nav */
+.hud-nav-particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--coin);
+  pointer-events: none;
+  animation: nav-sparkle-fly 0.5s ease-out forwards;
+  z-index: 10;
+}
+@keyframes nav-sparkle-fly {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx, 12px), var(--dy, -10px)) scale(0); }
+}
+
+@keyframes hud-active-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+
+@keyframes hud-particle-drift {
+  0%, 100% { opacity: 0.45; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+@media (max-width: 1180px) {
+  .game-hud {
+    grid-template-columns: 1fr;
+  }
+
+  .hud-menu {
+    order: 3;
+  }
+
+  .hud-player {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 760px) {
+  .game-hud {
+    top: 0.4rem;
+    padding: 0.45rem;
+  }
+
+  .hud-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hud-nav-item {
+    min-height: 38px;
+  }
+
+  .hud-brand {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+  }
+
+  .hud-logo {
+    width: 38px;
+    height: 38px;
+  }
+
+  .hud-title {
+    font-size: 1.5rem;
+  }
+}
+
 /* ===== Pixel utilities ===== */
 
 @utility pixel-card {
@@ -430,10 +886,22 @@
 }
 
 /* ===== Immersive typing area ===== */
+.practice-stage-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .practice-stage-grid {
+    grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
+    align-items: stretch;
+  }
+}
+
 .typing-area {
   position: relative;
-  min-height: 200px;
-  padding: 2rem 2.5rem;
+  min-height: 360px;
+  padding: 1.5rem 2rem;
   border: 2px solid var(--color-border);
   border-radius: 10px;
   background: color-mix(in oklab, var(--color-card) 50%, transparent);
@@ -442,8 +910,8 @@
 }
 .typing-text {
   font-family: var(--font-sans);
-  font-size: 1.6rem;
-  line-height: 2;
+  font-size: clamp(1.15rem, 1.25vw, 1.45rem);
+  line-height: 1.85;
   letter-spacing: 0.03em;
   word-break: break-word;
   position: relative;
@@ -470,24 +938,47 @@
 
 /* ===== Results screen ===== */
 .results-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
+  padding: 1.5rem;
   background: color-mix(in oklab, var(--color-background) 85%, transparent);
   backdrop-filter: blur(4px);
   animation: pixel-pop 360ms cubic-bezier(.2,1.4,.4,1);
-  z-index: 10;
+  z-index: 100;
 }
 .results-card {
+  position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: min(560px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 3rem);
+  overflow: auto;
   padding: 2rem;
   background: var(--color-card);
   border: 2px solid var(--color-border);
   border-radius: 10px;
   box-shadow: var(--shadow-pixel-lg);
   text-align: center;
+}
+.results-close-btn {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-card);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  cursor: pointer;
+}
+.results-close-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
 }
 .results-title {
   font-family: var(--font-display);
@@ -532,7 +1023,7 @@
   border-radius: 10px;
   overflow: hidden;
   background: var(--color-card);
-  min-height: 200px;
+  min-height: 360px;
   display: grid;
   place-items: center;
 }
@@ -542,6 +1033,27 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem;
+}
+
+.pet-placeholder-square {
+  width: clamp(116px, 12vw, 168px);
+  height: clamp(116px, 12vw, 168px);
+  border: 3px solid var(--color-border);
+  border-radius: 4px;
+  background:
+    linear-gradient(135deg, transparent 0 46%, color-mix(in oklab, var(--color-border) 25%, transparent) 46% 54%, transparent 54%),
+    color-mix(in oklab, var(--color-primary) 78%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+  image-rendering: pixelated;
+}
+
+.world-art-label {
+  padding: 0.25rem 0.4rem;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--color-card) 86%, transparent);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-pixel-sm);
 }
 
 /* ===== Top controls minimal ===== */
@@ -573,6 +1085,48 @@
   border-color: var(--color-primary);
 }
 .typing-toolbar-spacer { flex: 1; }
+
+/* ===== Keyboard dock ===== */
+.keyboard-dock {
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--color-card) 72%, transparent);
+  box-shadow: var(--shadow-pixel);
+}
+
+.pixel-keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  width: min(100%, 520px);
+}
+
+.pixel-keyboard-row {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.pixel-key {
+  display: grid;
+  place-items: center;
+  width: clamp(28px, 2.5vw, 38px);
+  height: clamp(28px, 2.5vw, 38px);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  font-family: var(--font-pixel);
+  font-size: clamp(0.55rem, 0.7vw, 0.7rem);
+  transition: transform 80ms ease, box-shadow 80ms ease, background 80ms ease;
+}
+
+.pixel-key-space {
+  width: min(72vw, 360px);
+  height: clamp(28px, 2.2vw, 34px);
+  margin-top: 0.25rem;
+}
 
 /* Float / blink animations */
 @keyframes pixel-float {
