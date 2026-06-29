@@ -2,12 +2,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Maximize2, X } from "lucide-react";
 import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
+import { PetRoom } from "./PetRoom";
 import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 import { Confetti } from "./Confetti";
 import { AICoach } from "./AICoach";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { generateWorldText, generateMascotLine, generateWeakSpotWords } from "../lib/game/textGenerator";
+import { pushNotification } from "../lib/game/notifications";
+
+type Props = {
+  customWords?: string[];
+  customTitle?: string;
+};
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
