@@ -495,7 +495,7 @@ export function TypingArena() {
             <div className="results-rewards">
               +{Math.round(wpm * 1.5)} XP &nbsp; +{Math.round(wpm / 2)} 🪙
             </div>
-            <div className="mb-4 text-left">
+            <div className="results-coach text-left">
               <AICoach
                 wpm={wpm}
                 accuracy={accuracy}
@@ -506,14 +506,16 @@ export function TypingArena() {
                 keystrokes={keystrokes.map((k) => ({ correct: k.correct, target: k.target }))}
               />
             </div>
-            {mistakeChars.length > 0 && (
-              <button className="pixel-btn w-full mt-2" onClick={handleWeakSpotDrill}>
-                🎯 Practice: {mistakeChars.join(", ")}
+            <div className="results-actions">
+              {mistakeChars.length > 0 && (
+                <button className="pixel-btn w-full" onClick={handleWeakSpotDrill}>
+                  🎯 Practice: {mistakeChars.join(", ")}
+                </button>
+              )}
+              <button className="pixel-btn w-full" onClick={() => reset()}>
+                ↻ Try Again
               </button>
-            )}
-            <button className="pixel-btn w-full" onClick={() => reset()}>
-              ↻ Try Again
-            </button>
+            </div>
           </div>
         </div>
       )}

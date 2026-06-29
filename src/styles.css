@@ -582,9 +582,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.42rem;
+  gap: 0.5rem;
   height: 100%;
-  padding: 0.42rem 0.5rem;
+  padding: 0.42rem 0.6rem;
 }
 
 .hud-menu::after {
@@ -602,16 +602,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  min-height: 44px;
+  gap: 0.42rem;
+  min-height: 46px;
   width: max-content;
-  padding: 0.5rem 0.72rem;
+  padding: 0.52rem 0.78rem;
   border: 2px solid transparent;
   border-radius: 5px;
   background: transparent;
   color: var(--color-foreground);
   font-family: var(--font-pixel);
-  font-size: clamp(0.52rem, 0.62vw, 0.66rem);
+  font-size: clamp(0.58rem, 0.68vw, 0.72rem);
+  letter-spacing: 0.035em;
+  line-height: 1;
   cursor: pointer;
   white-space: nowrap;
   transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
@@ -666,7 +668,27 @@
 }
 
 .hud-nav-icon {
-  font-size: 0.8rem;
+  display: inline-grid;
+  place-items: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  color: currentColor;
+  line-height: 1;
+  flex: 0 0 1.05rem;
+}
+
+.hud-nav-icon svg {
+  display: block;
+  width: 0.95rem;
+  height: 0.95rem;
+  stroke: currentColor;
+  shape-rendering: geometricPrecision;
+}
+
+.hud-nav-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.05rem;
   line-height: 1;
 }
 
@@ -1788,7 +1810,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 1.5rem;
+  padding: 1rem;
   background: color-mix(in oklab, var(--color-background) 85%, transparent);
   backdrop-filter: blur(4px);
   animation: pixel-pop 360ms cubic-bezier(.2,1.4,.4,1);
@@ -1797,10 +1819,10 @@
 .results-card {
   position: relative;
   width: 100%;
-  max-width: min(560px, calc(100vw - 2rem));
-  max-height: calc(100dvh - 3rem);
+  max-width: min(820px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
   overflow: auto;
-  padding: 2rem;
+  padding: 1.45rem 1.75rem 1.35rem;
   background: var(--color-card);
   border: 2px solid var(--color-border);
   border-radius: 10px;
@@ -1828,17 +1850,18 @@
 }
 .results-title {
   font-family: var(--font-display);
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
+  font-size: clamp(1.55rem, 2.2vw, 2rem);
+  margin-bottom: 0.85rem;
 }
 .results-stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 1.5rem 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0.85rem 0 1rem;
 }
 .results-stat {
-  padding: 0.75rem;
+  min-height: 86px;
+  padding: 0.58rem 0.7rem;
   background: color-mix(in oklab, var(--color-muted) 40%, transparent);
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -1852,14 +1875,38 @@
 }
 .results-stat-value {
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  margin-top: 0.15rem;
+  font-size: 1.42rem;
+  margin-top: 0.1rem;
 }
 .results-rewards {
   font-family: var(--font-pixel);
   font-size: 0.7rem;
   color: var(--muted-foreground);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.results-coach {
+  margin-bottom: 0.85rem;
+}
+
+.results-actions {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.results-actions .pixel-btn {
+  min-height: 46px;
+  padding-block: 0.58rem;
+}
+
+@media (max-width: 680px) {
+  .results-card {
+    padding: 1.35rem 1rem 1rem;
+  }
+
+  .results-stats {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* ===== World artwork panel ===== */
