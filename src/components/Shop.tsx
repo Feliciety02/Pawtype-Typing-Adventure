@@ -86,9 +86,9 @@ export function Shop() {
         </div>
         <button
           className={`pixel-btn w-full ${alreadyOwned ? "pixel-btn-secondary" : ""}`}
-          disabled={alreadyOwned || !canAfford || isUnavailable}
+          disabled={alreadyOwned || !canAfford}
           onClick={() => {
-            if (alreadyOwned || isUnavailable) return;
+            if (alreadyOwned) return;
             dispatch({ type: "SPEND_COINS", amount: item.price });
             if (item.action === "pet" && item.petType) {
               dispatch({
@@ -106,7 +106,7 @@ export function Shop() {
             }
           }}
         >
-          {isUnavailable ? "Soon" : alreadyOwned ? "Owned" : !canAfford ? "Can't afford" : "Buy"}
+          {alreadyOwned ? "Owned" : !canAfford ? "Can't afford" : "Buy"}
         </button>
       </div>
     );
