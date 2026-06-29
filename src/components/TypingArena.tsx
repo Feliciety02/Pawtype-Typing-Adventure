@@ -6,6 +6,7 @@ import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 import { Confetti } from "./Confetti";
 import { AICoach } from "./AICoach";
+import { useWorld, WORLDS } from "./WorldTheme";
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
@@ -15,7 +16,7 @@ const WORD_BANK = [
   "bramble","copper","ivory","midnight","gentle","compass","horizon","lullaby","marigold","sprout",
 ];
 
-function makeWords(n = 40) {
+function makeWords(n = 50) {
   const out: string[] = [];
   for (let i = 0; i < n; i++) out.push(WORD_BANK[Math.floor(Math.random() * WORD_BANK.length)]);
   return out;
@@ -27,6 +28,8 @@ const DURATIONS = [15, 30, 60] as const;
 
 export function TypingArena() {
   const { state, dispatch } = useGame();
+  const { world } = useWorld();
+  const currentWorld = WORLDS.find((w) => w.id === world)!;
   const activePet = state.inventory.activePet
     ? state.inventory.pets.find((p) => p.type === state.inventory.activePet)
     : null;
@@ -42,12 +45,10 @@ export function TypingArena() {
   const [finished, setFinished] = useState(false);
   const [combo, setCombo] = useState(0);
   const [bestCombo, setBestCombo] = useState(0);
-  const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
   const [keystrokes, setKeystrokes] = useState<KeystrokeEvent[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const sparkId = useRef(0);
 
   const target = useMemo(() => words.join(" "), [words]);
 
@@ -141,7 +142,6 @@ export function TypingArena() {
         setCombo((c) => {
           const nc = c + 1;
           setBestCombo((b) => Math.max(b, nc));
-          if (nc > 0 && nc % 10 === 0) burstSparkles();
           return nc;
         });
         setMood("happy");
@@ -156,16 +156,6 @@ export function TypingArena() {
       setFinished(true);
       setMood("happy");
     }
-  };
-
-  const burstSparkles = () => {
-    const batch = Array.from({ length: 6 }).map(() => ({
-      id: sparkId.current++,
-      x: 30 + Math.random() * 40,
-      y: 10 + Math.random() * 60,
-    }));
-    setSparkles((s) => [...s, ...batch]);
-    setTimeout(() => setSparkles((s) => s.slice(batch.length)), 800);
   };
 
   const wpm = useMemo(() => {
@@ -183,209 +173,167 @@ export function TypingArena() {
   const progress = (elapsed / duration) * 100;
 
   return (
-    <div className="grid lg:grid-cols-[1fr_280px] gap-6">
-      <div className="pixel-card p-6 sm:p-8 relative overflow-hidden">
-        {/* Top controls */}
-        <div className="flex flex-wrap items-center gap-3 mb-6">
-          <div className="pixel-chip">⏱ Time</div>
-          <div className="flex gap-1.5">
+    <div className="flex flex-col gap-4">
+      {/* World title bar */}
+      <div className="flex items-center gap-2 px-1">
+        <span className="text-xl">{currentWorld.emoji}</span>
+        <span className="font-display text-xl">{currentWorld.name}</span>
+        <span className="font-pixel text-[0.55rem] text-muted-foreground ml-1">{currentWorld.blurb}</span>
+      </div>
+
+      {/* Main content: typing area + artwork */}
+      <div className="grid lg:grid-cols-[1fr_220px] gap-4">
+        {/* Typing area */}
+        <div className="typing-area" onClick={() => inputRef.current?.focus()}>
+          {/* Subtle ambient glow */}
+          <div className="ambient-glow absolute inset-0" />
+
+          {/* Minimal top controls */}
+          <div className="typing-toolbar relative z-1">
             {DURATIONS.map((d) => (
               <button
                 key={d}
-                onClick={() => reset(d)}
-                className="pixel-btn pixel-btn-secondary"
-                style={
-                  d === duration
-                    ? { background: "var(--color-primary)", color: "var(--color-primary-foreground)" }
-                    : undefined
-                }
+                onClick={(e) => { e.stopPropagation(); reset(d); }}
+                className={`typing-toolbar-btn ${d === duration ? "active" : ""}`}
               >
                 {d}s
               </button>
             ))}
-          </div>
-          <div className="ml-auto pixel-chip" title="Combo">
-            🔥 x{combo}
-          </div>
-          <button onClick={() => reset()} className="pixel-btn pixel-btn-secondary" aria-label="New test">
-            ↻ New
-          </button>
-        </div>
-
-        {/* Timer bar */}
-        <div className="pixel-bar mb-6">
-          <div
-            className="h-full"
-            style={{
-              width: `${progress}%`,
-              background:
-                "linear-gradient(90deg, var(--coin), var(--color-primary))",
-              transition: "width 100ms linear",
-            }}
-          />
-          <span
-            className="absolute inset-0 grid place-items-center font-pixel text-[0.65rem]"
-            style={{ color: "var(--color-foreground)" }}
-          >
-            {Math.ceil(remaining)}s left
-          </span>
-        </div>
-
-        {/* Words display */}
-        <div
-          className="relative font-mono text-2xl sm:text-[1.7rem] leading-[1.7] tracking-wide cursor-text scanlines rounded-md p-4"
-          style={{ background: "color-mix(in oklab, var(--color-muted) 60%, transparent)" }}
-          onClick={() => inputRef.current?.focus()}
-        >
-          {target.split("").map((ch, i) => {
-            const typedCh = typed[i];
-            const state =
-              typedCh == null ? "pending" : typedCh === ch ? "correct" : "wrong";
-            const isCursor = i === typed.length;
-            return (
-              <span
-                key={i}
-                style={{
-                  color:
-                    state === "correct"
-                      ? "var(--color-foreground)"
-                      : state === "wrong"
-                        ? "var(--color-destructive)"
-                        : "var(--muted-foreground)",
-                  background: isCursor
-                    ? "color-mix(in oklab, var(--color-primary) 35%, transparent)"
-                    : state === "wrong"
-                      ? "color-mix(in oklab, var(--color-destructive) 18%, transparent)"
-                      : "transparent",
-                  borderRadius: 2,
-                  padding: "0 1px",
-                }}
-              >
-                {ch === " " ? "\u00A0" : ch}
-              </span>
-            );
-          })}
-
-          {/* Sparkle particles */}
-          {sparkles.map((s) => (
-            <span
-              key={s.id}
-              className="absolute font-pixel text-xs animate-sparkle pointer-events-none"
-              style={{
-                left: `${s.x}%`,
-                top: `${s.y}%`,
-                color: "var(--coin)",
-                textShadow: "1px 1px 0 var(--color-border)",
-              }}
+            <div className="typing-toolbar-spacer" />
+            <button
+              onClick={(e) => { e.stopPropagation(); reset(); }}
+              className="typing-toolbar-btn"
+              aria-label="New test"
             >
-              ✦
-            </span>
-          ))}
-        </div>
-
-        <input
-          ref={inputRef}
-          value={typed}
-          onChange={handleChange}
-          autoFocus
-          aria-label="Type the text above"
-          spellCheck={false}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          className="absolute opacity-0 pointer-events-none"
-        />
-
-        {/* Live stats */}
-        <div className="grid grid-cols-4 gap-3 mt-6">
-          <Stat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
-          <Stat label="Acc" value={`${accuracy}%`} accent="var(--leaf)" />
-          <Stat label="Combo" value={`${bestCombo}`} accent="var(--coin)" />
-          <Stat label="Time" value={`${elapsed.toFixed(0)}s`} accent="var(--sky)" />
-        </div>
-
-        {finished && (
-          <div
-            className="absolute inset-0 grid place-items-center backdrop-blur-sm animate-pixel-pop"
-            style={{ background: "color-mix(in oklab, var(--color-background) 80%, transparent)" }}
-          >
-            <div className="pixel-card p-6 text-center max-w-sm w-full">
-              <div className="flex justify-center mb-2">
-                <PixelMascot mood="happy" size={72} />
-              </div>
-              <h2 className="text-3xl mb-2">Quest Complete!</h2>
-              <div className="grid grid-cols-3 gap-3 my-4">
-                <Stat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
-                <Stat label="Acc" value={`${accuracy}%`} accent="var(--leaf)" />
-                <Stat label="Combo" value={`${bestCombo}`} accent="var(--coin)" />
-              </div>
-              <p className="text-sm text-muted-foreground mb-4 font-pixel">
-                + {Math.round(wpm * 1.5)} XP &nbsp; + {Math.round(wpm / 2)} 🪙
-              </p>
-              <div className="mb-4 text-left">
-                <AICoach
-                  wpm={wpm}
-                  accuracy={accuracy}
-                  duration={elapsed}
-                  correctChars={correctChars}
-                  mistakes={mistakes}
-                  bestCombo={bestCombo}
-                  keystrokes={keystrokes.map((k) => ({ correct: k.correct, target: k.target }))}
-                />
-              </div>
-              <button className="pixel-btn w-full" onClick={() => reset()}>
-                ↻ Try Again
-              </button>
-            </div>
+              ↻ New
+            </button>
           </div>
-        )}
-      </div>
 
-      {/* Side: keyboard + pet */}
-      <div className="flex flex-col gap-4">
-        <div className="pixel-card p-4 flex flex-col items-center gap-2">
-          {activePet ? (
-            <>
-              <span className="font-pixel text-[0.6rem] text-muted-foreground uppercase">{activePet.name}</span>
-              <PixelPet pet={activePet} size={100} showDetails={false} />
-              <p className="font-pixel text-[0.6rem] text-center max-w-[200px]" style={{ color: "var(--muted-foreground)" }}>
-                {mood === "happy" && "✦ Great typing! +1 love."}
-                {mood === "oops" && "✧ Oops — stay calm!"}
-                {mood === "sleep" && "Zzz... wake me up!"}
-                {mood === "idle" && "Ready when you are!"}
-              </p>
-            </>
-          ) : (
-            <>
-              <PixelMascot mood={mood} size={100} />
-              <p className="font-pixel text-[0.6rem] text-center max-w-[200px]" style={{ color: "var(--muted-foreground)" }}>
-                {mood === "happy" && "Nice rhythm! Keep going."}
-                {mood === "oops" && "Oops — slow down a bit."}
-                {mood === "sleep" && "Zzz... start typing to wake me!"}
-                {mood === "idle" && "Press any key to begin."}
-              </p>
-              <p className="font-pixel text-[0.5rem] text-muted-foreground">Adopt a pet in the shop!</p>
-            </>
+          {/* Thin progress bar */}
+          <div className="relative z-1" style={{ height: 3, background: "var(--color-muted)", borderRadius: 2, marginBottom: "1.5rem", overflow: "hidden" }}>
+            <div style={{ width: `${progress}%`, height: "100%", background: "linear-gradient(90deg, var(--color-primary), var(--accent))", transition: "width 0.1s linear", borderRadius: 2 }} />
+          </div>
+
+          {/* Typing text — large, spacious */}
+          <div className="typing-text relative z-1">
+            {target.split("").map((ch, i) => {
+              const typedCh = typed[i];
+              const state = typedCh == null ? "pending" : typedCh === ch ? "correct" : "wrong";
+              const isCurrent = i === typed.length;
+              let cls = "char-" + state;
+              if (isCurrent) cls += " char-current";
+              return (
+                <span key={i} className={cls}>
+                  {ch === " " ? "\u00A0" : ch}
+                </span>
+              );
+            })}
+          </div>
+
+          <input
+            ref={inputRef}
+            value={typed}
+            onChange={handleChange}
+            autoFocus
+            aria-label="Type the text above"
+            spellCheck={false}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            className="absolute opacity-0 pointer-events-none"
+          />
+
+          {/* Results screen */}
+          {finished && (
+            <div className="results-overlay">
+              <div className="results-card">
+                <div className="flex justify-center mb-3">
+                  <PixelMascot mood="happy" size={64} />
+                </div>
+                <div className="results-title">Quest Complete!</div>
+                <div className="results-stats">
+                  <div className="results-stat">
+                    <div className="results-stat-label">WPM</div>
+                    <div className="results-stat-value" style={{ color: "var(--color-primary)" }}>{wpm}</div>
+                  </div>
+                  <div className="results-stat">
+                    <div className="results-stat-label">Accuracy</div>
+                    <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
+                  </div>
+                  <div className="results-stat">
+                    <div className="results-stat-label">Best Combo</div>
+                    <div className="results-stat-value" style={{ color: "var(--coin)" }}>{bestCombo}</div>
+                  </div>
+                  <div className="results-stat">
+                    <div className="results-stat-label">Time</div>
+                    <div className="results-stat-value" style={{ color: "var(--sky)" }}>{elapsed.toFixed(0)}s</div>
+                  </div>
+                  <div className="results-stat">
+                    <div className="results-stat-label">Correct</div>
+                    <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{correctChars}</div>
+                  </div>
+                  <div className="results-stat">
+                    <div className="results-stat-label">Mistakes</div>
+                    <div className="results-stat-value" style={{ color: "var(--color-destructive)" }}>{mistakes}</div>
+                  </div>
+                </div>
+                <div className="results-rewards">
+                  +{Math.round(wpm * 1.5)} XP &nbsp; +{Math.round(wpm / 2)} 🪙
+                </div>
+                <div className="mb-4 text-left">
+                  <AICoach
+                    wpm={wpm}
+                    accuracy={accuracy}
+                    duration={elapsed}
+                    correctChars={correctChars}
+                    mistakes={mistakes}
+                    bestCombo={bestCombo}
+                    keystrokes={keystrokes.map((k) => ({ correct: k.correct, target: k.target }))}
+                  />
+                </div>
+                <button className="pixel-btn w-full" onClick={() => reset()}>
+                  ↻ Try Again
+                </button>
+              </div>
+            </div>
           )}
         </div>
+
+        {/* Artwork panel */}
+        <div className="world-art">
+          <div className="world-art-inner">
+            {activePet ? (
+              <>
+                <PixelPet pet={activePet} size={100} showDetails={false} />
+                <span className="font-pixel text-[0.55rem] text-muted-foreground text-center">
+                  {mood === "happy" && "✦ Great typing!"}
+                  {mood === "oops" && "✧ Stay calm!"}
+                  {mood === "sleep" && "Zzz..."}
+                  {mood === "idle" && `${currentWorld.emoji} ${currentWorld.name}`}
+                </span>
+              </>
+            ) : (
+              <>
+                <PixelMascot mood={mood} size={100} />
+                <span className="font-pixel text-[0.5rem] text-muted-foreground text-center">
+                  {mood === "happy" && "Nice rhythm!"}
+                  {mood === "oops" && "Slow down!"}
+                  {mood === "sleep" && "Start typing!"}
+                  {mood === "idle" && `${currentWorld.emoji} ${currentWorld.name}`}
+                </span>
+                <button className="typing-toolbar-btn text-[0.5rem]">Adopt a pet!</button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Keyboard */}
+      <div className="pixel-card p-3">
         <PixelKeyboard active={activeKey} />
       </div>
 
       <Confetti active={showConfetti} onFinish={() => setShowConfetti(false)} />
-    </div>
-  );
-}
-
-function Stat({ label, value, accent }: { label: string; value: string; accent: string }) {
-  return (
-    <div
-      className="pixel-card-sm p-2.5 text-center"
-      style={{ borderLeft: `4px solid ${accent}` }}
-    >
-      <div className="font-pixel text-[0.6rem] text-muted-foreground uppercase">{label}</div>
-      <div className="font-display text-2xl leading-tight" style={{ color: accent }}>
-        {value}
-      </div>
     </div>
   );
 }

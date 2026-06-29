@@ -335,12 +335,9 @@ function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="flex items-end justify-between gap-4 mb-4">
-      <div>
-        <h2 className="text-3xl">{title}</h2>
-        <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">{subtitle}</p>
-      </div>
-      <button className="pixel-btn pixel-btn-secondary hidden sm:inline-flex">View all →</button>
+    <div className="mb-4">
+      <h2 className="text-3xl">{title}</h2>
+      <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">{subtitle}</p>
     </div>
   );
 }
