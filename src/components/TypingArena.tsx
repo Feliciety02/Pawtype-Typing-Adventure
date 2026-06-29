@@ -222,8 +222,10 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     });
   }, [mistakeChars]);
 
-  const reset = useCallback((newDuration?: (typeof DURATIONS)[number], customWords?: string[]) => {
-    setWords(customWords ?? (generatedText ? makeWordsFrom(generatedText) : makeWords()));
+  const reset = useCallback((newDuration?: (typeof DURATIONS)[number], drillWords?: string[]) => {
+    const base = drillWords
+      ?? (customWords && customWords.length ? customWords : (generatedText ? makeWordsFrom(generatedText) : makeWords()));
+    setWords(base);
     setTyped("");
     setStartedAt(null);
     setElapsed(0);
