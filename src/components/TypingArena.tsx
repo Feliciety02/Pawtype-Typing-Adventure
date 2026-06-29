@@ -188,18 +188,20 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     return () => clearTimeout(t);
   }, [startedAt, finished, typed]);
 
-  // Generate world-themed text on mount / world change
+  // Generate world-themed text on mount / world change (skipped for lessons)
   useEffect(() => {
+    if (customWords && customWords.length) return;
     setGeneratedText(null);
     generateWorldText(world).then(setGeneratedText);
-  }, [world]);
+  }, [world, customWords]);
 
   // Use generated text once it loads
   useEffect(() => {
+    if (customWords && customWords.length) return;
     if (generatedText) {
       setWords(makeWordsFrom(generatedText));
     }
-  }, [generatedText]);
+  }, [generatedText, customWords]);
 
   // Generate mascot line on mood change
   useEffect(() => {
