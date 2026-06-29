@@ -388,7 +388,19 @@ It is not yet ready for:
 - production analytics
 - live release as a complete learning platform
 
-## 13. Run Notes
+## 13. Documentation
+
+In-app documentation is available via the **📖 Library** tab. Raw markdown files live in [`docs/`](docs/):
+
+| File | Content |
+|------|---------|
+| [`docs/ACHIEVEMENTS.md`](docs/ACHIEVEMENTS.md) | 12-tier badge system with 500+ collectible badges |
+| `src/lib/docs/themes.ts` | All 12 worlds, palettes, ambient effects, HUD styling |
+| `src/lib/docs/pets.ts` | Pet evolution, XP formula, pricing |
+| `src/lib/docs/economy.ts` | Shop, daily rewards, earning rates |
+| `src/lib/docs/future.ts` | Short/medium/long-term roadmap |
+
+## 14. Run Notes
 
 Once the environment is prepared, the expected workflow is likely:
 

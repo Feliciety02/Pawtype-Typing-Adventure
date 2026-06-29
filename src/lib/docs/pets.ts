@@ -1,0 +1,63 @@
+export const PETS_DOC = `# Fuzzy Friends — Pet Documentation
+
+Pixel companions that grow with you. Earn pet XP by typing, and watch them evolve through four stages.
+
+---
+
+## Available Pets
+
+| Pet | Emoji | Price | Personality |
+|-----|-------|-------|-------------|
+| Cat | 🐱 | 300🪙 | A sleepy pixel companion |
+| Dog | 🐶 | 400🪙 | A wagging pixel pup |
+| Fox | 🦊 | 500🪙 | A clever pixel fox |
+| Rabbit | 🐰 | 350🪙 | A fluffy pixel bunny |
+| Panda | 🐼 | 600🪙 | A roly-poly pixel panda |
+| Penguin | 🐧 | 450🪙 | A waddling pixel penguin |
+| Baby Dragon | 🐉 | 800🪙 | A tiny pixel dragon |
+
+All pets are purchased from the **Curiosity Cart** (shop).
+
+---
+
+## Evolution
+
+Pets evolve through 4 visual stages as they level up:
+
+| Stage | Level Range | Description |
+|-------|-------------|-------------|
+| Baby | 1–2 | Small, simple sprite |
+| Adult | 3–5 | Full-size, more detail |
+| Evolved | 6–9 | Special effects, larger |
+| Legendary | 10+ | Glowing aura, final form |
+
+XP is earned through:
+- Typing practice (per character)
+- Completing adventure stages
+- Boss battle rewards
+
+---
+
+## Pet XP Formula
+
+\`\`\`
+XP per test = correctChars / 10 (minimum 1)
+XP per stage = stage goal (×2 for boss)
+\`\`\`
+
+XP needed per level: \`level × 50\`
+
+---
+
+## Default Names
+
+| Pet | Default Name |
+|-----|-------------|
+| Cat | Whiskers |
+| Dog | Barkley |
+| Fox | Sly |
+| Rabbit | Flopsy |
+| Panda | Bamboo |
+| Penguin | Chilly |
+| Dragon | Ember |
+`;

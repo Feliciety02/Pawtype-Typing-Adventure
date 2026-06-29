@@ -9,6 +9,7 @@ import { WorldSwitcher } from "@/components/WorldSwitcher";
 import { AdventureMap } from "@/components/AdventureMap";
 import { Shop } from "@/components/Shop";
 import { StatsView } from "@/components/StatsView";
+import { DocsViewer } from "@/components/DocsViewer";
 import { useWorld, WORLDS, type WorldId } from "@/components/WorldTheme";
 import { useGame } from "@/lib/game/store";
 import { xpForLevel, getDailyReward } from "@/lib/game/types";
@@ -32,7 +33,8 @@ type View =
   | "lessons"
   | "shop"
   | "achievements"
-  | "stats";
+  | "stats"
+  | "library";
 
 const THEME_PREVIEW_ASSETS: Record<WorldId, string> = {
   cafe: "/theme/cozy-cafe.png",
@@ -115,6 +117,11 @@ function Index() {
             <StatsView />
           </section>
         )}
+        {view === "library" && (
+          <section className="mt-8">
+            <DocsViewer />
+          </section>
+        )}
       </div>
 
       <footer className="mt-16 mb-6 text-center font-pixel text-[0.65rem] text-muted-foreground">
@@ -169,6 +176,7 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
     { icon: "◈", label: "Shop", view: "shop" },
     { icon: "★", label: "Achievements", view: "achievements" },
     { icon: "▥", label: "Stats", view: "stats" },
+    { icon: "📖", label: "Library", view: "library" },
   ];
 
   const burstNavSparkles = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -310,6 +318,7 @@ function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
     { label: "Shop", view: "shop", emoji: "🛒" },
     { label: "Achievements", view: "achievements", emoji: "★" },
     { label: "Stats", view: "stats", emoji: "📊" },
+    { label: "Library", view: "library", emoji: "📖" },
   ];
 
   return (
