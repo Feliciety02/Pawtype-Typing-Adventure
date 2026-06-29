@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useGame } from "../lib/game/store";
 import type { PetType } from "../lib/game/types";
 
@@ -7,7 +8,7 @@ type ShopItem = {
   emoji: string;
   price: number;
   description: string;
-  action: "pet" | "item";
+  action: "pet" | "item" | "theme";
   petType?: PetType;
 };
 
@@ -21,6 +22,12 @@ const SHOP_ITEMS: ShopItem[] = [
   { id: "pet-dragon", name: "Baby Dragon", emoji: "🐉", price: 800, description: "A tiny pixel dragon", action: "pet", petType: "dragon" },
   { id: "crt-shader", name: "CRT Filter", emoji: "📺", price: 150, description: "Retro scanline effect", action: "item" },
   { id: "sparkle-trail", name: "Sparkle Trail", emoji: "✨", price: 200, description: "Particles follow your typing", action: "item" },
+  { id: "theme-autumn", name: "Autumn Cottage", emoji: "🍂", price: 150, description: "Crisp air & golden leaves", action: "theme" },
+  { id: "theme-mushroom", name: "Fairy Mushroom Village", emoji: "🍄", price: 150, description: "Glowing spores & twisted roots", action: "theme" },
+  { id: "theme-moonlit", name: "Moonlit Garden", emoji: "🌙", price: 150, description: "Silver beams & jasmine scent", action: "theme" },
+  { id: "theme-rainy", name: "Rainy Library", emoji: "🌧️", price: 150, description: "Steamy windows & old paper", action: "theme" },
+  { id: "theme-snowy", name: "Snowy Cabin", emoji: "❄️", price: 150, description: "Frosted glass & crackling fire", action: "theme" },
+  { id: "theme-sunflower", name: "Sunflower Meadow", emoji: "🌻", price: 150, description: "Golden fields & buzzing bees", action: "theme" },
 ];
 
 export function Shop() {
@@ -29,6 +36,14 @@ export function Shop() {
 
   const owned = (id: string) => inventory.items.includes(id);
   const ownedPet = (type: PetType) => inventory.pets.some((p) => p.type === type);
+
+  // Auto-unlock theme items for existing saves
+  useEffect(() => {
+    const themeIds = ["theme-autumn","theme-mushroom","theme-moonlit","theme-rainy","theme-snowy","theme-sunflower"];
+    themeIds.forEach((id) => {
+      if (!owned(id)) dispatch({ type: "ADD_ITEM", itemId: id });
+    });
+  }, []);
 
   return (
     <div className="pixel-card p-5 sm:p-6">
@@ -59,6 +74,7 @@ export function Shop() {
               style={{ opacity: alreadyOwned || isUnavailable ? 0.65 : 1 }}
             >
               {isUnavailable && <span className="coming-soon-badge">Coming soon</span>}
+              {item.action === "theme" && alreadyOwned && <span className="coming-soon-badge" style={{ background: "var(--leaf)" }}>Unlocked</span>}
               <div
                 className="grid place-items-center text-3xl"
                 style={{

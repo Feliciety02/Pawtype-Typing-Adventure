@@ -218,6 +218,126 @@
   --border: oklch(0.1 0.03 275);
 }
 
+.world-autumn:not(.dark) {
+  --background: oklch(0.96 0.035 60);
+  --card: oklch(0.99 0.02 60);
+  --primary: oklch(0.6 0.16 45);
+  --primary-foreground: oklch(0.98 0.02 60);
+  --accent: oklch(0.8 0.14 55);
+  --muted: oklch(0.92 0.04 60);
+  --border: oklch(0.24 0.05 50);
+  --coin: oklch(0.78 0.16 70);
+}
+.world-autumn.dark {
+  --background: oklch(0.22 0.04 50);
+  --card: oklch(0.28 0.05 50);
+  --primary: oklch(0.75 0.16 45);
+  --primary-foreground: oklch(0.18 0.04 50);
+  --accent: oklch(0.72 0.14 55);
+  --muted: oklch(0.32 0.04 50);
+  --border: oklch(0.14 0.03 50);
+}
+
+.world-mushroom:not(.dark) {
+  --background: oklch(0.96 0.03 310);
+  --card: oklch(0.99 0.02 310);
+  --primary: oklch(0.6 0.18 300);
+  --primary-foreground: oklch(0.98 0.02 310);
+  --accent: oklch(0.8 0.14 315);
+  --muted: oklch(0.92 0.04 310);
+  --border: oklch(0.24 0.06 300);
+  --sakura: oklch(0.82 0.14 320);
+}
+.world-mushroom.dark {
+  --background: oklch(0.22 0.05 300);
+  --card: oklch(0.28 0.05 300);
+  --primary: oklch(0.78 0.18 300);
+  --primary-foreground: oklch(0.18 0.04 300);
+  --accent: oklch(0.7 0.16 315);
+  --muted: oklch(0.32 0.05 300);
+  --border: oklch(0.14 0.04 300);
+}
+
+.world-moonlit:not(.dark) {
+  --background: oklch(0.96 0.025 250);
+  --card: oklch(0.99 0.02 250);
+  --primary: oklch(0.55 0.16 260);
+  --primary-foreground: oklch(0.98 0.02 250);
+  --accent: oklch(0.78 0.12 240);
+  --muted: oklch(0.92 0.035 250);
+  --border: oklch(0.22 0.05 255);
+  --sky: oklch(0.75 0.14 240);
+}
+.world-moonlit.dark {
+  --background: oklch(0.2 0.04 255);
+  --card: oklch(0.26 0.05 255);
+  --primary: oklch(0.76 0.16 260);
+  --primary-foreground: oklch(0.16 0.04 255);
+  --accent: oklch(0.72 0.14 240);
+  --muted: oklch(0.3 0.04 255);
+  --border: oklch(0.12 0.03 255);
+}
+
+.world-rainy:not(.dark) {
+  --background: oklch(0.95 0.015 70);
+  --card: oklch(0.98 0.01 70);
+  --primary: oklch(0.52 0.08 270);
+  --primary-foreground: oklch(0.97 0.01 70);
+  --accent: oklch(0.76 0.06 260);
+  --muted: oklch(0.9 0.02 70);
+  --border: oklch(0.22 0.03 260);
+}
+.world-rainy.dark {
+  --background: oklch(0.24 0.02 260);
+  --card: oklch(0.3 0.02 260);
+  --primary: oklch(0.7 0.1 265);
+  --primary-foreground: oklch(0.2 0.02 260);
+  --accent: oklch(0.66 0.08 250);
+  --muted: oklch(0.34 0.02 260);
+  --border: oklch(0.15 0.02 260);
+}
+
+.world-snowy:not(.dark) {
+  --background: oklch(0.97 0.015 240);
+  --card: oklch(0.99 0.01 240);
+  --primary: oklch(0.6 0.1 240);
+  --primary-foreground: oklch(0.99 0.01 240);
+  --accent: oklch(0.82 0.08 235);
+  --muted: oklch(0.94 0.02 240);
+  --border: oklch(0.22 0.04 240);
+  --sky: oklch(0.78 0.12 235);
+}
+.world-snowy.dark {
+  --background: oklch(0.2 0.03 240);
+  --card: oklch(0.26 0.04 240);
+  --primary: oklch(0.76 0.12 240);
+  --primary-foreground: oklch(0.16 0.03 240);
+  --accent: oklch(0.72 0.1 235);
+  --muted: oklch(0.3 0.03 240);
+  --border: oklch(0.12 0.03 240);
+}
+
+.world-sunflower:not(.dark) {
+  --background: oklch(0.97 0.035 90);
+  --card: oklch(0.99 0.02 90);
+  --primary: oklch(0.62 0.16 85);
+  --primary-foreground: oklch(0.98 0.02 90);
+  --accent: oklch(0.82 0.14 95);
+  --muted: oklch(0.93 0.04 90);
+  --border: oklch(0.24 0.05 85);
+  --coin: oklch(0.82 0.16 80);
+  --leaf: oklch(0.68 0.16 130);
+}
+.world-sunflower.dark {
+  --background: oklch(0.24 0.04 85);
+  --card: oklch(0.3 0.05 85);
+  --primary: oklch(0.78 0.16 85);
+  --primary-foreground: oklch(0.18 0.04 85);
+  --accent: oklch(0.74 0.14 95);
+  --muted: oklch(0.34 0.04 85);
+  --border: oklch(0.14 0.03 85);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -336,6 +456,63 @@
     radial-gradient(circle at 78% 28%, color-mix(in oklab, var(--accent) 42%, transparent) 0 2px, transparent 3px),
     radial-gradient(circle at 50% 90%, color-mix(in oklab, var(--primary) 20%, transparent), transparent 38%),
     linear-gradient(180deg, color-mix(in oklab, var(--accent) 8%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+
+.world-autumn .game-hud {
+  --hud-trim: var(--coin);
+  --hud-decoration: "🍂";
+  background:
+    repeating-linear-gradient(45deg, color-mix(in oklab, var(--coin) 10%, transparent) 0 6px, transparent 6px 14px),
+    linear-gradient(180deg, color-mix(in oklab, var(--coin) 8%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+
+.world-mushroom .game-hud {
+  --hud-trim: var(--primary);
+  --hud-decoration: "🍄";
+  background:
+    radial-gradient(circle at 24% 50%, color-mix(in oklab, var(--sakura) 24%, transparent) 0 4px, transparent 5px),
+    radial-gradient(circle at 76% 30%, color-mix(in oklab, var(--primary) 20%, transparent) 0 4px, transparent 5px),
+    linear-gradient(180deg, color-mix(in oklab, var(--sakura) 8%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+
+.world-moonlit .game-hud {
+  --hud-trim: var(--sky);
+  --hud-decoration: "🌙";
+  background:
+    radial-gradient(circle at 50% 20%, color-mix(in oklab, var(--sky) 28%, transparent) 0 8px, transparent 10px),
+    linear-gradient(180deg, color-mix(in oklab, var(--sky) 6%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+
+.world-rainy .game-hud {
+  --hud-trim: var(--accent);
+  --hud-decoration: "🌧️";
+  background:
+    repeating-linear-gradient(105deg, transparent 0 8px, color-mix(in oklab, var(--accent) 8%, transparent) 8px 10px, transparent 10px 20px),
+    linear-gradient(180deg, color-mix(in oklab, var(--accent) 6%, transparent) 0 2px, transparent 5px),
+    var(--hud-surface);
+}
+
+.world-snowy .game-hud {
+  --hud-trim: var(--sky);
+  --hud-decoration: "❄️";
+  background:
+    radial-gradient(circle at 20% 40%, color-mix(in oklab, var(--sky) 20%, transparent) 0 3px, transparent 4px),
+    radial-gradient(circle at 70% 60%, color-mix(in oklab, var(--sky) 16%, transparent) 0 3px, transparent 4px),
+    linear-gradient(180deg, color-mix(in oklab, var(--sky) 6%, transparent) 0 3px, transparent 6px),
+    var(--hud-surface);
+}
+
+.world-sunflower .game-hud {
+  --hud-trim: var(--coin);
+  --hud-decoration: "🌻";
+  background:
+    repeating-linear-gradient(135deg, color-mix(in oklab, var(--coin) 12%, transparent) 0 6px, transparent 6px 16px),
+    linear-gradient(180deg, color-mix(in oklab, var(--coin) 8%, transparent) 0 3px, transparent 6px),
+    linear-gradient(90deg, color-mix(in oklab, var(--leaf) 10%, transparent), transparent 24% 76%, color-mix(in oklab, var(--coin) 10%, transparent)),
     var(--hud-surface);
 }
 
@@ -949,6 +1126,105 @@
 @keyframes space-twinkle {
   0%, 100% { opacity: 0.2; transform: scale(0.5); }
   50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Autumn Cottage — falling leaves */
+.world-autumn .ambient-particle {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 2px 50% 50% 50%;
+  background: var(--coin);
+  opacity: 0;
+  animation: autumn-leaf 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes autumn-leaf {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+  15% { opacity: 0.8; }
+  85% { opacity: 0.4; }
+  100% { opacity: 0; transform: translate(20px, 35px) rotate(120deg); }
+}
+
+/* Fairy Mushroom Village — glowing spores */
+.world-mushroom .ambient-particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--sakura);
+  box-shadow: 0 0 4px var(--sakura);
+  opacity: 0;
+  animation: mushroom-spore 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes mushroom-spore {
+  0% { opacity: 0; transform: scale(0.3); }
+  20% { opacity: 0.9; }
+  80% { opacity: 0.5; }
+  100% { opacity: 0; transform: scale(1.4) translateY(-20px); }
+}
+
+/* Moonlit Garden — floating fireflies */
+.world-moonlit .ambient-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--sky);
+  opacity: 0;
+  animation: moonlit-flicker 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes moonlit-flicker {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  25% { opacity: 0.7; transform: translate(15px, -8px); }
+  50% { opacity: 0.9; transform: translate(8px, -18px); }
+  75% { opacity: 0.4; transform: translate(-12px, -10px); }
+}
+
+/* Rainy Library — drifting steam */
+.world-rainy .ambient-glow {
+  background:
+    radial-gradient(ellipse at 30% 80%, color-mix(in oklab, var(--accent) 10%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, color-mix(in oklab, var(--accent) 8%, transparent) 0%, transparent 40%);
+  pointer-events: none;
+  animation: rainy-steam 6s ease-in-out infinite;
+}
+@keyframes rainy-steam {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+
+/* Snowy Cabin — falling snow */
+.world-snowy .ambient-particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: white;
+  opacity: 0;
+  animation: snowy-flake 5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes snowy-flake {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  15% { opacity: 0.8; }
+  85% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(35px) scale(1.1) translateX(10px); }
+}
+
+/* Sunflower Meadow — floating pollen */
+.world-sunflower .ambient-particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  background: var(--coin);
+  opacity: 0;
+  animation: sunflower-pollen 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes sunflower-pollen {
+  0% { opacity: 0; transform: translate(0, 0); }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.3; }
+  100% { opacity: 0; transform: translate(25px, -15px); }
 }
 
 /* ===== Adventure map ===== */

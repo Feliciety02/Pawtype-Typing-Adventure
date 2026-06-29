@@ -24,6 +24,12 @@ const WORLD_THEMES: Record<WorldId, string> = {
   sakura: "a cherry blossom park with drifting petals, a koi pond, and paper lanterns",
   castle: "a royal castle with velvet drapes, candlelit halls, and stone archways",
   space: "a starfield with glowing nebulae, floating comets, and deep cosmic silence",
+  autumn: "an autumn cottage with crisp leaves, golden light, and a warm hearth",
+  mushroom: "a fairy mushroom village with glowing spores, twisted roots, and enchanted air",
+  moonlit: "a moonlit garden with silver beams, jasmine scent, and quiet reflection",
+  rainy: "a rainy library with steamy windows, old paper smell, and soft thunder",
+  snowy: "a snowy cabin with frosted glass, crackling fire, and deep winter silence",
+  sunflower: "a sunflower meadow with golden fields, buzzing bees, and endless blue sky",
 };
 
 export async function generateWorldText(worldId: WorldId): Promise<string | null> {

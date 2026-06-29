@@ -47,7 +47,14 @@ export const DEFAULT_PLAYER: PlayerState = {
 };
 
 export const DEFAULT_INVENTORY: Inventory = {
-  items: [],
+  items: [
+    "theme-autumn",
+    "theme-mushroom",
+    "theme-moonlit",
+    "theme-rainy",
+    "theme-snowy",
+    "theme-sunflower",
+  ],
   pets: [],
   activePet: null,
 };

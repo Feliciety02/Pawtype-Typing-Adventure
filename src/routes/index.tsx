@@ -41,6 +41,12 @@ const THEME_PREVIEW_ASSETS: Record<WorldId, string> = {
   sakura: "/theme/sakura-park.png",
   castle: "/theme/royal-castle.png",
   space: "/theme/stardust.png",
+  autumn: "/theme/autumn-cottage.png",
+  mushroom: "/theme/fairy-mushroom-village.png",
+  moonlit: "/theme/moonlit-garden.png",
+  rainy: "/theme/rainy-library.png",
+  snowy: "/theme/snowy-cabin.png",
+  sunflower: "/theme/sunflower-meadow.png",
 };
 
 function useQuests() {
@@ -566,7 +572,7 @@ function ThemeSetsSection({
                       glow willow ivory
                     </div>
                     <div>garden cloud cinnamon moon</div>
-                    <div>{theme.id === "forest" ? "forest moss leaf" : theme.id === "ocean" ? "ocean tide wave" : theme.id === "sakura" ? "sakura blossom petal" : theme.id === "castle" ? "castle king crown" : theme.id === "space" ? "stardust galaxy star" : "latte cozy brew"}</div>
+                    <div>{theme.id === "forest" ? "forest moss leaf" : theme.id === "ocean" ? "ocean tide wave" : theme.id === "sakura" ? "sakura blossom petal" : theme.id === "castle" ? "castle king crown" : theme.id === "space" ? "stardust galaxy star" : theme.id === "autumn" ? "autumn leaf cider" : theme.id === "mushroom" ? "mushroom glow spore" : theme.id === "moonlit" ? "moonbeam jasmine dew" : theme.id === "rainy" ? "rainy window book" : theme.id === "snowy" ? "snowy frost cabin" : theme.id === "sunflower" ? "sunflower golden bee" : "latte cozy brew"}</div>
                   </div>
                 </div>
 

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-export type WorldId = "cafe" | "forest" | "ocean" | "sakura" | "castle" | "space";
+export type WorldId = "cafe" | "forest" | "ocean" | "sakura" | "castle" | "space" | "autumn" | "mushroom" | "moonlit" | "rainy" | "snowy" | "sunflower";
 
 export type World = {
   id: WorldId;
@@ -16,7 +16,13 @@ export const WORLDS: World[] = [
   { id: "ocean",  name: "Tide Pool",    emoji: "🌊", blurb: "Salt breeze and seafoam.",           swatches: ["#9bd5e8","#2f6f9c","#e6f3f8","#142838"] },
   { id: "sakura", name: "Sakura Park",  emoji: "🌸", blurb: "Petals drift in the wind.",          swatches: ["#f5b6c8","#c75f86","#fbeaf0","#3a1f2a"] },
   { id: "castle", name: "Royal Castle", emoji: "🏰", blurb: "Velvet drapes & gold trim.",         swatches: ["#c8a8e8","#6e4caa","#f1eafa","#241638"] },
-  { id: "space",  name: "Stardust",     emoji: "🌌", blurb: "Neon comets in deep night.",         swatches: ["#7ee0d6","#a06bff","#1b1538","#0a0820"] },
+  { id: "space",    name: "Stardust",              emoji: "🌌", blurb: "Neon comets in deep night.",               swatches: ["#7ee0d6","#a06bff","#1b1538","#0a0820"] },
+  { id: "autumn",   name: "Autumn Cottage",        emoji: "🍂", blurb: "Crisp air & golden leaves.",                swatches: ["#e8b060","#c25a2a","#fbe8c8","#3a2218"] },
+  { id: "mushroom", name: "Fairy Mushroom Village", emoji: "🍄", blurb: "Glowing spores & twisted roots.",          swatches: ["#d4a0e8","#7a3a9a","#f2e0f8","#2a1838"] },
+  { id: "moonlit",  name: "Moonlit Garden",         emoji: "🌙", blurb: "Silver beams & jasmine scent.",             swatches: ["#a0b8e8","#3a5a8a","#e0eaf8","#182038"] },
+  { id: "rainy",    name: "Rainy Library",          emoji: "🌧️", blurb: "Steamy windows & old paper.",               swatches: ["#b0a8a0","#5a524a","#e8e4e0","#2a2622"] },
+  { id: "snowy",    name: "Snowy Cabin",            emoji: "❄️", blurb: "Frosted glass & crackling fire.",           swatches: ["#c8dce8","#6090a8","#e8f0f4","#1a2830"] },
+  { id: "sunflower",name: "Sunflower Meadow",       emoji: "🌻", blurb: "Golden fields & buzzing bees.",             swatches: ["#f0d060","#c08a20","#fcf0c0","#382818"] },
 ];
 
 type Ctx = { world: WorldId; setWorld: (w: WorldId) => void };

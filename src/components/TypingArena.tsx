@@ -40,6 +40,12 @@ const WORLD_ART_URL: Record<WorldId, string> = {
   sakura: "/theme/sakura-park.png",
   castle: "/theme/royal-castle.png",
   space: "/theme/stardust.png",
+  autumn: "/theme/autumn-cottage.png",
+  mushroom: "/theme/fairy-mushroom-village.png",
+  moonlit: "/theme/moonlit-garden.png",
+  rainy: "/theme/rainy-library.png",
+  snowy: "/theme/snowy-cabin.png",
+  sunflower: "/theme/sunflower-meadow.png",
 };
 
 export function TypingArena() {
