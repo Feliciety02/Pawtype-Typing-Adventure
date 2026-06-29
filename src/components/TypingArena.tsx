@@ -453,9 +453,12 @@ export function TypingArena() {
             >
               <X size={14} />
             </button>
-            <div className="flex justify-center mb-3">
+            <div className="flex justify-center mb-2">
               <PixelMascot mood="happy" size={64} />
             </div>
+            {mascotLine && (
+              <p className="font-pixel text-[0.55rem] text-muted-foreground text-center mb-3">{mascotLine}</p>
+            )}
             <div className="results-title">Quest Complete!</div>
             <div className="results-stats">
               <div className="results-stat">
