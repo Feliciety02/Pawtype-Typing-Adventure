@@ -60,6 +60,24 @@ export function TypingArena() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const target = useMemo(() => words.join(" "), [words]);
+  const wordRanges = useMemo(() => {
+    let cursor = 0;
+    return words.map((word, index) => {
+      const start = cursor;
+      const end = start + word.length;
+      cursor = end + 1;
+      return { word, index, start, end };
+    });
+  }, [words]);
+  const currentWordIndex = useMemo(() => {
+    const index = wordRanges.findIndex(({ end }) => typed.length <= end);
+    return index === -1 ? wordRanges.length - 1 : index;
+  }, [typed.length, wordRanges]);
+  const visibleWords = useMemo(() => {
+    const start = Math.max(0, currentWordIndex - 3);
+    const end = Math.min(words.length, currentWordIndex + 18);
+    return wordRanges.slice(start, end);
+  }, [currentWordIndex, wordRanges, words.length]);
 
   // Timer tick
   useEffect(() => {
@@ -209,24 +227,18 @@ export function TypingArena() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* World title bar */}
-      <div className="flex items-center gap-2 px-1">
-        <span className="text-xl">{currentWorld.emoji}</span>
-        <span className="font-display text-xl">{currentWorld.name}</span>
-        <span className="font-pixel text-[0.55rem] text-muted-foreground ml-1">{currentWorld.blurb}</span>
-        {!isFullscreen && (
-          <button
-            className="typing-toolbar-btn ml-auto"
-            type="button"
-            onClick={requestFullscreen}
-            title="Fullscreen"
-            aria-label="Enter fullscreen"
-          >
-            <Maximize2 size={12} />
-            Fullscreen
-          </button>
-        )}
-      </div>
+      {!isFullscreen && (
+        <button
+          className="typing-toolbar-btn self-end"
+          type="button"
+          onClick={requestFullscreen}
+          title="Fullscreen"
+          aria-label="Enter fullscreen"
+        >
+          <Maximize2 size={12} />
+          Fullscreen
+        </button>
+      )}
 
       {/* Main content: typing area + artwork */}
       <div className="practice-stage-grid">
@@ -243,46 +255,93 @@ export function TypingArena() {
           {/* Subtle ambient glow */}
           <div className="ambient-glow absolute inset-0" />
 
-          {/* Minimal top controls */}
           <div className="typing-toolbar relative z-1">
-            {DURATIONS.map((d) => (
-              <button
-                key={d}
-                onClick={(e) => { e.stopPropagation(); reset(d); }}
-                className={`typing-toolbar-btn ${d === duration ? "active" : ""}`}
-              >
-                {d}s
-              </button>
-            ))}
+            <div className="typing-time-pills" aria-label="Typing test duration">
+              {DURATIONS.map((d) => (
+                <button
+                  key={d}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    reset(d);
+                  }}
+                  className={`typing-toolbar-btn ${d === duration ? "active" : ""}`}
+                >
+                  {d}s
+                </button>
+              ))}
+            </div>
             <div className="typing-toolbar-spacer" />
             <button
               onClick={(e) => { e.stopPropagation(); reset(); }}
-              className="typing-toolbar-btn"
+              className="typing-toolbar-btn typing-new-btn"
               aria-label="New test"
+              title="New test"
             >
-              ↻ New
+              ↻
             </button>
           </div>
 
-          {/* Thin progress bar */}
-          <div className="relative z-1" style={{ height: 3, background: "var(--color-muted)", borderRadius: 2, marginBottom: "1.5rem", overflow: "hidden" }}>
-            <div style={{ width: `${progress}%`, height: "100%", background: "linear-gradient(90deg, var(--color-primary), var(--accent))", transition: "width 0.1s linear", borderRadius: 2 }} />
+          <div className="typing-progress-line relative z-1" aria-hidden="true">
+            <div style={{ width: `${progress}%` }} />
           </div>
 
-          {/* Typing text — large, spacious */}
-          <div className="typing-text relative z-1">
-            {target.split("").map((ch, i) => {
-              const typedCh = typed[i];
-              const state = typedCh == null ? "pending" : typedCh === ch ? "correct" : "wrong";
-              const isCurrent = i === typed.length;
-              let cls = "char-" + state;
-              if (isCurrent) cls += " char-current";
-              return (
-                <span key={i} className={cls}>
-                  {ch === " " ? "\u00A0" : ch}
-                </span>
-              );
-            })}
+          <div className="typing-focus-shell relative z-1">
+            <div className="typing-text">
+              {visibleWords.map(({ word, index, start, end }) => {
+                const isCurrent = index === currentWordIndex;
+                const isComplete = typed.length > end;
+                const isUpcoming = index > currentWordIndex;
+                const isPast = index < currentWordIndex;
+                const typedWord = typed.slice(start, Math.min(typed.length, end));
+                const hasMistake = typedWord
+                  .split("")
+                  .some((char, charIndex) => char !== word[charIndex]);
+                const wordClass = [
+                  "typing-word",
+                  isCurrent && "word-current",
+                  isComplete && !hasMistake && "word-complete",
+                  isComplete && hasMistake && "word-complete-wrong",
+                  isPast && !isComplete && "word-past",
+                  isUpcoming && "word-upcoming",
+                ]
+                  .filter(Boolean)
+                  .join(" ");
+
+                return (
+                  <span className={wordClass} key={`${index}-${word}`}>
+                    {word.split("").map((ch, charIndex) => {
+                      const targetIndex = start + charIndex;
+                      const typedCh = typed[targetIndex];
+                      const charState =
+                        typedCh == null
+                          ? "pending"
+                          : typedCh === ch
+                            ? "correct"
+                            : "wrong";
+                      const isCursor = targetIndex === typed.length;
+
+                      return (
+                        <span
+                          className={`typing-char char-${charState} ${isCursor ? "char-current" : ""}`}
+                          key={`${targetIndex}-${ch}`}
+                        >
+                          {ch}
+                        </span>
+                      );
+                    })}
+                    {isCurrent && typed.length === end && <span className="typing-caret-space" />}
+                  </span>
+                );
+              })}
+            </div>
+            {!startedAt && !typed && (
+              <div className="typing-start-hint font-pixel">Start typing to wake the room</div>
+            )}
+          </div>
+
+          <div className="typing-session-meta relative z-1">
+            <span>{Math.max(0, Math.ceil(duration - elapsed))}s</span>
+            <span>{currentWordIndex + 1} / {words.length}</span>
           </div>
 
           <input

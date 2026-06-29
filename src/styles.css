@@ -265,11 +265,11 @@
   top: 0.75rem;
   z-index: 50;
   display: grid;
-  grid-template-columns: minmax(220px, 0.9fr) minmax(420px, 1.7fr) minmax(280px, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: minmax(130px, 14%) minmax(600px, 64%) minmax(180px, 22%);
+  gap: 0.55rem;
   align-items: center;
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.5rem;
   border: 2px solid var(--color-border);
   border-radius: 8px;
   background:
@@ -278,50 +278,6 @@
     var(--hud-surface);
   box-shadow: var(--shadow-pixel), 0 0 24px var(--hud-glow);
   overflow: visible;
-}
-
-/* Corner decorations */
-.game-hud .hud-corner {
-  position: absolute;
-  width: 8px; height: 8px;
-  border: 2px solid var(--hud-trim);
-  border-radius: 2px;
-  pointer-events: none;
-  z-index: 1;
-}
-.game-hud .hud-corner-tl { top: -4px; left: -4px; border-right: none; border-bottom: none; }
-.game-hud .hud-corner-tr { top: -4px; right: -4px; border-left: none; border-bottom: none; }
-.game-hud .hud-corner-bl { bottom: -4px; left: -4px; border-right: none; border-top: none; }
-.game-hud .hud-corner-br { bottom: -4px; right: -4px; border-left: none; border-top: none; }
-
-/* Top decoration line with world accent */
-.game-hud .hud-crest {
-  position: absolute;
-  top: -1px; left: 20%; right: 20%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--hud-trim), transparent);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.game-hud::before,
-.game-hud::after {
-  content: var(--hud-decoration);
-  position: absolute;
-  top: -0.45rem;
-  color: var(--hud-trim);
-  font-family: var(--font-pixel);
-  font-size: 0.8rem;
-  text-shadow: 1px 1px 0 var(--color-border);
-  animation: hud-particle-drift 3.4s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.game-hud::before { left: 1.5rem; }
-.game-hud::after {
-  right: 1.5rem;
-  animation-delay: 1.2s;
 }
 
 .world-cafe .game-hud {
@@ -333,7 +289,6 @@
     linear-gradient(90deg, color-mix(in oklab, var(--coin) 18%, transparent), transparent 24% 76%, color-mix(in oklab, var(--primary) 14%, transparent)),
     var(--hud-surface);
 }
-.world-cafe .hud-crest { background: linear-gradient(90deg, transparent, var(--coin), transparent); }
 
 .world-forest .game-hud {
   --hud-trim: var(--leaf);
@@ -343,7 +298,6 @@
     linear-gradient(180deg, color-mix(in oklab, var(--leaf) 8%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
-.world-forest .hud-crest { background: linear-gradient(90deg, transparent, var(--leaf), transparent); }
 
 .world-ocean .game-hud {
   --hud-trim: var(--sky);
@@ -354,7 +308,6 @@
     linear-gradient(180deg, color-mix(in oklab, var(--sky) 8%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
-.world-ocean .hud-crest { background: linear-gradient(90deg, transparent, var(--sky), transparent); }
 
 .world-sakura .game-hud {
   --hud-trim: var(--sakura);
@@ -364,7 +317,6 @@
     linear-gradient(180deg, color-mix(in oklab, var(--sakura) 10%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
-.world-sakura .hud-crest { background: linear-gradient(90deg, transparent, var(--sakura), transparent); }
 
 .world-castle .game-hud {
   --hud-trim: var(--coin);
@@ -375,7 +327,6 @@
     linear-gradient(180deg, color-mix(in oklab, var(--coin) 8%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
-.world-castle .hud-crest { background: linear-gradient(90deg, transparent, var(--coin), transparent); }
 
 .world-space .game-hud {
   --hud-trim: var(--accent);
@@ -387,7 +338,6 @@
     linear-gradient(180deg, color-mix(in oklab, var(--accent) 8%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
-.world-space .hud-crest { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
 
 .hud-brand,
 .hud-menu,
@@ -401,14 +351,14 @@
 
 .hud-brand {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) auto;
+  grid-template-columns: 28px minmax(0, max-content);
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.5rem 0.65rem;
+  gap: 0.3rem;
+  height: 100%;
+  padding: 0.3rem 0.36rem;
 }
 
-.hud-logo,
-.hud-avatar {
+.hud-logo {
   display: grid;
   place-items: center;
   border: 2px solid var(--color-border);
@@ -420,38 +370,44 @@
 }
 
 .hud-logo {
-  width: 44px;
-  height: 44px;
-  font-size: 1.1rem;
+  width: 28px;
+  height: 28px;
+  font-size: 0.72rem;
 }
 
 .hud-title {
   font-family: var(--font-display);
-  font-size: 1.85rem;
+  font-size: 1.2rem;
   line-height: 1;
   color: var(--color-foreground);
   white-space: nowrap;
 }
 
-.hud-subtitle,
-.hud-control-label {
+.hud-subtitle {
   font-family: var(--font-pixel);
-  font-size: 0.52rem;
+  font-size: 0.4rem;
   color: var(--muted-foreground);
   text-transform: uppercase;
+  white-space: nowrap;
+  max-width: 10.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hud-world-mark {
+  display: none;
   font-size: 1.25rem;
   filter: drop-shadow(1px 1px 0 var(--color-border));
 }
 
 .hud-menu {
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0.35rem;
-  padding: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.42rem;
+  height: 100%;
+  padding: 0.42rem 0.5rem;
 }
 
 .hud-menu::after {
@@ -470,8 +426,9 @@
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  min-height: 42px;
-  padding: 0.45rem 0.5rem;
+  min-height: 44px;
+  width: max-content;
+  padding: 0.5rem 0.72rem;
   border: 2px solid transparent;
   border-radius: 5px;
   background: transparent;
@@ -479,6 +436,7 @@
   font-family: var(--font-pixel);
   font-size: clamp(0.52rem, 0.62vw, 0.66rem);
   cursor: pointer;
+  white-space: nowrap;
   transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
 }
 
@@ -539,23 +497,9 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.4rem;
-  padding: 0.45rem;
-}
-
-.hud-avatar {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  border: 2px solid var(--color-border);
-  border-radius: 5px;
-  background: var(--hud-trim);
-  color: var(--color-primary-foreground);
-  box-shadow: var(--shadow-pixel-sm);
-  font-family: var(--font-pixel);
-  font-size: 0.7rem;
+  gap: 0.42rem;
+  height: 100%;
+  padding: 0.42rem 0.5rem;
 }
 
 /* Compact stat bar — combines level, coins, streak in one container */
@@ -564,48 +508,50 @@
   align-items: center;
   gap: 0;
   border: 2px solid var(--color-border);
-  border-radius: 5px;
-  background: color-mix(in oklab, var(--color-muted) 52%, transparent);
-  box-shadow: 2px 2px 0 0 var(--color-border);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 16%, transparent), transparent 58%),
+    color-mix(in oklab, var(--color-muted) 62%, var(--color-card));
+  box-shadow: 3px 3px 0 0 var(--color-border), 0 0 14px var(--hud-glow);
   overflow: hidden;
+  min-height: 40px;
 }
 .hud-stat-item {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.45rem;
+  gap: 0.34rem;
+  padding: 0.3rem 0.62rem;
   font-family: var(--font-pixel);
-  font-size: 0.55rem;
+  font-size: 0.64rem;
 }
 .hud-stat-item strong {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 1.18rem;
+  line-height: 1;
 }
-.hud-stat-icon { font-size: 0.7rem; line-height: 1; }
+.hud-stat-icon {
+  font-size: 0.88rem;
+  line-height: 1;
+  filter: drop-shadow(1px 1px 0 color-mix(in oklab, var(--color-border) 55%, transparent));
+}
 .hud-stat-divider {
-  width: 1px;
-  height: 20px;
-  background: color-mix(in oklab, var(--color-border) 50%, transparent);
+  width: 2px;
+  height: 26px;
+  background: color-mix(in oklab, var(--color-border) 58%, transparent);
 }
 
 .hud-icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  min-height: 32px;
+  width: 40px;
+  min-height: 40px;
+  height: 40px;
   border: 2px solid var(--color-border);
   border-radius: 5px;
   background: color-mix(in oklab, var(--color-muted) 52%, transparent);
-  box-shadow: 2px 2px 0 0 var(--color-border);
+  box-shadow: 3px 3px 0 0 var(--color-border);
   font-family: var(--font-pixel);
-  color: var(--color-foreground);
-  cursor: pointer;
-  transition: transform 100ms ease, background 100ms ease;
-}
-
-.hud-icon-btn {
-  width: 34px;
   color: var(--color-foreground);
   cursor: pointer;
   transition: transform 100ms ease, background 100ms ease;
@@ -617,21 +563,82 @@
   background: color-mix(in oklab, var(--hud-trim) 24%, var(--color-card));
 }
 
-.hud-controls {
-  display: grid;
-  gap: 0.25rem;
-  min-width: 128px;
-}
-
-.hud-control-row {
-  display: flex;
-  gap: 0.3rem;
-}
-
 .game-hud .pixel-btn {
   min-height: 32px;
-  padding: 0.35rem 0.5rem;
-  font-size: 0.56rem;
+  padding: 0.32rem 0.44rem;
+  font-size: 0.52rem;
+}
+
+.hud-settings {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.hud-settings-panel {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  right: 0;
+  z-index: 80;
+  display: grid;
+  gap: 0.55rem;
+  width: min(280px, calc(100vw - 2rem));
+  padding: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 12%, transparent), transparent 52%),
+    color-mix(in oklab, var(--color-card) 94%, transparent);
+  box-shadow: var(--shadow-pixel), 0 0 18px var(--hud-glow);
+}
+
+.hud-settings-panel::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  border-left: 2px solid var(--color-border);
+  border-top: 2px solid var(--color-border);
+  background: var(--color-card);
+  transform: rotate(45deg);
+}
+
+.hud-settings-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.hud-settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+}
+
+.hud-settings-row strong {
+  max-width: 8.5rem;
+  overflow: hidden;
+  color: var(--color-foreground);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hud-settings-panel .pixel-btn {
+  width: 100%;
+  justify-content: center;
+  min-height: 36px;
+}
+
+.hud-settings-panel .pixel-btn.is-active {
+  background: var(--hud-trim);
+  color: var(--color-primary-foreground);
 }
 
 /* View transition animation */
@@ -690,24 +697,26 @@
   }
 
   .hud-menu {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .hud-nav-item {
+    width: 100%;
     min-height: 38px;
   }
 
   .hud-brand {
-    grid-template-columns: 42px minmax(0, 1fr) auto;
+    grid-template-columns: 30px minmax(0, 1fr);
   }
 
   .hud-logo {
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
   }
 
   .hud-title {
-    font-size: 1.5rem;
+    font-size: 1.32rem;
   }
 }
 
@@ -901,39 +910,185 @@
 .typing-area {
   position: relative;
   min-height: 360px;
-  padding: 1.5rem 2rem;
+  padding: 1.35rem 1.6rem;
   border: 2px solid var(--color-border);
   border-radius: 10px;
   background: color-mix(in oklab, var(--color-card) 50%, transparent);
   cursor: text;
   overflow: hidden;
 }
+
+.typing-area::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  background: inherit;
+  background-position: center;
+  background-size: cover;
+  filter: blur(14px) saturate(0.88);
+  transform: scale(1.05);
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.typing-area::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--cream) 76%, transparent), color-mix(in oklab, var(--sakura) 18%, var(--color-card)) 100%),
+    color-mix(in oklab, var(--color-card) 72%, transparent);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
 .typing-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem 0.72rem;
+  max-height: calc(3 * 2.15rem);
+  overflow: hidden;
   font-family: var(--font-sans);
-  font-size: clamp(1.15rem, 1.25vw, 1.45rem);
-  line-height: 1.85;
+  font-size: clamp(1.35rem, 1.5vw, 1.85rem);
+  line-height: 1.7;
   letter-spacing: 0.03em;
   word-break: break-word;
   position: relative;
   z-index: 1;
-}
-.typing-text .char-correct { color: var(--color-foreground); }
-.typing-text .char-pending { color: var(--muted-foreground); }
-.typing-text .char-wrong { color: var(--color-destructive); background: color-mix(in oklab, var(--color-destructive) 15%, transparent); border-radius: 2px; }
-.typing-text .char-current {
-  border-left: 2.5px solid var(--color-primary);
-  animation: caret-blink 1s step-end infinite;
-}
-@keyframes caret-blink {
-  0%, 100% { border-color: var(--color-primary); }
-  50% { border-color: transparent; }
+  color: color-mix(in oklab, var(--color-foreground) 82%, #6f4f5f);
 }
 
-/* Active word highlight */
-.typing-text .word-current {
-  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
-  border-radius: 4px;
-  padding: 0 2px;
+.typing-focus-shell {
+  display: grid;
+  align-content: center;
+  min-height: 230px;
+  padding: 1rem 0.35rem 0.4rem;
+}
+
+.typing-word {
+  position: relative;
+  display: inline-flex;
+  border-radius: 5px;
+  transition: color 160ms ease, opacity 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.typing-word.word-current {
+  padding: 0 0.22rem;
+  background: color-mix(in oklab, var(--sakura) 24%, var(--color-card));
+  box-shadow: inset 0 -3px 0 color-mix(in oklab, var(--color-primary) 48%, transparent);
+  transform: translateY(-1px);
+}
+
+.typing-word.word-complete {
+  opacity: 0.46;
+}
+
+.typing-word.word-complete-wrong {
+  opacity: 0.72;
+  background: color-mix(in oklab, var(--color-destructive) 14%, transparent);
+}
+
+.typing-word.word-upcoming {
+  color: color-mix(in oklab, var(--muted-foreground) 70%, #9b7a87);
+}
+
+.typing-word.word-past {
+  opacity: 0.38;
+}
+
+.typing-char {
+  position: relative;
+  min-width: 0.02em;
+}
+
+.typing-text .char-correct { color: color-mix(in oklab, var(--color-foreground) 88%, #4d342d); }
+.typing-text .char-pending { color: color-mix(in oklab, var(--muted-foreground) 78%, #927988); }
+.typing-text .char-wrong {
+  color: var(--color-destructive);
+  background: color-mix(in oklab, var(--color-destructive) 16%, transparent);
+  border-radius: 2px;
+}
+.typing-text .char-current::before,
+.typing-caret-space::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0.18em;
+  bottom: 0.18em;
+  width: 2px;
+  background: var(--color-primary);
+  animation: caret-blink 1s step-end infinite;
+}
+.typing-caret-space {
+  position: relative;
+  display: inline-block;
+  width: 0.42rem;
+}
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-progress-line {
+  height: 5px;
+  margin: 1rem 0 0.35rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-border) 65%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-muted) 55%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, white 42%, transparent);
+}
+
+.typing-progress-line > div {
+  height: 100%;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, white 28%, transparent) 0 5px, transparent 5px 9px),
+    linear-gradient(90deg, var(--sakura), var(--coin), var(--accent));
+  box-shadow: 0 0 12px color-mix(in oklab, var(--coin) 46%, transparent);
+  transition: width 100ms linear;
+}
+
+.typing-time-pills {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-card) 78%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.typing-time-pills .typing-toolbar-btn {
+  min-height: 28px;
+  padding: 0.24rem 0.58rem;
+  border-radius: 999px;
+  box-shadow: none;
+}
+
+.typing-new-btn {
+  width: 34px;
+  min-height: 34px;
+  padding: 0;
+  font-size: 0.8rem;
+}
+
+.typing-start-hint {
+  margin-top: 0.85rem;
+  color: color-mix(in oklab, var(--muted-foreground) 70%, transparent);
+  font-size: 0.58rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.typing-session-meta {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.45rem;
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  color: color-mix(in oklab, var(--muted-foreground) 78%, transparent);
 }
 
 /* ===== Results screen ===== */

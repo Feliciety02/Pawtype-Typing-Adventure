@@ -126,12 +126,34 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const [crt, setCrt] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
   const sparkId = useRef(0);
+  const settingsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle("crt-mode", crt);
   }, [crt]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+
+    const closeSettings = (event: MouseEvent) => {
+      if (!settingsRef.current?.contains(event.target as Node)) {
+        setSettingsOpen(false);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSettingsOpen(false);
+    };
+
+    document.addEventListener("mousedown", closeSettings);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeSettings);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [settingsOpen]);
 
   const NAV_ITEMS: { icon: string; label: string; view: View }[] = [
     { icon: "⌂", label: "Hub", view: "hub" },
@@ -156,13 +178,6 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
 
   return (
     <header className="game-hud">
-      {/* Corner decorations */}
-      <div className="hud-corner hud-corner-tl" />
-      <div className="hud-corner hud-corner-tr" />
-      <div className="hud-corner hud-corner-bl" />
-      <div className="hud-corner hud-corner-br" />
-      <div className="hud-crest" />
-
       {/* Hover sparkles */}
       {sparkles.map((s) => (
         <span
@@ -179,11 +194,8 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
         </div>
         <div className="min-w-0">
           <div className="hud-title">Pawtype</div>
-          <div className="hud-subtitle">{currentWorld.emoji} Cozy pixel typing tutor</div>
+          <div className="hud-subtitle">Cozy pixel typing tutor</div>
         </div>
-        <span className="hud-world-mark" aria-hidden="true">
-          {currentWorld.emoji}
-        </span>
       </div>
 
       {/* Center — Navigation */}
@@ -206,9 +218,6 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
 
       {/* Right — Player HUD */}
       <div className="hud-player">
-        <div className="hud-avatar" title="Player profile">
-          {player.level >= 10 ? "★" : "P"}
-        </div>
         <div className="hud-stat-bar">
           <div className="hud-stat-item" title="Level">
             <span className="hud-stat-icon">⬆</span>
@@ -228,21 +237,36 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
         <button className="hud-icon-btn" type="button" aria-label="Notifications" title="Notifications">
           <Bell size={14} />
         </button>
-        <button
-          className={`hud-icon-btn ${crt ? "is-active" : ""}`}
-          onClick={() => setCrt((c) => !c)}
-          aria-label="Toggle CRT effect"
-          title="CRT shader"
-          type="button"
-        >
-          <Settings size={14} />
-        </button>
-        <div className="hud-controls">
-          <span className="hud-control-label">{currentWorld.name}</span>
-          <div className="hud-control-row">
-            <WorldSwitcher />
-            <ThemeToggle />
-          </div>
+        <div className="hud-settings" ref={settingsRef}>
+          <button
+            className={`hud-icon-btn ${settingsOpen ? "is-active" : ""}`}
+            onClick={() => setSettingsOpen((open) => !open)}
+            aria-label="Open settings"
+            aria-expanded={settingsOpen}
+            title="Settings"
+            type="button"
+          >
+            <Settings size={14} />
+          </button>
+
+          {settingsOpen && (
+            <div className="hud-settings-panel animate-pixel-pop">
+              <div className="hud-settings-title">Settings</div>
+              <div className="hud-settings-row">
+                <span>World</span>
+                <strong>{currentWorld.name}</strong>
+              </div>
+              <WorldSwitcher />
+              <ThemeToggle />
+              <button
+                className={`pixel-btn pixel-btn-secondary ${crt ? "is-active" : ""}`}
+                onClick={() => setCrt((c) => !c)}
+                type="button"
+              >
+                CRT {crt ? "On" : "Off"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
