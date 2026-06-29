@@ -54,16 +54,18 @@ export function Shop() {
       ? ownedPet(item.petType!)
       : owned(item.id);
     const canAfford = player.coins >= item.price;
-    const isUnavailable = item.action === "item";
 
     return (
       <div
         key={item.id}
         className="pixel-card-sm p-3 flex flex-col items-center text-center gap-2"
-        style={{ opacity: alreadyOwned || isUnavailable ? 0.65 : 1 }}
+        style={{ opacity: alreadyOwned ? 0.75 : 1 }}
       >
-        {isUnavailable && <span className="coming-soon-badge">Coming soon</span>}
-        {item.action === "theme" && alreadyOwned && <span className="coming-soon-badge" style={{ background: "var(--leaf)" }}>Unlocked</span>}
+        {alreadyOwned && (
+          <span className="coming-soon-badge" style={{ background: "var(--leaf)" }}>
+            {item.action === "pet" ? "Adopted" : "Unlocked"}
+          </span>
+        )}
         <div
           className="grid place-items-center text-3xl"
           style={{
