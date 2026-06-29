@@ -2,12 +2,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Maximize2, X } from "lucide-react";
 import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
+import { PetRoom } from "./PetRoom";
 import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 import { Confetti } from "./Confetti";
 import { AICoach } from "./AICoach";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { generateWorldText, generateMascotLine, generateWeakSpotWords } from "../lib/game/textGenerator";
+import { pushNotification } from "../lib/game/notifications";
+
+type Props = {
+  customWords?: string[];
+  customTitle?: string;
+};
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
@@ -48,13 +55,13 @@ const WORLD_ART_URL: Record<WorldId, string> = {
   sunflower: "/theme/sunflower-meadow.png",
 };
 
-export function TypingArena() {
-  const { dispatch } = useGame();
+export function TypingArena({ customWords, customTitle }: Props = {}) {
+  const { state, dispatch } = useGame();
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const worldArtUrl = WORLD_ART_URL[world];
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
-  const [words, setWords] = useState<string[]>(() => makeWords());
+  const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : makeWords()));
   const [typed, setTyped] = useState("");
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -71,6 +78,8 @@ export function TypingArena() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [generatedText, setGeneratedText] = useState<string | null>(null);
   const [mascotLine, setMascotLine] = useState<string | null>(null);
+  const [petRoomOpen, setPetRoomOpen] = useState(false);
+  const prevLevelRef = useRef(state.player.level);
   const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const prevWorldRef = useRef(world);
@@ -123,6 +132,12 @@ export function TypingArena() {
 
     if (accuracy === 100) setShowConfetti(true);
 
+    pushNotification({
+      emoji: accuracy === 100 ? "✨" : "🎯",
+      title: customTitle ? `Lesson · ${customTitle}` : "Test complete",
+      body: `${wpm} WPM · ${accuracy}% acc · +${xp} XP · +${coins}🪙`,
+    });
+
     saveSession({
       timestamp: Date.now(),
       duration: elapsed,
@@ -134,6 +149,18 @@ export function TypingArena() {
       keystrokes,
     }).catch(console.warn);
   }, [finished]);
+
+  // Notify on level up
+  useEffect(() => {
+    if (state.player.level > prevLevelRef.current) {
+      pushNotification({
+        emoji: "⬆",
+        title: `Level ${state.player.level}!`,
+        body: "You leveled up. Keep that rhythm going.",
+      });
+      prevLevelRef.current = state.player.level;
+    }
+  }, [state.player.level]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -161,18 +188,20 @@ export function TypingArena() {
     return () => clearTimeout(t);
   }, [startedAt, finished, typed]);
 
-  // Generate world-themed text on mount / world change
+  // Generate world-themed text on mount / world change (skipped for lessons)
   useEffect(() => {
+    if (customWords && customWords.length) return;
     setGeneratedText(null);
     generateWorldText(world).then(setGeneratedText);
-  }, [world]);
+  }, [world, customWords]);
 
   // Use generated text once it loads
   useEffect(() => {
+    if (customWords && customWords.length) return;
     if (generatedText) {
       setWords(makeWordsFrom(generatedText));
     }
-  }, [generatedText]);
+  }, [generatedText, customWords]);
 
   // Generate mascot line on mood change
   useEffect(() => {
@@ -193,8 +222,10 @@ export function TypingArena() {
     });
   }, [mistakeChars]);
 
-  const reset = useCallback((newDuration?: (typeof DURATIONS)[number], customWords?: string[]) => {
-    setWords(customWords ?? (generatedText ? makeWordsFrom(generatedText) : makeWords()));
+  const reset = useCallback((newDuration?: (typeof DURATIONS)[number], drillWords?: string[]) => {
+    const base = drillWords
+      ?? (customWords && customWords.length ? customWords : (generatedText ? makeWordsFrom(generatedText) : makeWords()));
+    setWords(base);
     setTyped("");
     setStartedAt(null);
     setElapsed(0);
@@ -208,7 +239,7 @@ export function TypingArena() {
     setKeystrokes([]);
     if (newDuration) setDuration(newDuration);
     setTimeout(() => inputRef.current?.focus(), 0);
-  }, [generatedText]);
+  }, [generatedText, customWords]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (finished) return;
@@ -430,10 +461,10 @@ export function TypingArena() {
             <button
               className="typing-toolbar-btn text-[0.5rem]"
               type="button"
-              title="Pet room coming soon"
-              disabled
+              title="Open pet room"
+              onClick={() => setPetRoomOpen(true)}
             >
-              Coming soon
+              🏡 Pet Room
             </button>
           </div>
         </div>
@@ -521,6 +552,7 @@ export function TypingArena() {
       )}
 
       <Confetti active={showConfetti} onFinish={() => setShowConfetti(false)} />
+      {petRoomOpen && <PetRoom onClose={() => setPetRoomOpen(false)} />}
     </div>
   );
 }
