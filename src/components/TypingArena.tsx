@@ -59,7 +59,7 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
   const { state, dispatch } = useGame();
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
-  const worldArtUrl = WORL_ART_PLACEHOLDER; // overwritten below
+  const worldArtUrl = WORLD_ART_URL[world];
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
   const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : makeWords()));
   const [typed, setTyped] = useState("");
