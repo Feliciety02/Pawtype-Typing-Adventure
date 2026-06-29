@@ -7,6 +7,7 @@ import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 import { Confetti } from "./Confetti";
 import { AICoach } from "./AICoach";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
+import { generateWorldText, generateMascotLine, generateWeakSpotWords } from "../lib/game/textGenerator";
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
@@ -15,6 +16,12 @@ const WORD_BANK = [
   "kindle","cottage","linen","amber","clover","biscuit","journey","whisper","feather","silver",
   "bramble","copper","ivory","midnight","gentle","compass","horizon","lullaby","marigold","sprout",
 ];
+
+function makeWordsFrom(text: string | null): string[] {
+  if (!text) return makeWords();
+  const words = text.replace(/[^\w\s]/g, "").split(/\s+/).filter(Boolean);
+  return words.length >= 15 ? words.slice(0, 50) : makeWords();
+}
 
 function makeWords(n = 50) {
   const out: string[] = [];
@@ -56,8 +63,12 @@ export function TypingArena() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [generatedText, setGeneratedText] = useState<string | null>(null);
+  const [mascotLine, setMascotLine] = useState<string | null>(null);
   const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const prevWorldRef = useRef(world);
+  const prevMoodRef = useRef<Mood>(mood);
 
   const target = useMemo(() => words.join(" "), [words]);
   const wordRanges = useMemo(() => {
@@ -144,8 +155,40 @@ export function TypingArena() {
     return () => clearTimeout(t);
   }, [startedAt, finished, typed]);
 
-  const reset = useCallback((newDuration?: (typeof DURATIONS)[number]) => {
-    setWords(makeWords());
+  // Generate world-themed text on mount / world change
+  useEffect(() => {
+    setGeneratedText(null);
+    generateWorldText(world).then(setGeneratedText);
+  }, [world]);
+
+  // Use generated text once it loads
+  useEffect(() => {
+    if (generatedText) {
+      setWords(makeWordsFrom(generatedText));
+    }
+  }, [generatedText]);
+
+  // Generate mascot line on mood change
+  useEffect(() => {
+    if (prevMoodRef.current === mood) return;
+    prevMoodRef.current = mood;
+    generateMascotLine(mood).then(setMascotLine);
+  }, [mood]);
+
+  const mistakeChars = useMemo(() => {
+    return [...new Set(keystrokes.filter((k) => !k.correct).map((k) => k.target))];
+  }, [keystrokes]);
+
+  const handleWeakSpotDrill = useCallback(() => {
+    generateWeakSpotWords([...mistakeChars]).then((result) => {
+      if (result) {
+        reset(undefined, result);
+      }
+    });
+  }, [mistakeChars]);
+
+  const reset = useCallback((newDuration?: (typeof DURATIONS)[number], customWords?: string[]) => {
+    setWords(customWords ?? (generatedText ? makeWordsFrom(generatedText) : makeWords()));
     setTyped("");
     setStartedAt(null);
     setElapsed(0);
@@ -159,7 +202,7 @@ export function TypingArena() {
     setKeystrokes([]);
     if (newDuration) setDuration(newDuration);
     setTimeout(() => inputRef.current?.focus(), 0);
-  }, []);
+  }, [generatedText]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (finished) return;
@@ -371,12 +414,21 @@ export function TypingArena() {
           <div className="world-art-inner">
             <div className="pet-placeholder-square" aria-hidden="true" />
             <span className="font-pixel text-[0.5rem] text-center world-art-label">
-              {mood === "happy" && "Nice rhythm!"}
-              {mood === "oops" && "Slow down!"}
-              {mood === "sleep" && "Start typing!"}
-              {mood === "idle" && currentWorld.name}
+              {mascotLine ?? (
+                mood === "happy" ? "Nice rhythm!" :
+                mood === "oops" ? "Slow down!" :
+                mood === "sleep" ? "Start typing!" :
+                currentWorld.name
+              )}
             </span>
-            <button className="typing-toolbar-btn text-[0.5rem]">Adopt a pet!</button>
+            <button
+              className="typing-toolbar-btn text-[0.5rem]"
+              type="button"
+              title="Pet room coming soon"
+              disabled
+            >
+              Coming soon
+            </button>
           </div>
         </div>
       </div>
@@ -445,6 +497,11 @@ export function TypingArena() {
                 keystrokes={keystrokes.map((k) => ({ correct: k.correct, target: k.target }))}
               />
             </div>
+            {mistakeChars.length > 0 && (
+              <button className="pixel-btn w-full mt-2" onClick={handleWeakSpotDrill}>
+                🎯 Practice: {mistakeChars.join(", ")}
+              </button>
+            )}
             <button className="pixel-btn w-full" onClick={() => reset()}>
               ↻ Try Again
             </button>

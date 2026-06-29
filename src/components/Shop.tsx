@@ -50,13 +50,15 @@ export function Shop() {
             ? ownedPet(item.petType!)
             : owned(item.id);
           const canAfford = player.coins >= item.price;
+          const isUnavailable = item.action === "item";
 
           return (
             <div
               key={item.id}
               className="pixel-card-sm p-3 flex flex-col items-center text-center gap-2"
-              style={{ opacity: alreadyOwned ? 0.6 : 1 }}
+              style={{ opacity: alreadyOwned || isUnavailable ? 0.65 : 1 }}
             >
+              {isUnavailable && <span className="coming-soon-badge">Coming soon</span>}
               <div
                 className="grid place-items-center text-3xl"
                 style={{
@@ -77,9 +79,9 @@ export function Shop() {
               </div>
               <button
                 className={`pixel-btn w-full ${alreadyOwned ? "pixel-btn-secondary" : ""}`}
-                disabled={alreadyOwned || !canAfford}
+                disabled={alreadyOwned || !canAfford || isUnavailable}
                 onClick={() => {
-                  if (alreadyOwned) return;
+                  if (alreadyOwned || isUnavailable) return;
                   dispatch({ type: "SPEND_COINS", amount: item.price });
                   if (item.action === "pet" && item.petType) {
                     dispatch({
@@ -97,7 +99,7 @@ export function Shop() {
                   }
                 }}
               >
-                {alreadyOwned ? "Owned" : !canAfford ? "Can't afford" : "Buy"}
+                {isUnavailable ? "Soon" : alreadyOwned ? "Owned" : !canAfford ? "Can't afford" : "Buy"}
               </button>
             </div>
           );

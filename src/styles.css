@@ -541,6 +541,7 @@
 }
 
 .hud-icon-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -561,6 +562,32 @@
 .hud-icon-btn.is-active {
   transform: translateY(-1px);
   background: color-mix(in oklab, var(--hud-trim) 24%, var(--color-card));
+}
+
+.hud-icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+
+.hud-icon-btn:disabled:hover {
+  transform: none;
+  background: color-mix(in oklab, var(--color-muted) 52%, transparent);
+}
+
+.hud-soon-badge {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  padding: 0.1rem 0.22rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--coin);
+  color: var(--color-foreground);
+  box-shadow: 1px 1px 0 0 var(--color-border);
+  font-family: var(--font-pixel);
+  font-size: 0.38rem;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .game-hud .pixel-btn {
@@ -771,6 +798,36 @@
 
 .pixel-btn:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 0 var(--color-border); }
 .pixel-btn:active { transform: translate(2px,2px); box-shadow: 0 0 0 0 var(--color-border); }
+.pixel-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+  filter: grayscale(0.35);
+}
+.pixel-btn:disabled:hover,
+.pixel-btn:disabled:active {
+  transform: none;
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  padding: 0.28rem 0.46rem;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, white 20%, transparent) 0 4px, transparent 4px 8px),
+    color-mix(in oklab, var(--coin) 72%, var(--color-card));
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
 @utility pixel-chip {
   display: inline-flex;
@@ -892,6 +949,364 @@
 @keyframes space-twinkle {
   0%, 100% { opacity: 0.2; transform: scale(0.5); }
   50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* ===== Adventure map ===== */
+.adventure-shell {
+  isolation: isolate;
+  min-height: 430px;
+  background:
+    radial-gradient(circle at 18% 16%, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 72%, color-mix(in oklab, var(--leaf) 14%, transparent), transparent 30%),
+    linear-gradient(135deg, color-mix(in oklab, var(--color-card) 95%, transparent), color-mix(in oklab, var(--color-muted) 52%, var(--color-card)));
+}
+
+.adventure-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, color-mix(in oklab, var(--color-border) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklab, var(--color-border) 5%, transparent) 1px, transparent 1px);
+  background-size: 18px 18px;
+  mask-image: radial-gradient(circle at center, black, transparent 82%);
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.adventure-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 1.25rem;
+}
+
+.adventure-title-block,
+.adventure-progress-card {
+  border: 2px solid color-mix(in oklab, var(--color-border) 82%, transparent);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--color-card) 78%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.adventure-title-block {
+  padding: 1rem 1.1rem;
+}
+
+.adventure-kicker {
+  width: max-content;
+  margin-bottom: 0.4rem;
+  padding: 0.22rem 0.45rem;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--leaf) 18%, var(--color-card));
+  color: var(--color-foreground);
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  text-transform: uppercase;
+}
+
+.adventure-progress-card {
+  display: grid;
+  align-content: center;
+  gap: 0.45rem;
+  padding: 0.9rem;
+}
+
+.adventure-progress-bar {
+  height: 12px;
+}
+
+.adventure-progress-bar > div {
+  height: 100%;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, white 24%, transparent) 0 5px, transparent 5px 9px),
+    linear-gradient(90deg, var(--leaf), var(--coin));
+  box-shadow: 0 0 10px color-mix(in oklab, var(--leaf) 36%, transparent);
+  transition: width 260ms ease;
+}
+
+.adventure-next-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-family: var(--font-pixel);
+  font-size: 0.56rem;
+  text-transform: uppercase;
+}
+
+.adventure-next-line span {
+  color: var(--muted-foreground);
+}
+
+.adventure-map-board {
+  position: relative;
+  min-height: 250px;
+  padding: 1.4rem;
+  border: 2px dashed color-mix(in oklab, var(--color-border) 52%, transparent);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 30% 28%, color-mix(in oklab, var(--coin) 8%, transparent), transparent 20%),
+    color-mix(in oklab, var(--color-card) 58%, transparent);
+  overflow: hidden;
+}
+
+.adventure-map-glow {
+  position: absolute;
+  inset: 10%;
+  background: radial-gradient(ellipse at center, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 68%);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.adventure-route {
+  position: absolute;
+  inset: 1.2rem;
+  width: calc(100% - 2.4rem);
+  height: calc(100% - 2.4rem);
+  pointer-events: none;
+}
+
+.adventure-route-shadow {
+  stroke: color-mix(in oklab, var(--color-border) 40%, transparent);
+  stroke-width: 1.5;
+}
+
+.adventure-route-line {
+  stroke: color-mix(in oklab, var(--leaf) 56%, var(--color-border));
+  stroke-width: 0.75;
+  stroke-dasharray: 3 3;
+  animation: adventure-route-drift 10s linear infinite;
+}
+
+@keyframes adventure-route-drift {
+  to { stroke-dashoffset: -36; }
+}
+
+.adventure-node-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: center;
+  min-height: 230px;
+}
+
+.adventure-node {
+  display: grid;
+  gap: 0.5rem;
+  min-height: 172px;
+  padding: 0.78rem;
+  text-align: left;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 13%, transparent), transparent 56%),
+    color-mix(in oklab, var(--color-card) 88%, transparent);
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.adventure-node:hover:not(:disabled) {
+  transform: translate(-2px, -3px);
+  box-shadow: 5px 5px 0 0 var(--color-border), 0 0 18px color-mix(in oklab, var(--leaf) 18%, transparent);
+}
+
+.adventure-node:disabled {
+  cursor: not-allowed;
+}
+
+.adventure-node-low {
+  transform: translateY(22px);
+}
+
+.adventure-node-high {
+  transform: translateY(-18px);
+}
+
+.adventure-node-low:hover:not(:disabled) {
+  transform: translate(-2px, 18px);
+}
+
+.adventure-node-high:hover:not(:disabled) {
+  transform: translate(-2px, -22px);
+}
+
+.adventure-node-locked {
+  opacity: 0.58;
+  filter: grayscale(0.7);
+}
+
+.adventure-node-complete {
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 14%, transparent), transparent 52%),
+    color-mix(in oklab, var(--leaf) 20%, var(--color-card));
+}
+
+.adventure-node-topline,
+.adventure-node-meta,
+.adventure-node-reward {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--font-pixel);
+}
+
+.adventure-node-index,
+.adventure-node-status,
+.adventure-node-meta,
+.adventure-node-reward {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+}
+
+.adventure-node-status {
+  color: var(--color-primary);
+}
+
+.adventure-node-icon {
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: 66px;
+  height: 66px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 35% 28%, color-mix(in oklab, white 22%, transparent), transparent 35%),
+    color-mix(in oklab, var(--color-muted) 76%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+  font-size: 2rem;
+}
+
+.adventure-node-name {
+  min-height: 1.6rem;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 0.9;
+  text-align: center;
+}
+
+.adventure-node-meta {
+  color: var(--muted-foreground);
+}
+
+.adventure-node-reward {
+  padding-top: 0.4rem;
+  border-top: 1px dashed color-mix(in oklab, var(--color-border) 40%, transparent);
+  color: color-mix(in oklab, var(--coin) 78%, var(--color-foreground));
+}
+
+.adventure-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+  background: color-mix(in oklab, var(--color-background) 82%, transparent);
+  backdrop-filter: blur(5px);
+}
+
+.adventure-runner-card {
+  width: min(720px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+  padding: 1.25rem;
+}
+
+.adventure-boss-emoji {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 4rem;
+  text-align: center;
+}
+
+.adventure-runner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.adventure-close-btn {
+  min-width: 38px;
+  padding-inline: 0.6rem;
+}
+
+.adventure-typing-panel {
+  min-height: 150px;
+  padding: 1rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 75%, transparent);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--color-muted) 64%, transparent);
+  font-family: var(--font-sans);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.75;
+  letter-spacing: 0.03em;
+  cursor: text;
+}
+
+.adventure-char {
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
+.adventure-char-pending {
+  color: color-mix(in oklab, var(--muted-foreground) 72%, transparent);
+}
+
+.adventure-char-correct {
+  color: var(--color-foreground);
+}
+
+.adventure-char-wrong {
+  background: color-mix(in oklab, var(--color-destructive) 18%, transparent);
+  color: var(--color-destructive);
+}
+
+.adventure-char-current {
+  background: color-mix(in oklab, var(--color-primary) 28%, transparent);
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+
+.adventure-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .adventure-header {
+    grid-template-columns: 1fr;
+  }
+
+  .adventure-node-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adventure-node-low,
+  .adventure-node-high,
+  .adventure-node-low:hover:not(:disabled),
+  .adventure-node-high:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .adventure-map-board {
+    padding: 0.85rem;
+  }
+
+  .adventure-node-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .adventure-route {
+    display: none;
+  }
 }
 
 /* ===== Immersive typing area ===== */
@@ -1238,6 +1653,16 @@
   background: var(--color-primary);
   color: var(--color-primary-foreground);
   border-color: var(--color-primary);
+}
+.typing-toolbar-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.76;
+  background: color-mix(in oklab, var(--color-card) 72%, transparent);
+  color: var(--muted-foreground);
+}
+.typing-toolbar-btn:disabled:hover {
+  background: color-mix(in oklab, var(--color-card) 72%, transparent);
+  color: var(--muted-foreground);
 }
 .typing-toolbar-spacer { flex: 1; }
 

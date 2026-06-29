@@ -234,8 +234,15 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
             <strong>{player.streak}</strong>
           </div>
         </div>
-        <button className="hud-icon-btn" type="button" aria-label="Notifications" title="Notifications">
+        <button
+          className="hud-icon-btn hud-icon-btn-soon"
+          type="button"
+          aria-label="Notifications coming soon"
+          title="Notifications coming soon"
+          disabled
+        >
           <Bell size={14} />
+          <span className="hud-soon-badge">Soon</span>
         </button>
         <div className="hud-settings" ref={settingsRef}>
           <button
@@ -447,11 +454,18 @@ function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
 
 /* ─── Shared components ─── */
 
-function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
+function ComingSoonBadge() {
+  return <span className="coming-soon-badge">Coming soon</span>;
+}
+
+function SectionHeader({ title, subtitle, comingSoon = false }: { title: string; subtitle: string; comingSoon?: boolean }) {
   return (
-    <div className="mb-4">
-      <h2 className="text-3xl">{title}</h2>
-      <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">{subtitle}</p>
+    <div className="mb-4 flex items-start justify-between gap-3">
+      <div>
+        <h2 className="text-3xl">{title}</h2>
+        <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">{subtitle}</p>
+      </div>
+      {comingSoon && <ComingSoonBadge />}
     </div>
   );
 }
@@ -611,7 +625,7 @@ function ThemeSetsSection({
 function LessonsCard() {
   return (
     <div className="pixel-card p-5">
-      <SectionHeader title="Lessons" subtitle="A gentle path from sprout to scholar." />
+      <SectionHeader title="Lessons" subtitle="A gentle path from sprout to scholar." comingSoon />
       <ul className="flex flex-col gap-3">
         {LESSONS.map((l) => (
           <li
@@ -640,8 +654,8 @@ function LessonsCard() {
                 </span>
               ))}
             </div>
-            <button className="pixel-btn" disabled={l.locked}>
-              {l.locked ? "Locked" : "Play"}
+            <button className="pixel-btn" disabled title={l.locked ? "Lesson locked" : "Lessons are coming soon"}>
+              {l.locked ? "Locked" : "Soon"}
             </button>
           </li>
         ))}
@@ -653,7 +667,7 @@ function LessonsCard() {
 function AchievementsCard() {
   return (
     <div className="pixel-card p-5">
-      <SectionHeader title="Badges" subtitle="Collect them all." />
+      <SectionHeader title="Badges" subtitle="Collect them all." comingSoon />
       <div className="grid grid-cols-3 gap-3">
         {ACHIEVEMENTS.map((a) => (
           <div
