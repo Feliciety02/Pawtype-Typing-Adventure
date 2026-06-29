@@ -34,12 +34,12 @@ type Mood = "idle" | "happy" | "oops" | "sleep";
 const DURATIONS = [15, 30, 60] as const;
 
 const WORLD_ART_URL: Record<WorldId, string> = {
-  cafe: "/Cozy%20Caf%C3%A9.png",
-  forest: "/Mossy%20Forest.png",
-  ocean: "/Tide%20Pool.png",
-  sakura: "/Sakura%20Park.png",
-  castle: "/Royal%20Castle.png",
-  space: "/Stardust.png",
+  cafe: "/theme/cozy-cafe.png",
+  forest: "/theme/mossy-forest.png",
+  ocean: "/theme/tide-pool.png",
+  sakura: "/theme/sakura-park.png",
+  castle: "/theme/royal-castle.png",
+  space: "/theme/stardust.png",
 };
 
 export function TypingArena() {

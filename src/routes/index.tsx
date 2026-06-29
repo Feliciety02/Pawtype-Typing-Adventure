@@ -35,12 +35,12 @@ type View =
   | "stats";
 
 const THEME_PREVIEW_ASSETS: Record<WorldId, string> = {
-  cafe: "/Cozy%20Caf%C3%A9.png",
-  forest: encodeURI("/Mossy Forest.png"),
-  ocean: encodeURI("/Tide Pool.png"),
-  sakura: encodeURI("/Sakura Park.png"),
-  castle: encodeURI("/Royal Castle.png"),
-  space: encodeURI("/Stardust.png"),
+  cafe: "/theme/cozy-cafe.png",
+  forest: "/theme/mossy-forest.png",
+  ocean: "/theme/tide-pool.png",
+  sakura: "/theme/sakura-park.png",
+  castle: "/theme/royal-castle.png",
+  space: "/theme/stardust.png",
 };
 
 function useQuests() {
