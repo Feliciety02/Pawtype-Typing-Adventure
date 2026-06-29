@@ -239,7 +239,7 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     setKeystrokes([]);
     if (newDuration) setDuration(newDuration);
     setTimeout(() => inputRef.current?.focus(), 0);
-  }, [generatedText]);
+  }, [generatedText, customWords]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (finished) return;
