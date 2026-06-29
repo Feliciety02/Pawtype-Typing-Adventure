@@ -552,6 +552,7 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
       )}
 
       <Confetti active={showConfetti} onFinish={() => setShowConfetti(false)} />
+      {petRoomOpen && <PetRoom onClose={() => setPetRoomOpen(false)} />}
     </div>
   );
 }
