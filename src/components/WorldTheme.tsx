@@ -36,8 +36,24 @@ export function WorldProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setWorld = (w: WorldId) => {
-    setWorldState(w);
-    applyWorld(w);
+    const root = document.documentElement;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) {
+      setWorldState(w);
+      applyWorld(w);
+      try { localStorage.setItem("world", w); } catch {}
+      return;
+    }
+
+    root.classList.add("theme-transitioning");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setWorldState(w);
+        applyWorld(w);
+        setTimeout(() => root.classList.remove("theme-transitioning"), 300);
+      });
+    });
     try { localStorage.setItem("world", w); } catch {}
   };
 
