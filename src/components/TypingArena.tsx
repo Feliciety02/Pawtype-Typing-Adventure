@@ -132,6 +132,12 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
 
     if (accuracy === 100) setShowConfetti(true);
 
+    pushNotification({
+      emoji: accuracy === 100 ? "✨" : "🎯",
+      title: customTitle ? `Lesson · ${customTitle}` : "Test complete",
+      body: `${wpm} WPM · ${accuracy}% acc · +${xp} XP · +${coins}🪙`,
+    });
+
     saveSession({
       timestamp: Date.now(),
       duration: elapsed,
@@ -143,6 +149,18 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
       keystrokes,
     }).catch(console.warn);
   }, [finished]);
+
+  // Notify on level up
+  useEffect(() => {
+    if (state.player.level > prevLevelRef.current) {
+      pushNotification({
+        emoji: "⬆",
+        title: `Level ${state.player.level}!`,
+        body: "You leveled up. Keep that rhythm going.",
+      });
+      prevLevelRef.current = state.player.level;
+    }
+  }, [state.player.level]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
