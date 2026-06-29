@@ -45,7 +45,6 @@ export function TypingArena() {
   const [sparkles, setSparkles] = useState<{ id: number; x: number; y: number }[]>([]);
   const [keystrokes, setKeystrokes] = useState<KeystrokeEvent[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [pressedChars, setPressedChars] = useState<Record<string, "correct" | "wrong">>({});
   const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const sparkId = useRef(0);
@@ -90,6 +89,7 @@ export function TypingArena() {
     }).catch(console.warn);
   }, [finished]);
 
+  // Idle → sleep after a while
   useEffect(() => {
     if (startedAt || finished) return;
     const t = setTimeout(() => setMood("sleep"), 6000);
@@ -108,7 +108,6 @@ export function TypingArena() {
     setBestCombo(0);
     setMood("idle");
     setKeystrokes([]);
-    setPressedChars({});
     if (newDuration) setDuration(newDuration);
     setTimeout(() => inputRef.current?.focus(), 0);
   }, []);
@@ -127,8 +126,6 @@ export function TypingArena() {
       setActiveKey(ch);
       const expected = target[lastIdx];
       const isCorrect = ch === expected;
-      const upper = ch.toUpperCase();
-      setPressedChars((prev) => ({ ...prev, [upper]: isCorrect ? "correct" : "wrong" }));
       setKeystrokes((prev) => [
         ...prev,
         {
@@ -186,63 +183,104 @@ export function TypingArena() {
   const progress = (elapsed / duration) * 100;
 
   return (
-    <div className="grid lg:grid-cols-[1fr_300px] gap-6">
-      {/* Main typing column */}
+    <div className="grid lg:grid-cols-[1fr_280px] gap-6">
       <div className="pixel-card p-6 sm:p-8 relative overflow-hidden">
-        {/* Top toolbar */}
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {DURATIONS.map((d) => (
-            <button
-              key={d}
-              onClick={() => reset(d)}
-              className="font-pixel text-[0.65rem] px-2.5 py-1 border-2 rounded transition-all"
-              style={{
-                borderColor: "var(--color-border)",
-                background: d === duration ? "var(--color-primary)" : "transparent",
-                color: d === duration ? "var(--color-primary-foreground)" : "var(--muted-foreground)",
-              }}
-            >
-              {d}s
-            </button>
-          ))}
-          <div className="flex-1" />
-          <div className="stat-chip">
-            <span>🔥</span>
-            <span className="stat-value">{combo}</span>
+        {/* Top controls */}
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          <div className="pixel-chip">⏱ Time</div>
+          <div className="flex gap-1.5">
+            {DURATIONS.map((d) => (
+              <button
+                key={d}
+                onClick={() => reset(d)}
+                className="pixel-btn pixel-btn-secondary"
+                style={
+                  d === duration
+                    ? { background: "var(--color-primary)", color: "var(--color-primary-foreground)" }
+                    : undefined
+                }
+              >
+                {d}s
+              </button>
+            ))}
           </div>
-          <button
-            onClick={() => reset()}
-            className="font-pixel text-[0.65rem] px-2.5 py-1 border-2 rounded"
-            style={{ borderColor: "var(--color-border)", color: "var(--muted-foreground)", background: "transparent" }}
-            aria-label="New test"
-          >
-            ↻
+          <div className="ml-auto pixel-chip" title="Combo">
+            🔥 x{combo}
+          </div>
+          <button onClick={() => reset()} className="pixel-btn pixel-btn-secondary" aria-label="New test">
+            ↻ New
           </button>
         </div>
 
-        {/* Thin progress bar */}
-        <div className="progress-bar mb-5">
-          <div className="progress-fill" style={{ width: `${progress}%` }} />
+        {/* Timer bar */}
+        <div className="pixel-bar mb-6">
+          <div
+            className="h-full"
+            style={{
+              width: `${progress}%`,
+              background:
+                "linear-gradient(90deg, var(--coin), var(--color-primary))",
+              transition: "width 100ms linear",
+            }}
+          />
+          <span
+            className="absolute inset-0 grid place-items-center font-pixel text-[0.65rem]"
+            style={{ color: "var(--color-foreground)" }}
+          >
+            {Math.ceil(remaining)}s left
+          </span>
         </div>
 
-        {/* Typing text display */}
+        {/* Words display */}
         <div
-          className="typing-text cursor-text select-none"
-          style={{ minHeight: "6em" }}
+          className="relative font-mono text-2xl sm:text-[1.7rem] leading-[1.7] tracking-wide cursor-text scanlines rounded-md p-4"
+          style={{ background: "color-mix(in oklab, var(--color-muted) 60%, transparent)" }}
           onClick={() => inputRef.current?.focus()}
         >
           {target.split("").map((ch, i) => {
             const typedCh = typed[i];
-            const state = typedCh == null ? "pending" : typedCh === ch ? "correct" : "wrong";
-            const isCurrent = i === typed.length;
-            let cls = "char-" + state;
-            if (isCurrent) cls += " char-current";
+            const state =
+              typedCh == null ? "pending" : typedCh === ch ? "correct" : "wrong";
+            const isCursor = i === typed.length;
             return (
-              <span key={i} className={cls}>
+              <span
+                key={i}
+                style={{
+                  color:
+                    state === "correct"
+                      ? "var(--color-foreground)"
+                      : state === "wrong"
+                        ? "var(--color-destructive)"
+                        : "var(--muted-foreground)",
+                  background: isCursor
+                    ? "color-mix(in oklab, var(--color-primary) 35%, transparent)"
+                    : state === "wrong"
+                      ? "color-mix(in oklab, var(--color-destructive) 18%, transparent)"
+                      : "transparent",
+                  borderRadius: 2,
+                  padding: "0 1px",
+                }}
+              >
                 {ch === " " ? "\u00A0" : ch}
               </span>
             );
           })}
+
+          {/* Sparkle particles */}
+          {sparkles.map((s) => (
+            <span
+              key={s.id}
+              className="absolute font-pixel text-xs animate-sparkle pointer-events-none"
+              style={{
+                left: `${s.x}%`,
+                top: `${s.y}%`,
+                color: "var(--coin)",
+                textShadow: "1px 1px 0 var(--color-border)",
+              }}
+            >
+              ✦
+            </span>
+          ))}
         </div>
 
         <input
@@ -258,34 +296,14 @@ export function TypingArena() {
           className="absolute opacity-0 pointer-events-none"
         />
 
-        {/* Sparkle particles */}
-        {sparkles.map((s) => (
-          <span
-            key={s.id}
-            className="absolute font-pixel text-xs animate-sparkle pointer-events-none"
-            style={{
-              left: `${s.x}%`,
-              top: `${s.y}%`,
-              color: "var(--coin)",
-              textShadow: "1px 1px 0 var(--color-border)",
-            }}
-          >
-            ✦
-          </span>
-        ))}
-
-        {/* Compact live stats */}
-        <div className="flex items-center justify-center gap-4 mt-5 pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>
-          <CompactStat label="WPM" value={String(wpm)} />
-          <div style={{ width: 1, height: 24, background: "var(--color-border)" }} />
-          <CompactStat label="ACC" value={`${accuracy}%`} />
-          <div style={{ width: 1, height: 24, background: "var(--color-border)" }} />
-          <CompactStat label="CHARS" value={`${correctChars}/${mistakes}`} />
-          <div style={{ width: 1, height: 24, background: "var(--color-border)" }} />
-          <CompactStat label="TIME" value={`${Math.ceil(remaining)}s`} />
+        {/* Live stats */}
+        <div className="grid grid-cols-4 gap-3 mt-6">
+          <Stat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
+          <Stat label="Acc" value={`${accuracy}%`} accent="var(--leaf)" />
+          <Stat label="Combo" value={`${bestCombo}`} accent="var(--coin)" />
+          <Stat label="Time" value={`${elapsed.toFixed(0)}s`} accent="var(--sky)" />
         </div>
 
-        {/* Finish overlay */}
         {finished && (
           <div
             className="absolute inset-0 grid place-items-center backdrop-blur-sm animate-pixel-pop"
@@ -297,11 +315,11 @@ export function TypingArena() {
               </div>
               <h2 className="text-3xl mb-2">Quest Complete!</h2>
               <div className="grid grid-cols-3 gap-3 my-4">
-                <CompactStat label="WPM" value={String(wpm)} />
-                <CompactStat label="ACC" value={`${accuracy}%`} />
-                <CompactStat label="COMBO" value={`${bestCombo}`} />
+                <Stat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
+                <Stat label="Acc" value={`${accuracy}%`} accent="var(--leaf)" />
+                <Stat label="Combo" value={`${bestCombo}`} accent="var(--coin)" />
               </div>
-              <p className="text-sm text-muted-foreground mb-4 font-pixel xp-popup" style={{ position: "static", animationDelay: "0.2s" }}>
+              <p className="text-sm text-muted-foreground mb-4 font-pixel">
                 + {Math.round(wpm * 1.5)} XP &nbsp; + {Math.round(wpm / 2)} 🪙
               </p>
               <div className="mb-4 text-left">
@@ -325,13 +343,12 @@ export function TypingArena() {
 
       {/* Side: keyboard + pet */}
       <div className="flex flex-col gap-4">
-        {/* Pet panel */}
-        <div className="pet-room flex flex-col items-center gap-2">
+        <div className="pixel-card p-4 flex flex-col items-center gap-2">
           {activePet ? (
             <>
-              <span className="font-pixel text-[0.6rem] text-muted-foreground uppercase tracking-wider">{activePet.name}</span>
+              <span className="font-pixel text-[0.6rem] text-muted-foreground uppercase">{activePet.name}</span>
               <PixelPet pet={activePet} size={100} showDetails={false} />
-              <p className="font-pixel text-[0.6rem] text-center" style={{ color: "var(--muted-foreground)" }}>
+              <p className="font-pixel text-[0.6rem] text-center max-w-[200px]" style={{ color: "var(--muted-foreground)" }}>
                 {mood === "happy" && "✦ Great typing! +1 love."}
                 {mood === "oops" && "✧ Oops — stay calm!"}
                 {mood === "sleep" && "Zzz... wake me up!"}
@@ -341,7 +358,7 @@ export function TypingArena() {
           ) : (
             <>
               <PixelMascot mood={mood} size={100} />
-              <p className="font-pixel text-[0.6rem] text-center" style={{ color: "var(--muted-foreground)" }}>
+              <p className="font-pixel text-[0.6rem] text-center max-w-[200px]" style={{ color: "var(--muted-foreground)" }}>
                 {mood === "happy" && "Nice rhythm! Keep going."}
                 {mood === "oops" && "Oops — slow down a bit."}
                 {mood === "sleep" && "Zzz... start typing to wake me!"}
@@ -351,9 +368,7 @@ export function TypingArena() {
             </>
           )}
         </div>
-        <div className="pixel-card p-3">
-          <PixelKeyboard active={activeKey} pressedChars={pressedChars} />
-        </div>
+        <PixelKeyboard active={activeKey} />
       </div>
 
       <Confetti active={showConfetti} onFinish={() => setShowConfetti(false)} />
@@ -361,11 +376,16 @@ export function TypingArena() {
   );
 }
 
-function CompactStat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, accent }: { label: string; value: string; accent: string }) {
   return (
-    <div className="text-center">
-      <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase tracking-wider">{label}</div>
-      <div className="font-display text-xl leading-tight">{value}</div>
+    <div
+      className="pixel-card-sm p-2.5 text-center"
+      style={{ borderLeft: `4px solid ${accent}` }}
+    >
+      <div className="font-pixel text-[0.6rem] text-muted-foreground uppercase">{label}</div>
+      <div className="font-display text-2xl leading-tight" style={{ color: accent }}>
+        {value}
+      </div>
     </div>
   );
 }

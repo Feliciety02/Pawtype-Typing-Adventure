@@ -20,31 +20,20 @@ export function WorldSwitcher() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 font-pixel text-[0.7rem] px-3 py-1.5 border-2 border-[var(--color-border)] rounded"
-        style={{
-          background: open ? "var(--color-card)" : "transparent",
-          color: "var(--color-foreground)",
-          boxShadow: open ? "var(--shadow-pixel-sm)" : "none",
-        }}
+        className="pixel-btn pixel-btn-secondary"
         aria-label="Switch world theme"
         aria-expanded={open}
       >
-        {current.emoji} <span className="hidden sm:inline">{current.name}</span>
+        {current.emoji} {current.name}
       </button>
 
       {open && (
         <div
-          className="absolute right-0 mt-2 p-3 z-30 animate-pixel-pop"
-          style={{
-            width: 300,
-            background: "var(--color-card)",
-            border: "2px solid var(--color-border)",
-            borderRadius: 8,
-            boxShadow: "var(--shadow-pixel-lg)",
-          }}
+          className="pixel-card absolute right-0 mt-2 p-3 z-30 animate-pixel-pop"
+          style={{ width: 280 }}
         >
-          <div className="font-pixel text-[0.6rem] text-muted-foreground uppercase mb-2 px-1 tracking-wider">
-            Choose your world
+          <div className="font-pixel text-[0.65rem] text-muted-foreground uppercase mb-2 px-1">
+            Choose a world
           </div>
           <div className="grid grid-cols-2 gap-2">
             {WORLDS.map((w) => {
@@ -53,18 +42,28 @@ export function WorldSwitcher() {
                 <button
                   key={w.id}
                   onClick={() => { setWorld(w.id); setOpen(false); }}
-                  className={`world-card-btn ${active ? "active" : ""}`}
-                  style={{
-                    background: `linear-gradient(135deg, ${w.swatches[0]}88, ${w.swatches[2]}88)`,
-                    borderColor: active ? "var(--color-primary)" : "var(--color-border)",
-                  }}
+                  className="pixel-card-sm p-2 text-left transition-transform hover:-translate-y-0.5"
+                  style={
+                    active
+                      ? { outline: `2px solid var(--color-primary)`, outlineOffset: 2 }
+                      : undefined
+                  }
                 >
-                  <div className="world-card-emoji">{w.emoji}</div>
-                  <div className="world-card-name">{w.name}</div>
-                  <div className="world-card-blurb">{w.blurb}</div>
-                  <div className="world-card-swatches">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className="text-base leading-none">{w.emoji}</span>
+                    <span className="font-pixel text-[0.65rem]">{w.name}</span>
+                  </div>
+                  <div className="flex gap-1">
                     {w.swatches.map((c, i) => (
-                      <span key={i} className="world-card-swatch" style={{ background: c }} />
+                      <span
+                        key={i}
+                        style={{
+                          width: 16, height: 16,
+                          background: c,
+                          border: "1.5px solid var(--color-border)",
+                          borderRadius: 2,
+                        }}
+                      />
                     ))}
                   </div>
                 </button>

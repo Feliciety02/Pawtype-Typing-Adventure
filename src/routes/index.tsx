@@ -57,42 +57,40 @@ function Index() {
   const [view, setView] = useState<View>("hub");
 
   return (
-    <main className="min-h-dvh px-4 sm:px-6 lg:px-10 py-6 max-w-[1400px] mx-auto flex flex-col">
+    <main className="min-h-dvh px-4 sm:px-6 lg:px-10 py-6 max-w-[1400px] mx-auto">
       <Header view={view} onViewChange={setView} />
 
-      <div className="flex-1">
-        {view === "hub" && <Hub onViewChange={setView} />}
-        {view === "practice" && (
-          <section className="mt-6">
-            <TypingArena />
-          </section>
-        )}
-        {view === "adventure" && (
-          <section className="mt-8">
-            <AdventureMap />
-          </section>
-        )}
-        {view === "lessons" && (
-          <section className="mt-8 grid lg:grid-cols-[1.4fr_1fr] gap-6">
-            <LessonsCard />
-            <AchievementsCard />
-          </section>
-        )}
-        {view === "shop" && (
-          <section className="mt-8">
-            <Shop />
-          </section>
-        )}
-        {view === "stats" && (
-          <section className="mt-8">
-            <StatsView />
-          </section>
-        )}
-      </div>
+      {view === "hub" && <Hub onViewChange={setView} />}
+      {view === "practice" && (
+        <section className="mt-8">
+          <TypingArena />
+        </section>
+      )}
+      {view === "adventure" && (
+        <section className="mt-8">
+          <AdventureMap />
+        </section>
+      )}
+      {view === "lessons" && (
+        <section className="mt-8 grid lg:grid-cols-[1.4fr_1fr] gap-6">
+          <LessonsCard />
+          <AchievementsCard />
+        </section>
+      )}
+      {view === "shop" && (
+        <section className="mt-8">
+          <Shop />
+        </section>
+      )}
+      {view === "stats" && (
+        <section className="mt-8">
+          <StatsView />
+        </section>
+      )}
 
-      <div className="footer-cozy">
-        Made with <span className="animate-sparkle">🌸</span> in a cozy pixel cabin · Pawtype v0.1
-      </div>
+      <footer className="mt-16 mb-6 text-center font-pixel text-[0.65rem] text-muted-foreground">
+        Made with 🌸 in a cozy pixel cabin · Pawtype v0.1
+      </footer>
     </main>
   );
 }
@@ -103,108 +101,63 @@ function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) =>
   const { state } = useGame();
   const { player } = state;
   const [crt, setCrt] = useState(false);
-  const [mobileNav, setMobileNav] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle("crt-mode", crt);
   }, [crt]);
 
   const NAV_ITEMS: { label: string; view: View }[] = [
-    { label: "Practice", view: "practice", icon: "⌨" },
-    { label: "Adventure", view: "adventure", icon: "🗺" },
-    { label: "Lessons", view: "lessons", icon: "📖" },
-    { label: "Hub", view: "hub", icon: "🏠" },
-    { label: "Shop", view: "shop", icon: "🛒" },
-    { label: "Stats", view: "stats", icon: "📊" },
+    { label: "🏠 Hub", view: "hub" },
+    { label: "⌨ Practice", view: "practice" },
+    { label: "🗺 Adventure", view: "adventure" },
+    { label: "📖 Lessons", view: "lessons" },
+    { label: "🛒 Shop", view: "shop" },
+    { label: "📊 Stats", view: "stats" },
   ];
 
   return (
-    <header>
-      {/* Top bar */}
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2.5">
-          <div
-            className="grid place-items-center"
-            style={{
-              width: 40, height: 40,
-              background: "var(--color-primary)",
-              border: "2px solid var(--color-border)",
-              borderRadius: 6,
-            }}
-          >
-            <span className="font-pixel text-base" style={{ color: "var(--color-primary-foreground)" }}>P</span>
-          </div>
-          <div>
-            <h1 className="text-2xl leading-none">Pawtype</h1>
-            <p className="font-pixel text-[0.5rem] text-muted-foreground">Cozy pixel typing tutor</p>
-          </div>
+    <header className="flex items-center justify-between gap-4 flex-wrap">
+      <div className="flex items-center gap-3">
+        <div
+          className="grid place-items-center pixel-card-sm"
+          style={{ width: 48, height: 48, background: "var(--color-primary)" }}
+        >
+          <span className="font-pixel text-lg" style={{ color: "var(--color-primary-foreground)" }}>P</span>
         </div>
-
-        {/* Top controls */}
-        <div className="flex items-center gap-1.5">
-          <div className="hidden sm:flex items-center gap-1.5">
-            <div className="pixel-chip text-[0.6rem]">🪙 {player.coins.toLocaleString()}</div>
-            <div className="pixel-chip text-[0.6rem]">🔥 {player.streak}</div>
-          </div>
-          <WorldSwitcher />
-          <ThemeToggle />
-          <button
-            className="font-pixel text-[0.55rem] px-1.5 py-1 border-2 rounded"
-            style={{ borderColor: "var(--color-border)", background: "transparent", color: "var(--muted-foreground)" }}
-            onClick={() => setCrt((c) => !c)}
-            aria-label="Toggle CRT effect"
-            title="CRT shader"
-          >
-            {crt ? "📺" : "📺"}
-          </button>
-          {/* Mobile nav toggle */}
-          <button
-            className="md:hidden font-pixel text-sm px-2 py-1 border-2 rounded"
-            style={{ borderColor: "var(--color-border)" }}
-            onClick={() => setMobileNav((o) => !o)}
-            aria-label="Toggle navigation"
-          >
-            {mobileNav ? "✕" : "☰"}
-          </button>
+        <div>
+          <h1 className="text-3xl leading-none">Pawtype</h1>
+          <p className="font-pixel text-[0.6rem] text-muted-foreground mt-1">Cozy pixel typing tutor</p>
         </div>
       </div>
 
-      {/* Desktop nav row */}
-      <nav className="hidden md:flex items-center justify-center gap-1 py-1.5" style={{ borderTop: "1px solid var(--color-border)", borderBottom: "1px solid var(--color-border)" }}>
+      <nav className="hidden md:flex items-center gap-1">
         {NAV_ITEMS.map((item) => (
           <button
             key={item.view}
-            className="font-pixel text-[0.65rem] px-3 py-1.5 rounded transition-all"
-            style={{
-              background: view === item.view ? "var(--color-card)" : "transparent",
-              color: view === item.view ? "var(--color-foreground)" : "var(--muted-foreground)",
-              boxShadow: view === item.view ? "var(--shadow-pixel-sm)" : "none",
-            }}
+            className="pixel-btn pixel-btn-ghost"
+            style={view === item.view ? { background: "var(--color-card)", boxShadow: "var(--shadow-pixel-sm)" } : undefined}
             onClick={() => onViewChange(item.view)}
           >
-            {item.icon} {item.label}
+            {item.label}
           </button>
         ))}
       </nav>
 
-      {/* Mobile nav */}
-      {mobileNav && (
-        <nav className="md:hidden flex flex-col gap-1 mt-2 py-2" style={{ borderTop: "1px solid var(--color-border)" }}>
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.view}
-              className="font-pixel text-[0.65rem] px-3 py-2 rounded text-left"
-              style={{
-                background: view === item.view ? "var(--color-card)" : "transparent",
-                color: view === item.view ? "var(--color-foreground)" : "var(--muted-foreground)",
-              }}
-              onClick={() => { onViewChange(item.view); setMobileNav(false); }}
-            >
-              {item.icon} {item.label}
-            </button>
-          ))}
-        </nav>
-      )}
+      <div className="flex items-center gap-2">
+        <div className="hidden sm:block pixel-chip" title="Coins">🪙 {player.coins.toLocaleString()}</div>
+        <div className="hidden sm:block pixel-chip" title="Streak">🔥 {player.streak}</div>
+        <WorldSwitcher />
+        <ThemeToggle />
+        <button
+          className="pixel-btn pixel-btn-secondary"
+          onClick={() => setCrt((c) => !c)}
+          aria-label="Toggle CRT effect"
+          title="CRT shader"
+          style={{ fontSize: "0.7rem", padding: "4px 8px" }}
+        >
+          {crt ? "📺 ON" : "📺 OFF"}
+        </button>
+      </div>
     </header>
   );
 }
@@ -382,9 +335,12 @@ function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <div className="mb-4">
-      <h2 className="text-3xl">{title}</h2>
-      <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">{subtitle}</p>
+    <div className="flex items-end justify-between gap-4 mb-4">
+      <div>
+        <h2 className="text-3xl">{title}</h2>
+        <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">{subtitle}</p>
+      </div>
+      <button className="pixel-btn pixel-btn-secondary hidden sm:inline-flex">View all →</button>
     </div>
   );
 }
