@@ -55,13 +55,13 @@ const WORLD_ART_URL: Record<WorldId, string> = {
   sunflower: "/theme/sunflower-meadow.png",
 };
 
-export function TypingArena() {
-  const { dispatch } = useGame();
+export function TypingArena({ customWords, customTitle }: Props = {}) {
+  const { state, dispatch } = useGame();
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
-  const worldArtUrl = WORLD_ART_URL[world];
+  const worldArtUrl = WORL_ART_PLACEHOLDER; // overwritten below
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
-  const [words, setWords] = useState<string[]>(() => makeWords());
+  const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : makeWords()));
   const [typed, setTyped] = useState("");
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
