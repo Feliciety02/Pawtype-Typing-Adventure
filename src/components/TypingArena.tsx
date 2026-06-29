@@ -461,10 +461,10 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
             <button
               className="typing-toolbar-btn text-[0.5rem]"
               type="button"
-              title="Pet room coming soon"
-              disabled
+              title="Open pet room"
+              onClick={() => setPetRoomOpen(true)}
             >
-              Coming soon
+              🏡 Pet Room
             </button>
           </div>
         </div>
