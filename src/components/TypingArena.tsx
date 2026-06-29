@@ -5,6 +5,7 @@ import { PixelPet } from "./PixelPet";
 import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 import { Confetti } from "./Confetti";
+import { AICoach } from "./AICoach";
 
 const WORD_BANK = [
   "pixel","cozy","cabin","sakura","forest","coffee","rain","cloud","moss","lantern",
@@ -321,6 +322,17 @@ export function TypingArena() {
               <p className="text-sm text-muted-foreground mb-4 font-pixel">
                 + {Math.round(wpm * 1.5)} XP &nbsp; + {Math.round(wpm / 2)} 🪙
               </p>
+              <div className="mb-4 text-left">
+                <AICoach
+                  wpm={wpm}
+                  accuracy={accuracy}
+                  duration={elapsed}
+                  correctChars={correctChars}
+                  mistakes={mistakes}
+                  bestCombo={bestCombo}
+                  keystrokes={keystrokes.map((k) => ({ correct: k.correct, target: k.target }))}
+                />
+              </div>
               <button className="pixel-btn w-full" onClick={() => reset()}>
                 ↻ Try Again
               </button>
