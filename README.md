@@ -1,6 +1,6 @@
 # Pawtype Studio
 
-Pawtype Studio is a cozy pixel-themed typing tutor prototype built with TanStack Start, React 19, Vite, and Tailwind CSS v4. The current codebase is primarily a frontend experience with light SSR scaffolding and no real backend business logic yet.
+Pawtype Studio is a cozy pixel-themed typing tutor prototype built with TanStack Start, React 19, Vite, and Tailwind CSS v4. The current codebase is primarily a frontend-heavy experience, but it now includes Supabase-backed authentication, cloud save, and light server-side gameplay persistence.
 
 This README is intended as a working product and engineering assessment so the project can be evaluated for next steps.
 
@@ -26,7 +26,7 @@ The project is best described as a polished frontend prototype / vertical slice:
 - the adventure stage unlock flow works locally per selected world
 - world theme and dark mode persist in `localStorage`
 - most progression, rewards, stats, lessons, badges, and economy are still static mock content
-- there is no real backend, database, auth, API, leaderboard, or user profile
+- Supabase auth and cloud save are live, but the broader backend product model is still early and there is still no leaderboard or full user profile system
 
 ## 2. Architecture Overview
 
@@ -42,38 +42,36 @@ The project is best described as a polished frontend prototype / vertical slice:
 
 ### Backend / server
 
-There is no application backend in the usual sense.
+There is no large custom application backend in the usual sense.
 
 What exists:
 
 - `src/start.ts` defines a TanStack Start instance
 - `src/server.ts` wraps the SSR server entry and normalizes catastrophic 500 errors
 - `src/lib/error-capture.ts`, `src/lib/error-page.ts`, and `src/lib/lovable-error-reporting.ts` provide error capture/reporting utilities
+- `src/lib/supabase/auth.ts` and `src/lib/supabase/game.ts` provide server functions for auth and cloud persistence
+- Supabase handles authentication, session cookies, and cloud game-state storage
 
 What does not exist:
 
 - no REST API
-- no RPC/server functions
-- no database integration
-- no authentication
-- no session handling
+- no large domain-specific API layer beyond the current server functions
 - no admin tooling
-- no persistent gameplay data beyond browser storage
+- no production-grade content management or analytics stack
 
 ### Routes
 
 The app currently has only one product route:
 
 - `/` -> the full Pawtype landing/game page
+- `/auth/callback` -> Supabase OAuth return route for Google/Facebook sign-in
 
-There are no dedicated routes yet for:
+There are no dedicated full pages yet for:
 
-- sign in / account
 - lesson catalog
 - profile
 - stats history
 - shop
-- settings
 - admin / content management
 
 ## 3. Repository Structure
@@ -248,16 +246,16 @@ Gaps:
 
 ### Current status
 
-Backend maturity is effectively `not started`.
+Backend maturity is effectively `early MVP`.
 
-There is SSR infrastructure and error handling, but no application backend layer.
+There is SSR infrastructure, Supabase auth, server-side session handling, and cloud persistence for game state, but no broad product backend layer yet.
 
 ### What this means
 
 The app currently behaves like a local-first frontend demo:
 
-- no user accounts
-- no cloud save
+- Supabase user accounts exist
+- cloud save exists for authenticated players
 - no shared data
 - no real analytics
 - no leaderboard
@@ -301,7 +299,7 @@ So the codebase assessment is based on source inspection rather than a successfu
 
 The biggest product gaps are:
 
-- no real onboarding or account flow
+- onboarding and account access exist, but they are still lightweight
 - no lesson progression system
 - no long-term player progression
 - no real economy or reward tracking
@@ -317,9 +315,8 @@ The biggest product gaps are:
 The biggest technical gaps are:
 
 - no backend service layer
-- no database schema
-- no auth/session strategy
-- no API/server functions
+- only a minimal database shape and auth/session strategy exist today
+- only a small set of server functions exist today
 - no automated tests
 - no telemetry / analytics instrumentation
 - no validation layer for content or user state

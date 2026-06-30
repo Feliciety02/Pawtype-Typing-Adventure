@@ -17,7 +17,7 @@ export function getSupabaseServerClient() {
         },
         setAll(cookies) {
           cookies.forEach((cookie) => {
-            setCookie(cookie.name, cookie.value);
+            setCookie(cookie.name, cookie.value, cookie.options);
           });
         },
       },

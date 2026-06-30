@@ -1,35 +1,48 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
+import { getRequestUrl } from "@tanstack/react-start/server";
 
+import {
+  signInCredentialsSchema,
+  signUpCredentialsSchema,
+} from "@/lib/auth/shared";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export const signUp = createServerFn({ method: "POST" })
-  .validator(z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-  }))
+  .validator(signUpCredentialsSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();
+    const requestUrl = getRequestUrl();
+    const emailRedirectTo = new URL("/auth/callback", requestUrl.origin).toString();
     const { error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
+      options: {
+        emailRedirectTo,
+      },
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      if (error.message.toLowerCase().includes("user already registered")) {
+        throw new Error("This email already has an account. Sign in instead.");
+      }
+      throw new Error(error.message);
+    }
     return { success: true };
   });
 
 export const signIn = createServerFn({ method: "POST" })
-  .validator(z.object({
-    email: z.string().email(),
-    password: z.string().min(1),
-  }))
+  .validator(signInCredentialsSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      if (error.message.toLowerCase().includes("invalid login credentials")) {
+        throw new Error("Incorrect email or password.");
+      }
+      throw new Error(error.message);
+    }
     return { success: true };
   });
 

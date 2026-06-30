@@ -2,8 +2,14 @@ import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useGame } from "@/lib/game/store";
+import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { buildDemoGameState } from "@/lib/game/demo";
+import { useGame } from "@/lib/game/store";
+import {
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  passwordHint,
+} from "@/lib/auth/shared";
 
 const FEATURE_CARDS = [
   { label: "Cloud Save", value: "ON", tone: "mint" },
@@ -25,6 +31,7 @@ export function PixelLoginScreen() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const isBusy = isLoggingIn || isSigningUp || isSocialLoading;
@@ -33,15 +40,21 @@ export function PixelLoginScreen() {
     event.preventDefault();
     setError(null);
 
+    if (mode === "signup" && password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     try {
       if (mode === "login") {
         await login({ email, password });
       } else {
         await signUp({ email, password });
         setMode("login");
+        setConfirmPassword("");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to enter Pawtype.");
+      setError(getAuthErrorMessage(err, "Unable to enter Pawtype."));
     }
   };
 
@@ -50,7 +63,7 @@ export function PixelLoginScreen() {
     try {
       await loginWithProvider(provider);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "OAuth sign-in failed.");
+      setError(getAuthErrorMessage(err, "OAuth sign-in failed."));
     }
   };
 
@@ -126,6 +139,12 @@ export function PixelLoginScreen() {
                 placeholder="player@pawtype.gg"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
+                autoComplete="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                inputMode="email"
+                maxLength={254}
                 required
               />
             </label>
@@ -133,13 +152,37 @@ export function PixelLoginScreen() {
               <span>Password</span>
               <input
                 type="password"
-                placeholder="At least 6 characters"
+                placeholder={mode === "login" ? "Your password" : "Create a strong password"}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 required
-                minLength={6}
+                minLength={mode === "login" ? 1 : PASSWORD_MIN_LENGTH}
+                maxLength={PASSWORD_MAX_LENGTH}
               />
+              {mode === "signup" ? <small>{passwordHint}</small> : null}
             </label>
+            {mode === "signup" ? (
+              <label>
+                <span>Confirm Password</span>
+                <input
+                  type="password"
+                  placeholder="Repeat your password"
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  autoComplete="new-password"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  required
+                  minLength={PASSWORD_MIN_LENGTH}
+                  maxLength={PASSWORD_MAX_LENGTH}
+                />
+              </label>
+            ) : null}
 
             {error ? <p className="pixel-auth-error">{error}</p> : null}
 
@@ -189,7 +232,9 @@ export function PixelLoginScreen() {
 
           <p className="pixel-login-footnote">
             Demo mode opens the game instantly with local progress only. Google and
-            Facebook require those Supabase providers to be enabled.
+            Facebook require those Supabase providers to be enabled with
+            <code> /auth/callback </code>
+            added as an allowed redirect URL in Supabase Auth.
           </p>
         </div>
       </div>

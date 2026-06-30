@@ -11,7 +11,7 @@ Planned features and high-potential additions to expand the game.
 ✅ **Shipped** — browsable from inside the Settings page (Library tab) with full markdown rendering, table of contents, and 5 doc sections (Achievements, Themes, Pets, Economy, Future Addons).
 
 ### 🔐 Cloud Sync & Auth
-✅ **Shipped** — Sign-in/sign-up form with Supabase auth (email/password), cloud save/load of game state on login/logout, automatic 2-second debounced cloud sync while playing. Accessible from Header (Log In icon) and Settings → Account.
+✅ **Shipped** — Sign-in/sign-up form with Supabase auth (email/password), Google and Facebook OAuth entry points, PKCE browser auth flow, server-backed auth cookies, safer callback redirects, stronger signup password rules, cloud save/load of game state on login/logout, and automatic 2-second debounced cloud sync while playing. Accessible from Header profile menu and Settings → Account.
 
 ### 🕹 Pixel Login Gate
 ✅ **Shipped** — Dedicated full-screen pixel-art login page before the main game, with Google and Facebook OAuth entry points plus a local demo account mode for instant access without cloud sync.

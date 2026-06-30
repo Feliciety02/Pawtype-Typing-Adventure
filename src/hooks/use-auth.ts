@@ -3,6 +3,7 @@ import { useRouter } from "@tanstack/react-router";
 import type { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 
+import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { signIn, signOut, signUp } from "@/lib/supabase/auth";
 import { isDemoModeEnabled, setDemoModeEnabled, subscribeToDemoMode } from "@/lib/auth/demo";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -55,8 +56,13 @@ export function useAuth() {
   }, []);
 
   const loginMutation = useMutation({
-    mutationFn: (data: { email: string; password: string }) =>
-      signIn({ data }),
+    mutationFn: async (data: { email: string; password: string }) => {
+      try {
+        return await signIn({ data });
+      } catch (error) {
+        throw new Error(getAuthErrorMessage(error, "Unable to sign in right now."));
+      }
+    },
     onSuccess: async () => {
       setDemoModeEnabled(false);
       const supabase = getSupabaseBrowserClient();
@@ -67,8 +73,15 @@ export function useAuth() {
   });
 
   const signUpMutation = useMutation({
-    mutationFn: (data: { email: string; password: string }) =>
-      signUp({ data }),
+    mutationFn: async (data: { email: string; password: string }) => {
+      try {
+        return await signUp({ data });
+      } catch (error) {
+        throw new Error(
+          getAuthErrorMessage(error, "Unable to create your account right now."),
+        );
+      }
+    },
     onSuccess: () => {
       setDemoModeEnabled(false);
     },
@@ -88,6 +101,10 @@ export function useAuth() {
     try {
       setDemoModeEnabled(false);
       await signInWithOAuth(provider);
+    } catch (error) {
+      throw new Error(
+        getAuthErrorMessage(error, "Unable to open social sign-in right now."),
+      );
     } finally {
       setIsSocialLoading(false);
     }

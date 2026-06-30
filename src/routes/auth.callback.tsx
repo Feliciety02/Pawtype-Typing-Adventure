@@ -1,22 +1,46 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import {
+  clearStashedPostAuthPath,
+  readStashedPostAuthPath,
+  sanitizeAuthPath,
+} from "@/lib/supabase/auth-redirect";
 
 export const Route = createFileRoute("/auth/callback")({
   component: AuthCallbackPage,
 });
 
 function AuthCallbackPage() {
-  const navigate = useNavigate({ from: "/auth/callback" });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     const completeOAuth = async () => {
+      const url = new URL(window.location.href);
+      const providerError =
+        url.searchParams.get("error_description") ?? url.searchParams.get("error");
+      if (providerError) {
+        setError(providerError);
+        clearStashedPostAuthPath();
+        return;
+      }
+
       const code = new URLSearchParams(window.location.search).get("code");
       if (!code) {
+        const supabase = getSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        if (data.user) {
+          const next = sanitizeAuthPath(
+            url.searchParams.get("next") ?? readStashedPostAuthPath(),
+          );
+          clearStashedPostAuthPath();
+          window.location.replace(next);
+          return;
+        }
+
         setError("Missing OAuth code. Try signing in again.");
         return;
       }
@@ -29,7 +53,11 @@ function AuthCallbackPage() {
       }
 
       if (!cancelled) {
-        navigate({ to: "/" });
+        const next = sanitizeAuthPath(
+          url.searchParams.get("next") ?? readStashedPostAuthPath(),
+        );
+        clearStashedPostAuthPath();
+        window.location.replace(next);
       }
     };
 
@@ -38,7 +66,7 @@ function AuthCallbackPage() {
     return () => {
       cancelled = true;
     };
-  }, [navigate]);
+  }, []);
 
   return (
     <main className="min-h-dvh grid place-items-center px-4">
