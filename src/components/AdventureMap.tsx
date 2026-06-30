@@ -161,11 +161,11 @@ export function AdventureMap() {
           world={world}
           onClose={() => setActive(null)}
           onWin={() => {
-            const isBoss = active.difficulty === "Boss";
+            const { xp, coins } = rewardsFor(active);
             dispatch({ type: "COMPLETE_STAGE", world, stageId: active.id });
-            dispatch({ type: "ADD_XP", amount: isBoss ? active.goal * 6 : active.goal * 3 });
-            dispatch({ type: "EARN_COINS", amount: isBoss ? active.goal * 2 : active.goal });
-            dispatch({ type: "ADD_PET_XP", amount: isBoss ? active.goal * 2 : active.goal });
+            dispatch({ type: "ADD_XP", amount: xp });
+            dispatch({ type: "EARN_COINS", amount: coins });
+            dispatch({ type: "ADD_PET_XP", amount: Math.round(coins) });
           }}
         />
       )}
