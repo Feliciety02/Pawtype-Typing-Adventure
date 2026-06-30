@@ -1,27 +1,30 @@
 import { useGame } from "../lib/game/store";
-import { computeAchievements, CATEGORY_META, rarityForTier, type BadgeCategory } from "../lib/game/achievements";
+import { computeAchievements, CATEGORY_META, type BadgeCategory } from "../lib/game/achievements";
 
 const CATEGORIES: BadgeCategory[] = ["speed", "accuracy", "combo", "pet", "adventure", "learning", "streak", "challenge"];
 
 const BADGE_BASE = "/Badge Collection";
 
+const TIER_COLORS: Record<number, string> = {
+  1: "#b0b0b0",
+  2: "#4ade80",
+  3: "#60a5fa",
+  4: "#a78bfa",
+  5: "#fbbf24",
+  6: "#fb923c",
+  7: "#22d3ee",
+  8: "#facc15",
+  9: "#f472b6",
+  10: "#ef4444",
+  11: "#a855f7",
+};
+
 function BadgeIcon({ assetName, category, unlocked, tier }: { assetName: string; category: string; unlocked: boolean; tier: number }) {
-  const hue = (tier * 36 + 200) % 360;
-  const lightness = unlocked ? 40 + tier * 4 : 20;
   return (
     <div
-      className="grid place-items-center"
       style={{
-        width: 72,
-        height: 72,
-        background: unlocked
-          ? `hsl(${hue}, 60%, ${lightness}%)`
-          : "var(--color-muted)",
-        border: "2px solid",
-        borderColor: unlocked
-          ? `hsl(${hue}, 70%, ${lightness + 20}%)`
-          : "var(--color-border)",
-        borderRadius: 6,
+        width: 180,
+        height: 180,
         position: "relative",
         overflow: "hidden",
       }}
@@ -33,10 +36,15 @@ function BadgeIcon({ assetName, category, unlocked, tier }: { assetName: string;
           style={{ width: "100%", height: "100%", objectFit: "contain", imageRendering: "pixelated" }}
         />
       ) : (
-        <span style={{ opacity: 0.7, fontSize: "0.45rem", color: "#fff", textAlign: "center", lineHeight: 1.1 }}>
-          🏅<br />
-          <span style={{ fontSize: "0.35rem", opacity: 0.6 }}>T{tier}</span>
-        </span>
+        <img
+          src={`${BADGE_BASE}/${category}/${assetName}`}
+          alt={`${category} badge tier ${tier} (locked)`}
+          style={{
+            width: "100%", height: "100%", objectFit: "contain", imageRendering: "pixelated",
+            filter: "brightness(0.15) saturate(0.2)",
+            opacity: 0.6,
+          }}
+        />
       )}
     </div>
   );
@@ -54,9 +62,7 @@ export function AchievementsCard() {
         <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">
           Collect them all — {unlocked} / {achievements.length} unlocked.
         </p>
-        <p className="font-pixel text-[0.5rem] text-muted-foreground mt-0.5">
-          🖼️ Badge images coming soon — placeholders shown for now.
-        </p>
+
       </div>
 
       <div className="space-y-8">
@@ -75,7 +81,7 @@ export function AchievementsCard() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                 {catBadges.map((a) => {
                   const pct =
                     a.progress && a.progress.goal > 0
@@ -87,32 +93,32 @@ export function AchievementsCard() {
                   return (
                     <div
                       key={a.id}
-                      className="pixel-card-sm p-3 text-center flex flex-col items-center gap-1.5"
-                      style={a.unlocked ? undefined : { opacity: 0.5, filter: "grayscale(0.7)" }}
+                      className="flex flex-col items-center gap-1.5"
                       title={a.description}
+                      style={a.unlocked ? undefined : { opacity: 0.85 }}
                     >
                       <BadgeIcon assetName={a.assetName} category={a.category} unlocked={a.unlocked} tier={a.tier} />
-                      <div className="font-pixel text-[0.6rem] leading-tight min-h-[2em]">
+                      <div className="font-pixel text-[0.75rem] leading-tight text-center font-bold">
                         {a.title}
                       </div>
-                      <span className="font-pixel text-[0.5rem] text-muted-foreground">
+                      <span className="font-pixel text-[0.5rem]" style={{ color: a.unlocked ? TIER_COLORS[a.tier] ?? "#888" : "var(--muted-foreground)" }}>
                         {a.rarity}
                       </span>
                       {a.progress && !a.unlocked && (
                         <>
-                          <div className="pixel-bar w-full" style={{ height: 5 }}>
+                          <div className="pixel-bar" style={{ height: 4, width: "80%" }}>
                             <div
                               className="h-full transition-all"
-                              style={{ width: `${pct}%`, background: "var(--coin)" }}
+                              style={{ width: `${pct}%`, background: TIER_COLORS[a.tier] ?? "var(--coin)" }}
                             />
                           </div>
-                          <span className="font-pixel text-[0.45rem] text-muted-foreground">
+                          <span className="font-pixel text-[0.4rem] text-muted-foreground">
                             {a.progress.current} / {a.progress.goal}
                           </span>
                         </>
                       )}
                       {a.unlocked && (
-                        <span className="font-pixel text-[0.5rem]" style={{ color: "var(--leaf)" }}>
+                        <span className="font-pixel text-[0.5rem]" style={{ color: TIER_COLORS[a.tier] ?? "var(--leaf)" }}>
                           ✓ Unlocked
                         </span>
                       )}
