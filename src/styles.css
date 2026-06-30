@@ -1472,11 +1472,12 @@
 }
 
 .adventure-node-icon {
+  position: relative;
   display: grid;
   place-items: center;
   justify-self: center;
-  width: 66px;
-  height: 66px;
+  width: 72px;
+  height: 72px;
   border: 2px solid var(--color-border);
   border-radius: 8px;
   background:
@@ -1484,6 +1485,30 @@
     color-mix(in oklab, var(--color-muted) 76%, var(--color-card));
   box-shadow: var(--shadow-pixel-sm);
   font-size: 2rem;
+  overflow: hidden;
+}
+
+.adventure-node-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.adventure-node-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  background: color-mix(in oklab, var(--color-card) 55%, transparent);
+  text-shadow: 0 1px 0 color-mix(in oklab, black 40%, transparent);
+}
+
+.adventure-node-overlay-check {
+  color: var(--leaf);
+  background: color-mix(in oklab, var(--leaf) 22%, transparent);
 }
 
 .adventure-node-name {
