@@ -20,9 +20,9 @@ export const saveGameState = createServerFn({ method: "POST" })
     const { error } = await supabase.from("game_states").upsert(
       {
         user_id: session.user.id,
-        player: data.player,
-        inventory: data.inventory,
-        adventures: data.adventures,
+        player: data.player as never,
+        inventory: data.inventory as never,
+        adventures: data.adventures as never,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "user_id" },
