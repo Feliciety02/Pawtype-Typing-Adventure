@@ -52,7 +52,6 @@ export const loadGameState = createServerFn({ method: "GET" }).handler(async () 
     adventures: JSON.parse(JSON.stringify(data.adventures ?? {})) as JsonValue,
   };
 });
-});
 
 export const deleteGameState = createServerFn({ method: "POST" }).handler(async () => {
   const session = await getSession();
