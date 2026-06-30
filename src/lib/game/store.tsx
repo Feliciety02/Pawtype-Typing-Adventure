@@ -190,7 +190,14 @@ function yesterday(isoToday: string): string {
 
 function initializeGame(): GameState {
   const saved = persistence.load();
-  return saved ?? DEFAULT_GAME_STATE;
+  if (!saved) return DEFAULT_GAME_STATE;
+  return {
+    ...DEFAULT_GAME_STATE,
+    ...saved,
+    player: { ...DEFAULT_GAME_STATE.player, ...(saved.player ?? {}) },
+    inventory: { ...DEFAULT_GAME_STATE.inventory, ...(saved.inventory ?? {}) },
+    adventures: { ...DEFAULT_GAME_STATE.adventures, ...(saved.adventures ?? {}) },
+  };
 }
 
 type GameCtx = {
