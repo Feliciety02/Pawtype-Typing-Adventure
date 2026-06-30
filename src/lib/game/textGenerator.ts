@@ -3,10 +3,14 @@ import type { WorldId } from "../../components/WorldTheme";
 const OLLAMA_URL = "http://localhost:11434/api/generate";
 
 async function ollamaGenerate(prompt: string): Promise<string | null> {
+  const controller = new AbortController();
+  const timeout = globalThis.setTimeout(() => controller.abort(), 4000);
+
   try {
     const res = await fetch(OLLAMA_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
       body: JSON.stringify({ model: "llama3.2:1b", prompt, stream: false }),
     });
     if (!res.ok) return null;
@@ -14,6 +18,8 @@ async function ollamaGenerate(prompt: string): Promise<string | null> {
     return (data.response ?? "").trim() || null;
   } catch {
     return null;
+  } finally {
+    globalThis.clearTimeout(timeout);
   }
 }
 
@@ -64,4 +70,23 @@ export async function generateQuestText(stageName: string, worldId: WorldId): Pr
   const theme = WORLD_THEMES[worldId];
   const prompt = `Write one short, atmospheric sentence (max 15 words) setting the scene for "${stageName}" in ${theme}. Make it feel like a cozy pixel-art game. No markdown. No quotes.`;
   return ollamaGenerate(prompt);
+}
+
+export async function generateAdventureWords(
+  stageName: string,
+  worldId: WorldId,
+  seedWords: string[],
+  count = 36,
+): Promise<string[] | null> {
+  const theme = WORLD_THEMES[worldId];
+  const prompt = `Generate ${count} simple typing-practice words for "${stageName}" in ${theme}. Use common lowercase English words only. Include some of these theme words where natural: ${seedWords.join(", ")}. Return a comma-separated list only. No markdown. No numbers.`;
+  const result = await ollamaGenerate(prompt);
+  if (!result) return null;
+
+  const words = result
+    .split(/[\s,;|]+/)
+    .map((word) => word.toLowerCase().replace(/[^a-z'-]/g, ""))
+    .filter((word) => word.length >= 2 && word.length <= 14);
+
+  return words.length > 0 ? words.slice(0, count) : null;
 }

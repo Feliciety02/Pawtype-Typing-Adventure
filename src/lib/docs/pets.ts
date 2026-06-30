@@ -1,6 +1,6 @@
 export const PETS_DOC = `# Fuzzy Friends — Pet Documentation
 
-Pixel companions that grow with you. Earn pet XP by typing, and watch them evolve through four stages.
+Pixel companions that grow with you. Every player starts with Whiskers the Cat. Earn pet XP by typing, and watch companions evolve through four stages.
 
 ---
 
@@ -8,7 +8,7 @@ Pixel companions that grow with you. Earn pet XP by typing, and watch them evolv
 
 | Pet | Emoji | Price | Personality |
 |-----|-------|-------|-------------|
-| Cat | 🐱 | 300🪙 | A sleepy pixel companion |
+| Cat | ?? | Starter | Your first pixel companion |
 | Dog | 🐶 | 400🪙 | A wagging pixel pup |
 | Fox | 🦊 | 500🪙 | A clever pixel fox |
 | Rabbit | 🐰 | 350🪙 | A fluffy pixel bunny |
@@ -16,7 +16,7 @@ Pixel companions that grow with you. Earn pet XP by typing, and watch them evolv
 | Penguin | 🐧 | 450🪙 | A waddling pixel penguin |
 | Baby Dragon | 🐉 | 800🪙 | A tiny pixel dragon |
 
-All pets are purchased from the **Curiosity Cart** (shop).
+Whiskers the Cat is included by default. Additional pets are purchased from the **Curiosity Cart** (shop).
 
 ---
 

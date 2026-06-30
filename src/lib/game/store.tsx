@@ -4,6 +4,7 @@ import {
   type PetState,
   type PetType,
   DEFAULT_GAME_STATE,
+  DEFAULT_STARTER_PET,
   xpForLevel,
   petXpForLevel,
   getDailyReward,
@@ -191,11 +192,24 @@ function yesterday(isoToday: string): string {
 function initializeGame(): GameState {
   const saved = persistence.load();
   if (!saved) return DEFAULT_GAME_STATE;
+  const savedInventory = { ...DEFAULT_GAME_STATE.inventory, ...(saved.inventory ?? {}) };
+  const hasPets = savedInventory.pets.length > 0;
+  const inventory = hasPets
+    ? {
+        ...savedInventory,
+        activePet: savedInventory.activePet ?? savedInventory.pets[0]?.type ?? DEFAULT_STARTER_PET.type,
+      }
+    : {
+        ...savedInventory,
+        pets: [DEFAULT_STARTER_PET],
+        activePet: DEFAULT_STARTER_PET.type,
+      };
+
   return {
     ...DEFAULT_GAME_STATE,
     ...saved,
     player: { ...DEFAULT_GAME_STATE.player, ...(saved.player ?? {}) },
-    inventory: { ...DEFAULT_GAME_STATE.inventory, ...(saved.inventory ?? {}) },
+    inventory,
     adventures: { ...DEFAULT_GAME_STATE.adventures, ...(saved.adventures ?? {}) },
   };
 }

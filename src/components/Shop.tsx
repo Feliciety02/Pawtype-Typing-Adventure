@@ -13,7 +13,7 @@ type ShopItem = {
 };
 
 const SHOP_ITEMS: ShopItem[] = [
-  { id: "pet-cat", name: "Cat", emoji: "🐱", price: 300, description: "A sleepy pixel companion", action: "pet", petType: "cat" },
+  { id: "pet-cat", name: "Cat", emoji: "🐱", price: 0, description: "Your starter pixel companion", action: "pet", petType: "cat" },
   { id: "pet-dog", name: "Dog", emoji: "🐶", price: 400, description: "A wagging pixel pup", action: "pet", petType: "dog" },
   { id: "pet-fox", name: "Fox", emoji: "🦊", price: 500, description: "A clever pixel fox", action: "pet", petType: "fox" },
   { id: "pet-rabbit", name: "Rabbit", emoji: "🐰", price: 350, description: "A fluffy pixel bunny", action: "pet", petType: "rabbit" },

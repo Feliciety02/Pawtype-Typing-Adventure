@@ -89,9 +89,11 @@ Every world is a complete visual theme with its own color palette, ambient parti
 ## How It Works
 
 1. Each world sets CSS custom properties on \`<html>\` via the \`world-{id}\` class
-2. Light and dark modes each have separate palette overrides
+2. Light and dark modes each have separate palette overrides; the app uses the saved manual choice and does not auto-follow system theme
 3. The \`.game-hud\` block styles the top navigation bar
 4. \`.ambient-glow\` or \`.ambient-particle\` creates atmospheric effects
 5. Background images are loaded from \`/theme/{slug}.png\`
 6. World selection persists in \`localStorage\`
+7. Adventure node cards load image sets from \`/node-level\` when available; locked nodes use \`/Icons/lock.png\`
+8. Settings shows only unlocked worlds in the inline World Wardrobe grid
 `;

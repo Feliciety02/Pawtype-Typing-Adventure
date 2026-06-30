@@ -16,6 +16,7 @@ The app presents a gamified typing practice experience with:
 - an adventure map with unlockable stages
 - lessons, quests, badges, coins, streaks, and rewards as UI concepts
 - a pixel cat mascot and retro visual identity
+- a default starter cat pet named Whiskers
 
 ### Current reality
 
@@ -106,7 +107,7 @@ Implemented:
 - retro pixel visual system
 - custom fonts from Google Fonts
 - cozy world-specific palettes
-- light and dark mode
+- manual light and dark mode
 
 Status:
 
@@ -156,9 +157,14 @@ Gaps:
 Implemented:
 
 - separate stage sets per world
+- scrollable multi-world adventure campaigns across all 12 available themes
+- public `node-level` artwork for cafe, forest, ocean, sakura, castle, space, mushroom, and sunflower stage cards
+- shared `public/Icons/lock.png` lock overlay for locked adventure nodes and locked settings toggles
 - stage difficulties and target WPM goals
 - local unlock progression
 - stage modal with focused typing challenge
+- difficulty-based challenge timers
+- extendable adventure typing text using Ollama when available with local fallback words
 - pass/fail logic based on WPM and accuracy
 - per-world completion persistence using `localStorage`
 
@@ -171,6 +177,7 @@ Gaps:
 
 - stage rewards are UI-only and not connected to a real player economy
 - completion is stored only in the current browser
+- autumn, moonlit, rainy, and snowy currently use fallback icons until matching `public/node-level` art sets are added
 - no server-side save, sync, profile binding, or replayability rules
 - no boss mechanics beyond harder word lists
 - no content tools for authoring stages
@@ -181,6 +188,7 @@ Implemented:
 
 - all are displayed in the UI
 - progress bars and cards communicate the product vision well
+- new and reset saves start with Whiskers the Cat as the active pet
 
 Status:
 
@@ -198,10 +206,12 @@ Gaps:
 
 Implemented:
 
-- six worlds: cafe, forest, ocean, sakura, castle, space
+- twelve worlds: cafe, forest, ocean, sakura, castle, space, autumn, mushroom, moonlit, rainy, snowy, sunflower
 - world-based CSS variable overrides
+- unlocked-world selection grid in Settings
 - persistent theme selection
 - persistent world selection
+- manual Day/Night preference that persists without following system theme automatically
 
 Status:
 
@@ -211,7 +221,27 @@ Status:
 Gaps:
 
 - world choice affects visuals and stage sets, but not broader systems
-- no per-world assets, music, story, unlock tree, or content depth yet
+- no music, story, server-backed unlock tree, or content authoring tools yet
+
+### F. Settings
+
+Implemented:
+
+- gamified Settings page with General and Library tabs
+- inline unlocked-world theme grid with swatches
+- manual Day/Night mode
+- CRT, sparkle trail, focus glow, and reduced motion toggles
+- account status and reset controls
+- in-app documentation library
+
+Status:
+
+- settings are functional and persisted through `localStorage`
+- unlocked worlds are filtered from inventory and base worlds
+
+Gaps:
+
+- settings are still local-only and not synced to a user profile
 
 ## 5. Backend Status
 

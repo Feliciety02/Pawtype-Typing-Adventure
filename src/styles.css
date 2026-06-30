@@ -1016,6 +1016,260 @@
   box-shadow: var(--shadow-pixel-sm);
 }
 
+.inline-lock-icon {
+  width: 1.05em;
+  height: 1.05em;
+  object-fit: contain;
+  image-rendering: pixelated;
+  vertical-align: -0.15em;
+}
+
+.settings-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at 6% 0%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 26%),
+    color-mix(in oklab, var(--color-card) 82%, transparent);
+}
+
+.settings-panel-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.settings-kicker,
+.settings-help,
+.settings-chip,
+.settings-world-name,
+.settings-world-blurb,
+.settings-toggle-card {
+  font-family: var(--font-pixel);
+}
+
+.settings-kicker {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.54rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.settings-panel h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  line-height: 0.9;
+}
+
+.settings-help {
+  color: var(--muted-foreground);
+  font-size: 0.58rem;
+  line-height: 1.7;
+}
+
+.settings-chip {
+  display: inline-flex;
+  min-height: 1.75rem;
+  align-items: center;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.25rem 0.48rem;
+  background: color-mix(in oklab, var(--coin) 18%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+  font-size: 0.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.settings-world-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.settings-world-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.55rem;
+  align-items: center;
+  min-height: 118px;
+  padding: 0.78rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 72%, transparent);
+  border-radius: 7px;
+  background:
+    linear-gradient(135deg, color-mix(in oklab, white 14%, transparent), transparent 62%),
+    color-mix(in oklab, var(--color-muted) 50%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+  text-align: left;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.settings-world-card:hover {
+  transform: translate(-1px, -2px);
+  border-color: var(--color-primary);
+  box-shadow: 4px 4px 0 0 var(--color-border), 0 0 14px color-mix(in oklab, var(--color-primary) 18%, transparent);
+}
+
+.settings-world-card.is-active {
+  border-color: var(--color-primary);
+  background:
+    linear-gradient(135deg, color-mix(in oklab, var(--color-primary) 16%, transparent), transparent 62%),
+    color-mix(in oklab, var(--color-card) 92%, transparent);
+}
+
+.settings-world-emoji {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--color-card) 75%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+  font-size: 1.25rem;
+}
+
+.settings-world-name {
+  color: var(--color-foreground);
+  font-size: 0.66rem;
+  line-height: 1.25;
+}
+
+.settings-world-blurb {
+  color: var(--muted-foreground);
+  font-size: 0.5rem;
+  line-height: 1.35;
+}
+
+.settings-swatches {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.3rem;
+}
+
+.settings-swatches span {
+  width: 18px;
+  height: 18px;
+  border: 2px solid color-mix(in oklab, var(--color-border) 68%, transparent);
+  border-radius: 3px;
+}
+
+.settings-segment {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--color-muted) 56%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, white 20%, transparent);
+}
+
+.settings-segment button,
+.settings-toggle-card {
+  border: 2px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.settings-segment button {
+  min-height: 42px;
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.settings-segment button.is-active {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  box-shadow: 3px 3px 0 0 var(--color-border), 0 0 12px color-mix(in oklab, var(--color-primary) 28%, transparent);
+}
+
+.settings-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.7rem;
+}
+
+.settings-toggle-card {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 72px;
+  padding: 0.65rem;
+  text-align: left;
+}
+
+.settings-toggle-card.is-active {
+  border-color: var(--color-primary);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-card));
+}
+
+.settings-toggle-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+  filter: grayscale(0.35);
+}
+
+.settings-toggle-orb {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-muted) 68%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+  font-size: 0.48rem;
+}
+
+.settings-toggle-card.is-active .settings-toggle-orb {
+  background: var(--leaf);
+  color: var(--color-primary-foreground);
+}
+
+.settings-toggle-card strong,
+.settings-toggle-card small {
+  display: block;
+}
+
+.settings-toggle-card strong {
+  font-size: 0.6rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.settings-toggle-card small {
+  margin-top: 0.2rem;
+  color: var(--muted-foreground);
+  font-size: 0.5rem;
+}
+
+.pawtype-focus-glow :focus-visible {
+  outline: 3px solid var(--coin);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--coin) 18%, transparent);
+}
+
+.pawtype-reduce-motion *,
+.pawtype-reduce-motion *::before,
+.pawtype-reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.001ms !important;
+}
+
 .coming-soon-badge {
   display: inline-flex;
   align-items: center;
@@ -1349,14 +1603,82 @@
 
 .adventure-map-board {
   position: relative;
-  min-height: 250px;
-  padding: 1.4rem;
-  border: 2px dashed color-mix(in oklab, var(--color-border) 52%, transparent);
+  min-height: 360px;
+  padding: 1.1rem 0.35rem 0.35rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.adventure-world-list {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.adventure-world-section {
+  position: relative;
+  padding: 1rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 68%, transparent);
   border-radius: 10px;
   background:
-    radial-gradient(circle at 30% 28%, color-mix(in oklab, var(--coin) 8%, transparent), transparent 20%),
-    color-mix(in oklab, var(--color-card) 58%, transparent);
-  overflow: hidden;
+    radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 28%),
+    color-mix(in oklab, var(--color-card) 70%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+  overflow: visible;
+}
+
+.adventure-world-section::before {
+  content: "";
+  position: absolute;
+  inset: 0.45rem;
+  z-index: 0;
+  border: 1px dashed color-mix(in oklab, var(--stage-accent, var(--color-border)) 44%, transparent);
+  border-radius: 7px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.adventure-world-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.adventure-world-header h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 2.3vw, 2.45rem);
+  line-height: 0.9;
+}
+
+.adventure-world-header p {
+  margin-top: 0.35rem;
+  color: var(--muted-foreground);
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.adventure-world-progress {
+  display: grid;
+  min-width: 175px;
+  gap: 0.25rem;
+  text-align: right;
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  text-transform: uppercase;
+}
+
+.adventure-world-progress strong {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 0.9;
 }
 
 .adventure-map-glow {
@@ -1369,9 +1691,9 @@
 
 .adventure-route {
   position: absolute;
-  inset: 1.2rem;
-  width: calc(100% - 2.4rem);
-  height: calc(100% - 2.4rem);
+  inset: 0.25rem 0;
+  width: 100%;
+  height: calc(100% - 0.5rem);
   pointer-events: none;
 }
 
@@ -1395,28 +1717,39 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.85rem;
-  align-items: center;
-  min-height: 230px;
+  grid-template-columns: repeat(5, minmax(190px, 1fr));
+  gap: clamp(0.8rem, 1.15vw, 1.15rem);
+  align-items: stretch;
+  min-height: 390px;
 }
 
 .adventure-node {
+  position: relative;
   display: grid;
-  gap: 0.5rem;
-  min-height: 172px;
-  padding: 0.78rem;
+  grid-template-rows: auto auto auto auto;
+  gap: 0.38rem;
+  min-height: 350px;
+  padding: 2rem 0.68rem 0.62rem;
   text-align: left;
+  border: 3px solid var(--stage-accent);
+  border-radius: 7px;
   background:
-    linear-gradient(180deg, color-mix(in oklab, white 13%, transparent), transparent 56%),
-    color-mix(in oklab, var(--color-card) 88%, transparent);
+    radial-gradient(circle at 18% 12%, color-mix(in oklab, white 26%, transparent), transparent 24%),
+    linear-gradient(180deg, color-mix(in oklab, var(--color-card) 96%, transparent), color-mix(in oklab, var(--color-muted) 30%, var(--color-card))),
+    var(--color-card);
   cursor: pointer;
+  overflow: visible;
+  box-shadow:
+    4px 4px 0 0 color-mix(in oklab, var(--color-border) 74%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 36%, transparent);
   transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
 }
 
 .adventure-node:hover:not(:disabled) {
-  transform: translate(-2px, -3px);
-  box-shadow: 5px 5px 0 0 var(--color-border), 0 0 18px color-mix(in oklab, var(--leaf) 18%, transparent);
+  transform: translate(-2px, -4px);
+  box-shadow:
+    6px 6px 0 0 var(--color-border),
+    0 0 18px color-mix(in oklab, var(--stage-accent) 26%, transparent);
 }
 
 .adventure-node:disabled {
@@ -1424,23 +1757,23 @@
 }
 
 .adventure-node-low {
-  transform: translateY(22px);
+  transform: none;
 }
 
 .adventure-node-high {
-  transform: translateY(-18px);
+  transform: none;
 }
 
 .adventure-node-low:hover:not(:disabled) {
-  transform: translate(-2px, 18px);
+  transform: translate(-2px, -4px);
 }
 
 .adventure-node-high:hover:not(:disabled) {
-  transform: translate(-2px, -22px);
+  transform: translate(-2px, -4px);
 }
 
 .adventure-node-locked {
-  opacity: 0.58;
+  opacity: 0.68;
   filter: grayscale(0.7);
 }
 
@@ -1450,7 +1783,31 @@
     color-mix(in oklab, var(--leaf) 20%, var(--color-card));
 }
 
-.adventure-node-topline,
+.adventure-stage-ribbon {
+  position: absolute;
+  top: -0.9rem;
+  left: 0.7rem;
+  z-index: 2;
+  min-width: 5.4rem;
+  padding: 0.42rem 0.65rem 0.36rem;
+  border: 2px solid var(--color-border);
+  border-radius: 4px 4px 2px 2px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 18%, transparent), transparent 58%),
+    var(--stage-accent);
+  color: var(--color-primary-foreground);
+  box-shadow: 3px 3px 0 0 var(--color-border);
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.adventure-node-status-chip {
+  display: none;
+}
+
 .adventure-node-meta,
 .adventure-node-reward {
   display: flex;
@@ -1459,16 +1816,10 @@
   font-family: var(--font-pixel);
 }
 
-.adventure-node-index,
-.adventure-node-status,
 .adventure-node-meta,
 .adventure-node-reward {
-  font-size: 0.5rem;
+  font-size: 0.54rem;
   text-transform: uppercase;
-}
-
-.adventure-node-status {
-  color: var(--color-primary);
 }
 
 .adventure-node-icon {
@@ -1476,16 +1827,18 @@
   display: grid;
   place-items: center;
   justify-self: center;
-  width: 72px;
-  height: 72px;
-  border: 2px solid var(--color-border);
-  border-radius: 8px;
-  background:
-    radial-gradient(circle at 35% 28%, color-mix(in oklab, white 22%, transparent), transparent 35%),
-    color-mix(in oklab, var(--color-muted) 76%, var(--color-card));
-  box-shadow: var(--shadow-pixel-sm);
-  font-size: 2rem;
-  overflow: hidden;
+  width: clamp(198px, 15.84vw, 240px);
+  height: clamp(198px, 15.84vw, 240px);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: clamp(3.8rem, 7vw, 5rem);
+  overflow: visible;
+}
+
+.adventure-node-icon[data-has-image="true"] {
+  background: transparent;
 }
 
 .adventure-node-img {
@@ -1494,39 +1847,124 @@
   object-fit: contain;
   image-rendering: pixelated;
   pointer-events: none;
+  filter: drop-shadow(2px 2px 0 color-mix(in oklab, var(--color-border) 35%, transparent));
+}
+
+.adventure-node-locked .adventure-node-img {
+  filter: brightness(0.26) saturate(0.35);
+  opacity: 0.72;
+}
+
+.adventure-node-complete .adventure-node-img {
+  filter: drop-shadow(0 0 8px color-mix(in oklab, var(--leaf) 36%, transparent));
+}
+
+.adventure-node-fallback {
+  font-size: clamp(3.8rem, 7vw, 5rem);
+  filter: drop-shadow(2px 2px 0 color-mix(in oklab, var(--color-border) 32%, transparent));
 }
 
 .adventure-node-overlay {
   position: absolute;
-  inset: 0;
+  inset: 22%;
   display: grid;
   place-items: center;
-  font-size: 1.6rem;
-  background: color-mix(in oklab, var(--color-card) 55%, transparent);
+  font-size: 3rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 58%, transparent);
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--color-card) 68%, transparent);
   text-shadow: 0 1px 0 color-mix(in oklab, black 40%, transparent);
+  backdrop-filter: blur(1px);
+}
+
+.adventure-lock-img {
+  width: clamp(38px, 4.2vw, 56px);
+  height: clamp(38px, 4.2vw, 56px);
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 2px 0 color-mix(in oklab, var(--color-border) 42%, transparent));
 }
 
 .adventure-node-overlay-check {
   color: var(--leaf);
-  background: color-mix(in oklab, var(--leaf) 22%, transparent);
+  background: color-mix(in oklab, var(--leaf) 18%, transparent);
 }
 
-.adventure-node-name {
-  min-height: 1.6rem;
+.adventure-node-name-plaque {
+  display: grid;
+  place-items: center;
+  min-height: 2.25rem;
+  padding: 0.28rem 0.5rem 0.2rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 72%, transparent);
+  border-radius: 5px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, white 22%, transparent), transparent 58%),
+    color-mix(in oklab, var(--cream) 72%, var(--color-card));
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 45%, transparent);
   font-family: var(--font-display);
-  font-size: 1.45rem;
-  line-height: 0.9;
+  font-size: clamp(1.25rem, 1.45vw, 1.62rem);
+  line-height: 0.88;
   text-align: center;
+  text-wrap: balance;
 }
 
 .adventure-node-meta {
-  color: var(--muted-foreground);
+  align-self: end;
+  align-items: center;
+}
+
+.adventure-difficulty-pill,
+.adventure-wpm-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.45rem;
+  padding: 0.22rem 0.42rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 58%, transparent);
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--color-border) 14%, var(--color-card));
+  color: var(--color-foreground);
+  box-shadow: 1px 1px 0 0 color-mix(in oklab, var(--color-border) 48%, transparent);
+}
+
+.adventure-difficulty-pill {
+  background: color-mix(in oklab, var(--stage-accent) 72%, var(--color-card));
+  color: var(--color-primary-foreground);
 }
 
 .adventure-node-reward {
-  padding-top: 0.4rem;
-  border-top: 1px dashed color-mix(in oklab, var(--color-border) 40%, transparent);
-  color: color-mix(in oklab, var(--coin) 78%, var(--color-foreground));
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.26rem 0.38rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 42%, transparent);
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--coin) 12%, var(--color-card));
+  color: color-mix(in oklab, var(--coin) 82%, var(--color-foreground));
+  box-shadow: inset 0 -2px 0 color-mix(in oklab, var(--color-border) 16%, transparent);
+}
+
+.adventure-node-action {
+  display: grid;
+  place-items: center;
+  min-height: 1.8rem;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--stage-accent) 80%, var(--color-border));
+  color: var(--color-primary-foreground);
+  box-shadow: 3px 3px 0 0 var(--color-border);
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.adventure-node-locked .adventure-node-action {
+  background: color-mix(in oklab, var(--color-border) 74%, var(--color-card));
+  color: var(--color-card);
+}
+
+.adventure-node-complete .adventure-node-action {
+  background: var(--leaf);
 }
 
 .adventure-modal {
@@ -1541,9 +1979,10 @@
 }
 
 .adventure-runner-card {
-  width: min(720px, calc(100vw - 2rem));
+  width: min(860px, calc(100vw - 2rem));
   max-height: calc(100dvh - 2rem);
   overflow: auto;
+  overflow-x: hidden;
   padding: 1.25rem;
 }
 
@@ -1567,40 +2006,125 @@
   padding-inline: 0.6rem;
 }
 
+.adventure-type-wrap {
+  display: grid;
+  gap: 0.75rem;
+  cursor: text;
+}
+
+.adventure-type-progress {
+  height: 8px;
+  padding: 2px;
+  border: 2px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, color-mix(in oklab, var(--color-card) 82%, transparent), color-mix(in oklab, var(--color-muted) 68%, transparent));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, white 22%, transparent);
+  overflow: hidden;
+}
+
+.adventure-type-progress > div {
+  height: 100%;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, white 34%, transparent) 0 5px, transparent 5px 9px),
+    linear-gradient(90deg, var(--color-primary), var(--coin), var(--leaf));
+  box-shadow: 0 0 12px color-mix(in oklab, var(--color-primary) 36%, transparent);
+  transition: width 120ms linear;
+}
+
 .adventure-typing-panel {
-  min-height: 150px;
-  padding: 1rem;
+  min-height: 176px;
+  max-height: 220px;
+  padding: 1.25rem;
   border: 2px solid color-mix(in oklab, var(--color-border) 75%, transparent);
   border-radius: 8px;
-  background: color-mix(in oklab, var(--color-muted) 64%, transparent);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in oklab, var(--color-primary) 8%, transparent), transparent 32%),
+    color-mix(in oklab, var(--color-muted) 64%, transparent);
   font-family: var(--font-sans);
-  font-size: clamp(1.25rem, 2vw, 1.7rem);
-  line-height: 1.75;
-  letter-spacing: 0.03em;
+  font-size: clamp(1.55rem, 2.7vw, 2.35rem);
+  line-height: 1.55;
+  letter-spacing: 0.08em;
   cursor: text;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, white 24%, transparent),
+    inset 0 -10px 24px color-mix(in oklab, var(--color-border) 8%, transparent);
+}
+
+.adventure-word-stream {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.28em 0.46em;
+  max-height: 3.15em;
+  overflow: hidden;
+  transition: transform 160ms ease;
+}
+
+.adventure-word {
+  display: inline-flex;
+  position: relative;
+  align-items: baseline;
+  border-radius: 6px;
+  transition: opacity 140ms ease, transform 140ms ease, background 140ms ease;
+}
+
+.adventure-word-complete {
+  opacity: 0.42;
+}
+
+.adventure-word-current {
+  padding-inline: 0.08em;
+  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  box-shadow: inset 0 -3px 0 color-mix(in oklab, var(--color-primary) 44%, transparent);
+}
+
+.adventure-word-pending {
+  opacity: 0.82;
 }
 
 .adventure-char {
   border-radius: 3px;
-  padding: 0 1px;
+  padding: 0 0.02em;
 }
 
 .adventure-char-pending {
-  color: color-mix(in oklab, var(--muted-foreground) 72%, transparent);
+  color: color-mix(in oklab, var(--muted-foreground) 78%, transparent);
 }
 
 .adventure-char-correct {
-  color: var(--color-foreground);
+  color: color-mix(in oklab, var(--leaf) 72%, var(--color-foreground));
 }
 
 .adventure-char-wrong {
   background: color-mix(in oklab, var(--color-destructive) 18%, transparent);
   color: var(--color-destructive);
+  box-shadow: inset 0 -3px 0 color-mix(in oklab, var(--color-destructive) 45%, transparent);
 }
 
 .adventure-char-current {
+  color: var(--color-foreground);
   background: color-mix(in oklab, var(--color-primary) 28%, transparent);
-  box-shadow: inset 0 -2px 0 var(--color-primary);
+  box-shadow: inset 0 -3px 0 var(--color-primary);
+  animation: adventure-caret-pulse 900ms steps(2, end) infinite;
+}
+
+.adventure-space-cursor {
+  width: 0.34em;
+  height: 1.05em;
+  margin-left: 0.08em;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--color-primary) 62%, transparent);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--color-primary) 38%, transparent);
+  animation: adventure-caret-pulse 900ms steps(2, end) infinite;
+}
+
+@keyframes adventure-caret-pulse {
+  50% {
+    opacity: 0.38;
+  }
 }
 
 .adventure-result {
@@ -1616,6 +2140,17 @@
 
   .adventure-node-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adventure-world-header {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .adventure-world-progress {
+    width: 100%;
+    min-width: 0;
+    text-align: left;
   }
 
   .adventure-node-low,

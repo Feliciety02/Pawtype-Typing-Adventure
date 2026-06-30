@@ -46,6 +46,14 @@ export const DEFAULT_PLAYER: PlayerState = {
   totalMistakes: 0,
 };
 
+export const DEFAULT_STARTER_PET: PetState = {
+  type: "cat",
+  name: "Whiskers",
+  xp: 0,
+  level: 1,
+  adoptedAt: 0,
+};
+
 export const DEFAULT_INVENTORY: Inventory = {
   items: [
     "theme-autumn",
@@ -55,8 +63,8 @@ export const DEFAULT_INVENTORY: Inventory = {
     "theme-snowy",
     "theme-sunflower",
   ],
-  pets: [],
-  activePet: null,
+  pets: [DEFAULT_STARTER_PET],
+  activePet: DEFAULT_STARTER_PET.type,
 };
 
 export const DEFAULT_GAME_STATE: GameState = {

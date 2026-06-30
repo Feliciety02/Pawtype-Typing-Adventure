@@ -12,6 +12,9 @@ export type View = "hub" | "practice" | "adventure" | "lessons" | "shop" | "achi
 
 const CRT_KEY = "pawtype-crt-on";
 const SPARKLE_KEY = "pawtype-sparkle-on";
+const THEME_KEY = "theme";
+const FOCUS_GLOW_KEY = "pawtype-focus-glow";
+const REDUCE_MOTION_KEY = "pawtype-reduce-motion";
 
 export function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) => void }) {
   const { state } = useGame();
@@ -30,6 +33,18 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
 
   const ownsCrt = inventory.items.includes("crt-shader");
   const ownsSparkle = inventory.items.includes("sparkle-trail");
+
+  useEffect(() => {
+    const syncDisplayPrefs = () => {
+      document.documentElement.classList.toggle("dark", localStorage.getItem(THEME_KEY) === "dark");
+      document.documentElement.classList.toggle("pawtype-focus-glow", localStorage.getItem(FOCUS_GLOW_KEY) === "1");
+      document.documentElement.classList.toggle("pawtype-reduce-motion", localStorage.getItem(REDUCE_MOTION_KEY) === "1");
+    };
+
+    syncDisplayPrefs();
+    window.addEventListener("storage", syncDisplayPrefs);
+    return () => window.removeEventListener("storage", syncDisplayPrefs);
+  }, []);
 
   useEffect(() => {
     const isOn = ownsCrt && crt;

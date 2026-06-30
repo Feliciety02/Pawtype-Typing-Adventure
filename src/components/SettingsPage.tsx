@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGame } from "../lib/game/store";
-import { useWorld, WORLDS } from "./WorldTheme";
-import { WorldSwitcher } from "./WorldSwitcher";
-import { ThemeToggle } from "./ThemeToggle";
+import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { DocsViewer } from "./DocsViewer";
 
 const CRT_KEY = "pawtype-crt-on";
 const SPARKLE_KEY = "pawtype-sparkle-on";
+const THEME_KEY = "theme";
+const FOCUS_GLOW_KEY = "pawtype-focus-glow";
+const REDUCE_MOTION_KEY = "pawtype-reduce-motion";
 
 type SettingsTab = "general" | "library";
 
@@ -15,23 +16,47 @@ const TABS: { id: SettingsTab; label: string; emoji: string }[] = [
   { id: "library", label: "Library", emoji: "📖" },
 ];
 
+const BASE_WORLD_IDS: WorldId[] = ["cafe", "forest", "ocean", "sakura", "castle", "space"];
+
+function readStoredFlag(key: string) {
+  return typeof window !== "undefined" && window.localStorage.getItem(key) === "1";
+}
+
+function readThemeMode() {
+  return typeof window !== "undefined" && window.localStorage.getItem(THEME_KEY) === "dark";
+}
+
 export function SettingsPage() {
   const { state, dispatch } = useGame();
-  const { world } = useWorld();
+  const { world, setWorld } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const { player, inventory } = state;
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
-
-  const [crt, setCrt] = useState(() =>
-    typeof window !== "undefined" && window.localStorage.getItem(CRT_KEY) === "1"
-  );
-  const [sparkle, setSparkle] = useState(() =>
-    typeof window !== "undefined" && window.localStorage.getItem(SPARKLE_KEY) === "1"
-  );
+  const [dark, setDark] = useState(readThemeMode);
+  const [crt, setCrt] = useState(() => readStoredFlag(CRT_KEY));
+  const [sparkle, setSparkle] = useState(() => readStoredFlag(SPARKLE_KEY));
+  const [focusGlow, setFocusGlow] = useState(() => readStoredFlag(FOCUS_GLOW_KEY));
+  const [reduceMotion, setReduceMotion] = useState(() => readStoredFlag(REDUCE_MOTION_KEY));
 
   const ownsCrt = inventory.items.includes("crt-shader");
   const ownsSparkle = inventory.items.includes("sparkle-trail");
+  const unlockedWorlds = WORLDS.filter((item) => BASE_WORLD_IDS.includes(item.id) || inventory.items.includes(`theme-${item.id}`));
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    if (typeof window !== "undefined") window.localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
+  }, [dark]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("pawtype-focus-glow", focusGlow);
+    if (typeof window !== "undefined") window.localStorage.setItem(FOCUS_GLOW_KEY, focusGlow ? "1" : "0");
+  }, [focusGlow]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("pawtype-reduce-motion", reduceMotion);
+    if (typeof window !== "undefined") window.localStorage.setItem(REDUCE_MOTION_KEY, reduceMotion ? "1" : "0");
+  }, [reduceMotion]);
 
   const toggleCrt = () => {
     const next = !crt;
@@ -48,6 +73,16 @@ export function SettingsPage() {
     setSparkle(next);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(SPARKLE_KEY, next ? "1" : "0");
+      window.dispatchEvent(new Event("storage"));
+    }
+  };
+
+  const setThemeMode = (next: "light" | "dark") => {
+    const isDark = next === "dark";
+    setDark(isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
       window.dispatchEvent(new Event("storage"));
     }
   };
@@ -87,38 +122,68 @@ export function SettingsPage() {
               </div>
 
               {/* World */}
-              <div className="pixel-card-sm p-4 space-y-2">
-                <label className="font-pixel text-[0.6rem] text-muted-foreground uppercase tracking-wider">Current World</label>
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{currentWorld.emoji}</span>
-                  <strong className="font-pixel text-[0.7rem]">{currentWorld.name}</strong>
+              <div className="settings-panel pixel-card-sm">
+                <div className="settings-panel-head">
+                  <div>
+                    <label className="settings-kicker">World Wardrobe</label>
+                    <h3>{currentWorld.emoji} {currentWorld.name}</h3>
+                  </div>
+                  <span className="settings-chip">{unlockedWorlds.length}/{WORLDS.length} unlocked</span>
                 </div>
-                <WorldSwitcher />
+                <p className="settings-help">Only unlocked worlds appear here. Buy more worlds in the shop to expand this list.</p>
+                <div className="settings-world-grid">
+                  {unlockedWorlds.map((item) => {
+                    const active = item.id === world;
+                    return (
+                      <button
+                        key={item.id}
+                        className={`settings-world-card ${active ? "is-active" : ""}`}
+                        onClick={() => setWorld(item.id)}
+                        type="button"
+                      >
+                        <span className="settings-world-emoji">{item.emoji}</span>
+                        <span className="settings-world-name">{item.name}</span>
+                        <span className="settings-world-blurb">{item.blurb}</span>
+                        <span className="settings-swatches" aria-hidden="true">
+                          {item.swatches.map((color) => (
+                            <span key={color} style={{ background: color }} />
+                          ))}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Appearance */}
-              <div className="pixel-card-sm p-4 space-y-3">
-                <label className="font-pixel text-[0.6rem] text-muted-foreground uppercase tracking-wider">Appearance</label>
-                <div className="flex flex-wrap gap-2">
-                  <ThemeToggle />
-                  <button
-                    className={`pixel-btn pixel-btn-secondary ${crt ? "is-active" : ""}`}
-                    onClick={toggleCrt}
-                    disabled={!ownsCrt}
-                    title={ownsCrt ? "Toggle CRT scanlines" : "Buy CRT Filter in the shop"}
-                    type="button"
-                  >
-                    📺 CRT {ownsCrt ? (crt ? "On" : "Off") : "🔒"}
-                  </button>
-                  <button
-                    className={`pixel-btn pixel-btn-secondary ${sparkle ? "is-active" : ""}`}
-                    onClick={toggleSparkle}
-                    disabled={!ownsSparkle}
-                    title={ownsSparkle ? "Toggle sparkle trail while typing" : "Buy Sparkle Trail in the shop"}
-                    type="button"
-                  >
-                    ✨ Sparkle {ownsSparkle ? (sparkle ? "On" : "Off") : "🔒"}
-                  </button>
+              <div className="settings-panel pixel-card-sm">
+                <div className="settings-panel-head">
+                  <div>
+                    <label className="settings-kicker">Display Mode</label>
+                    <h3>{dark ? "Night Cabin" : "Day Cabin"}</h3>
+                  </div>
+                  <span className="settings-chip">Manual</span>
+                </div>
+                <p className="settings-help">Pawtype now uses your saved choice only. It will not auto-switch from system dark mode.</p>
+                <div className="settings-segment" role="group" aria-label="Display mode">
+                  <button className={!dark ? "is-active" : ""} onClick={() => setThemeMode("light")} type="button">Day</button>
+                  <button className={dark ? "is-active" : ""} onClick={() => setThemeMode("dark")} type="button">Night</button>
+                </div>
+              </div>
+
+              <div className="settings-panel pixel-card-sm">
+                <div className="settings-panel-head">
+                  <div>
+                    <label className="settings-kicker">Game Feel</label>
+                    <h3>Comfort & Effects</h3>
+                  </div>
+                  <span className="settings-chip">HUD</span>
+                </div>
+                <div className="settings-toggle-grid">
+                  <SettingsToggle label="CRT Filter" active={crt} locked={!ownsCrt} onClick={toggleCrt} />
+                  <SettingsToggle label="Sparkle Trail" active={sparkle} locked={!ownsSparkle} onClick={toggleSparkle} />
+                  <SettingsToggle label="Focus Glow" active={focusGlow} onClick={() => setFocusGlow((value) => !value)} />
+                  <SettingsToggle label="Reduce Motion" active={reduceMotion} onClick={() => setReduceMotion((value) => !value)} />
                 </div>
               </div>
 
@@ -158,5 +223,36 @@ export function SettingsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function SettingsToggle({
+  label,
+  active,
+  locked = false,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  locked?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      className={`settings-toggle-card ${active ? "is-active" : ""}`}
+      disabled={locked}
+      onClick={onClick}
+      type="button"
+    >
+      <span className="settings-toggle-orb" aria-hidden="true">
+        {locked ? (
+          <img src="/Icons/lock.png" alt="" className="inline-lock-icon" draggable={false} />
+        ) : active ? "ON" : "OFF"}
+      </span>
+      <span>
+        <strong>{label}</strong>
+        <small>{locked ? "Unlock in shop" : active ? "Enabled" : "Disabled"}</small>
+      </span>
+    </button>
   );
 }
