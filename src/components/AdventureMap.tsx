@@ -177,23 +177,28 @@ function StageNode({
   stage,
   index,
   status,
+  image,
   onPlay,
 }: {
   stage: Stage;
   index: number;
   status: Status;
+  image?: string;
   onPlay: () => void;
 }) {
   const accent =
     stage.difficulty === "Boss"
       ? "var(--color-primary)"
-      : stage.difficulty === "Hard"
-        ? "var(--coin)"
-        : stage.difficulty === "Normal"
-          ? "var(--leaf)"
-          : "var(--sky)";
+      : stage.difficulty === "Elite"
+        ? "var(--color-accent, var(--color-primary))"
+        : stage.difficulty === "Hard"
+          ? "var(--coin)"
+          : stage.difficulty === "Normal"
+            ? "var(--leaf)"
+            : "var(--sky)";
   const statusLabel = status === "complete" ? "Cleared" : status === "locked" ? "Locked" : "Start";
   const statusIcon = status === "complete" ? "✓" : status === "locked" ? "🔒" : "▶";
+  const { xp, coins } = rewardsFor(stage);
 
   return (
     <button
@@ -208,7 +213,19 @@ function StageNode({
         <span className="adventure-node-status">{statusIcon} {statusLabel}</span>
       </div>
       <div className="adventure-node-icon">
-        {status === "locked" ? "🔒" : status === "complete" ? "✓" : stage.emoji}
+        {image ? (
+          <img
+            src={image}
+            alt={`${stage.name} node`}
+            className="adventure-node-img"
+            style={{ imageRendering: "pixelated" }}
+            draggable={false}
+          />
+        ) : (
+          <span>{stage.emoji}</span>
+        )}
+        {status === "locked" && <span className="adventure-node-overlay">🔒</span>}
+        {status === "complete" && <span className="adventure-node-overlay adventure-node-overlay-check">✓</span>}
       </div>
       <div className="adventure-node-name">{stage.name}</div>
       <div className="adventure-node-meta">
@@ -216,8 +233,8 @@ function StageNode({
         <span>{stage.goal} WPM</span>
       </div>
       <div className="adventure-node-reward">
-        <span>+{stage.difficulty === "Boss" ? stage.goal * 6 : stage.goal * 3} XP</span>
-        <span>+{stage.difficulty === "Boss" ? stage.goal * 2 : stage.goal} coins</span>
+        <span>+{xp} XP</span>
+        <span>+{coins} coins</span>
       </div>
     </button>
   );
