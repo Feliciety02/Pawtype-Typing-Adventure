@@ -10,6 +10,12 @@ Planned features and high-potential additions to expand the game.
 ### 📖 In-App Documentation Library
 ✅ **Shipped** — browsable from inside the Settings page (Library tab) with full markdown rendering, table of contents, and 5 doc sections (Achievements, Themes, Pets, Economy, Future Addons).
 
+### 🔐 Cloud Sync & Auth
+✅ **Shipped** — Sign-in/sign-up form with Supabase auth (email/password), cloud save/load of game state on login/logout, automatic 2-second debounced cloud sync while playing. Accessible from Header (Log In icon) and Settings → Account.
+
+### 🕹 Pixel Login Gate
+✅ **Shipped** — Dedicated full-screen pixel-art login page before the main game, with Google and Facebook OAuth entry points plus a local demo account mode for instant access without cloud sync.
+
 ### 🐾 Pet Room
 A dedicated view to see your active pet larger, interact with it, feed treats, and view evolution progress. All pets you own appear in a row.
 
@@ -70,7 +76,6 @@ The mascot learns your typing patterns and gives personalized advice beyond post
 ## Technical Debt & Polish
 
 - **Offline support** — full PWA with service worker caching
-- **Cloud sync** — account-based save sync across devices
 - **Accessibility pass** — screen reader support, high contrast mode, keyboard navigation audit
 - **Mobile responsive** — typing on mobile with virtual keyboard
 - **i18n** — localization for multiple languages

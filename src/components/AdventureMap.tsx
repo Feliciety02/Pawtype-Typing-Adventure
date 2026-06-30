@@ -16,7 +16,19 @@ type Stage = {
 
 type Status = "locked" | "available" | "complete";
 
+type VisibleImageBounds = {
+  top: number;
+  left: number;
+  right: number;
+  bottom: number;
+  width: number;
+  height: number;
+  naturalWidth: number;
+  naturalHeight: number;
+};
+
 const LOCK_ICON = "/Icons/lock.png";
+const NODE_IMAGE_BOUNDS_CACHE = new Map<string, VisibleImageBounds>();
 
 const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
   cafe: [
@@ -238,6 +250,161 @@ function expandWords(words: string[], targetCount: number) {
   return Array.from({ length: targetCount }, (_, index) => words[index % words.length]);
 }
 
+async function measureVisibleImageBounds(src: string): Promise<VisibleImageBounds> {
+  const cached = NODE_IMAGE_BOUNDS_CACHE.get(src);
+  if (cached) return cached;
+
+  const image = new Image();
+  image.decoding = "async";
+  image.src = src;
+
+  if (typeof image.decode === "function") {
+    await image.decode().catch(() => undefined);
+  } else {
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    });
+  }
+
+  const naturalWidth = image.naturalWidth || image.width;
+  const naturalHeight = image.naturalHeight || image.height;
+  const canvas = document.createElement("canvas");
+  canvas.width = naturalWidth;
+  canvas.height = naturalHeight;
+
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  if (!context) {
+    const fallback = {
+      top: 0,
+      left: 0,
+      right: naturalWidth - 1,
+      bottom: naturalHeight - 1,
+      width: naturalWidth,
+      height: naturalHeight,
+      naturalWidth,
+      naturalHeight,
+    };
+    NODE_IMAGE_BOUNDS_CACHE.set(src, fallback);
+    return fallback;
+  }
+
+  context.clearRect(0, 0, naturalWidth, naturalHeight);
+  context.drawImage(image, 0, 0);
+  const { data } = context.getImageData(0, 0, naturalWidth, naturalHeight);
+
+  let top = naturalHeight;
+  let left = naturalWidth;
+  let right = -1;
+  let bottom = -1;
+
+  for (let y = 0; y < naturalHeight; y += 1) {
+    for (let x = 0; x < naturalWidth; x += 1) {
+      const alpha = data[(y * naturalWidth + x) * 4 + 3];
+      if (alpha <= 8) continue;
+      if (x < left) left = x;
+      if (x > right) right = x;
+      if (y < top) top = y;
+      if (y > bottom) bottom = y;
+    }
+  }
+
+  const bounds =
+    right === -1 || bottom === -1
+      ? {
+          top: 0,
+          left: 0,
+          right: naturalWidth - 1,
+          bottom: naturalHeight - 1,
+          width: naturalWidth,
+          height: naturalHeight,
+          naturalWidth,
+          naturalHeight,
+        }
+      : {
+          top,
+          left,
+          right,
+          bottom,
+          width: right - left + 1,
+          height: bottom - top + 1,
+          naturalWidth,
+          naturalHeight,
+        };
+
+  NODE_IMAGE_BOUNDS_CACHE.set(src, bounds);
+  return bounds;
+}
+
+function AdventureNodeImage({ src, alt, className }: { src: string; alt: string; className: string }) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [bounds, setBounds] = useState<VisibleImageBounds | null>(NODE_IMAGE_BOUNDS_CACHE.get(src) ?? null);
+  const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    measureVisibleImageBounds(src)
+      .then((nextBounds) => {
+        if (!cancelled) setBounds(nextBounds);
+      })
+      .catch(() => {
+        if (!cancelled) setBounds(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [src]);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame || typeof ResizeObserver === "undefined") return;
+
+    const updateSize = () =>
+      setFrameSize({
+        width: frame.clientWidth,
+        height: frame.clientHeight,
+      });
+
+    updateSize();
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
+
+  const measuredStyle = useMemo(() => {
+    if (!bounds || frameSize.width === 0 || frameSize.height === 0) return undefined;
+
+    const scale = Math.min(frameSize.width / bounds.naturalWidth, frameSize.height / bounds.naturalHeight);
+    const width = bounds.naturalWidth * scale;
+    const height = bounds.naturalHeight * scale;
+    const left = (frameSize.width - width) / 2;
+    const top = -bounds.top * scale;
+
+    return {
+      width: `${width}px`,
+      height: `${height}px`,
+      left: `${left}px`,
+      top: `${top}px`,
+    } as Record<string, string>;
+  }, [bounds, frameSize.height, frameSize.width]);
+
+  return (
+    <div ref={frameRef} className="adventure-node-image-frame">
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} ${measuredStyle ? "adventure-node-img-measured" : ""}`}
+        style={measuredStyle}
+        draggable={false}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  );
+}
+
 export function AdventureMap() {
   const { world } = useWorld();
   const { state, dispatch } = useGame();
@@ -399,14 +566,7 @@ function StageNode({
       <div className="adventure-stage-ribbon">Stage {index + 1}</div>
       <div className="adventure-node-icon" data-has-image={Boolean(image)}>
         {image ? (
-          <img
-            src={image}
-            alt={`${stage.name} node`}
-            className="adventure-node-img"
-            draggable={false}
-            loading="lazy"
-            decoding="async"
-          />
+          <AdventureNodeImage src={image} alt={`${stage.name} node`} className="adventure-node-img" />
         ) : (
           <span className="adventure-node-fallback">{stage.emoji}</span>
         )}
@@ -682,6 +842,8 @@ function StageRunner({
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
+          id="stage-input"
+          name="stage-input"
           aria-label="Type the stage text"
           className="absolute opacity-0 pointer-events-none"
         />

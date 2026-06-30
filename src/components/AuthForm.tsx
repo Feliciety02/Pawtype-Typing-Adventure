@@ -5,11 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function AuthForm() {
-  const { login, signUp, isLoggingIn, isSigningUp } = useAuth();
+  const { login, signUp, loginWithProvider, enterDemo, isLoggingIn, isSigningUp, isSocialLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [error, setError] = useState<string | null>(null);
+  const isBusy = isLoggingIn || isSigningUp || isSocialLoading;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +21,15 @@ export function AuthForm() {
       } else {
         await signUp({ email, password });
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    }
+  };
+
+  const handleProvider = async (provider: "google" | "facebook") => {
+    setError(null);
+    try {
+      await loginWithProvider(provider);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     }
@@ -67,12 +77,23 @@ export function AuthForm() {
           {error && (
             <p className="text-sm text-destructive">{error}</p>
           )}
-          <Button type="submit" className="w-full" disabled={isLoggingIn || isSigningUp}>
-            {isLoggingIn || isSigningUp
+          <Button type="submit" className="w-full" disabled={isBusy}>
+            {isBusy
               ? "Please wait..."
               : mode === "login"
                 ? "Sign In"
                 : "Create Account"}
+          </Button>
+          <div className="grid grid-cols-2 gap-2">
+            <Button type="button" variant="outline" disabled={isBusy} onClick={() => handleProvider("google")}>
+              Google
+            </Button>
+            <Button type="button" variant="outline" disabled={isBusy} onClick={() => handleProvider("facebook")}>
+              Facebook
+            </Button>
+          </div>
+          <Button type="button" variant="secondary" className="w-full" disabled={isBusy} onClick={enterDemo}>
+            Demo Account
           </Button>
           <p className="text-center text-sm text-muted-foreground">
             {mode === "login" ? (

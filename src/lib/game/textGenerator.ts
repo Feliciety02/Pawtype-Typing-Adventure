@@ -1,26 +1,8 @@
 import type { WorldId } from "../../components/WorldTheme";
-
-const OLLAMA_URL = "http://localhost:11434/api/generate";
+import { ollamaGenerate as serverOllamaGenerate } from "../ollama";
 
 async function ollamaGenerate(prompt: string): Promise<string | null> {
-  const controller = new AbortController();
-  const timeout = globalThis.setTimeout(() => controller.abort(), 4000);
-
-  try {
-    const res = await fetch(OLLAMA_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      signal: controller.signal,
-      body: JSON.stringify({ model: "llama3.2:1b", prompt, stream: false }),
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return (data.response ?? "").trim() || null;
-  } catch {
-    return null;
-  } finally {
-    globalThis.clearTimeout(timeout);
-  }
+  return serverOllamaGenerate({ prompt });
 }
 
 const WORLD_THEMES: Record<WorldId, string> = {

@@ -1,23 +1,67 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import type { User } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
 
-import { signIn, signOut, signUp, getUser } from "@/lib/supabase/auth";
+import { signIn, signOut, signUp } from "@/lib/supabase/auth";
+import { isDemoModeEnabled, setDemoModeEnabled, subscribeToDemoMode } from "@/lib/auth/demo";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { signInWithOAuth, type OAuthProvider } from "@/lib/supabase/oauth";
 
 export function useAuth() {
-  const queryClient = useQueryClient();
   const router = useRouter();
+  const [isDemo, setIsDemo] = useState(isDemoModeEnabled);
+  const [isSocialLoading, setIsSocialLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: user, isLoading } = useQuery({
-    queryKey: ["auth", "user"],
-    queryFn: () => getUser(),
-  });
+  useEffect(() => subscribeToDemoMode(() => setIsDemo(isDemoModeEnabled())), []);
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    let mounted = true;
+
+    const resolveInitialUser = async () => {
+      try {
+        const result = await Promise.race([
+          supabase.auth.getUser().then(({ data, error }) => {
+            if (error) return null;
+            return data.user ?? null;
+          }),
+          new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500)),
+        ]);
+
+        if (!mounted) return;
+        setUser(result);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    resolveInitialUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const loginMutation = useMutation({
     mutationFn: (data: { email: string; password: string }) =>
       signIn({ data }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "user"] });
+    onSuccess: async () => {
+      setDemoModeEnabled(false);
+      const supabase = getSupabaseBrowserClient();
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user ?? null);
       router.invalidate();
     },
   });
@@ -26,26 +70,49 @@ export function useAuth() {
     mutationFn: (data: { email: string; password: string }) =>
       signUp({ data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["auth", "user"] });
+      setDemoModeEnabled(false);
     },
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => signOut(),
+    mutationFn: () => (isDemo ? Promise.resolve({ success: true }) : signOut()),
     onSuccess: () => {
-      queryClient.setQueryData(["auth", "user"], null);
+      setDemoModeEnabled(false);
+      setUser(null);
       router.invalidate();
     },
   });
 
+  const loginWithProvider = async (provider: OAuthProvider) => {
+    setIsSocialLoading(true);
+    try {
+      setDemoModeEnabled(false);
+      await signInWithOAuth(provider);
+    } finally {
+      setIsSocialLoading(false);
+    }
+  };
+
+  const enterDemo = () => {
+    setDemoModeEnabled(true);
+    setUser(null);
+    setIsLoading(false);
+    router.invalidate();
+  };
+
   return {
-    user: user as User | null,
+    user,
     isLoading,
+    isDemo,
+    accountLabel: user?.email ?? (isDemo ? "Demo Adventurer" : null),
     login: loginMutation.mutateAsync,
     signUp: signUpMutation.mutateAsync,
+    loginWithProvider,
     logout: logoutMutation.mutateAsync,
+    enterDemo,
     isLoggingIn: loginMutation.isPending,
     isSigningUp: signUpMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
+    isSocialLoading,
   };
 }

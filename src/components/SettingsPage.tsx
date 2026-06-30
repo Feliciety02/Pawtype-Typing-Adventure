@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useGame } from "../lib/game/store";
+import { useAuth } from "../hooks/use-auth";
+import { AuthForm } from "./AuthForm";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { DocsViewer } from "./DocsViewer";
 
@@ -28,9 +30,11 @@ function readThemeMode() {
 
 export function SettingsPage() {
   const { state, dispatch } = useGame();
+  const { user, isDemo, accountLabel, isLoading: authLoading, logout, isLoggingOut } = useAuth();
   const { world, setWorld } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const { player, inventory } = state;
+  const [showAuth, setShowAuth] = useState(false);
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
   const [dark, setDark] = useState(readThemeMode);
@@ -197,13 +201,39 @@ export function SettingsPage() {
                   </div>
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Coins</span>
-                    <strong>🪙 {player.coins.toLocaleString()}</strong>
+                    <strong suppressHydrationWarning>🪙 {player.coins.toLocaleString()}</strong>
                   </div>
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Streak</span>
                     <strong>🔥 {player.streak}</strong>
                   </div>
+                  {authLoading ? null : user || isDemo ? (
+                    <div className="flex items-center gap-3 text-[0.65rem] font-pixel pt-1 border-t border-[var(--color-border)]">
+                      <span className="text-muted-foreground w-20">{isDemo ? "Mode" : "Signed in"}</span>
+                      <span className="text-foreground truncate max-w-[140px]" title={accountLabel ?? ""}>{accountLabel}</span>
+                    </div>
+                  ) : null}
                 </div>
+                {user || isDemo ? (
+                  <button
+                    className="pixel-btn pixel-btn-secondary text-[0.55rem]"
+                    onClick={async () => {
+                      try { await logout(); } catch {}
+                    }}
+                    disabled={isLoggingOut}
+                    type="button"
+                  >
+                    {isLoggingOut ? "Signing out..." : "🚪 Sign Out"}
+                  </button>
+                ) : (
+                  <button
+                    className="pixel-btn pixel-btn-secondary text-[0.55rem]"
+                    onClick={() => setShowAuth(true)}
+                    type="button"
+                  >
+                    🔑 Sign In
+                  </button>
+                )}
                 <button
                   className="pixel-btn pixel-btn-secondary text-[0.55rem]"
                   onClick={() => {
@@ -215,6 +245,11 @@ export function SettingsPage() {
                 >
                   🗑 Reset Data
                 </button>
+                {showAuth && (
+                  <div className="pt-2">
+                    <AuthForm />
+                  </div>
+                )}
               </div>
             </div>
           )}

@@ -62,18 +62,18 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
         <div className="pixel-card p-5 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-display text-3xl leading-none">Level {player.level}</div>
+              <div className="font-display text-3xl leading-none" suppressHydrationWarning>Level {player.level}</div>
               <p className="font-pixel text-[0.6rem] text-muted-foreground mt-1">{currentWorld.emoji} Exploring · {currentWorld.name}</p>
             </div>
             <div className="text-right">
               <div className="font-pixel text-[0.65rem] uppercase" style={{ color: "var(--muted-foreground)" }}>Typist</div>
-              <div className="font-pixel text-sm">Rank #{player.totalTestsCompleted > 0 ? Math.max(1, 100 - player.totalTestsCompleted) : "-"}</div>
+              <div className="font-pixel text-sm" suppressHydrationWarning>Rank #{player.totalTestsCompleted > 0 ? Math.max(1, 100 - player.totalTestsCompleted) : "-"}</div>
             </div>
           </div>
           <div>
             <div className="flex justify-between font-pixel text-[0.6rem] mb-1">
               <span style={{ color: "var(--muted-foreground)" }}>XP to next level</span>
-              <span>{player.xp} / {needed}</span>
+              <span suppressHydrationWarning>{player.xp} / {needed}</span>
             </div>
             <div className="pixel-bar">
               <div className="h-full transition-all" style={{ width: `${needed > 0 ? Math.round((player.xp / needed) * 100) : 0}%`, background: "var(--leaf)" }} />
@@ -82,17 +82,17 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
           <div className="grid grid-cols-3 gap-3 mt-1">
             <div className="pixel-card-sm p-2 text-center">
               <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase">Tests</div>
-              <div className="font-display text-lg" style={{ color: "var(--color-primary)" }}>{player.totalTestsCompleted}</div>
+              <div className="font-display text-lg" style={{ color: "var(--color-primary)" }} suppressHydrationWarning>{player.totalTestsCompleted}</div>
             </div>
             <div className="pixel-card-sm p-2 text-center">
               <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase">Accuracy</div>
-              <div className="font-display text-lg" style={{ color: "var(--leaf)" }}>
+              <div className="font-display text-lg" style={{ color: "var(--leaf)" }} suppressHydrationWarning>
                 {player.totalCorrectChars + player.totalMistakes > 0 ? `${Math.round((player.totalCorrectChars / (player.totalCorrectChars + player.totalMistakes)) * 100)}%` : "-"}
               </div>
             </div>
             <div className="pixel-card-sm p-2 text-center">
               <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase">Streak</div>
-              <div className="font-display text-lg" style={{ color: "var(--coin)" }}>🔥 {player.streak}</div>
+              <div className="font-display text-lg" style={{ color: "var(--coin)" }} suppressHydrationWarning>🔥 {player.streak}</div>
             </div>
           </div>
         </div>

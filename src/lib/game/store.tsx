@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useReducer, useRef, type ReactNode } from "react";
 import {
   type GameState,
   type PetState,
@@ -10,6 +10,8 @@ import {
   getDailyReward,
 } from "./types";
 import { persistence } from "./persistence";
+import { useAuth } from "@/hooks/use-auth";
+import { saveGameState, loadGameState } from "@/lib/supabase/game";
 
 export type GameAction =
   | { type: "EARN_COINS"; amount: number }
@@ -23,6 +25,7 @@ export type GameAction =
   | { type: "REMOVE_ITEM"; itemId: string }
   | { type: "ADD_PET_XP"; amount: number }
   | { type: "LOG_TYPING_TEST"; correctChars: number; mistakes: number }
+  | { type: "LOAD_FROM_CLOUD"; state: GameState }
   | { type: "RESET" };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
@@ -174,6 +177,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         },
       };
 
+    case "LOAD_FROM_CLOUD":
+      return action.state;
+
     case "RESET":
       persistence.clear();
       return DEFAULT_GAME_STATE;
@@ -226,10 +232,55 @@ const GameCtx = createContext<GameCtx>({
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(gameReducer, null, initializeGame);
+  const { user, isLoading } = useAuth();
+  const loadedCloudUserId = useRef<string | null>(null);
 
   useEffect(() => {
     persistence.save(state);
   }, [state]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user) {
+      loadedCloudUserId.current = null;
+      return;
+    }
+    if (loadedCloudUserId.current === user.id) return;
+    loadedCloudUserId.current = user.id;
+    loadGameState().then((cloud) => {
+      if (!cloud) return;
+      if (!cloud.player || !cloud.inventory) return;
+      const merged: GameState = {
+        player: { ...state.player, ...(cloud.player as Partial<typeof state.player>) },
+        inventory: { ...state.inventory, ...(cloud.inventory as Partial<typeof state.inventory>) },
+        adventures: { ...state.adventures, ...(cloud.adventures as Record<string, number[]>) },
+      };
+      dispatch({ type: "LOAD_FROM_CLOUD", state: merged });
+    });
+  }, [user, isLoading]);
+
+  const syncTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (!user) return;
+    if (syncTimer.current) clearTimeout(syncTimer.current);
+    syncTimer.current = setTimeout(async () => {
+      try {
+        await saveGameState({
+          data: {
+            player: state.player as unknown as Record<string, unknown>,
+            inventory: state.inventory as unknown as Record<string, unknown>,
+            adventures: state.adventures as unknown as Record<string, unknown>,
+          },
+        });
+      } catch {
+        console.warn("Cloud save failed");
+      }
+    }, 2000);
+    return () => {
+      if (syncTimer.current) clearTimeout(syncTimer.current);
+    };
+  }, [state, user]);
 
   return <GameCtx.Provider value={{ state, dispatch }}>{children}</GameCtx.Provider>;
 }

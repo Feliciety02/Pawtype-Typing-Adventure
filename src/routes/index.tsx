@@ -9,6 +9,8 @@ import { Shop } from "@/components/Shop";
 import { AchievementsCard } from "@/components/AchievementsCard";
 import { StatsView } from "@/components/StatsView";
 import { SettingsPage } from "@/components/SettingsPage";
+import { PixelLoginScreen } from "@/components/PixelLoginScreen";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,6 +26,21 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [view, setView] = useState<View>("hub");
+  const { user, isDemo, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <main className="min-h-dvh grid place-items-center px-4">
+        <div className="pixel-card max-w-sm p-6 text-center">
+          <p className="font-pixel text-[0.65rem] text-muted-foreground">Loading save data...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (!user && !isDemo) {
+    return <PixelLoginScreen />;
+  }
 
   return (
     <main className="min-h-dvh px-4 sm:px-6 lg:px-10 py-6 max-w-[1400px] mx-auto">

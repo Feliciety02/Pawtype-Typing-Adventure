@@ -122,7 +122,7 @@ export function Shop() {
           </p>
         </div>
         <div className="pixel-chip" title="Your coins">
-          🪙 {player.coins.toLocaleString()}
+          🪙 <span suppressHydrationWarning>{player.coins.toLocaleString()}</span>
         </div>
       </div>
 
