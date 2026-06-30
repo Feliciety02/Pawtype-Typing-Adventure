@@ -45,9 +45,9 @@ export const loadGameState = createServerFn({ method: "GET" }).handler(async () 
   if (!data) return null;
 
   return {
-    player: data.player as Record<string, unknown>,
-    inventory: data.inventory as Record<string, unknown>,
-    adventures: data.adventures as Record<string, unknown>,
+    player: JSON.parse(JSON.stringify(data.player ?? {})) as Record<string, unknown>,
+    inventory: JSON.parse(JSON.stringify(data.inventory ?? {})) as Record<string, unknown>,
+    adventures: JSON.parse(JSON.stringify(data.adventures ?? {})) as Record<string, unknown>,
   };
 });
 
