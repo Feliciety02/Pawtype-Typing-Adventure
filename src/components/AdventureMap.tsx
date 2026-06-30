@@ -142,12 +142,14 @@ export function AdventureMap() {
         <div className="adventure-node-grid">
           {stages.map((stage, index) => {
             const status = statusOf(stage, index);
+            const image = NODE_IMAGES[world]?.[index];
             return (
               <StageNode
                 key={stage.id}
                 stage={stage}
                 index={index}
                 status={status}
+                image={image}
                 onPlay={() => status !== "locked" && setActive(stage)}
               />
             );
