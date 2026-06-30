@@ -3,53 +3,70 @@ import { useWorld, type WorldId } from "./WorldTheme";
 import { useGame } from "../lib/game/store";
 import { generateQuestText } from "../lib/game/textGenerator";
 
+type Difficulty = "Easy" | "Normal" | "Hard" | "Elite" | "Boss";
+
 type Stage = {
   id: number;
   name: string;
   emoji: string;
-  difficulty: "Easy" | "Normal" | "Hard" | "Boss";
+  difficulty: Difficulty;
   goal: number;
   words: string[];
 };
 
 type Status = "locked" | "available" | "complete";
 
+const NODE_IMAGES: Record<string, string[]> = {
+  cafe: [16, 17, 18, 19, 20].map((n) => `/node-level/cozy-cafe-nl/cozy-cafe-node-${n}.png`),
+  forest: [1, 2, 3, 4, 5].map((n) => `/node-level/mossy-forest-nl/mossy-forest-node-${n}.png`),
+  ocean: [1, 2, 3, 4, 5].map((n) => `/node-level/tide-pool-nl/tide-pool-node-${n}.png`),
+  sakura: [1, 2, 3, 4, 5].map((n) => `/node-level/sakura-park-nl/sakura-park-node-${n}.png`),
+  castle: [1, 2, 3, 4, 5].map((n) => `/node-level/royal-castle-nl/royal-castle-node-${n}.png`),
+  space: [1, 2, 3, 4, 5].map((n) => `/node-level/stardust-nl/stardust-node-${n}.png`),
+};
+
 const STAGES_BY_WORLD: Record<string, Stage[]> = {
   cafe: [
     { id: 1, name: "Steamy Start", emoji: "☕", difficulty: "Easy", goal: 20, words: ["latte", "mocha", "cocoa", "cream", "sugar", "beans", "mug", "warm", "brew", "sip"] },
     { id: 2, name: "Pastry Path", emoji: "🥐", difficulty: "Normal", goal: 30, words: ["croissant", "biscuit", "muffin", "scone", "tart", "jam", "butter", "flaky", "crumb", "honey"] },
     { id: 3, name: "Barista Trial", emoji: "🫘", difficulty: "Hard", goal: 40, words: ["espresso", "macchiato", "cortado", "ristretto", "americano", "velvet", "aroma", "crema", "grind", "steam"] },
-    { id: 4, name: "Cafe Boss", emoji: "👑", difficulty: "Boss", goal: 50, words: ["cinnamon", "caramel", "hazelnut", "gingerbread", "marshmallow", "pumpkin", "vanilla", "chocolate", "blueberry", "raspberry"] },
+    { id: 4, name: "Roastmaster", emoji: "🔥", difficulty: "Elite", goal: 45, words: ["arabica", "robusta", "singleorigin", "frenchpress", "pourover", "chemex", "aeropress", "tamping", "extraction", "roastery"] },
+    { id: 5, name: "Cafe Boss", emoji: "👑", difficulty: "Boss", goal: 50, words: ["cinnamon", "caramel", "hazelnut", "gingerbread", "marshmallow", "pumpkin", "vanilla", "chocolate", "blueberry", "raspberry"] },
   ],
   forest: [
     { id: 1, name: "Mossy Trail", emoji: "🌿", difficulty: "Easy", goal: 20, words: ["fern", "moss", "oak", "pine", "leaf", "root", "bark", "seed", "vine", "sap"] },
     { id: 2, name: "Owl Grove", emoji: "🦉", difficulty: "Normal", goal: 30, words: ["willow", "cedar", "maple", "birch", "hollow", "branch", "forest", "meadow", "stream", "pebble"] },
     { id: 3, name: "Fox Hollow", emoji: "🦊", difficulty: "Hard", goal: 40, words: ["mushroom", "clearing", "wildflower", "thicket", "brambles", "sunlight", "whisper", "rustle", "emerald", "dewdrop"] },
-    { id: 4, name: "Forest Guardian", emoji: "🐺", difficulty: "Boss", goal: 50, words: ["ancientwood", "silverleaf", "moonpetal", "ironroot", "stormcloud", "windsong", "greenmantle", "starseed", "wolfsbane", "nightshade"] },
+    { id: 4, name: "Elder Glade", emoji: "🌳", difficulty: "Elite", goal: 45, words: ["evergreen", "canopy", "underbrush", "rootweave", "mossheart", "fireflies", "twilight", "wandering", "owlsong", "foxglove"] },
+    { id: 5, name: "Forest Guardian", emoji: "🐺", difficulty: "Boss", goal: 50, words: ["ancientwood", "silverleaf", "moonpetal", "ironroot", "stormcloud", "windsong", "greenmantle", "starseed", "wolfsbane", "nightshade"] },
   ],
   ocean: [
     { id: 1, name: "Tide Pool", emoji: "🐚", difficulty: "Easy", goal: 20, words: ["wave", "salt", "sand", "reef", "fish", "kelp", "tide", "foam", "crab", "shell"] },
     { id: 2, name: "Coral Cove", emoji: "🐠", difficulty: "Normal", goal: 30, words: ["coral", "dolphin", "seagull", "lagoon", "pebbles", "driftwood", "seaweed", "oyster", "anchor", "harbor"] },
     { id: 3, name: "Deep Trench", emoji: "🐙", difficulty: "Hard", goal: 40, words: ["jellyfish", "anglerfish", "starfish", "plankton", "barnacle", "luminous", "abyssal", "current", "compass", "beacon"] },
-    { id: 4, name: "Leviathan", emoji: "🐳", difficulty: "Boss", goal: 50, words: ["tempestwave", "stormwater", "krakenink", "mooncurrent", "saltspray", "horizonline", "tidalpull", "oceanheart", "seafoam", "whirlpool"] },
+    { id: 4, name: "Sunken Ruins", emoji: "🏛", difficulty: "Elite", goal: 45, words: ["shipwreck", "treasure", "trident", "mariner", "fathomless", "seabreeze", "pearl", "narwhal", "kelpforest", "manta"] },
+    { id: 5, name: "Leviathan", emoji: "🐳", difficulty: "Boss", goal: 50, words: ["tempestwave", "stormwater", "krakenink", "mooncurrent", "saltspray", "horizonline", "tidalpull", "oceanheart", "seafoam", "whirlpool"] },
   ],
   sakura: [
     { id: 1, name: "Petal Path", emoji: "🌸", difficulty: "Easy", goal: 20, words: ["bloom", "petal", "pink", "park", "wind", "bench", "kite", "pond", "koi", "bow"] },
     { id: 2, name: "Lantern Lane", emoji: "🏮", difficulty: "Normal", goal: 30, words: ["lantern", "blossom", "temple", "garden", "whisper", "kimono", "origami", "ribbon", "silken", "mochi"] },
     { id: 3, name: "Tea Garden", emoji: "🍵", difficulty: "Hard", goal: 40, words: ["matcha", "ceremony", "porcelain", "sakuramochi", "wisteria", "camellia", "azalea", "bamboo", "peaceful", "tranquil"] },
-    { id: 4, name: "Spring Empress", emoji: "👘", difficulty: "Boss", goal: 50, words: ["springbreeze", "pinkcascade", "mountainmist", "silentpetal", "goldenkoi", "crimsonleaf", "ancientstone", "windchime", "silkroad", "jadepool"] },
+    { id: 4, name: "Moon Bridge", emoji: "🌉", difficulty: "Elite", goal: 45, words: ["arched", "reflection", "wisterias", "stonelantern", "tearoom", "haiku", "calligraphy", "raindrop", "stillness", "blossomfall"] },
+    { id: 5, name: "Spring Empress", emoji: "👘", difficulty: "Boss", goal: 50, words: ["springbreeze", "pinkcascade", "mountainmist", "silentpetal", "goldenkoi", "crimsonleaf", "ancientstone", "windchime", "silkroad", "jadepool"] },
   ],
   castle: [
     { id: 1, name: "Drawbridge", emoji: "🛡", difficulty: "Easy", goal: 20, words: ["king", "queen", "sword", "crown", "gold", "gem", "tome", "mage", "quest", "kite"] },
     { id: 2, name: "Hall of Knights", emoji: "⚔", difficulty: "Normal", goal: 30, words: ["knight", "castle", "dragon", "wizard", "scroll", "shield", "armor", "valiant", "royal", "silver"] },
     { id: 3, name: "Wizard Spire", emoji: "🧙", difficulty: "Hard", goal: 40, words: ["enchanted", "sorcerer", "alchemy", "grimoire", "talisman", "incantation", "mystical", "arcane", "prophecy", "conjure"] },
-    { id: 4, name: "Dragon Lord", emoji: "🐉", difficulty: "Boss", goal: 50, words: ["dragonfire", "ironcrown", "stormblade", "goldhoard", "obsidian", "thundermail", "eldritch", "kingsguard", "midnightoath", "silvermoon"] },
+    { id: 4, name: "Throne Vault", emoji: "💎", difficulty: "Elite", goal: 45, words: ["chalice", "regalia", "heraldry", "banneret", "courtier", "vassalage", "fortress", "battlement", "portcullis", "seneschal"] },
+    { id: 5, name: "Dragon Lord", emoji: "🐉", difficulty: "Boss", goal: 50, words: ["dragonfire", "ironcrown", "stormblade", "goldhoard", "obsidian", "thundermail", "eldritch", "kingsguard", "midnightoath", "silvermoon"] },
   ],
   space: [
     { id: 1, name: "Launchpad", emoji: "🚀", difficulty: "Easy", goal: 20, words: ["star", "moon", "mars", "jet", "void", "beam", "ion", "arc", "disk", "glow"] },
     { id: 2, name: "Asteroid Belt", emoji: "☄", difficulty: "Normal", goal: 30, words: ["comet", "planet", "orbit", "nebula", "quasar", "cosmos", "gravity", "stellar", "photon", "plasma"] },
     { id: 3, name: "Nebula Drift", emoji: "🪐", difficulty: "Hard", goal: 40, words: ["andromeda", "supernova", "blackhole", "hyperdrive", "wormhole", "starlight", "interstellar", "exoplanet", "luminosity", "singularity"] },
-    { id: 4, name: "Galaxy Sentinel", emoji: "👾", difficulty: "Boss", goal: 50, words: ["voidwalker", "starforge", "cosmichunter", "nebulasong", "quantumleap", "eventhorizon", "ironstation", "photonblade", "stardrive", "celestial"] },
+    { id: 4, name: "Pulsar Station", emoji: "🛰", difficulty: "Elite", goal: 45, words: ["satellite", "moonbase", "lightspeed", "antimatter", "darkmatter", "neutronstar", "magnetar", "cosmicray", "asteroidfield", "spacetime"] },
+    { id: 5, name: "Galaxy Sentinel", emoji: "👾", difficulty: "Boss", goal: 50, words: ["voidwalker", "starforge", "cosmichunter", "nebulasong", "quantumleap", "eventhorizon", "ironstation", "photonblade", "stardrive", "celestial"] },
   ],
 };
 
@@ -64,6 +81,12 @@ const BOSS_PHASE_EMOJIS: Record<string, [string, string, string]> = {
 
 function bossEmojis(emoji: string): [string, string, string] {
   return BOSS_PHASE_EMOJIS[emoji] ?? [emoji, "💢", "💫"];
+}
+
+function rewardsFor(stage: Stage): { xp: number; coins: number } {
+  if (stage.difficulty === "Boss") return { xp: stage.goal * 6, coins: stage.goal * 2 };
+  if (stage.difficulty === "Elite") return { xp: Math.round(stage.goal * 4), coins: Math.round(stage.goal * 1.5) };
+  return { xp: stage.goal * 3, coins: stage.goal };
 }
 
 export function AdventureMap() {
