@@ -31,6 +31,8 @@ export const saveGameState = createServerFn({ method: "POST" })
     return { success: true };
   });
 
+type JsonValue = string | number | boolean | null | JsonValue[] | { [k: string]: JsonValue };
+
 export const loadGameState = createServerFn({ method: "GET" }).handler(async () => {
   const session = await getSession();
   if (!session?.user) return null;
@@ -45,10 +47,11 @@ export const loadGameState = createServerFn({ method: "GET" }).handler(async () 
   if (!data) return null;
 
   return {
-    player: JSON.parse(JSON.stringify(data.player ?? {})) as Record<string, unknown>,
-    inventory: JSON.parse(JSON.stringify(data.inventory ?? {})) as Record<string, unknown>,
-    adventures: JSON.parse(JSON.stringify(data.adventures ?? {})) as Record<string, unknown>,
+    player: JSON.parse(JSON.stringify(data.player ?? {})) as JsonValue,
+    inventory: JSON.parse(JSON.stringify(data.inventory ?? {})) as JsonValue,
+    adventures: JSON.parse(JSON.stringify(data.adventures ?? {})) as JsonValue,
   };
+});
 });
 
 export const deleteGameState = createServerFn({ method: "POST" }).handler(async () => {
