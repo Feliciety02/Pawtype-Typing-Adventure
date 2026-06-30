@@ -1,25 +1,34 @@
-export const ACHIEVEMENTS_DOC = `# Achievements & Badges
+export const ACHIEVEMENTS_DOC = `# 🏆 Achievements & Badges
 
-Hundreds of collectible badges across **12 prestige tiers** and **10 thematic categories**. Every badge is a milestone, a skill mastered, or a secret discovered.
+Hundreds of collectible badges across **12 prestige tiers** and **8 thematic categories**. Every badge is a milestone, a skill mastered, or a secret discovered.
+
+Designed as collectible fantasy relics — every badge is a pixel-perfect crest reflecting its category and prestige, from humble wooden trinkets to divine celestial artifacts.
 
 ---
 
-## Rarity Ladder
+## Design Principles
 
-| Tier | Rarity | Theme | Prestige |
-| ---- | ------ | ----- | -------- |
-| I | Common | Wood | ⭐ |
-| II | Uncommon | Nature | ⭐⭐ |
-| III | Rare | Crystal | ⭐⭐⭐ |
-| IV | Epic | Royal | ⭐⭐⭐⭐ |
-| V | Legendary | Heroic | ⭐⭐⭐⭐⭐ |
-| VI | Mythic | Ancient | ⭐⭐⭐⭐⭐⭐ |
-| VII | Celestial | Cosmic | ⭐⭐⭐⭐⭐⭐⭐ |
-| VIII | Divine | Holy | ⭐⭐⭐⭐⭐⭐⭐⭐ |
-| IX | Transcendent | Infinity | ⭐⭐⭐⭐⭐⭐⭐⭐⭐ |
-| X | Eternal | Timeless | ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ |
-| XI | Ascendant | Ascension | ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ |
-| XII | Omniversal | Beyond Reality | ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ |
+Badges are:
+- **Instantly recognizable** at small sizes
+- **Front-facing, centered, and symmetrical** — pixel-perfect construction
+- **Transparent background** with consistent outline thickness
+- **Unique personalized crest** matching the badge category
+- **Collectible RPG inventory items**, not flat UI icons
+
+---
+
+## Badge Rarity
+
+| Tier | Rarity    | Visual Theme                    |
+| ---- | --------- | ------------------------------- |
+| I    | Common    | Wood, leaves, rope              |
+| II   | Uncommon  | Bronze, vines, clover           |
+| III  | Rare      | Silver, crystals, stars         |
+| IV   | Epic      | Royal ornaments, runes          |
+| V    | Legendary | Gold, crowns, dragons           |
+| VI   | Mythic    | Sacred fire, phoenix motifs     |
+| VII  | Celestial | Galaxies, constellations, moons |
+| VIII | Divine    | Halos, infinity, sacred relics  |
 
 ---
 
@@ -99,20 +108,102 @@ Hundreds of collectible badges across **12 prestige tiers** and **10 thematic ca
 
 ---
 
-## Special Badge Categories
+## Badge Categories
 
-These classify *what* a badge represents, separate from its rarity tier.
+### ⚡ Speed Badges
 
-| Category | Emoji | Badges |
-|----------|-------|--------|
-| Speed | ⚡ | Quick Fingers → Hyper Velocity |
-| Accuracy | 🎯 | Steady Hands → Flawless Typist |
-| Combo | 🔥 | Spark → Eternal Fire |
-| Learning | 📚 | Curious Mind → Grand Archivist |
-| Pets | 🐾 | Pet Lover → Legendary Trainer |
-| Exploration | 🌍 | Wanderer → World Traveler |
-| Events | 🏅 | Spring Festival → Anniversary Champion |
-| Economy | 💰 | Saver → Millionaire |
-| Social | 🌟 | Friendly Neighbor → Legendary Supporter |
-| Mastery | 🎮 | Completionist → Ultimate Typing Master |
-`;
+Reward improvements in typing speed (WPM). Crest theme: feathers, wings, wind currents, lightning, storms, meteors.
+
+| Badge          | Meaning                                             |
+| -------------- | --------------------------------------------------- |
+| Tiny Feather   | First signs of quick typing.                        |
+| Swift Feather  | Developing speed and confidence.                    |
+| Wing           | Freedom and smooth movement across the keyboard.    |
+| Falcon Wing    | Precision combined with high speed.                 |
+| Lightning Bolt | Explosive bursts of typing performance.             |
+| Thunder Crest  | Mastery over speed through power and consistency.   |
+| Shooting Star  | Exceptional speed that leaves a lasting impression. |
+| Meteor         | Unstoppable momentum and force.                     |
+| Comet          | Speed that transcends earthly limits.               |
+| Hyper Velocity | The ultimate achievement in typing speed.           |
+
+**Unlock Source:** Typing WPM milestones.
+
+### 🎯 Accuracy Badges
+
+Reward precise and mistake-free typing. Crest theme: targets, eyes, scopes, crystal optics, sacred symbols.
+
+**Progression:** Wooden Target → Bullseye → Eagle Eye → Crystal Scope → Perfect Sight → Diamond Crosshair → Sacred Aim → Celestial Vision → Divine Precision → Absolute Accuracy
+
+**Unlock Source:** Typing accuracy milestones.
+
+### 🔥 Combo Badges
+
+Reward consecutive correct keystrokes. Crest theme: embers, flames, volcanoes, phoenixes, celestial fire.
+
+**Progression:** Spark → Ember → Flame → Fireball → Inferno → Phoenix Feather → Eternal Flame → Solar Core → Supernova → Eternal Inferno
+
+**Unlock Source:** Combo streak milestones.
+
+### 🐾 Pet Collection Badges
+
+Reward collecting, raising, and evolving companions. Crest theme: paws, collars, ribbons, hearts, claws, animal wings.
+
+**Progression:** Tiny Paw → Golden Paw → Bone Emblem → Companion Ribbon → Pet Heart → Beast Crest → Alpha Collar → Guardian Paw → Spirit Companion → Legendary Tamer
+
+**Unlock Source:** Pet collection milestones.
+
+### 🌍 Adventure Badges
+
+Reward exploration and completion of worlds. Each crest reflects its biome.
+
+| World   | Crest Theme      |
+| ------- | ---------------- |
+| Forest  | Oak              |
+| Café    | Coffee beans     |
+| Ocean   | Shells           |
+| Volcano | Magma            |
+| Mushroom| Mushrooms        |
+| Sakura  | Cherry blossoms  |
+| Castle  | Stone fortress   |
+| Moon    | Crescent moon    |
+| Galaxy  | Constellations   |
+| World   | World Tree       |
+
+**Unlock Source:** World completion.
+
+### 📚 Learning Badges
+
+Reward educational progress. Crest theme: books, scrolls, magical libraries, crystals, quills.
+
+**Unlock Source:** Lessons completed.
+
+### 📅 Daily Streak Badges
+
+Reward consistent practice. Crest theme: sunrise, trees, calendars, clocks, hourglasses, stars.
+
+**Unlock Source:** Daily login and typing streaks.
+
+### 🏆 Challenge Badges
+
+Reward difficult accomplishments and special objectives. Crest theme: shields, swords, banners, crowns, dragon motifs, championship relics.
+
+**Unlock Source:** Special challenge completion.
+
+---
+
+## Asset Naming Convention
+
+All badge assets use lowercase snake_case.
+
+\`\`\`
+badge_speed_tiny_feather.png
+badge_speed_hyper_velocity.png
+badge_accuracy_bullseye.png
+badge_combo_inferno.png
+badge_pet_guardian_paw.png
+badge_world_castle_crest.png
+badge_learning_magic_tome.png
+badge_streak_endless_journey.png
+badge_challenge_ultimate_hero.png
+\`\`\``;

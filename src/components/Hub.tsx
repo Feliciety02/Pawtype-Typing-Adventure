@@ -29,7 +29,6 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
     { label: "Shop", view: "shop", emoji: "🛒" },
     { label: "Achievements", view: "achievements", emoji: "★" },
     { label: "Stats", view: "stats", emoji: "📊" },
-    { label: "Library", view: "library", emoji: "📖" },
   ];
 
   return (

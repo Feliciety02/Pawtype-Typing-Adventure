@@ -8,7 +8,7 @@ import { LessonsCard } from "@/components/LessonsCard";
 import { Shop } from "@/components/Shop";
 import { AchievementsCard } from "@/components/AchievementsCard";
 import { StatsView } from "@/components/StatsView";
-import { DocsViewer } from "@/components/DocsViewer";
+import { SettingsPage } from "@/components/SettingsPage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -49,8 +49,8 @@ function Index() {
         {view === "stats" && (
           <section className="mt-8"><StatsView /></section>
         )}
-        {view === "library" && (
-          <section className="mt-8"><DocsViewer /></section>
+        {view === "settings" && (
+          <section className="mt-8"><SettingsPage /></section>
         )}
       </div>
 

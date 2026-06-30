@@ -9,8 +9,11 @@ Planned features and high-potential additions to expand the game.
 ### 🏆 Achievement Gallery
 A dedicated badge collection screen showing all 120+ badges with unlock progress per tier. Filter by category, sort by rarity, and see "next unlock" hints.
 
+### ⚙️ Settings Hub
+A dedicated Settings page with sidebar navigation (General / Library) replacing the old gear dropdown. General tab bundles world switcher, day/night theme, CRT filter, sparkle trail, account info, and reset data. All visual toggles sync live with the header.
+
 ### 📖 In-App Documentation Library
-The system you're reading now — browsable from inside the app with full markdown rendering, a table of contents, and search.
+✅ **Shipped** — browsable from inside the Settings page (Library tab) with full markdown rendering, table of contents, and 5 doc sections (Achievements, Themes, Pets, Economy, Future Addons).
 
 ### 🐾 Pet Room
 A dedicated view to see your active pet larger, interact with it, feed treats, and view evolution progress. All pets you own appear in a row.
