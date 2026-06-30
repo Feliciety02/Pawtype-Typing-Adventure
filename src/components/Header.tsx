@@ -104,7 +104,7 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
         />
       ))}
       <div className="hud-brand" aria-label="Pawtype">
-        <div className="hud-logo"><span>P</span></div>
+        <img src="/Logo.png" alt="Pawtype" className="hud-logo-img" />
         <div className="min-w-0">
           <div className="hud-title">Pawtype</div>
           <div className="hud-subtitle">Cozy pixel typing tutor</div>
