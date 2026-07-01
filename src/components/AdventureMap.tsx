@@ -461,7 +461,7 @@ export function AdventureMap() {
 
   const goals = adaptiveGoals ?? getCachedGoals();
   const stagesForWorld = useCallback((worldId: WorldId): Stage[] =>
-    STAGE_DEFS[worldId].map((stage, index) => ({
+    (STAGE_DEFS[worldId] ?? STAGE_DEFS.cafe ?? []).map((stage, index) => ({
       id: index + 1,
       ...stage,
       goal: goals[stage.difficulty] + (index === 1 ? 5 : 0),
