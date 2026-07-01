@@ -12,6 +12,9 @@ Planned features and high-potential additions to expand the game.
 ### Pattern Analyzer
 âœ… **Shipped** - Tracks per-character accuracy, bigram mistake patterns, and keyboard zone heat across all saved sessions. Identifies weak keys, problematic letter sequences, and hand zones. Feeds into the coach for targeted recommendations like "your left home row zone needs work" or "the 'th' sequence trips you up."
 
+### Dynamic Passage Generator
+âœ… **Shipped** - Word-level Markov chain generator that creates unique, thematically-coherent typing passages per world. Uses themed word pools for each of the 13 worlds, builds a probabilistic transition graph, and generates novel sequences that feel natural. Integrates with the Pattern Analyzer to boost weak-spot characters into generated text. Falls back gracefully to the existing rotation-based word pool system. Powers adventure stage words, world descriptions, and quest text.
+
 ### Cozy Campsite Adventure Refresh
 âœ… **Shipped** - The former Autumn Cottage world is now Cozy Campsite, with updated theme copy, shop and docs text, campsite-flavored typing prompts, ember ambience, and a dedicated five-node adventure art set wired using the same filename pattern as the other worlds.
 
