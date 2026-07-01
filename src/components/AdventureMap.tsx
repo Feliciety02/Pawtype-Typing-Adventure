@@ -31,7 +31,7 @@ type VisibleImageBounds = {
 const LOCK_ICON = "/Icons/lock.png";
 const NODE_IMAGE_BOUNDS_CACHE = new Map<string, VisibleImageBounds>();
 
-const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
+const NODE_IMAGES: Partial<Partial<Record<WorldId, string[]>>> = {
   cafe: [
     "/node-level/cozy-cafe/cozy-cafe-01-cafe-corner.png",
     "/node-level/cozy-cafe/cozy-cafe-02-roast-ridge.png",
@@ -139,7 +139,7 @@ const DIFFICULTY_TIME_LIMITS: Record<Difficulty, number> = {
   Boss: 55,
 };
 
-const WORLD_WORDS: Record<WorldId, string[]> = {
+const WORLD_WORDS: Partial<Record<WorldId, string[]>> = {
   cafe: ["latte", "mocha", "cocoa", "cream", "sugar", "beans", "mug", "warm", "brew", "sip", "roast", "coffee", "manor", "garden", "corner", "velvet", "caramel", "vanilla", "aroma", "steam"],
   forest: ["fern", "moss", "oak", "pine", "leaf", "root", "bark", "seed", "vine", "sap", "grove", "fox", "woods", "elder", "tree", "willow", "cedar", "brook", "branch", "hollow"],
   ocean: ["wave", "salt", "sand", "reef", "fish", "kelp", "tide", "foam", "crab", "shell", "coral", "pearl", "grotto", "abyss", "palace", "current", "lagoon", "oyster", "anchor", "harbor"],
@@ -155,7 +155,7 @@ const WORLD_WORDS: Record<WorldId, string[]> = {
   "frostveil-kingdom": ["frost", "ice", "crystal", "snow", "glacier", "palace", "frozen", "winter", "cold", "gem", "shard", "sleet", "snowflake", "blizzard", "north", "frost", "spire", "glow", "chill", "magic"]
 };
 
-const STAGE_DEFS: Record<WorldId, Array<{ name: string; emoji: string; difficulty: Difficulty }>> = {
+const STAGE_DEFS: Partial<Record<WorldId, Array<{ name: string; emoji: string; difficulty: Difficulty }>>> = {
   cafe: [
     { name: "Cafe Corner", emoji: "â˜•", difficulty: "Easy" },
     { name: "Roast Ridge", emoji: "ðŸ«˜", difficulty: "Easy" },
@@ -250,7 +250,7 @@ const STAGE_DEFS: Record<WorldId, Array<{ name: string; emoji: string; difficult
   ],
 };
 
-const STAGES_BY_WORLD: Record<WorldId, Stage[]> = Object.fromEntries(
+const STAGES_BY_WORLD: Partial<Record<WorldId, Stage[]>> = Object.fromEntries(
   Object.entries(STAGE_DEFS).map(([world, stages]) => [
     world,
     stages.map((stage, index) => ({
@@ -260,7 +260,7 @@ const STAGES_BY_WORLD: Record<WorldId, Stage[]> = Object.fromEntries(
       words: wordsFor(world as WorldId, index + 1),
     })),
   ]),
-) as Record<WorldId, Stage[]>;
+) as Partial<Record<WorldId, Stage[]>>;
 
 const BOSS_PHASE_EMOJIS: Record<string, [string, string, string]> = {
   "ðŸ‘‘": ["ðŸ‘‘", "âš”ï¸", "âœ¨"],
