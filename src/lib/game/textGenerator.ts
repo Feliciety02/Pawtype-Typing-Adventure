@@ -4,6 +4,7 @@ import {
   generateWorldText as aiWorldText,
   generateQuestText as aiQuestText,
 } from "./ai/generator";
+import { generateMascotLine as aiMascotLine, type MascotContext } from "./ai/mascot";
 
 const WORLD_THEMES: Record<WorldId, string> = {
   cafe: "a cozy cafe with warm coffee, rain tapping windows, and soft jazz",
@@ -92,7 +93,10 @@ export async function generateWeakSpotWords(mistakeChars: string[]): Promise<str
   return phrases.length > 0 ? phrases : null;
 }
 
-export async function generateMascotLine(mood: string): Promise<string | null> {
+export async function generateMascotLine(mood: string, ctx?: MascotContext): Promise<string | null> {
+  const ai = aiMascotLine(mood, ctx);
+  if (ai) return ai;
+
   const lines = MASCOT_LINES[mood];
   return lines ? rotatePick(lines, 1, mood)[0] ?? null : null;
 }

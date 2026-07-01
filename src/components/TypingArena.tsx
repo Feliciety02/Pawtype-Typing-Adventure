@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Maximize2, X } from "lucide-react";
 import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
+import { PixelCloud } from "./PixelCloud";
 import { PetRoom } from "./PetRoom";
 import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
@@ -47,12 +48,13 @@ const WORLD_ART_URL: Record<WorldId, string> = {
   sakura: "/theme/sakura-park.png",
   castle: "/theme/royal-castle.png",
   space: "/theme/stardust.png",
-  autumn: "/theme/autumn-cottage.png",
+  autumn: "/theme/cozy-campsite.png",
   mushroom: "/theme/fairy-mushroom-village.png",
-  moonlit: "/theme/moonlit-garden.png",
-  rainy: "/theme/rainy-library.png",
-  snowy: "/theme/snowy-cabin.png",
+  "volcanic-forge": "/theme/volcanic-forge.png",
   sunflower: "/theme/sunflower-meadow.png",
+  "desert-oasis": "/theme/desert-oasis.png",
+  "steam-punk-workshop": "/theme/steam-punk-workshop.png",
+  "frostveil-kingdom": "/theme/frostveil-kingdom.png",
 };
 
 export function TypingArena({ customWords, customTitle }: Props = {}) {
@@ -203,11 +205,25 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     }
   }, [generatedText, customWords]);
 
-  // Generate mascot line on mood change
+  // Generate mascot line on mood change with session context
+  const mascotCtxRef = useRef({ combo: 0, bestCombo: 0, mistakes: 0, correctChars: 0, weakChars: new Set<string>() });
+  const updateMascotCtx = useCallback(() => {
+    mascotCtxRef.current = { combo, bestCombo, mistakes, correctChars, weakChars: new Set(keystrokes.filter((k) => !k.correct).map((k) => k.target)) };
+  }, [combo, bestCombo, mistakes, correctChars, keystrokes]);
+  useEffect(() => {
+    updateMascotCtx();
+  }, [updateMascotCtx]);
   useEffect(() => {
     if (prevMoodRef.current === mood) return;
     prevMoodRef.current = mood;
-    generateMascotLine(mood).then(setMascotLine);
+    const ctx = mascotCtxRef.current;
+    generateMascotLine(mood, {
+      combo: ctx.combo,
+      bestCombo: ctx.bestCombo,
+      mistakes: ctx.mistakes,
+      correctChars: ctx.correctChars,
+      weakChars: [...ctx.weakChars],
+    }).then(setMascotLine);
   }, [mood]);
 
   const mistakeChars = useMemo(() => {
@@ -446,8 +462,11 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
             backgroundImage: `linear-gradient(color-mix(in oklab, var(--color-card) 16%, transparent), color-mix(in oklab, var(--color-card) 16%, transparent)), url("${worldArtUrl}")`,
             backgroundPosition: "center",
             backgroundSize: "cover",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
+          <PixelCloud count={3} />
           <div className="world-art-inner">
             <div className="pet-placeholder-square" aria-hidden="true" />
             <span className="font-pixel text-[0.5rem] text-center world-art-label">
