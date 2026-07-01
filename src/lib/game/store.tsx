@@ -259,7 +259,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
   }, [user, isLoading]);
 
-  const syncTimer = useRef<ReturnType<typeof setTimeout>>();
+  const syncTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     if (!user) return;

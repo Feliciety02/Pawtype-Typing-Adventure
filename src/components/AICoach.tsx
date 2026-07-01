@@ -6,6 +6,7 @@ const INSIGHT_STYLES: Record<CoachInsight["type"], { emoji: string; accent: stri
   tip: { emoji: "💡", accent: "var(--coin)" },
   warning: { emoji: "⚠️", accent: "var(--color-destructive)" },
   milestone: { emoji: "🏆", accent: "var(--leaf)" },
+  trend: { emoji: "📈", accent: "var(--color-primary)" },
 };
 
 type Props = {
@@ -30,7 +31,9 @@ export function AICoach(props: Props) {
     const isPerfect = props.accuracy === 100;
 
     if (isPersonalBest && props.wpm > 0) {
-      try { localStorage.setItem("pawtype-best-wpm", String(props.wpm)); } catch {}
+      try {
+        localStorage.setItem("pawtype-best-wpm", String(props.wpm));
+      } catch {}
     }
 
     getCoachFeedback({ ...props, isPersonalBest, isPerfect })
@@ -47,14 +50,16 @@ export function AICoach(props: Props) {
         }
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [props.wpm, props.accuracy, props.duration, props.correctChars, props.mistakes, props.bestCombo, props.keystrokes]);
 
   if (loading) {
     return (
       <div className="pixel-card-sm p-3 flex items-center gap-2">
         <span className="font-pixel text-[0.55rem] animate-sparkle">🧠</span>
-        <span className="font-pixel text-[0.6rem] text-muted-foreground">AI Coach is thinking...</span>
+        <span className="font-pixel text-[0.6rem] text-muted-foreground">Coach is checking your run...</span>
       </div>
     );
   }
@@ -64,7 +69,7 @@ export function AICoach(props: Props) {
       <div className="pixel-card-sm p-3 flex items-center gap-2" style={{ opacity: 0.6 }}>
         <span className="font-pixel text-[0.55rem]">🤖</span>
         <span className="font-pixel text-[0.6rem] text-muted-foreground">
-          {error ? "AI Coach unavailable. Make sure Ollama is running." : "Keep typing and I'll have feedback ready!"}
+          {error ? "Coach feedback is unavailable right now." : "Keep typing and I'll have feedback ready!"}
         </span>
       </div>
     );
@@ -80,7 +85,7 @@ export function AICoach(props: Props) {
       <span className="font-pixel text-sm shrink-0 mt-0.5">{style.emoji}</span>
       <div>
         <div className="font-pixel text-[0.55rem] uppercase mb-0.5" style={{ color: style.accent }}>
-          AI Coach
+          Coach
         </div>
         <p className="font-pixel text-[0.65rem] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
           {insight.text}
