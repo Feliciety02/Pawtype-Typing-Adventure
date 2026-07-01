@@ -277,7 +277,7 @@ const BOSS_PHASE_EMOJIS: Record<string, [string, string, string]> = {
 };
 
 function wordsFor(world: WorldId, stageId: number) {
-  const words = WORLD_WORDS[world];
+  const words = WORLD_WORDS[world] ?? WORLD_WORDS.cafe ?? [];
   return Array.from({ length: 10 }, (_, index) => words[(stageId * 3 + index) % words.length]);
 }
 
