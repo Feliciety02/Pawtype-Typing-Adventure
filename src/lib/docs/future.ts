@@ -13,10 +13,13 @@ Planned features and high-potential additions to expand the game.
 âœ… **Shipped** - Tracks per-character accuracy, bigram mistake patterns, and keyboard zone heat across all saved sessions. Identifies weak keys, problematic letter sequences, and hand zones. Feeds into the coach for targeted recommendations like "your left home row zone needs work" or "the 'th' sequence trips you up."
 
 ### Dynamic Passage Generator
-âœ… **Shipped** - Word-level Markov chain generator that creates unique, thematically-coherent typing passages per world. Uses themed word pools for each of the 13 worlds, builds a probabilistic transition graph, and generates novel sequences that feel natural. Integrates with the Pattern Analyzer to boost weak-spot characters into generated text. Falls back gracefully to the existing rotation-based word pool system. Powers adventure stage words, world descriptions, and quest text.
+âœ… **Shipped** - Bigram (2-word) Markov chain generator that creates unique, natural-sounding typing passages per world. Uses expanded semantic word pools (80+ words per world with nouns, adjectives, verbs, prepositions) and 15 hand-crafted seed sentences per world for training. Sentence templates provide varied punctuation and structure. Integrates with the Pattern Analyzer to boost weak-spot characters. Falls back gracefully to the existing rotation-based word pool system.
 
 ### Adaptive Difficulty & Recommendations
 âœ… **Shipped** - Adventure stage WPM goals now adapt to each player's skill level based on recent session history (up to 15 sessions). Dynamic goal calculation adjusts Easy/Normal/Hard/Boss targets to match the player's average WPM. Hub dashboard shows a daily AI suggestion (speed drill, accuracy focus, weak key practice, warmup, or steady pace tip) based on session trends and pattern analysis. Progress summary tracks WPM changes, accuracy trends, and consistency over the last 30 sessions.
+
+### Smart Mascot + Pixel Cloud Overlay
+âœ… **Shipped** - The mascot now references live session performance: combo streaks, weak keys, and mistake counts. Generates contextual lines like "40 keys in a row!" or "Watch the 'e' key — it's your most missed." A CSS pixel-art cloud overlay floats in the world-art panel with gentle animation. Both systems are 100% local.
 
 ### Cozy Campsite Adventure Refresh
 âœ… **Shipped** - The former Autumn Cottage world is now Cozy Campsite, with updated theme copy, shop and docs text, campsite-flavored typing prompts, ember ambience, and a dedicated five-node adventure art set wired using the same filename pattern as the other worlds.
