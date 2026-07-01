@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-export type WorldId = "cafe" | "forest" | "ocean" | "sakura" | "castle" | "space" | "autumn" | "mushroom" | "moonlit" | "rainy" | "snowy" | "sunflower";
+export type WorldId = "cafe" | "forest" | "ocean" | "sakura" | "castle" | "space" | "autumn" | "mushroom" | "moonlit" | "rainy" | "snowy" | "sunflower" | "volcanic-forge";
 
 export type World = {
   id: WorldId;
