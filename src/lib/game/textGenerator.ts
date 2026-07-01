@@ -6,7 +6,7 @@ import {
 } from "./ai/generator";
 import { generateMascotLine as aiMascotLine, type MascotContext } from "./ai/mascot";
 
-const WORLD_THEMES: Record<WorldId, string> = {
+const WORLD_THEMES: Partial<Record<WorldId, string>> = {
   cafe: "a cozy cafe with warm coffee, rain tapping windows, and soft jazz",
   forest: "a mossy forest with ferns, dappled sunlight, and a babbling brook",
   ocean: "a tide pool with crashing waves, salty air, and hidden sea creatures",
@@ -22,7 +22,7 @@ const WORLD_THEMES: Record<WorldId, string> = {
   "frostveil-kingdom": "a frozen kingdom with ice crystals, frost-covered pines, frozen waterfalls, and a shimmering ice palace",
 };
 
-const WORLD_LINES: Record<WorldId, string[]> = {
+const WORLD_LINES: Partial<Record<WorldId, string[]>> = {
   cafe: ["Steam curls past the window", "soft jazz drifts near the counter", "warm mugs wait beside quiet booths"],
   forest: ["Fern shadows sway in the light", "a brook chatters over smooth stone", "foxglow flickers beneath old trees"],
   ocean: ["Cool spray hangs over the rocks", "small shells gleam beside the tide", "seafoam slips through the pools"],

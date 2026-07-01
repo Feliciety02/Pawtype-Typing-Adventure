@@ -1,6 +1,6 @@
 import type { WorldId } from "../../components/WorldTheme";
 
-export const THEME_PREVIEW_ASSETS: Record<WorldId, string> = {
+export const THEME_PREVIEW_ASSETS: Partial<Record<WorldId, string>> = {
   cafe: "/theme/cozy-cafe.png",
   forest: "/theme/mossy-forest.png",
   ocean: "/theme/tide-pool.png",
