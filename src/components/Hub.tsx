@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useGame } from "../lib/game/store";
 import { useWorld, WORLDS } from "./WorldTheme";
 import { xpForLevel, getDailyReward } from "../lib/game/types";
@@ -5,7 +6,9 @@ import { useQuests } from "../lib/game/quests";
 import { PixelMascot } from "./PixelMascot";
 import { PixelPet } from "./PixelPet";
 import { ThemeSetsSection } from "./ThemeSetsSection";
+import { dailySuggestion } from "../lib/game/ai/difficulty";
 import type { View } from "./Header";
+import type { DailySuggestion } from "../lib/game/ai/difficulty";
 
 export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
   const { state, dispatch } = useGame();
@@ -21,6 +24,9 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
   const activePet = inventory.activePet
     ? inventory.pets.find((p) => p.type === inventory.activePet)
     : null;
+
+  const [suggestion, setSuggestion] = useState<DailySuggestion | null>(null);
+  useEffect(() => { dailySuggestion().then(setSuggestion).catch(() => {}); }, []);
 
   const QUICK_ACTIONS: { label: string; view: View; emoji: string }[] = [
     { label: "Practice", view: "practice", emoji: "⌨" },
@@ -113,6 +119,31 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
         </div>
         <div className="font-pixel text-[0.65rem]" style={{ color: "var(--coin)" }}>🪙 {reward?.coins ?? 0}</div>
       </div>
+
+      {/* AI Suggestion */}
+      {suggestion && (
+        <div className="pixel-card p-4 flex items-center gap-4"
+          style={{
+            borderLeft: `4px solid ${
+              suggestion.type === "speed" ? "var(--color-primary)" :
+              suggestion.type === "accuracy" ? "var(--leaf)" :
+              suggestion.type === "weakness" ? "var(--color-destructive)" :
+              suggestion.type === "warmup" ? "var(--coin)" :
+              "var(--muted-foreground)"
+            }`
+          }}>
+          <span className="text-3xl">
+            {suggestion.type === "speed" ? "⚡" :
+             suggestion.type === "accuracy" ? "🎯" :
+             suggestion.type === "weakness" ? "💪" :
+             suggestion.type === "warmup" ? "🔥" : "💡"}
+          </span>
+          <div className="flex-1 min-w-0">
+            <div className="font-pixel text-sm">{suggestion.title}</div>
+            <p className="font-pixel text-[0.6rem] text-muted-foreground mt-0.5">{suggestion.description}</p>
+          </div>
+        </div>
+      )}
 
       {/* Quest stats */}
       <div className="grid grid-cols-3 gap-4">

@@ -1,7 +1,8 @@
-import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+﻿import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { useGame } from "../lib/game/store";
 import { generateAdventureWords, generateQuestText } from "../lib/game/textGenerator";
+import { precomputeGoals, getCachedGoals } from "../lib/game/ai/difficulty";
 
 type Difficulty = "Easy" | "Normal" | "Hard" | "Boss";
 
@@ -73,6 +74,13 @@ const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
     "/node-level/cosmic-observatory/cosmic-observatory-04-cosmic-ruins.png",
     "/node-level/cosmic-observatory/cosmic-observatory-05-astral-observatory.png",
   ],
+  autumn: [
+    "/node-level/cozy-campsite/cozy-campsite-01-camp-entrance.png",
+    "/node-level/cozy-campsite/cozy-campsite-02-pine-camp.png",
+    "/node-level/cozy-campsite/cozy-campsite-03-campfire-circle.png",
+    "/node-level/cozy-campsite/cozy-campsite-04-bear-ridge.png",
+    "/node-level/cozy-campsite/cozy-campsite-05-rangers-lookout.png",
+  ],
   mushroom: [
     "/node-level/fairy-mushroom-village/fairy-mushroom-village-01-mushroom-trail.png",
     "/node-level/fairy-mushroom-village/fairy-mushroom-village-02-fairy-hollow.png",
@@ -86,6 +94,34 @@ const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
     "/node-level/sunflower-meadow/sunflower-meadow-03-windmill-hill.png",
     "/node-level/sunflower-meadow/sunflower-meadow-04-golden-harvest.png",
     "/node-level/sunflower-meadow/sunflower-meadow-05-harvest-haven.png",
+  ],
+  "volcanic-forge": [
+    "/node-level/volcanic-forge/volcanic-forge-01-ember-trail.png",
+    "/node-level/volcanic-forge/volcanic-forge-02-lava-cavern.png",
+    "/node-level/volcanic-forge/volcanic-forge-03-molten-crossing.png",
+    "/node-level/volcanic-forge/volcanic-forge-04-magma-summit.png",
+    "/node-level/volcanic-forge/volcanic-forge-05-inferno-forge.png",
+  ],
+  "desert-oasis": [
+    "/node-level/desert-oasis/desert-oasis-01-sandy-trail.png",
+    "/node-level/desert-oasis/desert-oasis-02-cactus-camp.png",
+    "/node-level/desert-oasis/desert-oasis-03-oasis-spring.png",
+    "/node-level/desert-oasis/desert-oasis-04-sunstone-dunes.png",
+    "/node-level/desert-oasis/desert-oasis-05-golden-pyramid.png",
+  ],
+  "steam-punk-workshop": [
+    "/node-level/steam-punk-workshop/steam-punk-workshop-01-gear-yard.png",
+    "/node-level/steam-punk-workshop/steam-punk-workshop-02-boiler-room.png",
+    "/node-level/steam-punk-workshop/steam-punk-workshop-03-copper-works.png",
+    "/node-level/steam-punk-workshop/steam-punk-workshop-04-steam-forge.png",
+    "/node-level/steam-punk-workshop/steam-punk-workshop-05-clockwork-core.png",
+  ],
+  "frostveil-kingdom": [
+    "/node-level/frostveil-kingdom/frostveil-kingdom-01-frost-path.png",
+    "/node-level/frostveil-kingdom/frostveil-kingdom-02-crystal-grove.png",
+    "/node-level/frostveil-kingdom/frostveil-kingdom-03-frozen-falls.png",
+    "/node-level/frostveil-kingdom/frostveil-kingdom-04-ice-citadel.png",
+    "/node-level/frostveil-kingdom/frostveil-kingdom-05-frostveil-palace.png",
   ],
 };
 
@@ -110,98 +146,107 @@ const WORLD_WORDS: Record<WorldId, string[]> = {
   sakura: ["bloom", "petal", "pink", "park", "wind", "pond", "koi", "lotus", "tea", "garden", "shrine", "hill", "sakura", "sanctuary", "lantern", "mochi", "ribbon", "spring", "temple", "blossom"],
   castle: ["gate", "royal", "court", "knight", "hall", "king", "keep", "crown", "citadel", "sword", "shield", "armor", "banner", "castle", "dragon", "wizard", "scroll", "gold", "gem", "throne"],
   space: ["star", "glade", "nebula", "grove", "galaxy", "pool", "cosmic", "ruins", "astral", "observatory", "comet", "planet", "orbit", "quasar", "cosmos", "gravity", "stellar", "photon", "void", "moon"],
-  autumn: ["camp", "pine", "fire", "circle", "bear", "ridge", "ranger", "lookout", "leaf", "cabin", "trail", "ember", "acorn", "harvest", "cider", "maple", "hearth", "golden", "twig", "lantern"],
+  autumn: ["camp", "pine", "fire", "circle", "bear", "ridge", "ranger", "lookout", "trail", "ember", "tent", "lantern", "bridge", "watchtower", "cliff", "lodge", "summit", "forest", "signal", "campfire"],
   mushroom: ["mushroom", "fairy", "hollow", "glow", "grove", "crystal", "thicket", "queen", "tree", "spore", "cap", "root", "fern", "twinkle", "sprite", "moss", "dew", "petal", "magic", "village"],
-  moonlit: ["moon", "gate", "silver", "pond", "jasmine", "walk", "lunar", "shrine", "night", "pavilion", "star", "garden", "glow", "quiet", "mist", "dream", "stone", "lantern", "petal", "shadow"],
-  rainy: ["reading", "nook", "archive", "hall", "grand", "library", "wizard", "study", "ancient", "archives", "book", "page", "ink", "quill", "scroll", "shelf", "paper", "rain", "window", "tome"],
-  snowy: ["frost", "path", "pine", "ridge", "frozen", "creek", "blizzard", "pass", "winter", "lodge", "snow", "cabin", "ice", "fire", "mittens", "fir", "crystal", "drift", "flake", "summit"],
+  "volcanic-forge": ["ember", "lava", "magma", "ash", "cinder", "forge", "crater", "volcano", "smoke", "vent", "boulder", "crystal", "basalt", "stone", "bridge", "river", "pool", "peak", "core", "erupt"],
   sunflower: ["daisy", "path", "sunflower", "field", "windmill", "hill", "golden", "harvest", "haven", "meadow", "bee", "seed", "petal", "wheat", "farm", "breeze", "barn", "honey", "bright", "summer"],
+  "desert-oasis": ["sand", "cactus", "oasis", "palm", "dune", "ruin", "pyramid", "sphinx", "sun", "heat", "stone", "temple", "gold", "pharaoh", "scroll", "caravan", "storm", "mirage", "silk", "camel"],
+  "steam-punk-workshop": ["gear", "steam", "copper", "pipe", "valve", "boiler", "forge", "anvil", "brass", "piston", "cog", "wheel", "clock", "spring", "metal", "iron", "furnace", "chain", "belt", "bolt"],
+  "frostveil-kingdom": ["frost", "ice", "crystal", "snow", "glacier", "palace", "frozen", "winter", "cold", "gem", "shard", "sleet", "snowflake", "blizzard", "north", "frost", "spire", "glow", "chill", "magic"]
 };
 
 const STAGE_DEFS: Record<WorldId, Array<{ name: string; emoji: string; difficulty: Difficulty }>> = {
   cafe: [
-    { name: "Cafe Corner", emoji: "☕", difficulty: "Easy" },
-    { name: "Roast Ridge", emoji: "🫘", difficulty: "Easy" },
-    { name: "Latte Lake", emoji: "🥛", difficulty: "Normal" },
-    { name: "Bean Garden", emoji: "🌱", difficulty: "Hard" },
-    { name: "Mocha Manor", emoji: "👑", difficulty: "Boss" },
+    { name: "Cafe Corner", emoji: "â˜•", difficulty: "Easy" },
+    { name: "Roast Ridge", emoji: "ðŸ«˜", difficulty: "Easy" },
+    { name: "Latte Lake", emoji: "ðŸ¥›", difficulty: "Normal" },
+    { name: "Bean Garden", emoji: "ðŸŒ±", difficulty: "Hard" },
+    { name: "Mocha Manor", emoji: "ðŸ‘‘", difficulty: "Boss" },
   ],
   forest: [
-    { name: "Mossy Trail", emoji: "🌿", difficulty: "Easy" },
-    { name: "Fern Grove", emoji: "🌲", difficulty: "Easy" },
-    { name: "Fox Hollow", emoji: "🦊", difficulty: "Normal" },
-    { name: "Whisper Woods", emoji: "🍃", difficulty: "Hard" },
+    { name: "Mossy Trail", emoji: "ðŸŒ¿", difficulty: "Easy" },
+    { name: "Fern Grove", emoji: "ðŸŒ²", difficulty: "Easy" },
+    { name: "Fox Hollow", emoji: "ðŸ¦Š", difficulty: "Normal" },
+    { name: "Whisper Woods", emoji: "ðŸƒ", difficulty: "Hard" },
     { name: "Elder Tree", emoji: "🌳", difficulty: "Boss" },
   ],
-  snowy: [
-    { name: "Frost Path", emoji: "❄️", difficulty: "Easy" },
-    { name: "Pine Ridge", emoji: "🌲", difficulty: "Easy" },
-    { name: "Frozen Creek", emoji: "🧊", difficulty: "Normal" },
-    { name: "Blizzard Pass", emoji: "🌨️", difficulty: "Hard" },
-    { name: "Winter Lodge", emoji: "🏔️", difficulty: "Boss" },
-  ],
   ocean: [
-    { name: "Tide Pool", emoji: "🐚", difficulty: "Easy" },
-    { name: "Coral Reef", emoji: "🪸", difficulty: "Easy" },
-    { name: "Pearl Grotto", emoji: "🦪", difficulty: "Normal" },
-    { name: "Deep Abyss", emoji: "🐙", difficulty: "Hard" },
-    { name: "Sea Palace", emoji: "🐳", difficulty: "Boss" },
+    { name: "Tide Pool", emoji: "ðŸš", difficulty: "Easy" },
+    { name: "Coral Reef", emoji: "ðŸª¸", difficulty: "Easy" },
+    { name: "Pearl Grotto", emoji: "ðŸ¦ª", difficulty: "Normal" },
+    { name: "Deep Abyss", emoji: "ðŸ™", difficulty: "Hard" },
+    { name: "Sea Palace", emoji: "ðŸ³", difficulty: "Boss" },
   ],
   sakura: [
-    { name: "Blossom Path", emoji: "🌸", difficulty: "Easy" },
-    { name: "Lotus Pond", emoji: "🪷", difficulty: "Easy" },
-    { name: "Tea Garden", emoji: "🍵", difficulty: "Normal" },
-    { name: "Shrine Hill", emoji: "⛩️", difficulty: "Hard" },
-    { name: "Sakura Sanctuary", emoji: "👘", difficulty: "Boss" },
+    { name: "Blossom Path", emoji: "ðŸŒ¸", difficulty: "Easy" },
+    { name: "Lotus Pond", emoji: "ðŸª·", difficulty: "Easy" },
+    { name: "Tea Garden", emoji: "ðŸµ", difficulty: "Normal" },
+    { name: "Shrine Hill", emoji: "â›©ï¸", difficulty: "Hard" },
+    { name: "Sakura Sanctuary", emoji: "ðŸ‘˜", difficulty: "Boss" },
   ],
   castle: [
-    { name: "Castle Gate", emoji: "🏰", difficulty: "Easy" },
-    { name: "Royal Courtyard", emoji: "👑", difficulty: "Easy" },
-    { name: "Knight's Hall", emoji: "⚔️", difficulty: "Normal" },
-    { name: "King's Keep", emoji: "🛡️", difficulty: "Hard" },
-    { name: "Crown Citadel", emoji: "🐉", difficulty: "Boss" },
+    { name: "Castle Gate", emoji: "ðŸ°", difficulty: "Easy" },
+    { name: "Royal Courtyard", emoji: "ðŸ‘‘", difficulty: "Easy" },
+    { name: "Knight's Hall", emoji: "âš”ï¸", difficulty: "Normal" },
+    { name: "King's Keep", emoji: "ðŸ›¡ï¸", difficulty: "Hard" },
+    { name: "Crown Citadel", emoji: "ðŸ‰", difficulty: "Boss" },
   ],
   space: [
-    { name: "Star Glade", emoji: "⭐", difficulty: "Easy" },
-    { name: "Nebula Grove", emoji: "🌌", difficulty: "Easy" },
-    { name: "Galaxy Pool", emoji: "🪐", difficulty: "Normal" },
-    { name: "Cosmic Ruins", emoji: "☄️", difficulty: "Hard" },
-    { name: "Astral Observatory", emoji: "👾", difficulty: "Boss" },
+    { name: "Star Glade", emoji: "â­", difficulty: "Easy" },
+    { name: "Nebula Grove", emoji: "ðŸŒŒ", difficulty: "Easy" },
+    { name: "Galaxy Pool", emoji: "ðŸª", difficulty: "Normal" },
+    { name: "Cosmic Ruins", emoji: "â˜„ï¸", difficulty: "Hard" },
+    { name: "Astral Observatory", emoji: "ðŸ‘¾", difficulty: "Boss" },
   ],
   mushroom: [
-    { name: "Mushroom Trail", emoji: "🍄", difficulty: "Easy" },
-    { name: "Fairy Hollow", emoji: "🧚", difficulty: "Easy" },
-    { name: "Glow Grove", emoji: "✨", difficulty: "Normal" },
-    { name: "Crystal Thicket", emoji: "💎", difficulty: "Hard" },
-    { name: "Fairy Queen's Tree", emoji: "👑", difficulty: "Boss" },
+    { name: "Mushroom Trail", emoji: "ðŸ„", difficulty: "Easy" },
+    { name: "Fairy Hollow", emoji: "ðŸ§š", difficulty: "Easy" },
+    { name: "Glow Grove", emoji: "âœ¨", difficulty: "Normal" },
+    { name: "Crystal Thicket", emoji: "ðŸ’Ž", difficulty: "Hard" },
+    { name: "Fairy Queen's Tree", emoji: "ðŸ‘‘", difficulty: "Boss" },
   ],
   sunflower: [
-    { name: "Daisy Path", emoji: "🌼", difficulty: "Easy" },
-    { name: "Sunflower Field", emoji: "🌻", difficulty: "Easy" },
-    { name: "Windmill Hill", emoji: "🌬️", difficulty: "Normal" },
-    { name: "Golden Harvest", emoji: "🌾", difficulty: "Hard" },
-    { name: "Harvest Haven", emoji: "🏡", difficulty: "Boss" },
+    { name: "Daisy Path", emoji: "ðŸŒ¼", difficulty: "Easy" },
+    { name: "Sunflower Field", emoji: "ðŸŒ»", difficulty: "Easy" },
+    { name: "Windmill Hill", emoji: "ðŸŒ¬ï¸", difficulty: "Normal" },
+    { name: "Golden Harvest", emoji: "ðŸŒ¾", difficulty: "Hard" },
+    { name: "Harvest Haven", emoji: "ðŸ¡", difficulty: "Boss" },
   ],
-  rainy: [
-    { name: "Reading Nook", emoji: "📚", difficulty: "Easy" },
-    { name: "Archive Hall", emoji: "🗄️", difficulty: "Easy" },
-    { name: "Grand Library", emoji: "📖", difficulty: "Normal" },
-    { name: "Wizard's Study", emoji: "🧙", difficulty: "Hard" },
-    { name: "Ancient Archives", emoji: "🔮", difficulty: "Boss" },
+  "volcanic-forge": [
+    { name: "Ember Trail", emoji: "🔥", difficulty: "Easy" },
+    { name: "Lava Cavern", emoji: "🕳️", difficulty: "Easy" },
+    { name: "Molten Crossing", emoji: "🌊", difficulty: "Normal" },
+    { name: "Magma Summit", emoji: "⛰️", difficulty: "Hard" },
+    { name: "Inferno Forge", emoji: "⚒️", difficulty: "Boss" },
+  ],
+  "desert-oasis": [
+    { name: "Sandy Trail", emoji: "🐪", difficulty: "Easy" },
+    { name: "Cactus Camp", emoji: "⛺", difficulty: "Easy" },
+    { name: "Oasis Spring", emoji: "🌴", difficulty: "Normal" },
+    { name: "Sunstone Dunes", emoji: "🏜️", difficulty: "Hard" },
+    { name: "Golden Pyramid", emoji: "🔺", difficulty: "Boss" },
   ],
   autumn: [
-    { name: "Camp Entrance", emoji: "🏕️", difficulty: "Easy" },
-    { name: "Pine Camp", emoji: "🌲", difficulty: "Easy" },
-    { name: "Campfire Circle", emoji: "🔥", difficulty: "Normal" },
-    { name: "Bear Ridge", emoji: "🐻", difficulty: "Hard" },
-    { name: "Ranger's Lookout", emoji: "🧭", difficulty: "Boss" },
+    { name: "Camp Entrance", emoji: "ðŸ•ï¸", difficulty: "Easy" },
+    { name: "Pine Camp", emoji: "ðŸŒ²", difficulty: "Easy" },
+    { name: "Campfire Circle", emoji: "ðŸ”¥", difficulty: "Normal" },
+    { name: "Bear Ridge", emoji: "ðŸ»", difficulty: "Hard" },
+    { name: "Ranger's Lookout", emoji: "ðŸ§­", difficulty: "Boss" },
   ],
-  moonlit: [
-    { name: "Moon Gate", emoji: "🌙", difficulty: "Easy" },
-    { name: "Silver Pond", emoji: "💧", difficulty: "Easy" },
-    { name: "Jasmine Walk", emoji: "🌼", difficulty: "Normal" },
-    { name: "Lunar Shrine", emoji: "⛩️", difficulty: "Hard" },
-    { name: "Moonlit Pavilion", emoji: "🏯", difficulty: "Boss" },
+
+  "steam-punk-workshop": [
+    { name: "Gear Yard", emoji: "⚙️", difficulty: "Easy" },
+    { name: "Boiler Room", emoji: "🛡️", difficulty: "Easy" },
+    { name: "Copper Works", emoji: "⚙️", difficulty: "Normal" },
+    { name: "Steam Forge", emoji: "🔥", difficulty: "Hard" },
+    { name: "Clockwork Core", emoji: "⏰", difficulty: "Boss" },
+  ],
+  "frostveil-kingdom": [
+    { name: "Frost Path", emoji: "❄️", difficulty: "Easy" },
+    { name: "Crystal Grove", emoji: "💎", difficulty: "Easy" },
+    { name: "Frozen Falls", emoji: "💧", difficulty: "Normal" },
+    { name: "Ice Citadel", emoji: "🏰", difficulty: "Hard" },
+    { name: "Frostveil Palace", emoji: "👑", difficulty: "Boss" },
   ],
 };
 
@@ -218,17 +263,17 @@ const STAGES_BY_WORLD: Record<WorldId, Stage[]> = Object.fromEntries(
 ) as Record<WorldId, Stage[]>;
 
 const BOSS_PHASE_EMOJIS: Record<string, [string, string, string]> = {
-  "👑": ["👑", "⚔️", "✨"],
-  "🌳": ["🌳", "🍃", "🌕"],
-  "🏔️": ["🏔️", "❄️", "💫"],
-  "🐳": ["🐳", "🌊", "💫"],
-  "👘": ["👘", "🎀", "🌸"],
-  "🐉": ["🐉", "🔥", "⚡"],
-  "👾": ["👾", "💥", "☄️"],
-  "🏡": ["🏡", "🌾", "🌻"],
-  "🔮": ["🔮", "📖", "✨"],
-  "🧭": ["🧭", "🔥", "🌲"],
-  "🏯": ["🏯", "🌙", "✨"],
+  "ðŸ‘‘": ["ðŸ‘‘", "âš”ï¸", "âœ¨"],
+  "ðŸŒ³": ["ðŸŒ³", "ðŸƒ", "ðŸŒ•"],
+  "ðŸ”ï¸": ["ðŸ”ï¸", "â„ï¸", "ðŸ’«"],
+  "ðŸ³": ["ðŸ³", "ðŸŒŠ", "ðŸ’«"],
+  "ðŸ‘˜": ["ðŸ‘˜", "ðŸŽ€", "ðŸŒ¸"],
+  "ðŸ‰": ["ðŸ‰", "ðŸ”¥", "âš¡"],
+  "ðŸ‘¾": ["ðŸ‘¾", "ðŸ’¥", "â˜„ï¸"],
+  "ðŸ¡": ["ðŸ¡", "ðŸŒ¾", "ðŸŒ»"],
+  "ðŸ”®": ["ðŸ”®", "ðŸ“–", "âœ¨"],
+  "ðŸ§­": ["ðŸ§­", "ðŸ”¥", "ðŸŒ²"],
+  "ðŸ¯": ["ðŸ¯", "ðŸŒ™", "âœ¨"],
 };
 
 function wordsFor(world: WorldId, stageId: number) {
@@ -237,7 +282,7 @@ function wordsFor(world: WorldId, stageId: number) {
 }
 
 function bossEmojis(emoji: string): [string, string, string] {
-  return BOSS_PHASE_EMOJIS[emoji] ?? [emoji, "💢", "💫"];
+  return BOSS_PHASE_EMOJIS[emoji] ?? [emoji, "ðŸ’¢", "ðŸ’«"];
 }
 
 function rewardsFor(stage: Stage): { xp: number; coins: number } {
@@ -337,7 +382,7 @@ async function measureVisibleImageBounds(src: string): Promise<VisibleImageBound
 }
 
 function AdventureNodeImage({ src, alt, className }: { src: string; alt: string; className: string }) {
-  const frameRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [bounds, setBounds] = useState<VisibleImageBounds | null>(NODE_IMAGE_BOUNDS_CACHE.get(src) ?? null);
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
 
@@ -358,7 +403,8 @@ function AdventureNodeImage({ src, alt, className }: { src: string; alt: string;
   }, [src]);
 
   useEffect(() => {
-    const frame = frameRef.current;
+    const image = imageRef.current;
+    const frame = image?.parentElement;
     if (!frame || typeof ResizeObserver === "undefined") return;
 
     const updateSize = () =>
@@ -391,33 +437,48 @@ function AdventureNodeImage({ src, alt, className }: { src: string; alt: string;
   }, [bounds, frameSize.height, frameSize.width]);
 
   return (
-    <div ref={frameRef} className="adventure-node-image-frame">
-      <img
-        src={src}
-        alt={alt}
-        className={`${className} ${measuredStyle ? "adventure-node-img-measured" : ""}`}
-        style={measuredStyle}
-        draggable={false}
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
+    <img
+      ref={imageRef}
+      src={src}
+      alt={alt}
+      className={`${className} ${measuredStyle ? "adventure-node-img-measured" : ""}`}
+      style={measuredStyle}
+      draggable={false}
+      loading="lazy"
+      decoding="async"
+    />
   );
 }
 
 export function AdventureMap() {
   const { world } = useWorld();
   const { state, dispatch } = useGame();
+  const [adaptiveGoals, setAdaptiveGoals] = useState<Record<Difficulty, number> | null>(null);
+
+  useEffect(() => {
+    precomputeGoals().then(setAdaptiveGoals).catch(() => {});
+  }, []);
+
+  const goals = adaptiveGoals ?? getCachedGoals();
+  const stagesForWorld = useCallback((worldId: WorldId): Stage[] =>
+    STAGE_DEFS[worldId].map((stage, index) => ({
+      id: index + 1,
+      ...stage,
+      goal: goals[stage.difficulty] + (index === 1 ? 5 : 0),
+      words: wordsFor(worldId, index + 1),
+    })),
+  [goals]);
+
   const orderedWorlds = [
     ...WORLDS.filter((item) => item.id === world),
     ...WORLDS.filter((item) => item.id !== world),
   ];
-  const allStages = orderedWorlds.flatMap((item) => STAGES_BY_WORLD[item.id]);
+  const allStages = useMemo(() => orderedWorlds.flatMap((item) => stagesForWorld(item.id)), [orderedWorlds, stagesForWorld]);
   const totalCleared = orderedWorlds.reduce((sum, item) => sum + (state.adventures[item.id]?.length ?? 0), 0);
   const [active, setActive] = useState<{ stage: Stage; world: WorldId } | null>(null);
 
   const statusOf = (worldId: WorldId, stage: Stage, index: number): Status => {
-    const stages = STAGES_BY_WORLD[worldId];
+    const stages = stagesForWorld(worldId);
     const completed = state.adventures[worldId] ?? [];
     if (completed.includes(stage.id)) return "complete";
     if (index === 0) return "available";
@@ -426,10 +487,10 @@ export function AdventureMap() {
 
   const clearedPercent = Math.round((totalCleared / allStages.length) * 100);
   const nextWorld = orderedWorlds.find((item) =>
-    STAGES_BY_WORLD[item.id].some((stage, index) => statusOf(item.id, stage, index) === "available"),
+    stagesForWorld(item.id).some((stage, index) => statusOf(item.id, stage, index) === "available"),
   );
   const nextStage = nextWorld
-    ? STAGES_BY_WORLD[nextWorld.id].find((stage, index) => statusOf(nextWorld.id, stage, index) === "available")
+    ? stagesForWorld(nextWorld.id).find((stage, index) => statusOf(nextWorld.id, stage, index) === "available")
     : undefined;
 
   return (
@@ -460,7 +521,7 @@ export function AdventureMap() {
 
       <div className="adventure-world-list">
         {orderedWorlds.map((theme) => {
-          const stages = STAGES_BY_WORLD[theme.id];
+          const stages = stagesForWorld(theme.id);
           const completed = state.adventures[theme.id] ?? [];
           const worldClearedPercent = Math.round((completed.length / stages.length) * 100);
 
@@ -512,13 +573,17 @@ export function AdventureMap() {
         <StageRunner
           stage={active.stage}
           world={active.world}
+          alreadyCompleted={(state.adventures[active.world] ?? []).includes(active.stage.id)}
           onClose={() => setActive(null)}
           onWin={() => {
-            const { xp, coins } = rewardsFor(active.stage);
+            const alreadyCompleted = (state.adventures[active.world] ?? []).includes(active.stage.id);
+            if (!alreadyCompleted) {
+              const { xp, coins } = rewardsFor(active.stage);
+              dispatch({ type: "ADD_XP", amount: xp });
+              dispatch({ type: "EARN_COINS", amount: coins });
+              dispatch({ type: "ADD_PET_XP", amount: coins });
+            }
             dispatch({ type: "COMPLETE_STAGE", world: active.world, stageId: active.stage.id });
-            dispatch({ type: "ADD_XP", amount: xp });
-            dispatch({ type: "EARN_COINS", amount: coins });
-            dispatch({ type: "ADD_PET_XP", amount: coins });
           }}
         />
       )}
@@ -564,7 +629,7 @@ function StageNode({
       type="button"
     >
       <div className="adventure-stage-ribbon">Stage {index + 1}</div>
-      <div className="adventure-node-icon" data-has-image={Boolean(image)}>
+      <div className="adventure-node-visual" data-has-image={Boolean(image)}>
         {image ? (
           <AdventureNodeImage src={image} alt={`${stage.name} node`} className="adventure-node-img" />
         ) : (
@@ -575,17 +640,19 @@ function StageNode({
             <img src={LOCK_ICON} alt="Locked" className="adventure-lock-img" draggable={false} />
           </span>
         )}
-        {status === "complete" && <span className="adventure-node-overlay adventure-node-overlay-check">✓</span>}
+
       </div>
       <div className="adventure-node-name-plaque">{stage.name}</div>
       <div className="adventure-node-meta">
         <span className="adventure-difficulty-pill">{stage.difficulty}</span>
         <span className="adventure-wpm-pill">{stage.goal} WPM</span>
       </div>
-      <div className="adventure-node-reward">
-        <span>+{xp} XP</span>
-        <span>+{coins} Coins</span>
-      </div>
+      {status !== "complete" && (
+        <div className="adventure-node-reward">
+          <span>+{xp} XP</span>
+          <span>+{coins} Coins</span>
+        </div>
+      )}
       <div className="adventure-node-action">{actionLabel}</div>
     </button>
   );
@@ -594,11 +661,13 @@ function StageNode({
 function StageRunner({
   stage,
   world,
+  alreadyCompleted,
   onClose,
   onWin,
 }: {
   stage: Stage;
   world: WorldId;
+  alreadyCompleted: boolean;
   onClose: () => void;
   onWin: () => void;
 }) {
@@ -627,6 +696,7 @@ function StageRunner({
   const [done, setDone] = useState<null | "win" | "lose">(null);
   const [bossIntro, setBossIntro] = useState(isBoss);
   const [questText, setQuestText] = useState<string | null>(null);
+  const [winHandled, setWinHandled] = useState(false);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -649,6 +719,7 @@ function StageRunner({
     setDone(null);
     setBossIntro(isBoss);
     setIsGeneratingWords(false);
+    setWinHandled(false);
   }, [isBoss, stage.id, stage.words]);
 
   useEffect(() => {
@@ -709,8 +780,11 @@ function StageRunner({
     if (!startedAt || done || elapsed < timeLimit) return;
     const passed = wpm >= stage.goal && acc >= minAcc;
     setDone(passed ? "win" : "lose");
-    if (passed) onWin();
-  }, [acc, done, elapsed, minAcc, onWin, stage.goal, startedAt, timeLimit, wpm]);
+    if (passed && !winHandled) {
+      onWin();
+      setWinHandled(true);
+    }
+  }, [acc, done, elapsed, minAcc, onWin, stage.goal, startedAt, timeLimit, winHandled, wpm]);
 
   const reset = () => {
     setTyped("");
@@ -721,6 +795,7 @@ function StageRunner({
     setDone(null);
     setTargetWords(expandWords(stage.words, 72));
     setIsGeneratingWords(false);
+    setWinHandled(false);
     setTimeout(() => inputRef.current?.focus(), 0);
   };
 
@@ -745,9 +820,12 @@ function StageRunner({
 
   if (bossIntro) {
     return (
-      <div className="adventure-modal" onClick={onClose}>
-        <div className="adventure-runner-card pixel-card animate-pixel-pop" onClick={(event) => event.stopPropagation()}>
-          <span className="adventure-boss-emoji">{stage.emoji}</span>
+      <div className="adventure-modal">
+        <div className="adventure-runner-card pixel-card animate-pixel-pop">
+          <div className="adventure-runner-header">
+            <span className="adventure-boss-emoji">{stage.emoji}</span>
+            <button className="pixel-btn pixel-btn-secondary adventure-close-btn" onClick={onClose} type="button">X</button>
+          </div>
           <div className="font-display text-4xl leading-none mb-2">{stage.name}</div>
           <p className="font-pixel text-[0.65rem] text-muted-foreground mb-4">{questText || "A boss stage appears. Type fast and stay accurate."}</p>
           <div className="grid grid-cols-3 gap-3 mb-4">
@@ -764,8 +842,8 @@ function StageRunner({
   }
 
   return (
-    <div className="adventure-modal" onClick={onClose}>
-      <div className="adventure-runner-card pixel-card animate-pixel-pop" onClick={(event) => event.stopPropagation()}>
+    <div className="adventure-modal">
+      <div className="adventure-runner-card pixel-card animate-pixel-pop">
         <div className="adventure-runner-header">
           <div className="flex items-center gap-2">
             <span className="text-3xl">{isBoss ? phaseEmojis[currentPhase] : stage.emoji}</span>
@@ -857,17 +935,25 @@ function StageRunner({
 
         {done && (
           <div className="adventure-result pixel-card-sm">
-            <div className="text-4xl mb-2">{done === "win" ? "🏆" : "💔"}</div>
+            <div className="text-4xl mb-2">{done === "win" ? "ðŸ†" : "ðŸ’”"}</div>
             <div className="font-display text-2xl leading-none mb-1">
               {done === "win" ? "Stage Cleared!" : "Try Again"}
             </div>
             <p className="font-pixel text-[0.65rem] text-muted-foreground mb-3">
-              {done === "win" ? `+${xpReward} XP - +${coinReward} coins` : `Need ${stage.goal} WPM and ${minAcc}% accuracy before time runs out.`}
+              {done === "win"
+                ? alreadyCompleted
+                  ? "Replay clear only. No extra XP or coins for completed quests."
+                  : `+${xpReward} XP - +${coinReward} coins`
+                : `Need ${stage.goal} WPM and ${minAcc}% accuracy before time runs out.`}
             </p>
             <div className="flex justify-center gap-2">
-              <button className="pixel-btn pixel-btn-secondary" onClick={onClose} type="button">Map</button>
               <button className="pixel-btn" onClick={reset} type="button">{done === "win" ? "Replay" : "Retry"}</button>
             </div>
+            {done === "win" && (
+              <p className="font-pixel text-[0.55rem] text-muted-foreground mt-3">
+                Press Esc or click X to leave this quest.
+              </p>
+            )}
           </div>
         )}
       </div>

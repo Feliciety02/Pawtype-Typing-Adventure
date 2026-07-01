@@ -15,6 +15,9 @@ Planned features and high-potential additions to expand the game.
 ### Dynamic Passage Generator
 âœ… **Shipped** - Word-level Markov chain generator that creates unique, thematically-coherent typing passages per world. Uses themed word pools for each of the 13 worlds, builds a probabilistic transition graph, and generates novel sequences that feel natural. Integrates with the Pattern Analyzer to boost weak-spot characters into generated text. Falls back gracefully to the existing rotation-based word pool system. Powers adventure stage words, world descriptions, and quest text.
 
+### Adaptive Difficulty & Recommendations
+âœ… **Shipped** - Adventure stage WPM goals now adapt to each player's skill level based on recent session history (up to 15 sessions). Dynamic goal calculation adjusts Easy/Normal/Hard/Boss targets to match the player's average WPM. Hub dashboard shows a daily AI suggestion (speed drill, accuracy focus, weak key practice, warmup, or steady pace tip) based on session trends and pattern analysis. Progress summary tracks WPM changes, accuracy trends, and consistency over the last 30 sessions.
+
 ### Cozy Campsite Adventure Refresh
 âœ… **Shipped** - The former Autumn Cottage world is now Cozy Campsite, with updated theme copy, shop and docs text, campsite-flavored typing prompts, ember ambience, and a dedicated five-node adventure art set wired using the same filename pattern as the other worlds.
 
