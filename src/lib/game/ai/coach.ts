@@ -1,5 +1,6 @@
 import type { CoachInsight, SessionData } from "./types";
 import { loadRecentSessions, computeTrends, personalBestWpm } from "./history";
+import { analyzePatterns, drillRecommendation } from "./patterns";
 
 function topMistakeChar(keystrokes: SessionData["keystrokes"]): { char: string; count: number } | null {
   const counts = new Map<string, number>();
@@ -134,6 +135,38 @@ function buildFallbackInsight(session: SessionData): CoachInsight {
   };
 }
 
+async function buildPatternInsight(session: SessionData): Promise<CoachInsight | null> {
+  const report = await analyzePatterns(30);
+  if (!report || report.topWeakChars.length === 0) return null;
+
+  const sessionMistake = topMistakeChar(session.keystrokes);
+  const topWeak = report.topWeakChars[0];
+
+  if (sessionMistake && sessionMistake.char === topWeak.char && session.accuracy > 90) {
+    return {
+      type: "trend",
+      text: `The "${topWeak.char}" key used to be your weakest (${topWeak.accuracy}% historically) — but you handled it well this run. Improvement is real.`,
+    };
+  }
+
+  if (report.weakestZone && report.weakestZone.accuracy < 85 && report.weakestZone.mistakes > 5) {
+    return {
+      type: "tip",
+      text: `Your ${report.weakestZone.label.toLowerCase()} zone is at ${report.weakestZone.accuracy}% accuracy overall. Try slow drills targeting those keys.`,
+    };
+  }
+
+  if (report.topWeakBigrams.length > 0) {
+    const top = report.topWeakBigrams[0];
+    return {
+      type: "tip",
+      text: `The "${top.pair}" sequence trips you up often (${top.accuracy}% accuracy). Practice transitioning between those two letters slowly.`,
+    };
+  }
+
+  return null;
+}
+
 export async function getCoachFeedback(session: SessionData): Promise<CoachInsight | null> {
   try {
     const recent = await loadRecentSessions(15);
@@ -142,6 +175,9 @@ export async function getCoachFeedback(session: SessionData): Promise<CoachInsig
 
     const trendInsight = trends ? buildTrendInsight(session, trends) : null;
     if (trendInsight) return trendInsight;
+
+    const patternInsight = await buildPatternInsight(session);
+    if (patternInsight) return patternInsight;
 
     const momentumInsight = buildMomentumInsight(session, allTimeBest);
     if (momentumInsight) return momentumInsight;
