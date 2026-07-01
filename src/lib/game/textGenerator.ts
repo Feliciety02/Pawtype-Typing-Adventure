@@ -122,7 +122,7 @@ export async function generateAdventureWords(
   const tokens = normalizeWords([
     ...seedWords,
     ...stageName.split(/[^a-zA-Z]+/),
-    ...WORLD_THEMES[worldId].split(/[^a-zA-Z]+/),
+    ...(WORLD_THEMES[worldId] ?? "").split(/[^a-zA-Z]+/),
   ]);
   if (tokens.length === 0) return null;
   return rotatePick(tokens, count, `${worldId}:${stageName}:${count}`);
