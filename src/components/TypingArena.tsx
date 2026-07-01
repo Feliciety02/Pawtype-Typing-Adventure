@@ -41,7 +41,7 @@ type Mood = "idle" | "happy" | "oops" | "sleep";
 
 const DURATIONS = [15, 30, 60] as const;
 
-const WORLD_ART_URL: Record<WorldId, string> = {
+const WORLD_ART_URL: Partial<Record<WorldId, string>> = {
   cafe: "/theme/cozy-cafe.png",
   forest: "/theme/mossy-forest.png",
   ocean: "/theme/tide-pool.png",
