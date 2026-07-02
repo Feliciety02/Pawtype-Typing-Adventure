@@ -117,7 +117,7 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
             </p>
           </div>
         </div>
-        <div className="font-pixel text-[0.65rem]" style={{ color: "var(--coin)" }}>🪙 {reward?.coins ?? 0}</div>
+        <div className="font-pixel text-[0.65rem]" style={{ color: "var(--coin)" }}><img src="/Icons/coin.png" alt="" className="pixel-icon" /> {reward?.coins ?? 0}</div>
       </div>
 
       {/* AI Suggestion */}
@@ -134,7 +134,7 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
           }}>
           <span className="text-3xl">
             {suggestion.type === "speed" ? "⚡" :
-             suggestion.type === "accuracy" ? "🎯" :
+             suggestion.type === "accuracy" ? <img src="/Icons/dart.png" alt="" className="pixel-icon" /> :
              suggestion.type === "weakness" ? "💪" :
              suggestion.type === "warmup" ? "🔥" : "💡"}
           </span>

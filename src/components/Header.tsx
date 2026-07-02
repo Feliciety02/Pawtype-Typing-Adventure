@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell, LogIn, LogOut, Settings, BarChart3, ChevronDown } from "lucide-react";
+import { LogIn, LogOut, Settings, BarChart3, ChevronDown } from "lucide-react";
 import { useGame } from "../lib/game/store";
 import { useAuth } from "../hooks/use-auth";
 import { AuthForm } from "./AuthForm";
@@ -91,7 +91,7 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
         >
           <div className="hud-avatar-wrap">
             <div className="hud-avatar">
-              {activePet ? <PixelPet pet={activePet} size={48} showDetails={false} /> : <div className="hud-avatar-fallback">P</div>}
+              {activePet ? <PixelPet pet={activePet} size={50} showDetails={false} /> : <div className="hud-avatar-fallback">P</div>}
             </div>
             <span className="hud-level-badge">Lv.{player.level}</span>
           </div>
@@ -145,12 +145,12 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
 
       <div className="hud-right">
         <div className="hud-coins">
-          <span className="hud-coins-icon">🪙</span>
+          <img src="/Icons/coin.png" alt="" className="hud-coins-icon" />
           <strong className="hud-coins-value" suppressHydrationWarning>{player.coins.toLocaleString()}</strong>
         </div>
         <div className="hud-notif-wrap" ref={notifRef}>
           <button className={`hud-notif-btn ${notifOpen ? "is-active" : ""}`} onClick={() => setNotifOpen((o) => !o)}>
-            <Bell size={18} />
+            <img src="/Icons/notification.png" alt="" className="hud-notif-icon" />
             {unread > 0 && <span className="hud-badge">{unread > 9 ? "9+" : unread}</span>}
           </button>
           {notifOpen && <NotificationsPanel onClose={() => setNotifOpen(false)} />}

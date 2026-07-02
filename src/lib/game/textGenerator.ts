@@ -110,6 +110,56 @@ export async function generateQuestText(stageName: string, worldId: WorldId): Pr
   return `${stageName} opens as ${lines[stageName.length % lines.length].toLowerCase()}.`;
 }
 
+export function sprinklePunctuation(words: string[]): string[] {
+  if (words.length === 0) return words;
+  const result: string[] = [];
+  let sincePeriod = 0;
+  let sinceComma = 0;
+  for (let i = 0; i < words.length; i++) {
+    sincePeriod++;
+    sinceComma++;
+    const word = words[i];
+    const remaining = words.length - i - 1;
+    if (sincePeriod >= 5 + Math.floor(Math.random() * 6) && remaining >= 2) {
+      result.push(word + ".");
+      sincePeriod = 0;
+      sinceComma = 0;
+    } else if (sinceComma >= 3 + Math.floor(Math.random() * 4) && remaining >= 1) {
+      const mark = Math.random() < 0.15 ? ";" : Math.random() < 0.25 ? ":" : ",";
+      result.push(word + mark);
+      sinceComma = 0;
+    } else if (Math.random() < 0.03 && remaining >= 2) {
+      result.push(word + (Math.random() < 0.5 ? "!" : "?"));
+      sincePeriod = 0;
+      sinceComma = 0;
+    } else {
+      result.push(word);
+    }
+  }
+  if (sincePeriod < 4 && result.length > 0) {
+    const last = result[result.length - 1];
+    const punct = last.endsWith(".") || last.endsWith("!") || last.endsWith("?") ? "" : ".";
+    if (punct) result[result.length - 1] = last + punct;
+  }
+  return result;
+}
+
+export async function generateNextWords(worldId: WorldId, count = 30): Promise<string[]> {
+  const text = await aiWorldText(worldId).catch(() => null);
+  if (text) {
+    const words = text.replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
+    if (words.length >= 5) return sprinklePunctuation(words.slice(0, count));
+  }
+  const lines = WORLD_LINES[worldId];
+  if (lines) {
+    const pool = lines.join(" ").replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
+    const batch = Array.from({ length: count }, () => pool[Math.floor(Math.random() * pool.length)]);
+    return sprinklePunctuation(batch);
+  }
+  const batch = Array.from({ length: count }, () => WORD_POOL[Math.floor(Math.random() * WORD_POOL.length)]);
+  return sprinklePunctuation(batch);
+}
+
 export async function generateAdventureWords(
   stageName: string,
   worldId: WorldId,

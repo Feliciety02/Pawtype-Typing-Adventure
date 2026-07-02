@@ -7,9 +7,9 @@ import { PetRoom } from "./PetRoom";
 import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 import { Confetti } from "./Confetti";
-import { AICoach } from "./AICoach";
+import { getCoachFeedback, type CoachInsight } from "../lib/game/coach";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
-import { generateWorldText, generateMascotLine, generateWeakSpotWords } from "../lib/game/textGenerator";
+import { generateWorldText, generateMascotLine, generateWeakSpotWords, generateNextWords, sprinklePunctuation } from "../lib/game/textGenerator";
 import { pushNotification } from "../lib/game/notifications";
 
 type Props = {
@@ -27,11 +27,11 @@ const WORD_BANK = [
 
 function makeWordsFrom(text: string | null): string[] {
   if (!text) return makeWords();
-  const words = text.replace(/[^\w\s]/g, "").split(/\s+/).filter(Boolean);
-  return words.length >= 15 ? words.slice(0, 50) : makeWords();
+  const words = text.split(/\s+/).filter(Boolean);
+  return words.length >= 15 ? sprinklePunctuation(words) : makeWords();
 }
 
-function makeWords(n = 50) {
+function makeWords(n = 80) {
   const out: string[] = [];
   for (let i = 0; i < n; i++) out.push(WORD_BANK[Math.floor(Math.random() * WORD_BANK.length)]);
   return out;
@@ -63,7 +63,7 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const worldArtUrl = WORLD_ART_URL[world];
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
-  const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : makeWords()));
+  const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : []));
   const [typed, setTyped] = useState("");
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -81,11 +81,16 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
   const [generatedText, setGeneratedText] = useState<string | null>(null);
   const [mascotLine, setMascotLine] = useState<string | null>(null);
   const [petRoomOpen, setPetRoomOpen] = useState(false);
+  const [coachInsight, setCoachInsight] = useState<CoachInsight | null>(null);
+  const [coachLoading, setCoachLoading] = useState(false);
+  const [coachError, setCoachError] = useState(false);
   const prevLevelRef = useRef(state.player.level);
   const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const prevWorldRef = useRef(world);
   const prevMoodRef = useRef<Mood>(mood);
+  const generatingRef = useRef(false);
+  const worldIdRef = useRef(world);
 
   const target = useMemo(() => words.join(" "), [words]);
   const wordRanges = useMemo(() => {
@@ -190,20 +195,23 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     return () => clearTimeout(t);
   }, [startedAt, finished, typed]);
 
-  // Generate world-themed text on mount / world change (skipped for lessons)
+  // Keep world ref in sync for continuous generation
+  useEffect(() => {
+    worldIdRef.current = world;
+  }, [world]);
+
+  // Generate initial words on mount / world change (skipped for lessons)
   useEffect(() => {
     if (customWords && customWords.length) return;
     setGeneratedText(null);
-    generateWorldText(world).then(setGeneratedText);
+    generateWorldText(world).then((text) => {
+      setGeneratedText(text);
+      if (text) {
+        const initial = text.replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
+        if (initial.length >= 10) setWords(initial);
+      }
+    });
   }, [world, customWords]);
-
-  // Use generated text once it loads
-  useEffect(() => {
-    if (customWords && customWords.length) return;
-    if (generatedText) {
-      setWords(makeWordsFrom(generatedText));
-    }
-  }, [generatedText, customWords]);
 
   // Generate mascot line on mood change with session context
   const mascotCtxRef = useRef({ combo: 0, bestCombo: 0, mistakes: 0, correctChars: 0, weakChars: new Set<string>() });
@@ -224,7 +232,27 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
       correctChars: ctx.correctChars,
       weakChars: [...ctx.weakChars],
     }).then(setMascotLine);
-  }, [mood]);
+    }, [mood]);
+
+  // Fetch coach feedback when race finishes
+  useEffect(() => {
+    if (!finished) {
+      setCoachInsight(null);
+      setCoachLoading(false);
+      setCoachError(false);
+      return;
+    }
+    setCoachLoading(true);
+    const isPersonalBest = wpm > 0 && wpm > parseInt(localStorage.getItem("pawtype-best-wpm") ?? "0");
+    const isPerfect = accuracy === 100;
+    if (isPersonalBest && wpm > 0) {
+      try { localStorage.setItem("pawtype-best-wpm", String(wpm)); } catch {}
+    }
+    getCoachFeedback({ wpm, accuracy, duration: elapsed, correctChars, mistakes, bestCombo, keystrokes: keystrokes.map((k) => ({ correct: k.correct, target: k.target })), isPersonalBest, isPerfect })
+      .then(setCoachInsight)
+      .catch(() => setCoachError(true))
+      .finally(() => setCoachLoading(false));
+  }, [finished]);
 
   const mistakeChars = useMemo(() => {
     return [...new Set(keystrokes.filter((k) => !k.correct).map((k) => k.target))];
@@ -249,6 +277,9 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     setCorrectChars(0);
     setFinished(false);
     setResultsOpen(false);
+    setCoachInsight(null);
+    setCoachLoading(false);
+    setCoachError(false);
     setCombo(0);
     setBestCombo(0);
     setMood("idle");
@@ -256,6 +287,17 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     if (newDuration) setDuration(newDuration);
     setTimeout(() => inputRef.current?.focus(), 0);
   }, [generatedText, customWords]);
+
+  const loadMoreWords = useCallback(async () => {
+    if (generatingRef.current) return;
+    generatingRef.current = true;
+    const id = worldIdRef.current;
+    const batch = await generateNextWords(id, 30).catch(() => null);
+    if (batch && batch.length > 0) {
+      setWords((prev) => [...prev, ...batch]);
+    }
+    generatingRef.current = false;
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (finished) return;
@@ -295,10 +337,10 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
         setMood("oops");
       }
     }
-    setTyped(next.slice(0, target.length));
-    if (next.length >= target.length) {
-      setFinished(true);
-      setMood("happy");
+    setTyped(next);
+    // Load more words when nearing the end
+    if (currentWordIndex >= words.length - 10 && !generatingRef.current) {
+      loadMoreWords();
     }
   };
 
@@ -312,6 +354,32 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     if (!total) return 100;
     return Math.round((correctChars / total) * 100);
   }, [correctChars, mistakes]);
+
+  const xp = useMemo(() => Math.round(wpm * 1.5), [wpm]);
+  const coins = useMemo(() => Math.round(wpm / 2), [wpm]);
+
+  const perfMessage = useMemo(() => {
+    if (accuracy === 100) return "⭐ Flawless victory!";
+    if (accuracy >= 95) return "✨ Incredible precision!";
+    if (accuracy >= 90) return "🌟 Great focus today!";
+    if (accuracy >= 80) return "👍 Solid effort!";
+    if (accuracy >= 70) return "💪 Keep it up!";
+    return "🌱 Room to grow!";
+  }, [accuracy]);
+
+  type Particle = { id: number; x: number; delay: number; size: number; shape: "star" | "dot"; color: string };
+  const particles = useMemo<Particle[]>(() => {
+    if (!finished) return [];
+    const COLORS = ["var(--coin)", "var(--sakura)", "var(--leaf)", "var(--sky)", "var(--color-primary)"];
+    return Array.from({ length: 14 }, (_, i) => ({
+      id: i,
+      x: 5 + Math.random() * 90,
+      delay: Math.random() * 1.8,
+      size: 4 + Math.random() * 7,
+      shape: Math.random() < 0.4 ? "star" as const : "dot" as const,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    }));
+  }, [finished]);
 
   const progress = (elapsed / duration) * 100;
 
@@ -437,7 +505,7 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
 
           <div className="typing-session-meta relative z-1">
             <span>{Math.max(0, Math.ceil(duration - elapsed))}s</span>
-            <span>{currentWordIndex + 1} / {words.length}</span>
+            <span>{currentWordIndex + 1} words</span>
           </div>
 
           <input
@@ -509,62 +577,101 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
             >
               <X size={14} />
             </button>
-            <div className="flex justify-center mb-2">
-              <PixelMascot mood="happy" size={64} />
+
+            {/* Celebration particles */}
+            <div className="results-particles" aria-hidden="true">
+              {particles.map((p) => (
+                <span
+                  key={p.id}
+                  className={`results-particle ${p.shape === "star" ? "results-particle-star" : ""}`}
+                  style={{
+                    left: `${p.x}%`,
+                    width: p.size,
+                    height: p.size,
+                    background: p.color,
+                    animationDelay: `${p.delay}s`,
+                  }}
+                />
+              ))}
             </div>
-            {mascotLine && (
-              <p className="font-pixel text-[0.55rem] text-muted-foreground text-center mb-3">{mascotLine}</p>
-            )}
-            <div className="results-title">Quest Complete!</div>
-            <div className="results-stats">
-              <div className="results-stat">
-                <div className="results-stat-label">WPM</div>
-                <div className="results-stat-value" style={{ color: "var(--color-primary)" }}>{wpm}</div>
+
+            <div className="results-grid">
+              {/* Left Column — Mascot, Title, Coach Speech Bubble */}
+              <div className="results-left">
+                <div className="flex justify-center">
+                  <PixelMascot mood="happy" size={56} />
+                </div>
+                <div className="results-title">Practice Complete!</div>
+                <p className="results-subtitle">{mascotLine ?? perfMessage}</p>
+
+                {/* Coach Speech Bubble */}
+                <div className="results-coach-bubble">
+                  <div className="results-coach-pet">
+                    <PixelMascot mood="idle" size={30} />
+                  </div>
+                  <div className="results-speech-bubble">
+                    <div className="results-speech-tail" />
+                    {coachLoading ? (
+                      <p className="results-speech-text">Analyzing your run...</p>
+                    ) : coachError ? (
+                      <p className="results-speech-text">Keep typing and I&apos;ll have feedback ready!</p>
+                    ) : coachInsight ? (
+                      <p className="results-speech-text">{coachInsight.text}</p>
+                    ) : (
+                      <p className="results-speech-text">Great work out there!</p>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="results-stat">
-                <div className="results-stat-label">Accuracy</div>
-                <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
+
+              {/* Right Column — Stats, Rewards, Buttons */}
+              <div className="results-right">
+                <div className="results-stats">
+                  <div className="results-stat">
+                    <img src="/Icons/dart.png" alt="" className="results-stat-icon" />
+                    <div className="results-stat-label">Accuracy</div>
+                    <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
+                  </div>
+                  <div className="results-stat">
+                    <span className="results-stat-icon">🔥</span>
+                    <div className="results-stat-label">Best Combo</div>
+                    <div className="results-stat-value" style={{ color: "var(--coin)" }}>{bestCombo}</div>
+                  </div>
+                  <div className="results-stat">
+                    <img src="/Icons/hourglass.png" alt="" className="results-stat-icon" />
+                    <div className="results-stat-label">Time</div>
+                    <div className="results-stat-value" style={{ color: "var(--sky)" }}>{elapsed.toFixed(0)}s</div>
+                  </div>
+                </div>
+
+                <div className="results-rewards-panel">
+                  <div className="results-reward">
+                    <img src="/Icons/star.png" alt="" className="results-reward-icon" />
+                    <span className="results-reward-value">+{xp}</span>
+                    <span className="results-reward-label">XP</span>
+                  </div>
+                  <div className="results-reward-divider" />
+                  <div className="results-reward">
+                    <img src="/Icons/coin.png" alt="" className="results-reward-icon" />
+                    <span className="results-reward-value">+{coins}</span>
+                    <span className="results-reward-label">Coins</span>
+                  </div>
+                </div>
+
+                <div className="results-actions">
+                  {mistakeChars.length > 0 && (
+                    <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={handleWeakSpotDrill} type="button">
+                      🎯 Practice: {mistakeChars.join(", ")}
+                    </button>
+                  )}
+                  <button className="pixel-btn results-btn-primary" onClick={() => reset()} type="button">
+                    ▶ Continue Practice
+                  </button>
+                  <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={() => reset()} type="button">
+                    ↻ Try Again
+                  </button>
+                </div>
               </div>
-              <div className="results-stat">
-                <div className="results-stat-label">Best Combo</div>
-                <div className="results-stat-value" style={{ color: "var(--coin)" }}>{bestCombo}</div>
-              </div>
-              <div className="results-stat">
-                <div className="results-stat-label">Time</div>
-                <div className="results-stat-value" style={{ color: "var(--sky)" }}>{elapsed.toFixed(0)}s</div>
-              </div>
-              <div className="results-stat">
-                <div className="results-stat-label">Correct</div>
-                <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{correctChars}</div>
-              </div>
-              <div className="results-stat">
-                <div className="results-stat-label">Mistakes</div>
-                <div className="results-stat-value" style={{ color: "var(--color-destructive)" }}>{mistakes}</div>
-              </div>
-            </div>
-            <div className="results-rewards">
-              +{Math.round(wpm * 1.5)} XP &nbsp; +{Math.round(wpm / 2)} 🪙
-            </div>
-            <div className="results-coach text-left">
-              <AICoach
-                wpm={wpm}
-                accuracy={accuracy}
-                duration={elapsed}
-                correctChars={correctChars}
-                mistakes={mistakes}
-                bestCombo={bestCombo}
-                keystrokes={keystrokes.map((k) => ({ correct: k.correct, target: k.target }))}
-              />
-            </div>
-            <div className="results-actions">
-              {mistakeChars.length > 0 && (
-                <button className="pixel-btn w-full" onClick={handleWeakSpotDrill}>
-                  🎯 Practice: {mistakeChars.join(", ")}
-                </button>
-              )}
-              <button className="pixel-btn w-full" onClick={() => reset()}>
-                ↻ Try Again
-              </button>
             </div>
           </div>
         </div>
