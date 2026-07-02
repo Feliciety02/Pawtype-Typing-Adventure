@@ -89,8 +89,11 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
           className={`hud-profile-btn ${profileOpen ? "is-active" : ""}`}
           onClick={() => { setProfileOpen((o) => !o); setShowAuth(false); }}
         >
-          <div className="hud-avatar">
-            {activePet ? <PixelPet pet={activePet} size={40} showDetails={false} /> : <div className="hud-avatar-fallback">P</div>}
+          <div className="hud-avatar-wrap">
+            <div className="hud-avatar">
+              {activePet ? <PixelPet pet={activePet} size={48} showDetails={false} /> : <div className="hud-avatar-fallback">P</div>}
+            </div>
+            <span className="hud-level-badge">Lv.{player.level}</span>
           </div>
           <div className="hud-profile-body">
             <span className="hud-profile-name">{accountLabel ?? "Demo Adventurer"}</span>
