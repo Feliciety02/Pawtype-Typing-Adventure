@@ -1,0 +1,570 @@
+// PawType Typing Curriculum
+// 13 units, each with a series of lessons. Every lesson carries a curated
+// word/sentence bank that TypingArena can consume via customWords.
+
+export type LessonDifficulty =
+  | "beginner"
+  | "easy"
+  | "intermediate"
+  | "advanced"
+  | "expert"
+  | "master";
+
+export type Lesson = {
+  id: string;
+  title: string;
+  emoji: string;
+  difficulty: LessonDifficulty;
+  targetWpm: number;
+  targetAccuracy: number;
+  words: string[];
+  note?: string;
+};
+
+export type Unit = {
+  id: string;
+  number: number;
+  title: string;
+  emoji: string;
+  purpose: string;
+  lessons: Lesson[];
+};
+
+// ---------- helpers ----------
+const rep = (arr: string[], times: number): string[] => {
+  const out: string[] = [];
+  for (let i = 0; i < times; i++) out.push(...arr);
+  return out;
+};
+
+const mix = (...groups: string[][]): string[] => {
+  const out: string[] = [];
+  const max = Math.max(...groups.map((g) => g.length));
+  for (let i = 0; i < max; i++) {
+    for (const g of groups) if (g[i]) out.push(g[i]);
+  }
+  return out;
+};
+
+const drill = (letters: string[], count = 8): string[] =>
+  letters.map((l) => l.repeat(count));
+
+// ---------- Unit 1 — Getting Started ----------
+const UNIT_1: Unit = {
+  id: "u1",
+  number: 1,
+  title: "Getting Started",
+  emoji: "🌱",
+  purpose: "Introduce posture, home row, and confidence.",
+  lessons: [
+    {
+      id: "u1-welcome",
+      title: "Welcome to PawType",
+      emoji: "🐾",
+      difficulty: "beginner",
+      targetWpm: 10,
+      targetAccuracy: 85,
+      note: "Type gentle greetings to meet your pixel coach.",
+      words: [
+        "hi","hello","hey","paw","type","cozy","calm","warm","soft","glow",
+        "welcome","friend","kitty","home","play","learn","begin","start","today","fun",
+      ],
+    },
+    {
+      id: "u1-posture",
+      title: "Proper Sitting Position",
+      emoji: "🪑",
+      difficulty: "beginner",
+      targetWpm: 10,
+      targetAccuracy: 85,
+      note: "Feet flat, shoulders soft, eyes on the screen.",
+      words: [
+        "sit","up","tall","feet","flat","calm","soft","relax","breathe","easy",
+        "chair","desk","light","screen","hands","wrists","level","still","steady","ready",
+      ],
+    },
+    {
+      id: "u1-fingers",
+      title: "Finger Placement",
+      emoji: "✋",
+      difficulty: "beginner",
+      targetWpm: 10,
+      targetAccuracy: 85,
+      note: "Rest fingers on ASDF and JKL; — bumps under F and J.",
+      words: rep(["asdf","jkl;","asdf","jkl;"], 8),
+    },
+    {
+      id: "u1-home-row",
+      title: "Home Row (ASDF JKL;)",
+      emoji: "🏠",
+      difficulty: "beginner",
+      targetWpm: 12,
+      targetAccuracy: 88,
+      words: rep(["asdf","jkl;","asdf","jkl;","fjfj","dkdk","slsl","a;a;"], 4),
+    },
+    {
+      id: "u1-fj",
+      title: "F & J Anchor Keys",
+      emoji: "🎯",
+      difficulty: "beginner",
+      targetWpm: 12,
+      targetAccuracy: 88,
+      words: [
+        ...drill(["f","j"], 8),
+        "fj","jf","fj","jf","ff","jj","ff","jj",
+        "jaf","fjj","jff","fjfj","jfjf",
+      ],
+    },
+    {
+      id: "u1-a-semi",
+      title: "A and ;",
+      emoji: "🔤",
+      difficulty: "beginner",
+      targetWpm: 12,
+      targetAccuracy: 88,
+      words: [
+        ...drill(["a",";"], 6),
+        "a;","; a","aa","; ;","a; a;","a; ;a","aja","a;j","ajf",
+      ],
+    },
+    {
+      id: "u1-s-l",
+      title: "S and L",
+      emoji: "🔤",
+      difficulty: "beginner",
+      targetWpm: 13,
+      targetAccuracy: 88,
+      words: [
+        ...drill(["s","l"], 6),
+        "sl","ls","ss","ll","sasl","lals","ssll","als","sla",
+        "as","al","la","sl","ls",
+      ],
+    },
+    {
+      id: "u1-d-k",
+      title: "D and K",
+      emoji: "🔤",
+      difficulty: "beginner",
+      targetWpm: 13,
+      targetAccuracy: 88,
+      words: [
+        ...drill(["d","k"], 6),
+        "dk","kd","dd","kk","dad","kad","ddkk","dsk","kdj","dak",
+      ],
+    },
+    {
+      id: "u1-review-home",
+      title: "Review Home Row",
+      emoji: "🔁",
+      difficulty: "easy",
+      targetWpm: 15,
+      targetAccuracy: 90,
+      words: [
+        "dad","sad","lad","fad","ask","lass","fall","hall","salad","flask",
+        "jak","kaa","alas","fads","dads","skas","lads","jalf","dals","jaska",
+      ],
+    },
+    {
+      id: "u1-home-challenge",
+      title: "Home Row Accuracy Challenge",
+      emoji: "⭐",
+      difficulty: "easy",
+      targetWpm: 15,
+      targetAccuracy: 92,
+      note: "Focus on accuracy over speed.",
+      words: rep(["dad","fall","salad","flask","ask","lass","alas","jak","dads","lads"], 4),
+    },
+  ],
+};
+
+// ---------- Unit 2 — Top Row ----------
+const UNIT_2: Unit = {
+  id: "u2",
+  number: 2,
+  title: "Top Row",
+  emoji: "🌤️",
+  purpose: "Reach up from the home row to master the top row.",
+  lessons: [
+    {
+      id: "u2-ru",
+      title: "Reach for R & U",
+      emoji: "🔤",
+      difficulty: "easy",
+      targetWpm: 15,
+      targetAccuracy: 90,
+      words: [
+        ...drill(["r","u"], 6),
+        "ru","ur","fur","rus","run","use","ruf","urs","fru","jur",
+      ],
+    },
+    { id: "u2-ei", title: "Reach for E & I", emoji: "🔤", difficulty: "easy", targetWpm: 16, targetAccuracy: 90,
+      words: [...drill(["e","i"],6), "ei","ie","ei","if","is","id","ie","die","fie","idea","idle","lied","kids","sides"] },
+    { id: "u2-wo", title: "Reach for W & O", emoji: "🔤", difficulty: "easy", targetWpm: 16, targetAccuracy: 90,
+      words: [...drill(["w","o"],6), "wo","ow","who","now","how","low","word","work","wool","slow","flow","wood"] },
+    { id: "u2-qp", title: "Reach for Q & P", emoji: "🔤", difficulty: "easy", targetWpm: 16, targetAccuracy: 90,
+      words: [...drill(["q","p"],5), "qp","pq","quip","pap","pip","aqua","quip","plop","pups","props","quilt"] },
+    { id: "u2-ty", title: "Reach for T & Y", emoji: "🔤", difficulty: "easy", targetWpm: 17, targetAccuracy: 90,
+      words: [...drill(["t","y"],6), "ty","yt","toy","try","yet","tea","yay","stay","type","tidy","tray","truly"] },
+    { id: "u2-review", title: "Home + Top Review", emoji: "🔁", difficulty: "intermediate", targetWpm: 20, targetAccuracy: 92,
+      words: ["quiet","story","light","water","poet","typed","paper","route","query","world","study","proud","early","truth","spirit"] },
+    { id: "u2-words", title: "Top Row Words", emoji: "📝", difficulty: "intermediate", targetWpm: 22, targetAccuracy: 92,
+      words: ["type","were","tire","tour","port","true","poet","yore","tier","riot","tore","query","peer","opera","poetry","output"] },
+    { id: "u2-sentences", title: "Top Row Sentences", emoji: "📖", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 92,
+      words: "we type quiet words on a quiet street . you were quite proud of your tour . poets write true stories with warm words .".split(" ") },
+    { id: "u2-acc", title: "Accuracy Challenge", emoji: "🎯", difficulty: "intermediate", targetWpm: 22, targetAccuracy: 95,
+      words: rep(["quiet","proud","query","truth","route","typed","water","poet","world","story"], 4) },
+    { id: "u2-speed", title: "Speed Challenge", emoji: "⚡", difficulty: "intermediate", targetWpm: 30, targetAccuracy: 90,
+      words: rep(["type","true","poet","tier","port","query","proud","world","story","route"], 5) },
+  ],
+};
+
+// ---------- Unit 3 — Bottom Row ----------
+const UNIT_3: Unit = {
+  id: "u3",
+  number: 3,
+  title: "Bottom Row",
+  emoji: "🌾",
+  purpose: "Curl down from home row into the bottom row.",
+  lessons: [
+    { id: "u3-vm", title: "V & M", emoji: "🔤", difficulty: "easy", targetWpm: 18, targetAccuracy: 90,
+      words: [...drill(["v","m"],6), "vm","mv","vim","mama","move","vase","warm","viva","mave","mvm"] },
+    { id: "u3-c-comma", title: "C & ,", emoji: "🔤", difficulty: "easy", targetWpm: 18, targetAccuracy: 90,
+      words: [...drill(["c",","],5), "cat,","cop,","calm,","cup,","cop,","code,","cool,","clay,","cast,","clove,"] },
+    { id: "u3-x-period", title: "X & .", emoji: "🔤", difficulty: "easy", targetWpm: 18, targetAccuracy: 90,
+      words: [...drill(["x","."],5), "ox.","fox.","axe.","mix.","exit.","next.","apex.","xray.","exam.","taxi."] },
+    { id: "u3-z-slash", title: "Z & /", emoji: "🔤", difficulty: "easy", targetWpm: 18, targetAccuracy: 90,
+      words: [...drill(["z","/"],5), "z/","/z","zip/","zap/","zoo/","zone/","fizz/","jazz/","zero/","gaze/"] },
+    { id: "u3-gb", title: "G & B", emoji: "🔤", difficulty: "easy", targetWpm: 20, targetAccuracy: 90,
+      words: [...drill(["g","b"],6), "gb","bg","big","bug","bag","gig","grab","glob","brag","bugs","goals","gable"] },
+    { id: "u3-hn", title: "H & N", emoji: "🔤", difficulty: "easy", targetWpm: 20, targetAccuracy: 90,
+      words: [...drill(["h","n"],6), "hn","nh","hen","hun","hand","noon","hang","then","north","hint","honey","night"] },
+    { id: "u3-review", title: "Bottom Row Review", emoji: "🔁", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 92,
+      words: ["mix","van","comb","band","hang","fizz","bunch","climb","cabin","bring","glove","month","charm","voice","bench"] },
+    { id: "u3-words", title: "Bottom Row Words", emoji: "📝", difficulty: "intermediate", targetWpm: 26, targetAccuracy: 92,
+      words: ["ninja","broken","cavern","gentle","hollow","harbor","monkey","cabin","canyon","banner","bumble","honest","modest","gather","bounce"] },
+    { id: "u3-mixed", title: "Mixed Alphabet", emoji: "🔤", difficulty: "intermediate", targetWpm: 28, targetAccuracy: 92,
+      words: ["quick","brown","fox","jumps","over","lazy","dog","five","boxing","wizards","hop","quickly","pack","dozens","juggle"] },
+    { id: "u3-challenge", title: "Alphabet Challenge", emoji: "🅰️", difficulty: "intermediate", targetWpm: 30, targetAccuracy: 93,
+      words: rep("the quick brown fox jumps over the lazy dog".split(" "), 4) },
+  ],
+};
+
+// ---------- Unit 4 — Capital Letters ----------
+const UNIT_4: Unit = {
+  id: "u4",
+  number: 4,
+  title: "Capital Letters",
+  emoji: "🔠",
+  purpose: "Use both shift keys to type clean capitals.",
+  lessons: [
+    { id: "u4-left", title: "Left Shift", emoji: "⬅️", difficulty: "intermediate", targetWpm: 22, targetAccuracy: 92,
+      words: ["Joy","Kai","Leo","Mia","Nia","Ola","Pia","Uma","Yui","Hana","Ivy","Nova","Jill","Otto","Pip"] },
+    { id: "u4-right", title: "Right Shift", emoji: "➡️", difficulty: "intermediate", targetWpm: 22, targetAccuracy: 92,
+      words: ["Ash","Bea","Cal","Dax","Eve","Fay","Gia","Han","Bex","Del","Fen","Gus","Rae","Sam","Cass"] },
+    { id: "u4-caps", title: "Capitalizing First Letters", emoji: "🔡", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 92,
+      words: ["The","Quick","Brown","Fox","Jumps","Over","Lazy","Dogs","And","Cats","Play","In","Cozy","Cabins","Today"] },
+    { id: "u4-names", title: "Names", emoji: "🧑‍🤝‍🧑", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 93,
+      words: ["Alice","Bella","Cora","Dana","Ella","Finn","Gina","Hugo","Iris","Juno","Kira","Luna","Milo","Nina","Owen"] },
+    { id: "u4-mixed", title: "Mixed Capitals", emoji: "🔀", difficulty: "intermediate", targetWpm: 26, targetAccuracy: 93,
+      words: "Anna and Ben walk to the Park . Cara found Luna near the Cafe . On Monday Milo brought Iris a Book .".split(" ") },
+    { id: "u4-review", title: "Review", emoji: "🔁", difficulty: "intermediate", targetWpm: 26, targetAccuracy: 94,
+      words: ["Sunday","Monday","Tuesday","January","France","Tokyo","Paris","London","Oceanic","Nova","Rivers","Mountains","Islands","People","Cities"] },
+  ],
+};
+
+// ---------- Unit 5 — Punctuation ----------
+const UNIT_5: Unit = {
+  id: "u5",
+  number: 5,
+  title: "Punctuation",
+  emoji: "✒️",
+  purpose: "Learn the marks that give text its rhythm.",
+  lessons: [
+    { id: "u5-period", title: "Period", emoji: ".", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 93,
+      words: ["end.","stop.","cozy.","warm.","calm.","done.","see.","now.","then.","home.","glow.","rest.","quiet.","soft.","bright."] },
+    { id: "u5-comma", title: "Comma", emoji: ",", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 93,
+      words: ["hello,","yes,","no,","first,","then,","also,","however,","meanwhile,","finally,","gently,","softly,","slowly,","today,","tonight,","tomorrow,"] },
+    { id: "u5-question", title: "Question Mark", emoji: "?", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 93,
+      words: ["who?","what?","why?","when?","how?","where?","really?","already?","again?","ready?","okay?","sure?","cozy?","warm?","home?"] },
+    { id: "u5-exclaim", title: "Exclamation Point", emoji: "!", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 93,
+      words: ["wow!","yes!","yay!","great!","nice!","cool!","hooray!","brilliant!","amazing!","perfect!","adorable!","cozy!","warm!","bright!","lovely!"] },
+    { id: "u5-apos", title: "Apostrophe", emoji: "'", difficulty: "intermediate", targetWpm: 26, targetAccuracy: 93,
+      words: ["it's","don't","can't","won't","isn't","aren't","doesn't","didn't","they're","you're","we're","I'll","she's","he's","that's"] },
+    { id: "u5-quotes", title: "Quotation Marks", emoji: "\"", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["\"hi\"","\"cozy\"","\"warm\"","\"quiet\"","\"soft\"","\"hello\"","\"welcome\"","\"pixel\"","\"kitty\"","\"gentle\"","\"story\"","\"night\"","\"home\"","\"friend\"","\"today\""] },
+    { id: "u5-colon", title: "Colon & Semicolon", emoji: ":;", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["note:","list:","time:","name:","step:","one;","two;","three;","also;","then;","first:","last:","next:","final;","end;"] },
+    { id: "u5-parens", title: "Parentheses", emoji: "()", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["(hi)","(cozy)","(note)","(soft)","(warm)","(kitty)","(quiet)","(story)","(pixel)","(home)","(bright)","(gentle)","(pixel)","(paw)","(type)"] },
+    { id: "u5-hyphen", title: "Hyphen", emoji: "-", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["well-lit","warm-hearted","cozy-cabin","pixel-art","home-made","co-op","fair-play","mid-day","sun-lit","hand-crafted","half-moon","late-night","paw-print","tea-time","by-the-way"] },
+    { id: "u5-review", title: "Review", emoji: "🔁", difficulty: "advanced", targetWpm: 28, targetAccuracy: 94,
+      words: "hello, friend! how are you today? it's warm, quiet, and cozy. (a soft night.) she said: \"welcome home.\"".split(" ") },
+  ],
+};
+
+// ---------- Unit 6 — Numbers ----------
+const UNIT_6: Unit = {
+  id: "u6",
+  number: 6,
+  title: "Numbers",
+  emoji: "🔢",
+  purpose: "Bring the number row into your typing flow.",
+  lessons: [
+    { id: "u6-15", title: "Number Row 1–5", emoji: "1️⃣", difficulty: "intermediate", targetWpm: 22, targetAccuracy: 92,
+      words: [...drill(["1","2","3","4","5"],4), "12","23","34","45","135","245","1234","2345","1122","3344"] },
+    { id: "u6-60", title: "Number Row 6–0", emoji: "6️⃣", difficulty: "intermediate", targetWpm: 22, targetAccuracy: 92,
+      words: [...drill(["6","7","8","9","0"],4), "67","78","89","90","678","890","6789","7890","6600","9988"] },
+    { id: "u6-mixed", title: "Mixed Numbers", emoji: "🔢", difficulty: "intermediate", targetWpm: 24, targetAccuracy: 92,
+      words: ["1024","2048","3141","1618","2718","4096","8192","9999","1234","5678","2024","1999","1080","1440","720"] },
+    { id: "u6-dates", title: "Dates", emoji: "📅", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["2024-01-15","2025-06-30","1999-12-31","03/14","07/04","10/31","12/25","01-01-2026","2026-02-14","2024-11-11","06-21","09-23","2020-04-01","2023-08-08","2022-05-05"] },
+    { id: "u6-money", title: "Money", emoji: "💰", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["$1.00","$5.50","$12.99","$25.00","$100","$1,000","$99.95","$0.50","$3.14","$42","€10","€25.00","£20","¥500","$9,999.99"] },
+    { id: "u6-phone", title: "Phone Numbers", emoji: "📞", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["555-1234","555-6789","(415)555-2671","(212)555-9812","800-555-0100","1-800-555-0100","911","311","202-555-0143","646-555-0177","305-555-0119","713-555-0184","702-555-0161","617-555-0198","404-555-0122"] },
+    { id: "u6-addr", title: "Addresses", emoji: "🏠", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93,
+      words: ["12 Main St","305 Oak Ave","1600 Pennsylvania","221B Baker St","742 Evergreen","10 Downing","1 Infinite Loop","500 5th Ave","350 Fifth Ave","55 Hudson Yards","1 Apple Park","4059 Mt Lee Dr","1600 Amphitheatre","350 Bush St","400 Broad St"] },
+    { id: "u6-review", title: "Review", emoji: "🔁", difficulty: "advanced", targetWpm: 28, targetAccuracy: 94,
+      words: ["order #4231","invoice 0098","room 204","gate B7","seat 12A","flight UA123","code 42","level 99","year 2026","zone 3","block 7","apt 5B","unit 12","lot 45","suite 300"] },
+  ],
+};
+
+// ---------- Unit 7 — Symbols ----------
+const symbol = (s: string, count = 6): string[] =>
+  [s.repeat(4), s.repeat(4), s.repeat(4), s.repeat(4)].concat(
+    Array.from({ length: count }, (_, i) => `${s}word${i}`)
+  );
+
+const UNIT_7: Unit = {
+  id: "u7",
+  number: 7,
+  title: "Symbols",
+  emoji: "🔣",
+  purpose: "Command every symbol on the keyboard.",
+  lessons: [
+    { id: "u7-excl", title: "!", emoji: "!", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: symbol("!") },
+    { id: "u7-at", title: "@", emoji: "@", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: ["@user","@name","@mail","@team","@home","@work","@cat","@dog","@app","@dev","@paw","@type","@pixel","@cozy","@warm"] },
+    { id: "u7-dollar", title: "$", emoji: "$", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: ["$1","$5","$10","$25","$100","$var","$price","$fee","$total","$sum","$net","$tax","$tip","$sale","$cost"] },
+    { id: "u7-percent", title: "%", emoji: "%", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: ["10%","25%","50%","75%","99%","5%off","20%off","100%","0.5%","3.14%","x%y","a%b","p%q","n%m","c%d"] },
+    { id: "u7-caret", title: "^", emoji: "^", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol("^") },
+    { id: "u7-amp", title: "&", emoji: "&", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: ["a&b","c&d","x&y","salt&pepper","black&white","cat&dog","paw&type","cozy&warm","up&down","in&out","tea&biscuit","sun&moon","milk&honey","fire&ice","bread&butter"] },
+    { id: "u7-lparen", title: "(", emoji: "(", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol("(") },
+    { id: "u7-rparen", title: ")", emoji: ")", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol(")") },
+    { id: "u7-under", title: "_", emoji: "_", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: ["user_name","file_id","pixel_art","cozy_cabin","paw_type","game_state","save_slot","first_run","hi_score","key_map","warm_glow","soft_light","home_row","top_row","end_zone"] },
+    { id: "u7-eq", title: "=", emoji: "=", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: ["a=1","b=2","x=y","p=q","name=paw","total=99","key=value","let x=1","const c=0","score=42","hp=100","xp=250","lvl=7","fps=60","dpi=800"] },
+    { id: "u7-lbrack", title: "[", emoji: "[", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol("[") },
+    { id: "u7-rbrack", title: "]", emoji: "]", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol("]") },
+    { id: "u7-lbrace", title: "{", emoji: "{", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol("{") },
+    { id: "u7-rbrace", title: "}", emoji: "}", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol("}") },
+    { id: "u7-back", title: "\\", emoji: "\\", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: symbol("\\") },
+    { id: "u7-pipe", title: "|", emoji: "|", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: ["a|b","c|d","x|y","yes|no","on|off","up|down","cat|dog","warm|cool","cozy|calm","in|out","p|q","m|n","1|2","3|4","5|6"] },
+    { id: "u7-lt", title: "<", emoji: "<", difficulty: "advanced", targetWpm: 24, targetAccuracy: 92, words: ["<div>","<p>","<a>","<h1>","<ul>","<li>","<img>","<br>","<hr>","<b>","<i>","<em>","<code>","<pre>","<span>"] },
+    { id: "u7-slash", title: "/", emoji: "/", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: ["/home","/user","/api","/src","/docs","/apps","/lib","/routes","/hooks","/pages","/img","/css","/js","/ts","/tmp"] },
+    { id: "u7-q", title: "?", emoji: "?", difficulty: "advanced", targetWpm: 26, targetAccuracy: 93, words: ["ok?","yes?","no?","why?","how?","who?","where?","when?","cozy?","warm?","paw?","calm?","ready?","done?","home?"] },
+    { id: "u7-review", title: "Review", emoji: "🔁", difficulty: "expert", targetWpm: 30, targetAccuracy: 94,
+      words: ["<tag>","{obj}","[list]","(fn)","key=val","x&y","a|b","p^q","10%","$5.50","@user","#tag","/api","c:\\path","name_case"] },
+  ],
+};
+
+// ---------- Unit 8 — Common English Words ----------
+const COMMON_TOP = "the be to of and a in that have I it for not on with he as you do at this but his by from they we say her she or an will my one all would there their what so up out if about who get which go me when make can like time no just him know take people into year your good some could them see other than then now look only come its over think also back after use two how our work first well way even new want because any these give day most us".split(" ");
+
+const UNIT_8: Unit = {
+  id: "u8",
+  number: 8,
+  title: "Common English Words",
+  emoji: "📚",
+  purpose: "Type the words you'll actually use every day.",
+  lessons: [
+    { id: "u8-25", title: "Top 25 Words", emoji: "🔝", difficulty: "intermediate", targetWpm: 28, targetAccuracy: 93, words: COMMON_TOP.slice(0,25) },
+    { id: "u8-50", title: "Top 50 Words", emoji: "🥇", difficulty: "intermediate", targetWpm: 30, targetAccuracy: 93, words: COMMON_TOP.slice(0,50) },
+    { id: "u8-100", title: "Top 100 Words", emoji: "💯", difficulty: "advanced", targetWpm: 32, targetAccuracy: 94, words: COMMON_TOP.slice(0,100) },
+    { id: "u8-200", title: "Top 200 Words", emoji: "📖", difficulty: "advanced", targetWpm: 35, targetAccuracy: 94, words: rep(COMMON_TOP, 2).slice(0,200) },
+    { id: "u8-articles", title: "Articles", emoji: "📝", difficulty: "intermediate", targetWpm: 30, targetAccuracy: 94,
+      words: rep(["the","a","an"], 20) },
+    { id: "u8-pronouns", title: "Pronouns", emoji: "👥", difficulty: "intermediate", targetWpm: 30, targetAccuracy: 94,
+      words: ["I","you","he","she","it","we","they","me","him","her","us","them","my","your","his","their","our","mine","yours","theirs"] },
+    { id: "u8-verbs", title: "Verbs", emoji: "🏃", difficulty: "advanced", targetWpm: 32, targetAccuracy: 94,
+      words: ["run","walk","jump","read","write","type","play","learn","sleep","eat","drink","see","hear","think","make","build","find","give","take","bring"] },
+    { id: "u8-adj", title: "Adjectives", emoji: "🎨", difficulty: "advanced", targetWpm: 32, targetAccuracy: 94,
+      words: ["cozy","warm","soft","bright","quiet","calm","gentle","kind","brave","clever","happy","tiny","huge","fast","slow","silent","cheerful","fuzzy","sleepy","curious"] },
+    { id: "u8-review", title: "Review", emoji: "🔁", difficulty: "advanced", targetWpm: 34, targetAccuracy: 94,
+      words: COMMON_TOP.slice(0,60) },
+  ],
+};
+
+// ---------- Unit 9 — Sentences ----------
+const UNIT_9: Unit = {
+  id: "u9",
+  number: 9,
+  title: "Sentences",
+  emoji: "📖",
+  purpose: "Chain words into real sentences.",
+  lessons: [
+    { id: "u9-short", title: "Short Sentences", emoji: "✏️", difficulty: "advanced", targetWpm: 32, targetAccuracy: 94,
+      words: "The cat sleeps. Rain falls softly. I write today. We type slowly. Time flows on. Stars glow tonight. Home feels warm.".split(" ") },
+    { id: "u9-med", title: "Medium Sentences", emoji: "📝", difficulty: "advanced", targetWpm: 35, targetAccuracy: 94,
+      words: "The little pixel cat curled up beside a warm lantern. Soft rain tapped on the cozy cabin window all night. Every morning we type a gentle passage together.".split(" ") },
+    { id: "u9-long", title: "Long Sentences", emoji: "📜", difficulty: "advanced", targetWpm: 38, targetAccuracy: 94,
+      words: "On quiet evenings the harbor lights blink slowly across the water while a distant lighthouse turns its warm beam over the sleeping pixel town below.".split(" ") },
+    { id: "u9-quotes", title: "Quotes", emoji: "💬", difficulty: "advanced", targetWpm: 36, targetAccuracy: 94,
+      words: "\"Be gentle,\" she said. \"Practice daily,\" the coach smiled. \"Small steps still count,\" whispered the pixel cat. \"You are getting faster every day.\"".split(" ") },
+    { id: "u9-convo", title: "Conversations", emoji: "🗨️", difficulty: "advanced", targetWpm: 36, targetAccuracy: 94,
+      words: "\"Hi!\" said Paw. \"Ready to type?\" \"Yes,\" said Ivy. \"Let's begin gently.\" \"Great,\" Paw purred. \"Keep your shoulders soft.\"".split(" ") },
+    { id: "u9-inst", title: "Instructions", emoji: "🧾", difficulty: "expert", targetWpm: 38, targetAccuracy: 95,
+      words: "First, sit up tall. Next, rest your fingers on the home row. Then, look at the screen instead of the keys. Finally, type in a steady, calm rhythm.".split(" ") },
+    { id: "u9-review", title: "Review", emoji: "🔁", difficulty: "expert", targetWpm: 40, targetAccuracy: 95,
+      words: "Sentences give thoughts a shape. Punctuation gives them breath. A steady rhythm makes them sing across the page.".split(" ") },
+  ],
+};
+
+// ---------- Unit 10 — Paragraphs ----------
+const UNIT_10: Unit = {
+  id: "u10",
+  number: 10,
+  title: "Paragraphs",
+  emoji: "📄",
+  purpose: "Sustain focus across longer passages.",
+  lessons: [
+    { id: "u10-short", title: "Short Paragraph", emoji: "📃", difficulty: "advanced", targetWpm: 38, targetAccuracy: 94,
+      words: "The cabin was small but bright. A kettle whistled softly on the stove and the pixel cat curled into a striped cushion by the window. Outside, gentle rain painted the garden a deeper green.".split(" ") },
+    { id: "u10-story", title: "Story", emoji: "📚", difficulty: "expert", targetWpm: 40, targetAccuracy: 95,
+      words: "Long ago in a valley of glowing mushrooms, a young typist named Paw set out with only a lantern and a notebook. Every step tapped a rhythm into the mossy trail, and every word she wrote became a tiny star above the forest.".split(" ") },
+    { id: "u10-dialogue", title: "Dialogue", emoji: "💭", difficulty: "expert", targetWpm: 40, targetAccuracy: 95,
+      words: "\"Where are we going?\" asked Ivy. \"Somewhere quiet,\" Paw said. \"A place where the words come easily.\" Ivy smiled. \"Then we will type our way there together.\"".split(" ") },
+    { id: "u10-news", title: "News", emoji: "📰", difficulty: "expert", targetWpm: 42, targetAccuracy: 95,
+      words: "PIXEL TIMES: The Cozy Cabin Festival opened this weekend under a soft golden sky. Visitors from every world sipped warm tea, admired the lanterns, and shared stories late into the peaceful night.".split(" ") },
+    { id: "u10-article", title: "Article", emoji: "🗞️", difficulty: "expert", targetWpm: 44, targetAccuracy: 95,
+      words: "Touch typing is a skill built slowly. Regular short sessions beat rare long ones. Focus on accuracy first, then let speed grow on its own. A calm posture and a steady rhythm are your best long-term teachers.".split(" ") },
+    { id: "u10-review", title: "Review", emoji: "🔁", difficulty: "expert", targetWpm: 45, targetAccuracy: 95,
+      words: "Every paragraph is a small journey. It starts with a clear thought, moves through gentle details, and lands softly on an idea worth remembering. Type it with care and it will read that way too.".split(" ") },
+  ],
+};
+
+// ---------- Unit 11 — Speed Building ----------
+const SPEED_POOL = "the of and to in a is that it for was with as be on not this by at have from or one had but what all were when we".split(" ");
+const UNIT_11: Unit = {
+  id: "u11",
+  number: 11,
+  title: "Speed Building",
+  emoji: "⚡",
+  purpose: "Push your rhythm, consistency, and endurance.",
+  lessons: [
+    { id: "u11-rhythm", title: "Rhythm", emoji: "🥁", difficulty: "expert", targetWpm: 45, targetAccuracy: 95,
+      words: rep(SPEED_POOL.slice(0,20), 4) },
+    { id: "u11-consistency", title: "Consistency", emoji: "📏", difficulty: "expert", targetWpm: 48, targetAccuracy: 96,
+      words: rep(SPEED_POOL.slice(0,30), 3) },
+    { id: "u11-accuracy", title: "Accuracy Focus", emoji: "🎯", difficulty: "expert", targetWpm: 40, targetAccuracy: 98,
+      words: rep(SPEED_POOL.slice(0,25), 3) },
+    { id: "u11-speed", title: "Speed Focus", emoji: "🚀", difficulty: "expert", targetWpm: 55, targetAccuracy: 93,
+      words: rep(SPEED_POOL, 3) },
+    { id: "u11-test", title: "Speed Test", emoji: "⏱️", difficulty: "master", targetWpm: 60, targetAccuracy: 95,
+      words: rep(SPEED_POOL, 4) },
+    { id: "u11-endurance", title: "Endurance", emoji: "💪", difficulty: "master", targetWpm: 55, targetAccuracy: 96,
+      words: rep(SPEED_POOL, 6) },
+    { id: "u11-marathon", title: "Marathon", emoji: "🏁", difficulty: "master", targetWpm: 60, targetAccuracy: 96,
+      words: rep(SPEED_POOL, 10) },
+  ],
+};
+
+// ---------- Unit 12 — Real World Typing ----------
+const UNIT_12: Unit = {
+  id: "u12",
+  number: 12,
+  title: "Real World Typing",
+  emoji: "🌍",
+  purpose: "Type the things you actually type in life.",
+  lessons: [
+    { id: "u12-emails", title: "Emails", emoji: "✉️", difficulty: "expert", targetWpm: 40, targetAccuracy: 95,
+      words: "Hi Sam, Thanks for the note. I'll send the file over by Friday. Let me know if you need anything else. Best, Paw".split(" ") },
+    { id: "u12-urls", title: "URLs", emoji: "🔗", difficulty: "expert", targetWpm: 38, targetAccuracy: 94,
+      words: ["https://pawtype.app","https://example.com/docs","https://github.com/lovable","https://tanstack.com/router","http://localhost:8080","https://cozy.cabin/blog","https://pixel.town","https://mdn.dev","https://vitejs.dev","https://react.dev","https://bun.sh","https://npmjs.com","https://cloudflare.com","https://lovable.dev","https://typing.paw"] },
+    { id: "u12-progsym", title: "Programming Symbols", emoji: "💻", difficulty: "expert", targetWpm: 36, targetAccuracy: 94,
+      words: ["=>","!==","&&","||","++","--","+=","-=","*=","/=",">=","<=","===","??","?.","...","::","->","<-","=>"] },
+    { id: "u12-code", title: "Code Snippets", emoji: "🧩", difficulty: "expert", targetWpm: 34, targetAccuracy: 94,
+      words: "const paw = () => { return 'cozy'; }; if (n > 0) { total += n; } function greet(name) { return `hi ${name}`; }".split(" ") },
+    { id: "u12-chat", title: "Chat Messages", emoji: "💬", difficulty: "expert", targetWpm: 42, targetAccuracy: 95,
+      words: "hey! omw brb lol thx ttyl :) sounds good see you soon otw rn tbh imo btw fyi np np np np np np".split(" ") },
+    { id: "u12-essays", title: "Essays", emoji: "🖋️", difficulty: "master", targetWpm: 50, targetAccuracy: 96,
+      words: "Reading and writing shape the way we think. When we practice both with patience, our sentences grow clearer and our ideas stand taller. Typing is simply the bridge that carries thought to page.".split(" ") },
+    { id: "u12-reports", title: "Reports", emoji: "📊", difficulty: "master", targetWpm: 48, targetAccuracy: 96,
+      words: "Q3 SUMMARY: Session count rose 12% versus Q2. Average WPM improved from 42 to 47. Accuracy held steady at 96%. Recommended next step: focus on symbol-heavy drills.".split(" ") },
+    { id: "u12-forms", title: "Forms", emoji: "🧾", difficulty: "master", targetWpm: 44, targetAccuracy: 96,
+      words: ["Name:","Address:","City:","State:","Zip:","Phone:","Email:","DOB:","Notes:","Signature:","Date:","Occupation:","Country:","Postal:","Reference:"] },
+    { id: "u12-mixed", title: "Mixed Practice", emoji: "🎛️", difficulty: "master", targetWpm: 50, targetAccuracy: 96,
+      words: "Send the PDF to sam@paw.app before 5:00 PM. Total = $1,240.50 (25% off). Notes: draft #3, revision 2, ETA Fri.".split(" ") },
+  ],
+};
+
+// ---------- Unit 13 — Advanced Challenges ----------
+const UNIT_13: Unit = {
+  id: "u13",
+  number: 13,
+  title: "Advanced Challenges",
+  emoji: "🏆",
+  purpose: "Prove your skill on the toughest tests.",
+  lessons: [
+    { id: "u13-hard", title: "Difficult Words", emoji: "🧠", difficulty: "master", targetWpm: 45, targetAccuracy: 96,
+      words: ["rhythm","syzygy","phlegm","zephyr","quixotic","juxtapose","onomatopoeia","penumbra","labyrinth","ephemeral","serendipity","quintessential","conscientious","perspicacious","unequivocally"] },
+    { id: "u13-rare", title: "Rare Letter Combinations", emoji: "🔡", difficulty: "master", targetWpm: 44, targetAccuracy: 96,
+      words: ["zyzzyva","jinx","jazz","fjord","quiz","quartz","waltz","phlox","psalm","sphinx","gnome","knead","wrist","yacht","lynx"] },
+    { id: "u13-pangram", title: "Pangrams", emoji: "🅰️", difficulty: "master", targetWpm: 50, targetAccuracy: 96,
+      words: "the quick brown fox jumps over the lazy dog . pack my box with five dozen liquor jugs . how vexingly quick daft zebras jump .".split(" ") },
+    { id: "u13-longq", title: "Long Quotes", emoji: "📜", difficulty: "master", targetWpm: 50, targetAccuracy: 96,
+      words: "\"The only way to do great work is to love what you do,\" someone once said, and so we type on, gently, patiently, one warm little letter at a time until the whole page glows.".split(" ") },
+    { id: "u13-timed", title: "Timed Test", emoji: "⏱️", difficulty: "master", targetWpm: 60, targetAccuracy: 96, words: rep(SPEED_POOL, 5) },
+    { id: "u13-acc", title: "Accuracy Test", emoji: "🎯", difficulty: "master", targetWpm: 45, targetAccuracy: 98, words: rep(SPEED_POOL.slice(0,30), 4) },
+    { id: "u13-final", title: "Final Exam", emoji: "🎓", difficulty: "master", targetWpm: 65, targetAccuracy: 97,
+      words: "Type with calm shoulders and quiet hands. Trust the rhythm you've built lesson by lesson. Symbols, numbers, and words all bend to steady practice — and now the whole keyboard is yours.".split(" ") },
+    { id: "u13-grad", title: "Graduation", emoji: "🎉", difficulty: "master", targetWpm: 70, targetAccuracy: 97,
+      words: "Congratulations, typist! You began on the home row and ended holding the full keyboard in your paws. Keep practicing daily and the words will always be there, warm and waiting.".split(" ") },
+  ],
+};
+
+export const UNITS: Unit[] = [
+  UNIT_1, UNIT_2, UNIT_3, UNIT_4, UNIT_5, UNIT_6, UNIT_7,
+  UNIT_8, UNIT_9, UNIT_10, UNIT_11, UNIT_12, UNIT_13,
+];
+
+export const ALL_LESSONS: Lesson[] = UNITS.flatMap((u) => u.lessons);
+
+export function findLesson(id: string): { unit: Unit; lesson: Lesson } | null {
+  for (const unit of UNITS) {
+    const lesson = unit.lessons.find((l) => l.id === id);
+    if (lesson) return { unit, lesson };
+  }
+  return null;
+}
+
+// ---------- Completion tracking (localStorage) ----------
+const COMPLETED_KEY = "pawtype-lessons-completed";
+
+export function loadCompletedLessons(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = window.localStorage.getItem(COMPLETED_KEY);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch {
+    return new Set();
+  }
+}
+
+export function markLessonCompleted(id: string) {
+  if (typeof window === "undefined") return;
+  const set = loadCompletedLessons();
+  set.add(id);
+  try {
+    window.localStorage.setItem(COMPLETED_KEY, JSON.stringify([...set]));
+    window.dispatchEvent(new CustomEvent("pawtype-lesson-completed", { detail: { id } }));
+  } catch {}
+}
+
+export function unitProgress(unit: Unit, completed: Set<string>): { done: number; total: number } {
+  return {
+    done: unit.lessons.filter((l) => completed.has(l.id)).length,
+    total: unit.lessons.length,
+  };
+}
