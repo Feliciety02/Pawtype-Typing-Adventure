@@ -34,8 +34,8 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
   }, [items]);
 
   return (
-    <div className="hud-settings-panel animate-pixel-pop" style={{ minWidth: 280, maxWidth: 320 }}>
-      <div className="hud-settings-title flex items-center justify-between">
+    <div className="hud-dropdown hud-dropdown-right animate-pixel-pop" style={{ minWidth: 280, maxWidth: 320 }}>
+      <div className="hud-dropdown-title flex items-center justify-between">
         <span>Notifications</span>
         {items.length > 0 && (
           <button
