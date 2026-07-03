@@ -15,6 +15,7 @@ import { pushNotification } from "../lib/game/notifications";
 type Props = {
   customWords?: string[];
   customTitle?: string;
+  noTimer?: boolean;
 };
 
 const WORD_BANK = [
@@ -57,12 +58,12 @@ const WORLD_ART_URL: Partial<Record<WorldId, string>> = {
   "frostveil-kingdom": "/theme/frostveil-kingdom.png",
 };
 
-export function TypingArena({ customWords, customTitle }: Props = {}) {
+export function TypingArena({ customWords, customTitle, noTimer }: Props = {}) {
   const { state, dispatch } = useGame();
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const worldArtUrl = WORLD_ART_URL[world];
-  const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
+  const [duration] = useState<(typeof DURATIONS)[number]>(30);
   const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : []));
   const [typed, setTyped] = useState("");
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -112,9 +113,9 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     return wordRanges.slice(start, end);
   }, [currentWordIndex, wordRanges, words.length]);
 
-  // Timer tick
+  // Timer tick (skipped for untimed lessons)
   useEffect(() => {
-    if (!startedAt || finished) return;
+    if (noTimer || !startedAt || finished) return;
     const t = setInterval(() => {
       const e = (Date.now() - startedAt) / 1000;
       setElapsed(e);
@@ -124,7 +125,19 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
       }
     }, 100);
     return () => clearInterval(t);
-  }, [startedAt, duration, finished]);
+  }, [startedAt, duration, finished, noTimer]);
+
+  // Finish when all words are typed in untimed mode
+  const typedAllRef = useRef(false);
+  useEffect(() => {
+    if (!noTimer || finished) return;
+    if (target.length > 0 && typed.length >= target.length && !typedAllRef.current) {
+      typedAllRef.current = true;
+      setElapsed((Date.now() - (startedAt ?? Date.now())) / 1000);
+      setFinished(true);
+      setMood("happy");
+    }
+  }, [noTimer, finished, typed, target, startedAt]);
 
   // Grant rewards & save session when test finishes
   useEffect(() => {
@@ -199,6 +212,11 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
   useEffect(() => {
     worldIdRef.current = world;
   }, [world]);
+
+  // Reset typed-all ref on reset
+  useEffect(() => {
+    typedAllRef.current = false;
+  }, [words]);
 
   // Generate initial words on mount / world change (skipped for lessons)
   useEffect(() => {
@@ -338,8 +356,8 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
       }
     }
     setTyped(next);
-    // Load more words when nearing the end
-    if (currentWordIndex >= words.length - 10 && !generatingRef.current) {
+    // Load more words when nearing the end (never in untimed lessons)
+    if (!noTimer && currentWordIndex >= words.length - 10 && !generatingRef.current) {
       loadMoreWords();
     }
   };
@@ -381,7 +399,9 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
     }));
   }, [finished]);
 
-  const progress = (elapsed / duration) * 100;
+  const progress = noTimer
+    ? (target.length > 0 ? (typed.length / target.length) * 100 : 0)
+    : (elapsed / duration) * 100;
 
   const requestFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -419,21 +439,23 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
           {/* Subtle ambient glow */}
           <div className="ambient-glow absolute inset-0" />
 
-          <div className="typing-toolbar relative z-1">
-            <div className="typing-time-pills" aria-label="Typing test duration">
-              {DURATIONS.map((d) => (
-                <button
-                  key={d}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    reset(d);
-                  }}
-                  className={`typing-toolbar-btn ${d === duration ? "active" : ""}`}
-                >
-                  {d}s
-                </button>
-              ))}
-            </div>
+            <div className="typing-toolbar relative z-1">
+            {!noTimer && (
+              <div className="typing-time-pills" aria-label="Typing test duration">
+                {DURATIONS.map((d) => (
+                  <button
+                    key={d}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      reset(d);
+                    }}
+                    className={`typing-toolbar-btn ${d === duration ? "active" : ""}`}
+                  >
+                    {d}s
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="typing-toolbar-spacer" />
             <button
               onClick={(e) => { e.stopPropagation(); reset(); }}
@@ -504,8 +526,12 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
           </div>
 
           <div className="typing-session-meta relative z-1">
-            <span>{Math.max(0, Math.ceil(duration - elapsed))}s</span>
-            <span>{currentWordIndex + 1} words</span>
+            {noTimer ? (
+              <span>{currentWordIndex + 1} / {words.length} words</span>
+            ) : (
+              <span>{Math.max(0, Math.ceil(duration - elapsed))}s</span>
+            )}
+            {!noTimer && <span>{currentWordIndex + 1} words</span>}
           </div>
 
           <input
@@ -665,7 +691,7 @@ export function TypingArena({ customWords, customTitle }: Props = {}) {
                     </button>
                   )}
                   <button className="pixel-btn results-btn-primary" onClick={() => reset()} type="button">
-                    ▶ Continue Practice
+                    ▶ {noTimer ? "Continue Lesson" : "Continue Practice"}
                   </button>
                   <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={() => reset()} type="button">
                     ↻ Try Again

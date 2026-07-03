@@ -224,6 +224,7 @@ export function LessonsCard() {
             key={active.lesson.id}
             customWords={active.lesson.words}
             customTitle={`${active.unit.title} · ${active.lesson.title}`}
+            noTimer
           />
         </div>
       )}
