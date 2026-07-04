@@ -1,5 +1,6 @@
 ﻿import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
+import { createPortal } from "react-dom";
 import { useGame } from "../lib/game/store";
 import { generateAdventureWords, generateQuestText } from "../lib/game/textGenerator";
 import { precomputeGoals, getCachedGoals } from "../lib/game/ai/difficulty";
@@ -478,7 +479,7 @@ export function AdventureMap() {
   ];
   const allStages = useMemo(() => orderedWorlds.flatMap((item) => stagesForWorld(item.id)), [orderedWorlds, stagesForWorld]);
   const totalCleared = orderedWorlds.reduce((sum, item) => sum + (state.adventures[item.id]?.length ?? 0), 0);
-  const [active, setActive] = useState<{ stage: Stage; world: WorldId } | null>(null);
+  const [active, setActive] = useState<{ stage: Stage; world: WorldId; image?: string } | null>(null);
 
   const statusOf = (worldId: WorldId, stage: Stage, index: number): Status => {
     const stages = stagesForWorld(worldId);
@@ -561,7 +562,7 @@ export function AdventureMap() {
                         index={index}
                         status={status}
                         image={image}
-                        onPlay={() => status !== "locked" && setActive({ stage, world: theme.id })}
+                        onPlay={() => status !== "locked" && setActive({ stage, world: theme.id, image })}
                       />
                     );
                   })}
@@ -576,6 +577,7 @@ export function AdventureMap() {
         <StageRunner
           stage={active.stage}
           world={active.world}
+          image={active.image}
           alreadyCompleted={(state.adventures[active.world] ?? []).includes(active.stage.id)}
           onClose={() => setActive(null)}
           onWin={() => {
@@ -664,12 +666,14 @@ function StageNode({
 function StageRunner({
   stage,
   world,
+  image,
   alreadyCompleted,
   onClose,
   onWin,
 }: {
   stage: Stage;
   world: WorldId;
+  image?: string;
   alreadyCompleted: boolean;
   onClose: () => void;
   onWin: () => void;
@@ -868,13 +872,8 @@ function StageRunner({
     );
   }
 
-  return (
-      <ModalShell
-        ariaLabel={`${stage.name} quest`}
-        onClose={onClose}
-        className="pixel-modal-shell-adventure"
-        frameClassName="pixel-modal-frame-adventure"
-      >
+  return createPortal(
+    <div className="adventure-scene-overlay" role="dialog" aria-modal="true" aria-label={`${stage.name} quest`}>
       <div className="adventure-runner-scene">
         <CelebrationOverlay
           active={done !== null}
@@ -884,6 +883,15 @@ function StageRunner({
           coins={coinReward}
         />
         <div className={`adventure-runner-card animate-pixel-pop ${done ? `is-complete is-${done}` : ""}`}>
+          <button
+            type="button"
+            className="adventure-scene-close"
+            onClick={onClose}
+            aria-label="Close quest"
+          >
+            ×
+          </button>
+
           <div className="adventure-runner-header">
             <div className="adventure-runner-heading">
               <div className="adventure-runner-heading-top">
@@ -902,11 +910,22 @@ function StageRunner({
                   </div>
                 </div>
               </div>
-              {questText && (
-                <div className="adventure-runner-flavor">
-                  {questText}
-                </div>
-              )}
+              {questText && <div className="adventure-runner-flavor">{questText}</div>}
+            </div>
+
+            <div className="adventure-runner-header-side">
+              <div className="adventure-runner-node-card">
+                {image ? (
+                  <img
+                    src={image}
+                    alt={`${stage.name} node`}
+                    className="adventure-runner-node-image"
+                    draggable={false}
+                  />
+                ) : (
+                  <span className="adventure-runner-node-fallback">{stage.emoji}</span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -926,6 +945,14 @@ function StageRunner({
             <div className="adventure-type-progress" aria-hidden="true">
               <div style={{ width: `${timePercent}%` }} />
             </div>
+
+            <div className="adventure-live-stats" aria-label="Live quest stats">
+              <MiniStat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
+              <MiniStat label="Accuracy" value={`${acc}%`} accent="var(--leaf)" />
+              <MiniStat label="Time" value={`${timeRemaining}s`} accent="var(--coin)" />
+              <MiniStat label="Goal" value={`${stage.goal}`} accent="var(--color-destructive)" />
+            </div>
+
             <div className="adventure-typing-panel">
               <div className="adventure-word-stream">
                 {visibleWords.map((entry) => {
@@ -973,6 +1000,7 @@ function StageRunner({
             className="absolute opacity-0 pointer-events-none"
           />
         </div>
+
         <QuestResultsModal
           open={resultsOpen}
           result={done}
@@ -1005,7 +1033,8 @@ function StageRunner({
           onDismiss={onClose}
         />
       </div>
-    </ModalShell>
+    </div>,
+    document.body,
   );
 }
 

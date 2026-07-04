@@ -201,11 +201,11 @@ export function SettingsPage() {
                   </div>
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Coins</span>
-                    <strong suppressHydrationWarning>🪙 {player.coins.toLocaleString()}</strong>
+                    <strong suppressHydrationWarning><img src="/Icons/coin.png" alt="" className="pixel-icon" /> {player.coins.toLocaleString()}</strong>
                   </div>
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Streak</span>
-                    <strong>🔥 {player.streak}</strong>
+                    <strong><img src="/Icons/flame.png" alt="" className="pixel-icon" /> {player.streak}</strong>
                   </div>
                   {authLoading ? null : user || isDemo ? (
                     <div className="flex items-center gap-3 text-[0.65rem] font-pixel pt-1 border-t border-[var(--color-border)]">
