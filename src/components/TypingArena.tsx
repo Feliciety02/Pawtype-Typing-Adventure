@@ -1,4 +1,5 @@
 ﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Maximize2, X } from "lucide-react";
 import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
@@ -16,6 +17,14 @@ type Props = {
   customWords?: string[];
   customTitle?: string;
   noTimer?: boolean;
+  lessonMode?: boolean;
+  onFinish?: (wpm: number, accuracy: number) => void;
+  onClose?: () => void;
+  onNextLesson?: () => void;
+  hasNext?: boolean;
+  lessonTargetAccuracy?: number;
+  lessonDifficulty?: string;
+  lessonWordCount?: number;
 };
 
 const WORD_BANK = [
@@ -58,7 +67,11 @@ const WORLD_ART_URL: Partial<Record<WorldId, string>> = {
   "frostveil-kingdom": "/theme/frostveil-kingdom.png",
 };
 
-export function TypingArena({ customWords, customTitle, noTimer }: Props = {}) {
+export function TypingArena({
+  customWords, customTitle, noTimer, lessonMode,
+  onFinish, onClose, onNextLesson, hasNext,
+  lessonTargetAccuracy, lessonDifficulty, lessonWordCount,
+}: Props = {}) {
   const { state, dispatch } = useGame();
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
@@ -143,6 +156,12 @@ export function TypingArena({ customWords, customTitle, noTimer }: Props = {}) {
   useEffect(() => {
     if (!finished) return;
     setResultsOpen(true);
+
+    if (lessonMode) {
+      onFinish?.(wpm, accuracy);
+      return;
+    }
+
     const xp = Math.round(wpm * 1.5);
     const coins = Math.round(wpm / 2);
     dispatch({ type: "EARN_COINS", amount: coins });
@@ -411,7 +430,7 @@ export function TypingArena({ customWords, customTitle, noTimer }: Props = {}) {
 
   return (
     <div className="flex flex-col gap-4">
-      {!isFullscreen && (
+      {!isFullscreen && !lessonMode && (
         <button
           className="typing-toolbar-btn self-end"
           type="button"
@@ -425,7 +444,125 @@ export function TypingArena({ customWords, customTitle, noTimer }: Props = {}) {
       )}
 
       {/* Main content: typing area + artwork */}
-      <div className="practice-stage-grid">
+      {lessonMode ? (
+        /* --- Lesson full-screen typing --- */
+        <div className="flex flex-col" style={{ height: "100dvh" }}>
+          {/* Top bar: stats + close */}
+          <div className="flex items-center justify-between px-4 py-2 shrink-0">
+            <div className="flex items-center gap-4">
+              <div className="text-center">
+                <div className="font-pixel text-[0.45rem] text-muted-foreground">WPM</div>
+                <div className="font-pixel text-sm">{wpm}</div>
+              </div>
+              <div className="text-center">
+                <div className="font-pixel text-[0.45rem] text-muted-foreground">Acc</div>
+                <div className="font-pixel text-sm" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
+              </div>
+              <div className="text-center">
+                <div className="font-pixel text-[0.45rem] text-muted-foreground">Combo</div>
+                <div className="font-pixel text-sm" style={{ color: "var(--coin)" }}>{bestCombo}</div>
+              </div>
+            </div>
+            <button
+              className="pixel-btn pixel-btn-secondary p-1.5"
+              onClick={() => onClose?.()}
+              aria-label="Close lesson"
+              title="Exit lesson"
+            >
+              <X size={14} />
+            </button>
+          </div>
+
+          {/* Progress bar */}
+          <div className="mx-4 mb-2 shrink-0" style={{ height: 4, background: "var(--color-muted)", borderRadius: 999, overflow: "hidden" }}>
+            <div style={{ width: `${progress}%`, height: "100%", background: `oklch(from var(--leaf) l c h / 0.8)`, borderRadius: 999, transition: "width 0.15s" }} />
+          </div>
+
+          {/* Word count */}
+          <div className="px-4 mb-1 shrink-0">
+            <span className="font-pixel text-[0.5rem] text-muted-foreground">
+              {currentWordIndex + 1} / {words.length} words
+            </span>
+          </div>
+
+          {/* Typing text */}
+          <div className="flex-1 flex items-center justify-center px-4 min-h-0" onClick={() => inputRef.current?.focus()}>
+            <div className="typing-focus-shell w-full max-w-3xl" style={{ border: "none", background: "transparent", boxShadow: "none", padding: 0 }}>
+              <div className="typing-text">
+                {visibleWords.map(({ word, index, start, end }) => {
+                  const isCurrent = index === currentWordIndex;
+                  const isComplete = typed.length > end;
+                  const isUpcoming = index > currentWordIndex;
+                  const isPast = index < currentWordIndex;
+                  const typedWord = typed.slice(start, Math.min(typed.length, end));
+                  const hasMistake = typedWord
+                    .split("")
+                    .some((char, charIndex) => char !== word[charIndex]);
+                  const wordClass = [
+                    "typing-word",
+                    isCurrent && "word-current",
+                    isComplete && !hasMistake && "word-complete",
+                    isComplete && hasMistake && "word-complete-wrong",
+                    isPast && !isComplete && "word-past",
+                    isUpcoming && "word-upcoming",
+                  ]
+                    .filter(Boolean)
+                    .join(" ");
+
+                  return (
+                    <span className={wordClass} key={`${index}-${word}`}>
+                      {word.split("").map((ch, charIndex) => {
+                        const targetIndex = start + charIndex;
+                        const typedCh = typed[targetIndex];
+                        const charState =
+                          typedCh == null
+                            ? "pending"
+                            : typedCh === ch
+                              ? "correct"
+                              : "wrong";
+                        const isCursor = targetIndex === typed.length;
+
+                        return (
+                          <span
+                            className={`typing-char char-${charState} ${isCursor ? "char-current" : ""}`}
+                            key={`${targetIndex}-${ch}`}
+                          >
+                            {ch}
+                          </span>
+                        );
+                      })}
+                      {isCurrent && typed.length === end && <span className="typing-caret-space" />}
+                    </span>
+                  );
+                })}
+              </div>
+              {!startedAt && !typed && (
+                <div className="typing-start-hint font-pixel" style={{ marginTop: "1rem" }}>Start typing to begin the lesson</div>
+              )}
+            </div>
+          </div>
+
+          {/* Keyboard */}
+          <div className="shrink-0 px-2 pb-2">
+            <PixelKeyboard active={activeKey} />
+          </div>
+
+          <input
+            ref={inputRef}
+            value={typed}
+            onChange={handleChange}
+            autoFocus
+            aria-label="Type the text above"
+            spellCheck={false}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            className="absolute opacity-0 pointer-events-none"
+          />
+        </div>
+      ) : (
+        <>
+        <div className="practice-stage-grid">
         {/* Typing area */}
         <div
           className="typing-area"
@@ -587,22 +724,12 @@ export function TypingArena({ customWords, customTitle, noTimer }: Props = {}) {
       <div className="keyboard-dock">
         <PixelKeyboard active={activeKey} />
       </div>
+      </>
+      )}
 
-      {finished && resultsOpen && (
+      {finished && resultsOpen && createPortal(
         <div className="results-overlay" role="dialog" aria-modal="true" aria-label="Typing results">
           <div className="results-card">
-            <button
-              className="results-close-btn"
-              type="button"
-              onClick={() => {
-                setResultsOpen(false);
-                setTimeout(() => inputRef.current?.focus(), 0);
-              }}
-              aria-label="Close results"
-              title="Close"
-            >
-              <X size={14} />
-            </button>
 
             {/* Celebration particles */}
             <div className="results-particles" aria-hidden="true">
@@ -621,87 +748,201 @@ export function TypingArena({ customWords, customTitle, noTimer }: Props = {}) {
               ))}
             </div>
 
-            <div className="results-grid">
-              {/* Left Column — Mascot, Title, Coach Speech Bubble */}
-              <div className="results-left">
-                <div className="flex justify-center">
-                  <PixelMascot mood="happy" size={56} />
-                </div>
-                <div className="results-title">Practice Complete!</div>
-                <p className="results-subtitle">{mascotLine ?? perfMessage}</p>
+            {lessonMode ? (
+              /* --- Lesson Results --- */
+              <div className="flex flex-col items-center gap-4 py-4 px-2">
+                {/* Stars */}
+                {(() => {
+                  const stars = (() => {
+                    if (lessonTargetAccuracy == null) return 1;
+                    if (accuracy >= Math.min(lessonTargetAccuracy + 5, 100)) return 3;
+                    if (accuracy >= lessonTargetAccuracy) return 2;
+                    return 1;
+                  })();
+                  return (
+                    <div className="flex gap-1">
+                      {[1, 2, 3].map((s) => (
+                        <span
+                          key={s}
+                          className="font-pixel"
+                          style={{
+                            fontSize: "clamp(1.2rem, 3vw, 1.8rem)",
+                            color: s <= stars ? "var(--coin)" : "var(--muted-foreground)",
+                            filter: s <= stars ? "drop-shadow(0 0 4px var(--coin))" : "none",
+                            transition: "all 0.3s",
+                          }}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                  );
+                })()}
 
-                {/* Coach Speech Bubble */}
-                <div className="results-coach-bubble">
-                  <div className="results-coach-pet">
-                    <PixelMascot mood="idle" size={30} />
-                  </div>
-                  <div className="results-speech-bubble">
-                    <div className="results-speech-tail" />
-                    {coachLoading ? (
-                      <p className="results-speech-text">Analyzing your run...</p>
-                    ) : coachError ? (
-                      <p className="results-speech-text">Keep typing and I&apos;ll have feedback ready!</p>
-                    ) : coachInsight ? (
-                      <p className="results-speech-text">{coachInsight.text}</p>
-                    ) : (
-                      <p className="results-speech-text">Great work out there!</p>
-                    )}
-                  </div>
-                </div>
-              </div>
+                <div className="results-title" style={{ margin: 0 }}>Lesson Complete!</div>
 
-              {/* Right Column — Stats, Rewards, Buttons */}
-              <div className="results-right">
-                <div className="results-stats">
-                  <div className="results-stat">
-                    <img src="/Icons/dart.png" alt="" className="results-stat-icon" />
-                    <div className="results-stat-label">Accuracy</div>
-                    <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
+                {/* Stats row */}
+                <div className="flex gap-4 justify-center">
+                  <div className="text-center">
+                    <div className="font-pixel text-[0.5rem] text-muted-foreground">WPM</div>
+                    <div className="font-display text-2xl">{wpm}</div>
                   </div>
-                  <div className="results-stat">
-                    <span className="results-stat-icon">🔥</span>
-                    <div className="results-stat-label">Best Combo</div>
-                    <div className="results-stat-value" style={{ color: "var(--coin)" }}>{bestCombo}</div>
+                  <div className="text-center">
+                    <div className="font-pixel text-[0.5rem] text-muted-foreground">Accuracy</div>
+                    <div className="font-display text-2xl" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
                   </div>
-                  <div className="results-stat">
-                    <img src="/Icons/hourglass.png" alt="" className="results-stat-icon" />
-                    <div className="results-stat-label">Time</div>
-                    <div className="results-stat-value" style={{ color: "var(--sky)" }}>{elapsed.toFixed(0)}s</div>
-                  </div>
-                </div>
-
-                <div className="results-rewards-panel">
-                  <div className="results-reward">
-                    <img src="/Icons/star.png" alt="" className="results-reward-icon" />
-                    <span className="results-reward-value">+{xp}</span>
-                    <span className="results-reward-label">XP</span>
-                  </div>
-                  <div className="results-reward-divider" />
-                  <div className="results-reward">
-                    <img src="/Icons/coin.png" alt="" className="results-reward-icon" />
-                    <span className="results-reward-value">+{coins}</span>
-                    <span className="results-reward-label">Coins</span>
+                  <div className="text-center">
+                    <div className="font-pixel text-[0.5rem] text-muted-foreground">Combo</div>
+                    <div className="font-display text-2xl" style={{ color: "var(--coin)" }}>{bestCombo}</div>
                   </div>
                 </div>
 
-                <div className="results-actions">
-                  {mistakeChars.length > 0 && (
-                    <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={handleWeakSpotDrill} type="button">
-                      🎯 Practice: {mistakeChars.join(", ")}
+                {/* Rewards */}
+                {(() => {
+                  const r = lessonDifficulty && lessonWordCount
+                    ? (() => {
+                        const base: Record<string, number> = { beginner: 25, easy: 50, intermediate: 75, advanced: 100, expert: 150, master: 200 };
+                        const xp = (base[lessonDifficulty] ?? 50) + Math.floor(lessonWordCount / 5);
+                        const coins = Math.round(xp / 2);
+                        const petExp = Math.max(1, Math.floor(lessonWordCount / 10));
+                        return { xp, coins, petExp };
+                      })()
+                    : null;
+                  if (!r) return null;
+                  return (
+                    <div className="flex gap-4 justify-center">
+                      <div className="text-center">
+                        <div className="font-pixel text-[0.5rem] text-muted-foreground">XP</div>
+                        <div className="font-pixel text-base" style={{ color: "var(--color-primary)" }}>+{r.xp}</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-pixel text-[0.5rem] text-muted-foreground">Coins</div>
+                        <div className="font-pixel text-base" style={{ color: "var(--coin)" }}>+{r.coins}</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-pixel text-[0.5rem] text-muted-foreground">Pet EXP</div>
+                        <div className="font-pixel text-base" style={{ color: "var(--leaf)" }}>+{r.petExp}</div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Coach */}
+                <div className="results-speech-bubble" style={{ maxWidth: 300 }}>
+                  <div className="results-speech-tail" />
+                  {coachLoading ? (
+                    <p className="results-speech-text">Analyzing your run...</p>
+                  ) : coachError ? (
+                    <p className="results-speech-text">Keep typing and I&apos;ll have feedback ready!</p>
+                  ) : coachInsight ? (
+                    <p className="results-speech-text">{coachInsight.text}</p>
+                  ) : (
+                    <p className="results-speech-text">Great work out there!</p>
+                  )}
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-2">
+                  <button className="pixel-btn pixel-btn-secondary" onClick={() => reset()} type="button">
+                    ↻ Retry
+                  </button>
+                  {hasNext && (
+                    <button className="pixel-btn results-btn-primary" onClick={() => onNextLesson?.()} type="button">
+                      Next Lesson →
                     </button>
                   )}
-                  <button className="pixel-btn results-btn-primary" onClick={() => reset()} type="button">
-                    ▶ {noTimer ? "Continue Lesson" : "Continue Practice"}
-                  </button>
-                  <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={() => reset()} type="button">
-                    ↻ Try Again
-                  </button>
+                  {!hasNext && (
+                    <button className="pixel-btn results-btn-primary" onClick={() => onClose?.()} type="button">
+                      Back to Lessons
+                    </button>
+                  )}
                 </div>
               </div>
-            </div>
+            ) : (
+              /* --- Practice Results --- */
+              <div className="results-grid">
+                {/* Left Column — Mascot, Title, Coach Speech Bubble */}
+                <div className="results-left">
+                  <div className="flex justify-center">
+                    <PixelMascot mood="happy" size={56} />
+                  </div>
+                  <div className="results-title">Practice Complete!</div>
+                  <p className="results-subtitle">{mascotLine ?? perfMessage}</p>
+
+                  {/* Coach Speech Bubble */}
+                  <div className="results-coach-bubble">
+                    <div className="results-coach-pet">
+                      <PixelMascot mood="idle" size={30} />
+                    </div>
+                    <div className="results-speech-bubble">
+                      <div className="results-speech-tail" />
+                      {coachLoading ? (
+                        <p className="results-speech-text">Analyzing your run...</p>
+                      ) : coachError ? (
+                        <p className="results-speech-text">Keep typing and I&apos;ll have feedback ready!</p>
+                      ) : coachInsight ? (
+                        <p className="results-speech-text">{coachInsight.text}</p>
+                      ) : (
+                        <p className="results-speech-text">Great work out there!</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column — Stats, Rewards, Buttons */}
+                <div className="results-right">
+                  <div className="results-stats">
+                    <div className="results-stat">
+                      <img src="/Icons/dart.png" alt="" className="results-stat-icon" />
+                      <div className="results-stat-label">Accuracy</div>
+                      <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
+                    </div>
+                    <div className="results-stat">
+                      <span className="results-stat-icon">🔥</span>
+                      <div className="results-stat-label">Best Combo</div>
+                      <div className="results-stat-value" style={{ color: "var(--coin)" }}>{bestCombo}</div>
+                    </div>
+                    <div className="results-stat">
+                      <img src="/Icons/hourglass.png" alt="" className="results-stat-icon" />
+                      <div className="results-stat-label">Time</div>
+                      <div className="results-stat-value" style={{ color: "var(--sky)" }}>{elapsed.toFixed(0)}s</div>
+                    </div>
+                  </div>
+
+                  <div className="results-rewards-panel">
+                    <div className="results-reward">
+                      <img src="/Icons/star.png" alt="" className="results-reward-icon" />
+                      <span className="results-reward-value">+{xp}</span>
+                      <span className="results-reward-label">XP</span>
+                    </div>
+                    <div className="results-reward-divider" />
+                    <div className="results-reward">
+                      <img src="/Icons/coin.png" alt="" className="results-reward-icon" />
+                      <span className="results-reward-value">+{coins}</span>
+                      <span className="results-reward-label">Coins</span>
+                    </div>
+                  </div>
+
+                  <div className="results-actions">
+                    {mistakeChars.length > 0 && (
+                      <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={handleWeakSpotDrill} type="button">
+                        🎯 Practice: {mistakeChars.join(", ")}
+                      </button>
+                    )}
+                    <button className="pixel-btn results-btn-primary" onClick={() => reset()} type="button">
+                      ▶ Continue Practice
+                    </button>
+                    <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={() => reset()} type="button">
+                      ↻ Try Again
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
-      )}
+      , document.body)}
 
       <Confetti active={showConfetti} onFinish={() => setShowConfetti(false)} />
       {petRoomOpen && <PetRoom onClose={() => setPetRoomOpen(false)} />}

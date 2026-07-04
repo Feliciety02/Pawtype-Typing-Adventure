@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { createPortal } from "react-dom";
 import { useGame } from "../lib/game/store";
 import { PixelPet } from "./PixelPet";
 import type { PetType } from "../lib/game/types";
@@ -15,7 +16,7 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
     dispatch({ type: "ADD_PET_XP", amount: 25 });
   };
 
-  return (
+  return createPortal(
     <div className="results-overlay" role="dialog" aria-modal="true" aria-label="Pet Room" onClick={onClose}>
       <div className="results-card" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
         <button className="results-close-btn" type="button" onClick={onClose} aria-label="Close pet room">
@@ -66,5 +67,5 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
         )}
       </div>
     </div>
-  );
+  , document.body);
 }

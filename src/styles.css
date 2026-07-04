@@ -2458,7 +2458,7 @@
 
 .adventure-runner-card {
   width: min(860px, calc(100vw - 2rem));
-  max-height: calc(100dvh - 2rem);
+  height: min(520px, 80dvh);
   overflow: auto;
   overflow-x: hidden;
   padding: 1.25rem;
@@ -2866,7 +2866,7 @@
   position: relative;
   width: 100%;
   max-width: min(780px, calc(100vw - 3rem));
-  max-height: min(520px, calc(100dvh - 3rem));
+  height: min(520px, 80dvh);
   overflow: auto;
   padding: 1.5rem 1.75rem;
   background: var(--color-card);

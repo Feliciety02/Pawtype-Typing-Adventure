@@ -49,43 +49,43 @@ type DoodadItem = {
 };
 
 const PETS: PetItem[] = [
-  { id: "pet-cat",     petType: "cat",     name: "Orange Tabby",  species: "cat",    emoji: "🐱", price: 0,   rarity: "common",    unlockLevel: 1,  description: "Friendly explorer with a curious tail-flick.", addedAt: 1 },
-  { id: "pet-dog",     petType: "dog",     name: "Pixel Pup",     species: "dog",    emoji: "🐶", price: 400, rarity: "common",    unlockLevel: 1,  description: "A wagging pixel pup who loves the keyboard.",  addedAt: 2 },
-  { id: "pet-rabbit",  petType: "rabbit",  name: "Flopsy",        species: "rabbit", emoji: "🐰", price: 350, rarity: "common",    unlockLevel: 2,  description: "Fluffy pixel bunny with a hop in every combo.", addedAt: 3 },
-  { id: "pet-fox",     petType: "fox",     name: "Sly",           species: "other",  emoji: "🦊", price: 500, rarity: "rare",      unlockLevel: 4,  description: "Clever fox that steals hearts and typos.",     addedAt: 4 },
-  { id: "pet-penguin", petType: "penguin", name: "Chilly",        species: "other",  emoji: "🐧", price: 450, rarity: "rare",      unlockLevel: 5,  description: "Waddling pixel penguin, cool under pressure.", addedAt: 5 },
-  { id: "pet-panda",   petType: "panda",   name: "Bamboo",        species: "other",  emoji: "🐼", price: 600, rarity: "epic",      unlockLevel: 8,  description: "A roly-poly pixel panda who naps on your keys.", addedAt: 6 },
-  { id: "pet-dragon",  petType: "dragon",  name: "Ember",         species: "dragon", emoji: "🐉", price: 800, rarity: "legendary", unlockLevel: 12, description: "Tiny pixel dragon fueled by combo streaks.",  addedAt: 7 },
+  { id: "pet-cat",     petType: "cat",     name: "Orange Tabby",  species: "cat",    emoji: "ðŸ±", price: 0,   rarity: "common",    unlockLevel: 1,  description: "Friendly explorer with a curious tail-flick.", addedAt: 1 },
+  { id: "pet-dog",     petType: "dog",     name: "Pixel Pup",     species: "dog",    emoji: "ðŸ¶", price: 400, rarity: "common",    unlockLevel: 1,  description: "A wagging pixel pup who loves the keyboard.",  addedAt: 2 },
+  { id: "pet-rabbit",  petType: "rabbit",  name: "Flopsy",        species: "rabbit", emoji: "ðŸ°", price: 350, rarity: "common",    unlockLevel: 2,  description: "Fluffy pixel bunny with a hop in every combo.", addedAt: 3 },
+  { id: "pet-fox",     petType: "fox",     name: "Sly",           species: "other",  emoji: "ðŸ¦Š", price: 500, rarity: "rare",      unlockLevel: 4,  description: "Clever fox that steals hearts and typos.",     addedAt: 4 },
+  { id: "pet-penguin", petType: "penguin", name: "Chilly",        species: "other",  emoji: "ðŸ§", price: 450, rarity: "rare",      unlockLevel: 5,  description: "Waddling pixel penguin, cool under pressure.", addedAt: 5 },
+  { id: "pet-panda",   petType: "panda",   name: "Bamboo",        species: "other",  emoji: "ðŸ¼", price: 600, rarity: "epic",      unlockLevel: 8,  description: "A roly-poly pixel panda who naps on your keys.", addedAt: 6 },
+  { id: "pet-dragon",  petType: "dragon",  name: "Ember",         species: "dragon", emoji: "ðŸ‰", price: 800, rarity: "legendary", unlockLevel: 12, description: "Tiny pixel dragon fueled by combo streaks.",  addedAt: 7 },
 ];
 
 const THEMES: ThemeItem[] = [
-  { id: "theme-cafe-preview",   worldId: "cafe",      name: "Cozy Café",        emoji: "☕",  price: 0,    category: "cafe",   unlockLevel: 1, description: "Warm terracotta & cream. Your starting hearth." },
-  { id: "theme-forest-preview", worldId: "forest",    name: "Mossy Forest",     emoji: "🌲",  price: 0,    category: "forest", unlockLevel: 1, description: "Ferns, dew, and dappled light." },
-  { id: "theme-ocean-preview",  worldId: "ocean",     name: "Tide Pool",        emoji: "🌊",  price: 0,    category: "beach",  unlockLevel: 1, description: "Salt breeze and seafoam." },
-  { id: "theme-sakura-preview", worldId: "sakura",    name: "Sakura Park",      emoji: "🌸",  price: 0,    category: "garden", unlockLevel: 1, description: "Petals drift in the wind." },
-  { id: "theme-castle-preview", worldId: "castle",    name: "Royal Castle",     emoji: "🏰",  price: 0,    category: "castle", unlockLevel: 1, description: "Velvet drapes & gold trim." },
-  { id: "theme-space-preview",  worldId: "space",     name: "Stardust",         emoji: "🌌",  price: 0,    category: "space",  unlockLevel: 1, description: "Neon comets in deep night." },
-  { id: "theme-autumn",         worldId: "autumn",    name: "Autumn Cottage",   emoji: "🍂",  price: 150,  category: "forest", unlockLevel: 3, description: "Crisp air & golden leaves." },
-  { id: "theme-mushroom",       worldId: "mushroom",  name: "Mushroom Village", emoji: "🍄",  price: 150,  category: "forest", unlockLevel: 5, description: "Glowing spores & twisted roots." },
-  { id: "theme-moonlit",        worldId: "moonlit",   name: "Moonlit Garden",   emoji: "🌙",  price: 150,  category: "garden", unlockLevel: 4, description: "Silver beams & jasmine scent." },
-  { id: "theme-rainy",          worldId: "rainy",     name: "Rainy Library",    emoji: "🌧️", price: 150,  category: "special",unlockLevel: 6, description: "Steamy windows & old paper." },
-  { id: "theme-snowy",          worldId: "snowy",     name: "Snowy Cabin",      emoji: "❄️", price: 150,  category: "snow",   unlockLevel: 4, description: "Frosted glass & crackling fire." },
-  { id: "theme-sunflower",      worldId: "sunflower", name: "Sunflower Meadow", emoji: "🌻",  price: 150,  category: "garden", unlockLevel: 3, description: "Golden fields & buzzing bees." },
+  { id: "theme-cafe-preview",   worldId: "cafe",      name: "Cozy CafÃ©",        emoji: "â˜•",  price: 0,    category: "cafe",   unlockLevel: 1, description: "Warm terracotta & cream. Your starting hearth." },
+  { id: "theme-forest-preview", worldId: "forest",    name: "Mossy Forest",     emoji: "ðŸŒ²",  price: 0,    category: "forest", unlockLevel: 1, description: "Ferns, dew, and dappled light." },
+  { id: "theme-ocean-preview",  worldId: "ocean",     name: "Tide Pool",        emoji: "ðŸŒŠ",  price: 0,    category: "beach",  unlockLevel: 1, description: "Salt breeze and seafoam." },
+  { id: "theme-sakura-preview", worldId: "sakura",    name: "Sakura Park",      emoji: "ðŸŒ¸",  price: 0,    category: "garden", unlockLevel: 1, description: "Petals drift in the wind." },
+  { id: "theme-castle-preview", worldId: "castle",    name: "Royal Castle",     emoji: "ðŸ°",  price: 0,    category: "castle", unlockLevel: 1, description: "Velvet drapes & gold trim." },
+  { id: "theme-space-preview",  worldId: "space",     name: "Stardust",         emoji: "ðŸŒŒ",  price: 0,    category: "space",  unlockLevel: 1, description: "Neon comets in deep night." },
+  { id: "theme-autumn",         worldId: "autumn",    name: "Autumn Cottage",   emoji: "ðŸ‚",  price: 150,  category: "forest", unlockLevel: 3, description: "Crisp air & golden leaves." },
+  { id: "theme-mushroom",       worldId: "mushroom",  name: "Mushroom Village", emoji: "ðŸ„",  price: 150,  category: "forest", unlockLevel: 5, description: "Glowing spores & twisted roots." },
+  { id: "theme-moonlit",        worldId: "moonlit",   name: "Moonlit Garden",   emoji: "ðŸŒ™",  price: 150,  category: "garden", unlockLevel: 4, description: "Silver beams & jasmine scent." },
+  { id: "theme-rainy",          worldId: "rainy",     name: "Rainy Library",    emoji: "ðŸŒ§ï¸", price: 150,  category: "special",unlockLevel: 6, description: "Steamy windows & old paper." },
+  { id: "theme-snowy",          worldId: "snowy",     name: "Snowy Cabin",      emoji: "â„ï¸", price: 150,  category: "snow",   unlockLevel: 4, description: "Frosted glass & crackling fire." },
+  { id: "theme-sunflower",      worldId: "sunflower", name: "Sunflower Meadow", emoji: "ðŸŒ»",  price: 150,  category: "garden", unlockLevel: 3, description: "Golden fields & buzzing bees." },
 ];
 
 const DOODADS: DoodadItem[] = [
-  { id: "doodad-bookshelf",   name: "Bookshelf",     emoji: "📚", price: 120, category: "furniture", description: "Stacked with dog-eared favorites." },
-  { id: "doodad-bench",       name: "Wooden Bench",  emoji: "🪑", price: 100, category: "furniture", description: "A cozy perch for your pet." },
-  { id: "doodad-picnic",      name: "Picnic Basket", emoji: "🧺", price: 90,  category: "furniture", description: "Snacks and stitched blankets." },
-  { id: "doodad-flowerpot",   name: "Flower Pot",    emoji: "🪴", price: 60,  category: "plants",    description: "A cheerful desk companion." },
-  { id: "doodad-tree",        name: "Potted Tree",   emoji: "🌳", price: 180, category: "plants",    description: "A tiny forest in your room." },
-  { id: "doodad-cactus",      name: "Cactus",        emoji: "🌵", price: 70,  category: "plants",    description: "Prickly but polite." },
-  { id: "doodad-lantern",     name: "Paper Lantern", emoji: "🏮", price: 130, category: "lights",    description: "Warm amber glow at dusk." },
-  { id: "doodad-campfire",    name: "Campfire",      emoji: "🔥", price: 200, category: "outdoor",   description: "Crackle, spark, cozy." },
-  { id: "doodad-mailbox",     name: "Mailbox",       emoji: "📮", price: 110, category: "outdoor",   description: "For pixel-pal postcards." },
-  { id: "doodad-star",        name: "Star Garland",  emoji: "⭐", price: 80,  category: "decor",     description: "Twinkles softly overhead." },
-  { id: "doodad-crt",         name: "CRT Filter",    emoji: "📺", price: 150, category: "special",   description: "Retro scanline shader for the whole app." },
-  { id: "doodad-sparkle",     name: "Sparkle Trail", emoji: "✨", price: 200, category: "special",   description: "Particles follow your typing." },
+  { id: "doodad-bookshelf",   name: "Bookshelf",     emoji: "ðŸ“š", price: 120, category: "furniture", description: "Stacked with dog-eared favorites." },
+  { id: "doodad-bench",       name: "Wooden Bench",  emoji: "ðŸª‘", price: 100, category: "furniture", description: "A cozy perch for your pet." },
+  { id: "doodad-picnic",      name: "Picnic Basket", emoji: "ðŸ§º", price: 90,  category: "furniture", description: "Snacks and stitched blankets." },
+  { id: "doodad-flowerpot",   name: "Flower Pot",    emoji: "ðŸª´", price: 60,  category: "plants",    description: "A cheerful desk companion." },
+  { id: "doodad-tree",        name: "Potted Tree",   emoji: "ðŸŒ³", price: 180, category: "plants",    description: "A tiny forest in your room." },
+  { id: "doodad-cactus",      name: "Cactus",        emoji: "ðŸŒµ", price: 70,  category: "plants",    description: "Prickly but polite." },
+  { id: "doodad-lantern",     name: "Paper Lantern", emoji: "ðŸ®", price: 130, category: "lights",    description: "Warm amber glow at dusk." },
+  { id: "doodad-campfire",    name: "Campfire",      emoji: "ðŸ”¥", price: 200, category: "outdoor",   description: "Crackle, spark, cozy." },
+  { id: "doodad-mailbox",     name: "Mailbox",       emoji: "ðŸ“®", price: 110, category: "outdoor",   description: "For pixel-pal postcards." },
+  { id: "doodad-star",        name: "Star Garland",  emoji: "â­", price: 80,  category: "decor",     description: "Twinkles softly overhead." },
+  { id: "doodad-crt",         name: "CRT Filter",    emoji: "ðŸ“º", price: 150, category: "special",   description: "Retro scanline shader for the whole app." },
+  { id: "doodad-sparkle",     name: "Sparkle Trail", emoji: "âœ¨", price: 200, category: "special",   description: "Particles follow your typing." },
 ];
 
 const RARITY_COLOR: Record<Rarity, string> = {
@@ -150,7 +150,7 @@ function OwnedBadge({ label = "Owned", color = "var(--leaf)" }: { label?: string
 function PriceBadge({ price }: { price: number }) {
   return (
     <span className="font-pixel text-[0.7rem]" style={{ color: "var(--coin)" }}>
-      🪙 {price === 0 ? "Free" : price.toLocaleString()}
+      ðŸª™ {price === 0 ? "Free" : price.toLocaleString()}
     </span>
   );
 }
@@ -175,8 +175,8 @@ type ShopTab = "pets" | "themes";
 
 function SegmentedSwitcher({ value, onChange }: { value: ShopTab; onChange: (t: ShopTab) => void }) {
   const tabs: { id: ShopTab; label: string; icon: string }[] = [
-    { id: "pets",   label: "Pets",             icon: "🐾" },
-    { id: "themes", label: "Themes & Doodads", icon: "🏡" },
+    { id: "pets",   label: "Pets",             icon: "ðŸ¾" },
+    { id: "themes", label: "Themes & Doodads", icon: "ðŸ¡" },
   ];
   return (
     <div
@@ -368,7 +368,7 @@ function PetsPage() {
                       className="text-sm leading-none"
                       title="Favorite"
                     >
-                      {fav ? "❤️" : "🤍"}
+                      {fav ? "â¤ï¸" : "ðŸ¤"}
                     </button>
                   </div>
                 </div>
@@ -401,7 +401,7 @@ function PetsPage() {
                     disabled={ownedP || locked || !canAfford}
                     onClick={(e) => { e.stopPropagation(); buy(p); }}
                   >
-                    {ownedP ? "Owned" : locked ? "Locked" : !canAfford ? "Need 🪙" : "Buy"}
+                    {ownedP ? "Owned" : locked ? "Locked" : !canAfford ? "Need ðŸª™" : "Buy"}
                   </button>
                 </div>
               </div>
@@ -417,14 +417,14 @@ function PetsPage() {
         {/* Bottom section: Eggs + progress */}
         <div className="grid gap-4 md:grid-cols-2 mt-8">
           <div className="pixel-card-sm p-4">
-            <SectionHeader title="Mystery Eggs" subtitle="Random pet — coming soon" />
+            <SectionHeader title="Mystery Eggs" subtitle="Random pet â€” coming soon" />
             <div className="grid grid-cols-5 gap-2">
               {[
-                { r: "common",    emoji: "🥚", color: RARITY_COLOR.common },
-                { r: "rare",      emoji: "🥚", color: RARITY_COLOR.rare },
-                { r: "epic",      emoji: "🥚", color: RARITY_COLOR.epic },
-                { r: "legendary", emoji: "🥚", color: RARITY_COLOR.legendary },
-                { r: "mythic",    emoji: "🥚", color: RARITY_COLOR.mythic },
+                { r: "common",    emoji: "ðŸ¥š", color: RARITY_COLOR.common },
+                { r: "rare",      emoji: "ðŸ¥š", color: RARITY_COLOR.rare },
+                { r: "epic",      emoji: "ðŸ¥š", color: RARITY_COLOR.epic },
+                { r: "legendary", emoji: "ðŸ¥š", color: RARITY_COLOR.legendary },
+                { r: "mythic",    emoji: "ðŸ¥š", color: RARITY_COLOR.mythic },
               ].map((e) => (
                 <div key={e.r} className="pixel-card-sm p-2 grid place-items-center text-center gap-1">
                   <div style={{ fontSize: 32, filter: `drop-shadow(0 0 6px ${e.color})` }}>{e.emoji}</div>
@@ -468,7 +468,7 @@ function PetsPage() {
             <>
               <div className="flex items-center justify-between">
                 <RarityBadge rarity={p.rarity} />
-                {equipped ? <OwnedBadge label="✓ Equipped" color="var(--sky)" /> :
+                {equipped ? <OwnedBadge label="âœ“ Equipped" color="var(--sky)" /> :
                  ownedP ? <OwnedBadge /> : locked ? <OwnedBadge label={`Lv ${p.unlockLevel}`} color="var(--muted-foreground)" /> : null}
               </div>
               <div
@@ -499,7 +499,7 @@ function PetsPage() {
                   className="font-pixel text-[0.6rem] px-2 py-1 rounded"
                   style={{ background: "var(--color-muted)", border: "2px solid var(--color-border)" }}
                 >
-                  {isFav(p.id) ? "❤️ Favorited" : "🤍 Favorite"}
+                  {isFav(p.id) ? "â¤ï¸ Favorited" : "ðŸ¤ Favorite"}
                 </button>
               </div>
               <div className="flex gap-2">
@@ -626,7 +626,7 @@ function ThemesPage() {
       <section>
         <SectionHeader
           title="Dreaming Worlds"
-          subtitle="Room themes — swap the sky above your keyboard."
+          subtitle="Room themes â€” swap the sky above your keyboard."
           right={<CategoryTabs items={THEME_CATEGORIES} value={themeCat} onChange={setThemeCat} />}
         />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -657,11 +657,11 @@ function ThemesPage() {
                   )}
                   {locked && (
                     <div className="absolute inset-0 grid place-items-center font-pixel text-[0.8rem]" style={{ color: "var(--color-primary-foreground)" }}>
-                      🔒 Lv {t.unlockLevel}
+                      ðŸ”’ Lv {t.unlockLevel}
                     </div>
                   )}
                   <div className="absolute top-2 left-2">
-                    {equipped ? <OwnedBadge label="✓ Equipped" color="var(--sky)" /> :
+                    {equipped ? <OwnedBadge label="âœ“ Equipped" color="var(--sky)" /> :
                      ownedT ? <OwnedBadge /> : null}
                   </div>
                 </div>
@@ -679,7 +679,7 @@ function ThemesPage() {
                   disabled={locked || (ownedT ? equipped : !canAfford)}
                   onClick={() => (ownedT ? equipTheme(t) : buyTheme(t))}
                 >
-                  {equipped ? "Equipped" : ownedT ? "Equip" : locked ? "Locked" : !canAfford ? "Need 🪙" : "Buy"}
+                  {equipped ? "Equipped" : ownedT ? "Equip" : locked ? "Locked" : !canAfford ? "Need ðŸª™" : "Buy"}
                 </button>
               </div>
             );
@@ -722,7 +722,7 @@ function ThemesPage() {
                   disabled={ownedD || !canAfford}
                   onClick={() => buyDoodad(d)}
                 >
-                  {ownedD ? "Owned" : !canAfford ? "Need 🪙" : "Buy"}
+                  {ownedD ? "Owned" : !canAfford ? "Need ðŸª™" : "Buy"}
                 </button>
               </div>
             );
@@ -738,8 +738,7 @@ function ThemesPage() {
  * ========================================================================= */
 
 export function Shop() {
-  const { state } = useGame();
-  const [tab, setTab] = useLocal<ShopTab>("shop.tab", "pets");
+    const [tab, setTab] = useLocal<ShopTab>("shop.tab", "pets");
 
   return (
     <div className="pixel-card p-5 sm:p-6">
@@ -753,10 +752,7 @@ export function Shop() {
               : "Personalize your world with themes and cozy doodads."}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <SegmentedSwitcher value={tab} onChange={setTab} />
-          <div className="pixel-chip">🪙 <span suppressHydrationWarning>{state.player.coins.toLocaleString()}</span></div>
-        </div>
+        <SegmentedSwitcher value={tab} onChange={setTab} />
       </div>
 
       {/* Animated tab body */}

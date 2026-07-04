@@ -568,3 +568,63 @@ export function unitProgress(unit: Unit, completed: Set<string>): { done: number
     total: unit.lessons.length,
   };
 }
+
+// ---------- Per-lesson best stats (localStorage) ----------
+const LESSON_STATS_KEY = "pawtype-lesson-stats";
+
+export type LessonStats = { bestWpm: number; bestAccuracy: number };
+
+export function loadLessonStats(): Record<string, LessonStats> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(LESSON_STATS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+export function saveLessonStats(id: string, wpm: number, accuracy: number) {
+  if (typeof window === "undefined") return;
+  const all = loadLessonStats();
+  const prev = all[id];
+  if (!prev || wpm > prev.bestWpm || accuracy > prev.bestAccuracy) {
+    all[id] = {
+      bestWpm: prev ? Math.max(prev.bestWpm, wpm) : wpm,
+      bestAccuracy: prev ? Math.max(prev.bestAccuracy, accuracy) : accuracy,
+    };
+    try { window.localStorage.setItem(LESSON_STATS_KEY, JSON.stringify(all)); } catch {}
+  }
+}
+
+// ---------- Unlock logic ----------
+export function isUnitUnlocked(unitNumber: number, completed: Set<string>): boolean {
+  if (unitNumber === 1) return true;
+  const prevUnit = UNITS.find((u) => u.number === unitNumber - 1);
+  if (!prevUnit) return true;
+  return prevUnit.lessons.every((l) => completed.has(l.id));
+}
+
+export function isLessonUnlocked(unit: Unit, lessonIndex: number, completed: Set<string>): boolean {
+  if (!isUnitUnlocked(unit.number, completed)) return false;
+  if (lessonIndex === 0) return true;
+  return completed.has(unit.lessons[lessonIndex - 1].id);
+}
+
+// ---------- Star rating ----------
+export function lessonStars(accuracy: number, targetAccuracy: number): number {
+  if (accuracy >= Math.min(targetAccuracy + 5, 100)) return 3;
+  if (accuracy >= targetAccuracy) return 2;
+  return 1;
+}
+
+// ---------- Difficulty-based rewards ----------
+const DIFFICULTY_XP: Record<string, number> = {
+  beginner: 25, easy: 50, intermediate: 75,
+  advanced: 100, expert: 150, master: 200,
+};
+export function lessonRewards(difficulty: string, wordCount: number) {
+  const base = DIFFICULTY_XP[difficulty] ?? 50;
+  const xp = base + Math.floor(wordCount / 5);
+  const coins = Math.round(xp / 2);
+  const petExp = Math.max(1, Math.floor(wordCount / 10));
+  return { xp, coins, petExp };
+}

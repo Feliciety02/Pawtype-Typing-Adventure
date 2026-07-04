@@ -1,4 +1,5 @@
 ﻿import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { useGame } from "../lib/game/store";
 import { generateAdventureWords, generateQuestText } from "../lib/game/textGenerator";
@@ -819,7 +820,7 @@ function StageRunner({
   };
 
   if (bossIntro) {
-    return (
+    return createPortal(
       <div className="adventure-modal">
         <div className="adventure-runner-card pixel-card animate-pixel-pop">
           <div className="adventure-runner-header">
@@ -838,10 +839,10 @@ function StageRunner({
           </button>
         </div>
       </div>
-    );
+    , document.body);
   }
 
-  return (
+  return createPortal(
     <div className="adventure-modal">
       <div className="adventure-runner-card pixel-card animate-pixel-pop">
         <div className="adventure-runner-header">
@@ -958,7 +959,7 @@ function StageRunner({
         )}
       </div>
     </div>
-  );
+  , document.body);
 }
 
 function MiniStat({ label, value, accent }: { label: string; value: string; accent: string }) {
