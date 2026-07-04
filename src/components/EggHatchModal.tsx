@@ -83,7 +83,17 @@ export function EggHatchModal({ milestone, onClose }: Props) {
             </button>
           ) : (
             <div className="egg-hatch-reveal">
-              <PixelPet mood="happy" petType={milestone.petType} />
+              <PixelPet
+                pet={{
+                  type: milestone.petType,
+                  name: PET_NAMES[milestone.petType],
+                  xp: 0,
+                  level: 1,
+                  adoptedAt: Date.now(),
+                }}
+                size={140}
+                showDetails={false}
+              />
             </div>
           )}
           {/* sparkles */}
