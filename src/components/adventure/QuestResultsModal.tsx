@@ -1,5 +1,6 @@
 import { RotateCcw, ArrowLeft, ArrowRight, X } from "lucide-react";
-import { PixelMascot } from "../PixelMascot";
+import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { PixelMascot } from "../coach/PixelMascot";
 import {
   CoachTipCard,
   PixelButton,
@@ -74,19 +75,19 @@ export function QuestResultsModal({
           <div className="quest-results-right">
             <div className="quest-results-stats">
               <StatCard
-                icon={<img src="/Icons/nav/keyboard.png" alt="" className="pixel-stat-art" />}
+                icon={<PixelIcon emoji="⌨" className="pixel-stat-art" />}
                 label="WPM"
                 value={String(wpm)}
                 valueClassName={success ? "is-sky" : undefined}
               />
               <StatCard
-                icon={<img src="/Icons/target.png" alt="" className="pixel-stat-art" />}
+                icon={<PixelIcon emoji="🎯" className="pixel-stat-art" />}
                 label="Accuracy"
                 value={`${accuracy}%`}
                 valueClassName={accuracy >= minAccuracy ? "is-sky" : undefined}
               />
               <StatCard
-                icon={<img src="/Icons/hourglass.png" alt="" className="pixel-stat-art" />}
+                icon={<PixelIcon emoji="⏳" className="pixel-stat-art" />}
                 label="Time"
                 value={`${elapsedSeconds.toFixed(0)}s`}
               />

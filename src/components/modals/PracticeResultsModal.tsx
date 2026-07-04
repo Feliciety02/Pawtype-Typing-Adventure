@@ -1,5 +1,6 @@
 import { Play, RotateCcw } from "lucide-react";
-import { PixelMascot } from "../PixelMascot";
+import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { PixelMascot } from "../coach/PixelMascot";
 import {
   CoachTipCard,
   ModalShell,
@@ -64,19 +65,19 @@ export function PracticeResultsModal({
         <div className="practice-results-right">
           <div className="practice-results-stats">
             <StatCard
-              icon={<img src="/Icons/target.png" alt="" className="pixel-stat-art" />}
+              icon={<PixelIcon emoji="🎯" className="pixel-stat-art" />}
               label="Accuracy"
               value={`${accuracy}%`}
               valueClassName="is-sky"
             />
             <StatCard
-              icon={<img src="/Icons/fire.png" alt="" className="pixel-stat-art" />}
+              icon={<PixelIcon emoji="🔥" className="pixel-stat-art" />}
               label="Best Combo"
               value={String(bestCombo)}
               valueClassName="is-gold"
             />
             <StatCard
-              icon={<img src="/Icons/hourglass.png" alt="" className="pixel-stat-art" />}
+              icon={<PixelIcon emoji="⏳" className="pixel-stat-art" />}
               label="Time"
               value={`${elapsedSeconds.toFixed(0)}s`}
               valueClassName="is-sky"
@@ -86,7 +87,7 @@ export function PracticeResultsModal({
           <RewardCard xp={xp} coins={coins} />
 
           <div className="practice-results-practiced">
-            <img src="/Icons/target.png" alt="" className="practice-results-practiced-icon" />
+            <PixelIcon emoji="🎯" className="practice-results-practiced-icon" />
             <span className="practice-results-practiced-label">Practiced:</span>
             <span className="practice-results-practiced-value">{practicedSummary}</span>
           </div>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useReducer, useRef, useCallback, type ReactNode } from "react";
 import {
   type GameState,
   type PetState,
@@ -10,7 +10,7 @@ import {
   getDailyReward,
 } from "./types";
 import { persistence } from "./persistence";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/lib/hooks/use-auth";
 import { saveGameState, loadGameState } from "@/lib/supabase/game";
 
 export type GameAction =
@@ -181,7 +181,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return action.state;
 
     case "RESET":
-      persistence.clear();
       return DEFAULT_GAME_STATE;
 
     default:
@@ -231,12 +230,23 @@ const GameCtx = createContext<GameCtx>({
 });
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(gameReducer, null, initializeGame);
+  const [state, rawDispatch] = useReducer(gameReducer, null, initializeGame);
   const { user, isLoading } = useAuth();
   const loadedCloudUserId = useRef<string | null>(null);
+  const resetFlagRef = useRef(false);
+
+  const dispatch = useCallback((action: GameAction) => {
+    if (action.type === "RESET") resetFlagRef.current = true;
+    rawDispatch(action);
+  }, []);
 
   useEffect(() => {
-    persistence.save(state);
+    if (resetFlagRef.current) {
+      resetFlagRef.current = false;
+      persistence.clear();
+    } else {
+      persistence.save(state);
+    }
   }, [state]);
 
   useEffect(() => {
@@ -266,13 +276,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
     if (syncTimer.current) clearTimeout(syncTimer.current);
     syncTimer.current = setTimeout(async () => {
       try {
-        await saveGameState({
-          data: {
-            player: state.player as unknown as Record<string, unknown>,
-            inventory: state.inventory as unknown as Record<string, unknown>,
-            adventures: state.adventures as unknown as Record<string, unknown>,
-          },
-        });
+        const data = {
+          player: { ...state.player } as Record<string, unknown>,
+          inventory: { ...state.inventory } as Record<string, unknown>,
+          adventures: state.adventures as Record<string, unknown>,
+        };
+        await saveGameState({ data });
       } catch {
         console.warn("Cloud save failed");
       }

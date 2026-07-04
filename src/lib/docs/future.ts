@@ -7,10 +7,16 @@ Planned features and high-potential additions to expand the game.
 ## âœ… Shipped
 
 ### Pixel RPG Modal Refresh
-âœ… **Shipped** - Practice results, lesson popups, pet room, egg rewards, and adventure quest overlays now share a reusable parchment-style pixel modal system with layered frames, corner ornaments, visible X controls, Escape support, stronger close behavior, and a premium cozy RPG presentation.
+âœ… **Shipped** - Practice results, compact lesson results, lesson popups, pet room, egg rewards, and wider adventure quest overlays now share a reusable parchment-style pixel modal system with layered frames, corner ornaments, visible X controls, Escape support, stronger close behavior, safer close-button spacing, and a premium cozy RPG presentation.
+
+### Practice Toolbar Controls
+âœ… **Shipped** - Practice timer pills now switch between 15s, 30s, and 60s correctly, and the new-test control uses a proper pixel reset icon instead of placeholder text.
 
 ### Adventure Quest Scene Flow
-âœ… **Shipped** - Adventure quest typing now stays as a dedicated gameplay scene. Quest clear and fail states fade the live stage into the background, trigger biome-specific celebration or failure particles, and open a separate foreground results card instead of mixing victory UI directly into the typing surface. The live quest HUD now prioritizes the typing panel, keeps the stage image in a compact header card, and moves WPM/accuracy/time/goal into a short stats row below the words. Victory celebrations now use a world-aware emoji/sprite particle engine with denser top-spawned particles, biome-specific assets, reusable sprite mapping, and softer failure effects.
+âœ… **Shipped** - Adventure quest typing now stays as a dedicated gameplay scene. Quest clear and fail states fade the live stage into the background, trigger biome-specific celebration or failure particles, and open a separate foreground results card instead of mixing victory UI directly into the typing surface. The live quest HUD now prioritizes the typing panel, keeps the stage image in a compact header card, and moves WPM/accuracy/time/goal into a short stats row below the words. Victory celebrations now use a world-aware emoji/sprite particle engine with denser top-spawned particles, stage-biome weighted emoji sets, optional stage-emoji particles, reusable sprite mapping, and softer failure effects. Quest typing content now loads coherent world-and-node-aware route passages at stage start/retry instead of repeating tiny seed word pools.
+
+### Theme-Aware Practice Confetti
+âœ… **Shipped** - Perfect practice runs now use the same world-aware celebration language as adventure stages: dense emoji particles burst outward from behind the results modal in staggered waves, choose assets from the current theme, mix in universal reward particles, drift with a slower natural fall, and remain behind results modals for readability.
 
 ### ðŸ“š PawType Curriculum (13 Units)
 âœ… **Shipped** - The Lessons view is now a full 13-unit curriculum with 90+ lessons: Getting Started, Top Row, Bottom Row, Capital Letters, Punctuation, Numbers, Symbols, Common English Words, Sentences, Paragraphs, Speed Building, Real World Typing, and Advanced Challenges. Each unit tracks progress, unlocks the next after completion, and expands into an accordion of lessons with curated word banks, difficulty (beginner -> master), target WPM, and target accuracy. Completion persists to localStorage and lessons can be replayed. Lesson cards now use a roomier three-column quest-card layout with larger status art, vertical lesson details, collectible reward badges, grouped progress actions, and no separate mascot callout column.
@@ -53,7 +59,7 @@ Planned features and high-potential additions to expand the game.
 âœ… **Shipped** - The top HUD now uses a single-row desktop layout with a wider main navigation strip, shorter nav button labels, and a redesigned profile card with a framed pet tile, level badge, HP-style progress bar, darker outline treatment, no dropdown button, a simplified utility area focused on coins plus notifications, larger spacing before the main page content, and a wider shared content shell for every tab view.
 
 ### ðŸ¾ Pet Room
-A dedicated view to see your active pet larger, interact with it, feed treats, and view evolution progress. All pets you own appear in a row.
+✅ **Shipped** — A dedicated modal to see your active pet larger, interact with it, feed treats, and view evolution progress. All pets you own appear in a row with active-pet highlighting.
 
 ---
 
@@ -110,6 +116,13 @@ Seasonal pass with exclusive cosmetics, badges, and pets. Free track always avai
 
 ## Technical Debt & Polish
 
+- **Modal focus trap** ✅ Done — Tab cycling, previous focus restore, Escape via ref (stable handler)
+- **Reducer side-effects** ✅ Done — \`persistence.clear()\` moved out of reducer into effect with ref flag
+- **useEffect dependency storms** ✅ Done — Escape handler uses ref, word generator uses ref to break render cycle
+- **CSS !important cleanup** ✅ Done — Replaced with specificity increases (header, login-screen)
+- **Type-safety bypasses** ✅ Done — Replaced \`as unknown as Record\` casts with cleaner patterns
+- **Dead code removal** ✅ Done — Removed \`ollama.ts\`, \`BiomeParticleEmitter\`
+- **ai/ → engine/ rename** ✅ Done — Directory renamed, all imports updated
 - **Offline support** - full PWA with service worker caching
 - **Accessibility pass** - screen reader support, high contrast mode, keyboard navigation audit
 - **Mobile responsive** - typing on mobile with virtual keyboard

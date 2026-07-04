@@ -8,7 +8,7 @@ Pixel companions that grow with you. Every player starts with Whiskers the Cat. 
 
 | Pet | Emoji | Price | Personality |
 |-----|-------|-------|-------------|
-| Cat | ?? | Starter | Your first pixel companion |
+| Cat | 🐱 | Starter | Your first pixel companion |
 | Dog | 🐶 | 400🪙 | A wagging pixel pup |
 | Fox | 🦊 | 500🪙 | A clever pixel fox |
 | Rabbit | 🐰 | 350🪙 | A fluffy pixel bunny |

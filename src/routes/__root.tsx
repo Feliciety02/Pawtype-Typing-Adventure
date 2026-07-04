@@ -10,8 +10,8 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-import { WorldProvider } from "../components/WorldTheme";
+import { reportLovableError } from "../lib/ui/lovable-error-reporting";
+import { WorldProvider } from "../components/shared/WorldTheme";
 import { GameProvider } from "../lib/game/store";
 import { Toaster } from "../components/ui/sonner";
 

@@ -1,4 +1,4 @@
-import type { WorldId } from "../../components/WorldTheme";
+import type { WorldId } from "../../components/shared/WorldTheme";
 
 export const THEME_PREVIEW_ASSETS: Partial<Record<WorldId, string>> = {
   cafe: "/theme/cozy-cafe.png",

@@ -1,10 +1,12 @@
-import type { WorldId } from "../../components/WorldTheme";
+import type { WorldId } from "../../components/shared/WorldTheme";
 import {
   generateAdventureWords as aiAdventureWords,
   generateWorldText as aiWorldText,
-  generateQuestText as aiQuestText,
-} from "./ai/generator";
-import { generateMascotLine as aiMascotLine, type MascotContext } from "./ai/mascot";
+  generateLessonText as aiLessonText,
+  generateWeakSpotSentences as aiWeakSpotSentences,
+} from "./engine/generator";
+import { generateMascotLine as aiMascotLine, type MascotContext } from "./engine/mascot";
+import type { Difficulty, Zone } from "./engine/generator";
 
 const WORLD_THEMES: Partial<Record<WorldId, string>> = {
   cafe: "a cozy cafe with warm coffee, rain tapping windows, and soft jazz",
@@ -38,6 +40,136 @@ const WORLD_LINES: Partial<Record<WorldId, string[]>> = {
   "frostveil-kingdom": ["Ice light glitters across the path", "snow gathers under crystal pines", "the palace shines beyond frozen falls"],
 };
 
+type QuestWorldProfile = {
+  setting: string;
+  route: string[];
+  landmarks: string[];
+  creatures: string[];
+  treasures: string[];
+  actions: string[];
+  moods: string[];
+};
+
+const QUEST_WORLD_PROFILES: Partial<Record<WorldId, QuestWorldProfile>> = {
+  cafe: {
+    setting: "coffee village",
+    route: ["cobblestone lane", "warm counter", "quiet booth", "bakery path", "mocha garden"],
+    landmarks: ["cafe corner", "roast ridge", "latte lake", "bean garden", "mocha manor"],
+    creatures: ["sleepy kitten", "friendly barista", "tiny sparrow", "curious pup"],
+    treasures: ["golden bean", "cream lantern", "warm mug", "sugar charm"],
+    actions: ["brews", "guides", "warms", "carries", "polishes"],
+    moods: ["cozy", "gentle", "golden", "sweet", "quiet"],
+  },
+  forest: {
+    setting: "mossy forest",
+    route: ["fern path", "brook trail", "pine bridge", "fox hollow", "elder grove"],
+    landmarks: ["mossy trail", "fern grove", "fox hollow", "whisper woods", "elder tree"],
+    creatures: ["red fox", "small moth", "green beetle", "sleepy owl"],
+    treasures: ["dew lantern", "moss charm", "acorn bell", "leaf badge"],
+    actions: ["follows", "guards", "finds", "crosses", "lights"],
+    moods: ["mossy", "soft", "green", "hidden", "misty"],
+  },
+  ocean: {
+    setting: "underwater kingdom",
+    route: ["tide path", "coral bridge", "shell lane", "pearl cave", "sea gate"],
+    landmarks: ["tide pool", "coral reef", "pearl grotto", "deep abyss", "sea palace"],
+    creatures: ["bright fish", "quiet crab", "gentle turtle", "silver dolphin"],
+    treasures: ["pearl key", "shell crown", "coral charm", "bubble lamp"],
+    actions: ["drifts", "dives", "carries", "shines", "guides"],
+    moods: ["blue", "salty", "clear", "rippling", "gentle"],
+  },
+  sakura: {
+    setting: "spring garden",
+    route: ["petal path", "lotus bridge", "tea lane", "shrine steps", "garden gate"],
+    landmarks: ["blossom path", "lotus pond", "tea garden", "shrine hill", "sakura sanctuary"],
+    creatures: ["koi fish", "paper crane", "quiet sparrow", "lantern moth"],
+    treasures: ["pink ribbon", "lotus charm", "tea bell", "petal badge"],
+    actions: ["floats", "waits", "guides", "rings", "glows"],
+    moods: ["pink", "calm", "spring", "bright", "peaceful"],
+  },
+  castle: {
+    setting: "royal castle",
+    route: ["stone gate", "banner hall", "royal court", "knight road", "crown stair"],
+    landmarks: ["castle gate", "royal courtyard", "knights hall", "kings keep", "crown citadel"],
+    creatures: ["brave hound", "silver hawk", "tiny dragon", "castle mouse"],
+    treasures: ["gold crown", "velvet banner", "ruby key", "royal badge"],
+    actions: ["guards", "raises", "opens", "carries", "polishes"],
+    moods: ["royal", "brave", "golden", "velvet", "steady"],
+  },
+  space: {
+    setting: "cosmic observatory",
+    route: ["star path", "nebula bridge", "moon deck", "comet trail", "orbit gate"],
+    landmarks: ["star glade", "nebula grove", "galaxy pool", "cosmic ruins", "astral observatory"],
+    creatures: ["moon moth", "star pup", "tiny comet", "glowing owl"],
+    treasures: ["meteor shard", "starlight key", "orbit badge", "cosmic gem"],
+    actions: ["orbits", "shimmers", "signals", "guides", "glows"],
+    moods: ["stellar", "quiet", "silver", "distant", "bright"],
+  },
+  autumn: {
+    setting: "cozy campsite",
+    route: ["pine trail", "camp path", "ember bridge", "bear ridge", "ranger road"],
+    landmarks: ["camp entrance", "pine camp", "campfire circle", "bear ridge", "ranger lookout"],
+    creatures: ["brown bear", "trail fox", "camp owl", "tiny squirrel"],
+    treasures: ["ember badge", "pine lantern", "map charm", "warm compass"],
+    actions: ["tracks", "warms", "guides", "carries", "signals"],
+    moods: ["crisp", "golden", "warm", "leafy", "quiet"],
+  },
+  mushroom: {
+    setting: "fairy mushroom village",
+    route: ["mushroom trail", "fairy path", "glow bridge", "crystal lane", "queen root"],
+    landmarks: ["mushroom trail", "fairy hollow", "glow grove", "crystal thicket", "fairy queens tree"],
+    creatures: ["tiny fairy", "glow moth", "soft beetle", "purple snail"],
+    treasures: ["spore lamp", "crystal charm", "fairy bell", "violet badge"],
+    actions: ["sparkles", "hides", "guides", "twirls", "glows"],
+    moods: ["magic", "violet", "soft", "glowing", "whimsical"],
+  },
+  sunflower: {
+    setting: "sunflower meadow",
+    route: ["daisy path", "sunny row", "windmill road", "harvest lane", "meadow gate"],
+    landmarks: ["daisy path", "sunflower field", "windmill hill", "golden harvest", "harvest haven"],
+    creatures: ["busy bee", "yellow bird", "field mouse", "painted butterfly"],
+    treasures: ["honey badge", "sun charm", "seed pouch", "gold ribbon"],
+    actions: ["buzzes", "waves", "gathers", "guides", "shines"],
+    moods: ["sunny", "golden", "bright", "warm", "cheerful"],
+  },
+  "volcanic-forge": {
+    setting: "volcanic forge",
+    route: ["ember trail", "lava bridge", "basalt road", "magma stair", "forge gate"],
+    landmarks: ["ember trail", "lava cavern", "molten crossing", "magma summit", "inferno forge"],
+    creatures: ["ember fox", "ash raven", "stone turtle", "spark sprite"],
+    treasures: ["fire crystal", "iron badge", "ember key", "molten coin"],
+    actions: ["sparks", "forges", "guards", "heats", "signals"],
+    moods: ["fiery", "bold", "smoky", "glowing", "brave"],
+  },
+  "desert-oasis": {
+    setting: "desert oasis",
+    route: ["sandy trail", "cactus road", "palm shade", "sunstone dune", "pyramid gate"],
+    landmarks: ["sandy trail", "cactus camp", "oasis spring", "sunstone dunes", "golden pyramid"],
+    creatures: ["desert fox", "small lizard", "gold beetle", "palm bird"],
+    treasures: ["oasis gem", "sun coin", "silk map", "gold scarab"],
+    actions: ["crosses", "shades", "finds", "guards", "reveals"],
+    moods: ["sunlit", "golden", "dry", "ancient", "warm"],
+  },
+  "steam-punk-workshop": {
+    setting: "steampunk workshop",
+    route: ["gear yard", "boiler hall", "copper road", "steam bridge", "clockwork gate"],
+    landmarks: ["gear yard", "boiler room", "copper works", "steam forge", "clockwork core"],
+    creatures: ["brass mouse", "clockwork bird", "steam pup", "copper beetle"],
+    treasures: ["gear badge", "copper key", "brass spring", "clock charm"],
+    actions: ["clicks", "builds", "turns", "repairs", "signals"],
+    moods: ["brassy", "clever", "warm", "busy", "steady"],
+  },
+  "frostveil-kingdom": {
+    setting: "frostveil kingdom",
+    route: ["frost path", "crystal bridge", "snow road", "ice stair", "palace gate"],
+    landmarks: ["frost path", "crystal grove", "frozen falls", "ice citadel", "frostveil palace"],
+    creatures: ["snow fox", "ice moth", "white hare", "silver owl"],
+    treasures: ["ice gem", "frost badge", "crystal key", "snow lantern"],
+    actions: ["glitters", "slides", "guards", "guides", "shines"],
+    moods: ["icy", "silver", "quiet", "frozen", "bright"],
+  },
+};
+
 const MASCOT_LINES: Record<string, string[]> = {
   idle: ["Ready when your paws are.", "Tap in and wake the room.", "A cozy run is waiting."],
   happy: ["Nice rhythm, keep gliding.", "Clean strokes, steady paws.", "That flow looks sharp."],
@@ -69,6 +201,71 @@ function normalizeWords(words: string[]) {
     .filter((word) => word.length >= 2 && word.length <= 14);
 }
 
+function profileFor(worldId: WorldId): QuestWorldProfile {
+  return QUEST_WORLD_PROFILES[worldId] ?? QUEST_WORLD_PROFILES.cafe!;
+}
+
+function stableIndex(seed: string) {
+  return seed.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function pickLocal<T>(items: T[], seed: string, index: number): T {
+  return items[(stableIndex(seed) + index) % items.length];
+}
+
+function tokenizeQuestSentence(sentence: string) {
+  return sentence
+    .toLowerCase()
+    .replace(/[^a-z0-9'\s-]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function createLocalAdventureWords(
+  stageName: string,
+  worldId: WorldId,
+  seedWords: string[],
+  count: number,
+  offset = 0,
+) {
+  const profile = profileFor(worldId);
+  const stageWords = normalizeWords(stageName.split(/\s+/));
+  const stage = stageWords.join(" ");
+  const seed = `${worldId}:${stageName}:${seedWords.join("-")}:${offset}`;
+  const words: string[] = [];
+  const templates = [
+    (i: number) =>
+      `${stage} begins near the ${pickLocal(profile.landmarks, seed, i)} where ${pickLocal(profile.moods, seed, i)} light covers the ${pickLocal(profile.route, seed, i)}`,
+    (i: number) =>
+      `follow the ${pickLocal(profile.route, seed, i + 2)} past the ${pickLocal(profile.landmarks, seed, i + 3)} and keep a steady typing rhythm`,
+    (i: number) =>
+      `a ${pickLocal(profile.creatures, seed, i + 4)} watches from the ${profile.setting} while the ${pickLocal(profile.treasures, seed, i + 5)} waits ahead`,
+    (i: number) =>
+      `each clean key ${pickLocal(profile.actions, seed, i + 6)} the path forward and brings the next marker into view`,
+    (i: number) =>
+      `the ${pickLocal(profile.moods, seed, i + 7)} ${pickLocal(profile.route, seed, i + 8)} turns toward ${pickLocal(profile.landmarks, seed, i + 9)} with quiet promise`,
+    (i: number) =>
+      `stay calm as the ${pickLocal(profile.creatures, seed, i + 10)} guides you between ${pickLocal(profile.treasures, seed, i + 11)} and ${pickLocal(profile.landmarks, seed, i + 12)}`,
+    (i: number) =>
+      `your paws cross the ${pickLocal(profile.route, seed, i + 13)} while the ${pickLocal(profile.treasures, seed, i + 14)} ${pickLocal(profile.actions, seed, i + 15)} softly`,
+    (i: number) =>
+      `finish this route with smooth letters careful spaces and a brave heart for the next quest`,
+  ];
+
+  let templateIndex = offset;
+  while (words.length < count + 16) {
+    const sentence = templates[templateIndex % templates.length](templateIndex);
+    const nextWords = tokenizeQuestSentence(sentence);
+    for (const word of nextWords) {
+      if (words[words.length - 1] === word) continue;
+      words.push(word);
+    }
+    templateIndex += 1;
+  }
+
+  return words.slice(0, count);
+}
+
 export async function generateWorldText(worldId: WorldId): Promise<string | null> {
   const ai = await aiWorldText(worldId).catch(() => null);
   if (ai) return ai;
@@ -79,6 +276,12 @@ export async function generateWorldText(worldId: WorldId): Promise<string | null
 
 export async function generateWeakSpotWords(mistakeChars: string[]): Promise<string[] | null> {
   if (mistakeChars.length === 0) return null;
+
+  const sentences = await aiWeakSpotSentences(mistakeChars).catch(() => null);
+  if (sentences && sentences.length > 0) {
+    const words = sentences.join(" ").split(/\s+/).filter(Boolean);
+    return words.length >= 8 ? words : null;
+  }
 
   const charSet = new Set(mistakeChars.map((char) => char.toLowerCase()));
   const pool = WORD_POOL.filter((word) => [...word].some((char) => charSet.has(char)));
@@ -102,12 +305,23 @@ export async function generateMascotLine(mood: string, ctx?: MascotContext): Pro
 }
 
 export async function generateQuestText(stageName: string, worldId: WorldId): Promise<string | null> {
-  const ai = await aiQuestText(stageName, worldId).catch(() => null);
-  if (ai) return ai;
+  const profile = profileFor(worldId);
+  const seed = `${worldId}:${stageName}:intro`;
+  const route = pickLocal(profile.route, seed, 1);
+  const landmark = pickLocal(profile.landmarks, seed, 2);
+  const treasure = pickLocal(profile.treasures, seed, 3);
+  const mood = pickLocal(profile.moods, seed, 4);
+  return `${stageName}: follow the ${route} toward ${landmark}, keep a ${mood} rhythm, and find the ${treasure}.`;
+}
 
-  const lines = WORLD_LINES[worldId];
-  if (!lines) return null;
-  return `${stageName} opens as ${lines[stageName.length % lines.length].toLowerCase()}.`;
+export async function generateLessonText(
+  difficulty: Difficulty,
+  targetZones: Zone[],
+  count = 30,
+): Promise<string> {
+  const text = await aiLessonText(difficulty, targetZones, count).catch(() => null);
+  if (text) return text;
+  return WORD_POOL.slice(0, count).join(" ");
 }
 
 export function sprinklePunctuation(words: string[]): string[] {
@@ -145,11 +359,16 @@ export function sprinklePunctuation(words: string[]): string[] {
 }
 
 export async function generateNextWords(worldId: WorldId, count = 30): Promise<string[]> {
-  const text = await aiWorldText(worldId).catch(() => null);
-  if (text) {
-    const words = text.replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
-    if (words.length >= 5) return sprinklePunctuation(words.slice(0, count));
+  const allWords: string[] = [];
+  for (let attempt = 0; attempt < 3 && allWords.length < count; attempt++) {
+    const text = await aiWorldText(worldId).catch(() => null);
+    if (text) {
+      const words = text.replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
+      if (words.length >= 5) allWords.push(...words);
+    }
   }
+  if (allWords.length >= 5) return sprinklePunctuation(allWords.slice(0, count));
+
   const lines = WORLD_LINES[worldId];
   if (lines) {
     const pool = lines.join(" ").replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
@@ -165,9 +384,13 @@ export async function generateAdventureWords(
   worldId: WorldId,
   seedWords: string[],
   count = 36,
+  offset = 0,
 ): Promise<string[] | null> {
+  const local = createLocalAdventureWords(stageName, worldId, seedWords, count, offset);
+  if (local.length >= count) return local;
+
   const ai = await aiAdventureWords(stageName, worldId, seedWords, count).catch(() => null);
-  if (ai) return ai;
+  if (ai && new Set(ai.map((word) => word.toLowerCase())).size >= Math.min(12, ai.length)) return ai;
 
   const tokens = normalizeWords([
     ...seedWords,
@@ -175,5 +398,5 @@ export async function generateAdventureWords(
     ...(WORLD_THEMES[worldId] ?? "").split(/[^a-zA-Z]+/),
   ]);
   if (tokens.length === 0) return null;
-  return rotatePick(tokens, count, `${worldId}:${stageName}:${count}`);
+  return rotatePick(tokens, count, `${worldId}:${stageName}:${count}:${offset}`);
 }

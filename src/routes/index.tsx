@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Header, type View } from "@/components/Header";
-import { Hub } from "@/components/Hub";
-import { TypingArena } from "@/components/TypingArena";
-import { AdventureMap } from "@/components/AdventureMap";
-import { LessonsCard } from "@/components/LessonsCard";
-import { Shop } from "@/components/Shop";
-import { AchievementsCard } from "@/components/AchievementsCard";
-import { StatsView } from "@/components/StatsView";
-import { SettingsPage } from "@/components/SettingsPage";
-import { PixelLoginScreen } from "@/components/PixelLoginScreen";
-import { useAuth } from "@/hooks/use-auth";
+import { Header, type View } from "@/components/layout/Header";
+import { Hub } from "@/components/hub/Hub";
+import { TypingArena } from "@/components/game/TypingArena";
+import { AdventureMap } from "@/components/adventure/AdventureMap";
+import { LessonsCard } from "@/components/game/LessonsCard";
+import { Shop } from "@/components/shop/Shop";
+import { AchievementsCard } from "@/components/game/AchievementsCard";
+import { StatsView } from "@/components/game/StatsView";
+import { SettingsPage } from "@/components/settings/SettingsPage";
+import { PixelLoginScreen } from "@/components/auth/PixelLoginScreen";
+import { useAuth } from "@/lib/hooks/use-auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({

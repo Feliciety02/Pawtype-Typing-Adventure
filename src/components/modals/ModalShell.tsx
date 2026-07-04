@@ -1,7 +1,8 @@
-import { useEffect, type ButtonHTMLAttributes, type HTMLAttributes, type ReactNode } from "react";
+import { useEffect, useRef, type ButtonHTMLAttributes, type HTMLAttributes, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { cn } from "../../lib/ui/utils";
 
 export function PixelCornerOrnaments() {
   return (
@@ -48,14 +49,52 @@ export function ModalShell({
   showCloseButton = true,
   closeLabel = "Close modal",
 }: ModalShellProps) {
+  const onCloseRef = useRef(onClose);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const prevFocusRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
+  useEffect(() => {
+    prevFocusRef.current = document.activeElement as HTMLElement;
+
+    const shell = shellRef.current;
+    if (shell) {
+      const first = shell.querySelector<HTMLElement>("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+      first?.focus();
+    }
+
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") onCloseRef.current();
+    };
+
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const shell = shellRef.current;
+      if (!shell) return;
+      const focusable = shell.querySelectorAll<HTMLElement>("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
 
     window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [onClose]);
+    window.addEventListener("keydown", trapFocus);
+    return () => {
+      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("keydown", trapFocus);
+      prevFocusRef.current?.focus();
+    };
+  }, []);
 
   return createPortal(
     <div
@@ -65,7 +104,7 @@ export function ModalShell({
       aria-label={ariaLabel}
       onClick={onClose}
     >
-      <div className={cn("pixel-modal-shell", className)} onClick={(event) => event.stopPropagation()}>
+      <div ref={shellRef} className={cn("pixel-modal-shell", className)} onClick={(event) => event.stopPropagation()}>
         <PixelFrame className={cn("pixel-modal-frame", frameClassName)}>
           {showCloseButton && (
             <button
@@ -113,13 +152,13 @@ export function RewardCard({ xp, coins }: RewardCardProps) {
   return (
     <div className="pixel-reward-card">
       <div className="pixel-reward-item">
-        <img src="/Icons/star.png" alt="" className="pixel-reward-icon" />
+        <PixelIcon emoji="⭐" className="pixel-reward-icon" />
         <span className="pixel-reward-value">+{xp}</span>
         <span className="pixel-reward-label">XP</span>
       </div>
       <div className="pixel-reward-divider" aria-hidden="true" />
       <div className="pixel-reward-item">
-        <img src="/Icons/coin.png" alt="" className="pixel-reward-icon" />
+        <PixelIcon emoji="🪙" className="pixel-reward-icon" />
         <span className="pixel-reward-value">+{coins}</span>
         <span className="pixel-reward-label">Coins</span>
       </div>

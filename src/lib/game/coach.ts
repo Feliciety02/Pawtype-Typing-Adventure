@@ -1,2 +1,2 @@
-export { getCoachFeedback } from "./ai/coach";
-export type { CoachInsight } from "./ai/types";
+export { getCoachFeedback } from "./engine/coach";
+export type { CoachInsight } from "./engine/types";

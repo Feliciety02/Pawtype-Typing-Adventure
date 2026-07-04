@@ -1,5 +1,6 @@
 import { useMemo, type CSSProperties } from "react";
-import type { WorldId } from "../WorldTheme";
+import { PixelIcon } from "../../lib/icons/PixelIcon";
+import type { WorldId } from "../shared/WorldTheme";
 
 type ResultState = "win" | "lose";
 
@@ -7,6 +8,7 @@ type CelebrationOverlayProps = {
   active: boolean;
   result: ResultState | null;
   world: WorldId;
+  stageEmoji?: string;
   xp: number;
   coins: number;
 };
@@ -14,17 +16,19 @@ type CelebrationOverlayProps = {
 type ParticleAsset = {
   id: string;
   emoji: string;
-  src?: string;
 };
 
 type ParticleInstance = {
   id: number;
   asset: ParticleAsset;
   left: number;
+  top?: number;
   origin: "left" | "center" | "right";
   delay: number;
   duration: number;
   drift: number;
+  burstX?: number;
+  burstY?: number;
   rotate: number;
   scale: number;
   bottomBounce: number;
@@ -34,30 +38,6 @@ type ParticleConfig = {
   victory: string[];
   glow: string;
   failure: string[];
-};
-
-const ICON_BY_EMOJI: Partial<Record<string, string>> = {
-  "✨": "/Icons/sparkles.png",
-  "⭐": "/Icons/star.png",
-  "🌟": "/Icons/glowing-star.png",
-  "🏆": "/Icons/trophy.png",
-  "🪙": "/Icons/coin.png",
-  "💰": "/Icons/coin.png",
-  "❤️": "/Icons/red-heart.png",
-  "💖": "/Icons/red-heart.png",
-  "🐾": "/Icons/paw-print.png",
-  "🌸": "/Icons/cherry-blossom.png",
-  "🍃": "/Icons/fallen-leaf.png",
-  "🍀": "/Icons/seedling.png",
-  "🌿": "/Icons/seedling.png",
-  "🌻": "/Icons/sunflower.png",
-  "🔥": "/Icons/fire.png",
-  "⚡": "/Icons/zap.png",
-  "💧": "/Icons/water-wave.png",
-  "🌊": "/Icons/water-wave.png",
-  "❄️": "/Icons/white-heart.png",
-  "💎": "/Icons/glowing-star.png",
-  "🤍": "/Icons/white-heart.png",
 };
 
 const UNIVERSAL_VICTORY = ["🎉", "🎊", "✨", "🌟", "⭐", "🏆", "🪙", "💰", "❤️", "🐾"];
@@ -155,7 +135,6 @@ function assetFor(emoji: string): ParticleAsset {
   return {
     id: emoji,
     emoji,
-    src: ICON_BY_EMOJI[emoji],
   };
 }
 
@@ -163,34 +142,52 @@ function makeParticleAssets(emojis: string[]) {
   return emojis.map(assetFor);
 }
 
-function makeVictoryParticles(world: WorldId) {
-  const config = PARTICLE_MAP[world];
-  const assets = makeParticleAssets([...config.victory, ...UNIVERSAL_VICTORY]);
+function normalizeStageEmoji(stageEmoji?: string) {
+  if (!stageEmoji || stageEmoji.includes("?")) return [];
+  return [stageEmoji];
+}
+
+function makeVictoryParticles(world: WorldId, stageEmoji?: string) {
+  const config = PARTICLE_MAP[world] ?? PARTICLE_MAP.cafe;
+  const stageAssets = normalizeStageEmoji(stageEmoji);
+  const assets = makeParticleAssets([
+    ...stageAssets,
+    ...config.victory,
+    ...config.victory,
+    ...config.victory,
+    ...UNIVERSAL_VICTORY,
+  ]);
   const originBands = [
     { origin: "left" as const, min: -4, max: 24 },
     { origin: "center" as const, min: 36, max: 64 },
     { origin: "right" as const, min: 76, max: 104 },
   ];
 
-  return Array.from({ length: 190 }, (_, index): ParticleInstance => {
+  return Array.from({ length: 360 }, (_, index): ParticleInstance => {
     const band = originBands[index % originBands.length];
+    const angle = randomBetween(-178, -2) * (Math.PI / 180);
+    const force = randomBetween(220, 760);
+    const waveDelay = Math.floor(index / 90) * randomBetween(0.18, 0.34);
     return {
       id: index,
       asset: assets[index % assets.length],
-      left: randomBetween(band.min, band.max),
+      left: randomBetween(40, 60),
+      top: randomBetween(38, 58),
       origin: band.origin,
-      delay: randomBetween(0, 2.65),
-      duration: randomBetween(4.2, 6),
-      drift: randomBetween(band.origin === "left" ? 20 : -58, band.origin === "right" ? -20 : 58),
-      rotate: randomBetween(-420, 420),
-      scale: randomBetween(0.86, 1.28),
+      delay: waveDelay + randomBetween(0, 1.85),
+      duration: randomBetween(5.8, 8.2),
+      drift: randomBetween(band.origin === "left" ? 70 : -140, band.origin === "right" ? -70 : 140),
+      burstX: Math.cos(angle) * force,
+      burstY: Math.sin(angle) * force,
+      rotate: randomBetween(-780, 780),
+      scale: randomBetween(0.82, 1.42),
       bottomBounce: randomBetween(-42, -16),
     };
   });
 }
 
 function makeFailureParticles(world: WorldId) {
-  const assets = makeParticleAssets(PARTICLE_MAP[world].failure);
+  const assets = makeParticleAssets((PARTICLE_MAP[world] ?? PARTICLE_MAP.cafe).failure);
 
   return Array.from({ length: 86 }, (_, index): ParticleInstance => {
     const origin = index % 3 === 0 ? "left" : index % 3 === 1 ? "center" : "right";
@@ -211,21 +208,19 @@ function makeFailureParticles(world: WorldId) {
 }
 
 function ParticleAssetView({ asset }: { asset: ParticleAsset }) {
-  if (asset.src) {
-    return <img src={asset.src} alt="" className="celebration-particle-img" draggable={false} />;
-  }
-
-  return <span className="celebration-particle-emoji">{asset.emoji}</span>;
+  return <PixelIcon emoji={asset.emoji} className="celebration-particle-img" />;
 }
 
 export function PixelConfetti({
   world,
   active,
+  stageEmoji,
 }: {
   world: WorldId;
   active: boolean;
+  stageEmoji?: string;
 }) {
-  const particles = useMemo(() => makeVictoryParticles(world), [world]);
+  const particles = useMemo(() => makeVictoryParticles(world, stageEmoji), [stageEmoji, world]);
 
   if (!active) return null;
 
@@ -238,9 +233,12 @@ export function PixelConfetti({
           style={
             {
               left: `${particle.left}%`,
+              top: particle.top == null ? undefined : `${particle.top}%`,
               "--particle-delay": `${particle.delay}s`,
               "--particle-duration": `${particle.duration}s`,
               "--particle-drift": `${particle.drift}px`,
+              "--particle-burst-x": `${particle.burstX ?? 0}px`,
+              "--particle-burst-y": `${particle.burstY ?? 0}px`,
               "--particle-rotate": `${particle.rotate}deg`,
               "--particle-scale": particle.scale,
               "--particle-bounce": `${particle.bottomBounce}px`,
@@ -254,28 +252,20 @@ export function PixelConfetti({
   );
 }
 
-export function BiomeParticleEmitter({
-  world,
-  active,
-}: {
-  world: WorldId;
-  active: boolean;
-}) {
-  return <PixelConfetti active={active} world={world} />;
-}
-
 export function VictoryParticles({
   world,
   active,
   xp,
   coins,
+  stageEmoji,
 }: {
   world: WorldId;
   active: boolean;
   xp: number;
   coins: number;
+  stageEmoji?: string;
 }) {
-  const config = PARTICLE_MAP[world];
+  const config = PARTICLE_MAP[world] ?? PARTICLE_MAP.cafe;
   const floaters = useMemo(
     () => [
       { id: "xp", text: `+${xp} XP`, left: "12%", delay: "0.42s" },
@@ -289,7 +279,7 @@ export function VictoryParticles({
   return (
     <div className="celebration-victory" aria-hidden="true">
       <div className="celebration-glow" style={{ "--celebration-glow": config.glow } as CSSProperties} />
-      <PixelConfetti active={active} world={world} />
+      <PixelConfetti active={active} world={world} stageEmoji={stageEmoji} />
       <div className="celebration-floaters">
         {floaters.map((floater) => (
           <span
@@ -352,13 +342,14 @@ export function CelebrationOverlay({
   active,
   result,
   world,
+  stageEmoji,
   xp,
   coins,
 }: CelebrationOverlayProps) {
   if (!active || !result) return null;
 
   return result === "win" ? (
-    <VictoryParticles active={active} world={world} xp={xp} coins={coins} />
+    <VictoryParticles active={active} world={world} stageEmoji={stageEmoji} xp={xp} coins={coins} />
   ) : (
     <FailureParticles active={active} world={world} />
   );

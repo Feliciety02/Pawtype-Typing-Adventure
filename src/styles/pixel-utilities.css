@@ -1,0 +1,61 @@
+/* ===== Pixel utilities ===== */
+
+@utility pixel-card {
+  background: var(--color-card);
+  color: var(--color-card-foreground);
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-pixel);
+  position: relative;
+}
+
+@utility pixel-card-sm {
+  background: var(--color-card);
+  color: var(--color-card-foreground);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+@utility pixel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-pixel);
+  font-size: 0.78rem;
+  padding: 0.65rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+  cursor: pointer;
+  user-select: none;
+  text-transform: uppercase;
+}
+
+@utility pixel-btn-secondary {
+  background: var(--color-card);
+  color: var(--color-foreground);
+}
+
+@utility pixel-btn-ghost {
+  background: transparent;
+  color: var(--color-foreground);
+  box-shadow: none;
+}
+
+.pixel-btn:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 0 var(--color-border); }
+.pixel-btn:active { transform: translate(2px,2px); box-shadow: 0 0 0 0 var(--color-border); }
+.pixel-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+  filter: grayscale(0.35);
+}
+.pixel-btn:disabled:hover,
+.pixel-btn:disabled:active {
+  transform: none;
+  box-shadow: var(--shadow-pixel-sm);
+}
