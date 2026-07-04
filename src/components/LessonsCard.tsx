@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, ChevronRight, Lock, Play, Star, Crown, Gift, Swords, Sparkles } from "lucide-react";
+import { ChevronDown, ChevronRight, Lock, Play, Crown, Swords } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
 import {
   UNITS,
@@ -40,24 +40,45 @@ const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string 
   master:       { label: "Master",       color: "var(--color-destructive)" },
 };
 
-// Big star row (used on lesson cards + detail modal)
+function lessonEmojiImg(emoji: string, className = "pixel-icon") {
+  const MAP: Record<string, string> = {
+    "🔥": "/Icons/fire.png",
+    "🌊": "/Icons/water-wave.png",
+    "⏰": "/Icons/alarm-clock.png",
+    "💎": "/Icons/glowing-star.png",
+    "👑": "/Icons/star.png",
+  };
+  const src = MAP[emoji];
+  return src ? <img src={src} alt="" className={className} /> : <span>{emoji}</span>;
+}
+
 function BigStars({ count, size = 22 }: { count: 0 | 1 | 2 | 3; size?: number }) {
   return (
-    <div className="lesson-big-stars" aria-label={`${count} of 3 stars`}>
+    <div className="quest-big-stars" aria-label={`${count} of 3 stars`}>
       {[0, 1, 2].map((i) => {
         const filled = i < count;
         const golden = count === 3;
         return (
-          <Star
+          <img
             key={i}
-            size={size}
-            className={`lesson-big-star ${filled ? "is-filled" : "is-empty"} ${golden && filled ? "is-golden" : ""}`}
-            strokeWidth={2.5}
-            fill={filled ? "currentColor" : "none"}
+            src="/Icons/star.png"
+            alt=""
+            className={`quest-big-star ${filled ? "is-filled" : "is-empty"} ${golden && filled ? "is-golden" : ""}`}
+            style={{ width: size, height: size }}
           />
         );
       })}
     </div>
+  );
+}
+
+function RewardBadge({ icon, label, value, collected = false }: { icon: string; label: string; value: number; collected?: boolean }) {
+  return (
+    <span className={`quest-reward-badge ${collected ? "is-collected" : ""}`}>
+      <img src={icon} alt="" className="quest-reward-icon" />
+      <span className="quest-reward-value">{collected ? value : `+${value}`}</span>
+      <span className="quest-reward-label">{label}</span>
+    </span>
   );
 }
 
@@ -81,12 +102,10 @@ export function LessonsCard() {
     };
   }, []);
 
-  // Check for any pending/unclaimed eggs on mount and after completion
   useEffect(() => {
     if (activeEgg) return;
     const unclaimed = getUnclaimedMilestones(completed.size);
     if (unclaimed.length === 0) return;
-    // queue extras, present the first
     unclaimed.forEach((m) => queuePendingEgg(m.index));
     const pending = [...loadPendingEggs()].sort((a, b) => a - b);
     if (pending.length > 0) {
@@ -121,7 +140,6 @@ export function LessonsCard() {
     dispatch({ type: "EARN_COINS", amount: rewards.coins });
     dispatch({ type: "ADD_PET_XP", amount: rewards.petExp });
 
-    // Check milestone (only on first-time completion)
     if (!wasCompleted) {
       const newCount = completed.size + 1;
       if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
@@ -152,7 +170,6 @@ export function LessonsCard() {
   const lessonDetail = detail?.lesson;
   const lessonUnit = detail?.unit;
 
-  // Find "current" lesson (first unlocked, incomplete lesson) for pulse
   const currentLessonId = useMemo(() => {
     for (const u of UNITS) {
       if (!isUnitUnlocked(u.number, completed)) continue;
@@ -165,171 +182,227 @@ export function LessonsCard() {
   }, [completed]);
 
   return (
-    <div className="pixel-card p-5 lessons-card-root">
+    <div className="pixel-card p-5 quest-log-root">
       <SectionHeader
-        title="Curriculum"
-        subtitle={`A guided path from home row to graduation - ${totals.done}/${totals.total} lessons complete`}
+        title="Quest Log"
+        subtitle={`A guided path from home row to graduation — ${totals.done}/${totals.total} quests complete`}
       />
 
       {/* Egg milestone progress banner */}
-      <div className="lesson-milestone-banner">
-        <div className="lesson-milestone-icon" aria-hidden="true">🥚</div>
-        <div className="lesson-milestone-body">
-          <div className="lesson-milestone-title">
+      <div className="quest-milestone-banner">
+        <div className="quest-milestone-icon" aria-hidden="true">
+          🥚
+        </div>
+        <div className="quest-milestone-body">
+          <div className="quest-milestone-title">
             Egg #{eggProgress.nextIndex} · {eggProgress.progress}/{eggProgress.total} lessons
           </div>
-          <div className="lesson-milestone-bar">
-            <div
-              className="lesson-milestone-fill"
-              style={{ width: `${(eggProgress.progress / eggProgress.total) * 100}%` }}
-            />
+          <div className="quest-milestone-bar">
+            <div className="quest-milestone-fill" style={{ width: `${(eggProgress.progress / eggProgress.total) * 100}%` }} />
           </div>
         </div>
-        <div className="lesson-milestone-hint">Every 10 lessons = 1 pet egg</div>
+        <div className="quest-milestone-hint">Every 10 lessons = 1 pet egg</div>
       </div>
 
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="quest-chapter-list">
         {UNITS.map((unit) => {
           const open = openUnits.has(unit.id);
           const prog = unitProgress(unit, completed);
           const unlocked = isUnitUnlocked(unit.number, completed);
           const isDone = prog.done === prog.total;
+          const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
 
           return (
-            <div key={unit.id} className={`unit-chapter-card ${isDone ? "is-done" : ""} ${!unlocked ? "is-locked" : ""}`}>
+            <div key={unit.id} className={`quest-chapter ${isDone ? "is-done" : ""} ${!unlocked ? "is-locked" : ""}`}>
+              {/* Chapter Header */}
               <button
                 type="button"
                 onClick={() => unlocked && toggleUnit(unit.id)}
-                className="unit-chapter-head"
+                className="quest-chapter-head"
                 aria-expanded={open}
                 disabled={!unlocked}
               >
-                <div className="unit-chapter-emblem">
-                  {unlocked ? <span>{unit.emoji}</span> : <Lock size={18} />}
+                <div className="quest-chapter-emblem">
+                  {unlocked ? (
+                    <img src="/Icons/glowing-star.png" alt="" className="quest-chapter-icon" />
+                  ) : (
+                    <Lock size={20} />
+                  )}
+                  <div className="quest-chapter-emblem-emoji">{unit.emoji}</div>
                 </div>
-                <div className="unit-chapter-body">
-                  <div className="unit-chapter-eyebrow">
+                <div className="quest-chapter-body">
+                  <div className="quest-chapter-eyebrow">
                     Chapter {unit.number}
                     {isDone && (
-                      <span className="unit-chapter-done-chip">
+                      <span className="quest-chapter-done-chip">
                         <Crown size={10} /> Cleared
                       </span>
                     )}
                   </div>
-                  <div className="unit-chapter-title">{unit.title}</div>
-                  <div className="unit-chapter-purpose">{unit.purpose}</div>
-                  <div className="unit-chapter-progress">
-                    <div className="unit-chapter-bar">
-                      <div
-                        className="unit-chapter-fill"
-                        style={{ width: `${prog.total ? (prog.done / prog.total) * 100 : 0}%` }}
-                      />
+                  <div className="quest-chapter-title">{unit.title}</div>
+                  <div className="quest-chapter-purpose">{unit.purpose}</div>
+                  <div className="quest-chapter-progress">
+                    <div className="quest-chapter-bar">
+                      <div className="quest-chapter-fill" style={{ width: `${pct}%` }} />
                     </div>
-                    <span className="unit-chapter-count">{prog.done}/{prog.total}</span>
+                    <span className="quest-chapter-count">{pct}%</span>
                   </div>
                 </div>
-                <div className="unit-chapter-caret" aria-hidden="true">
+                <div className="quest-chapter-caret" aria-hidden="true">
                   {open ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                 </div>
               </button>
 
               {open && unlocked && (
-                <div className="unit-lesson-list">
-                  {unit.lessons.map((lesson, lIdx) => {
-                    const done = completed.has(lesson.id);
-                    const unlockedL = isLessonUnlocked(unit, lIdx, completed);
-                    const stats = loadLessonStats()[lesson.id];
-                    const stars = (stats
-                      ? lessonStars(stats.bestAccuracy, lesson.targetAccuracy)
-                      : 0) as 0 | 1 | 2 | 3;
-                    const isCurrent = lesson.id === currentLessonId;
-                    const rewards = lessonRewards(lesson.difficulty, lesson.words.length);
-                    const isBoss = lIdx === unit.lessons.length - 1;
-                    const showChestAfter = (lIdx + 1) % 5 === 0 && lIdx !== unit.lessons.length - 1;
-
-                    return (
-                      <div key={lesson.id} className="lesson-node-row">
-                        <button
-                          type="button"
-                          onClick={() => unlockedL && setDetail({ unit, lesson })}
-                          disabled={!unlockedL}
-                          className={[
-                            "lesson-node-card",
-                            done ? "is-done" : "",
-                            !unlockedL ? "is-locked" : "",
-                            isCurrent ? "is-current" : "",
-                            isBoss ? "is-boss" : "",
-                            stars === 3 ? "is-perfect" : "",
-                          ].join(" ").trim()}
-                        >
-                          <div className="lesson-node-emblem">
-                            {done ? (
-                              <span className="lesson-node-check">✓</span>
-                            ) : !unlockedL ? (
-                              <Lock size={18} />
-                            ) : isBoss ? (
-                              <Swords size={20} />
-                            ) : (
-                              <span>{lesson.emoji === "🔥" ? <img src="/Icons/fire.png" alt="" className="pixel-icon" /> : lesson.emoji === "🌊" ? <img src="/Icons/water-wave.png" alt="" className="pixel-icon" /> : lesson.emoji === "⏰" ? <img src="/Icons/alarm-clock.png" alt="" className="pixel-icon" /> : lesson.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : lesson.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : lesson.emoji}</span>
-                            )}
-                            {isCurrent && !done && <span className="lesson-node-pulse" aria-hidden="true" />}
-                            {done && <span className="lesson-node-sparkle" aria-hidden="true" />}
+                <>
+                  {/* Mini Adventure Path */}
+                  <div className="quest-adventure-path" aria-hidden="true">
+                    {unit.lessons.map((lesson, lIdx) => {
+                      const done = completed.has(lesson.id);
+                      const unlockedL = isLessonUnlocked(unit, lIdx, completed);
+                      const isCurrent = lesson.id === currentLessonId;
+                      return (
+                        <div key={lesson.id} className="quest-path-node-wrap">
+                          {lIdx > 0 && <div className="quest-path-connector" />}
+                          <div
+                            className={`quest-path-node ${done ? "is-done" : ""} ${isCurrent ? "is-current" : ""} ${!unlockedL ? "is-locked" : ""}`}
+                            title={lesson.title}
+                          >
+                            {lessonEmojiImg(lesson.emoji, "quest-path-icon")}
                           </div>
+                        </div>
+                      );
+                    })}
+                  </div>
 
-                          <div className="lesson-node-body">
-                            <div className="lesson-node-titlerow">
-                              <div className="lesson-node-title">
-                                {isBoss && <span className="lesson-node-boss-tag">BOSS</span>}
-                                {lesson.title}
+                  {/* Lesson Quest Cards */}
+                  <div className="quest-card-list">
+                    {unit.lessons.map((lesson, lIdx) => {
+                      const done = completed.has(lesson.id);
+                      const unlockedL = isLessonUnlocked(unit, lIdx, completed);
+                      const stats = loadLessonStats()[lesson.id];
+                      const stars = (stats ? lessonStars(stats.bestAccuracy, lesson.targetAccuracy) : 0) as 0 | 1 | 2 | 3;
+                      const isCurrent = lesson.id === currentLessonId;
+                      const rewards = lessonRewards(lesson.difficulty, lesson.words.length);
+                      const isBoss = lIdx === unit.lessons.length - 1;
+                      const allRewardsClaimed = done && stars === 3;
+                      const showRewards = unlockedL && !allRewardsClaimed;
+
+                      return (
+                        <div key={lesson.id} className="quest-card-row">
+                          <button
+                            type="button"
+                            onClick={() => unlockedL && setDetail({ unit, lesson })}
+                            disabled={!unlockedL}
+                            className={[
+                              "quest-card",
+                              done ? "is-done" : "",
+                              !unlockedL ? "is-locked" : "",
+                              isCurrent ? "is-current" : "",
+                              isBoss ? "is-boss" : "",
+                              stars === 3 ? "is-perfect" : "",
+                            ].join(" ").trim()}
+                          >
+                            {/* Decorative scenery */}
+                            <div className="quest-card-scene" aria-hidden="true" />
+
+                            {/* Left - Status */}
+                            <div className="quest-card-art">
+                              <div className="quest-card-art-inner">
+                                {done ? (
+                                  <div className="quest-card-shield">
+                                    <span className="quest-card-shield-check">✓</span>
+                                  </div>
+                                ) : !unlockedL ? (
+                                  <div className="quest-card-locked-icon">
+                                    <Lock size={22} />
+                                    <div className="quest-card-vine" />
+                                    <div className="quest-card-vine quest-card-vine-2" />
+                                  </div>
+                                ) : isBoss ? (
+                                  <Swords size={28} />
+                                ) : (
+                                  lessonEmojiImg(lesson.emoji, "quest-card-emoji")
+                                )}
                               </div>
+                              {isCurrent && !done && <div className="quest-card-sparkle" />}
+                              {isCurrent && !done && <div className="quest-card-sparkle quest-card-sparkle-2" />}
+                              {isCurrent && !done && <div className="quest-card-sparkle quest-card-sparkle-3" />}
+                              <div className="quest-card-status-chip">
+                                {!unlockedL ? "Locked" : done ? "Cleared" : isCurrent ? "Current" : "Open"}
+                              </div>
+                            </div>
+
+                            {/* Center - Info */}
+                            <div className="quest-card-body">
+                              <div className="quest-card-title-row">
+                                <div className="quest-card-title">
+                                  {isBoss && <span className="quest-card-boss-tag">BOSS</span>}
+                                  {lesson.title}
+                                </div>
+                              </div>
+                              <div className="quest-card-desc">
+                                {lesson.note || `${lesson.words.length} words, ${lesson.words.slice(0, 3).join(", ")}${lesson.words.length > 3 ? "..." : ""}`}
+                              </div>
+                              <div className="quest-card-meta">
+                                <span className="quest-card-diff" style={{ color: DIFFICULTY_LABEL[lesson.difficulty].color }}>
+                                  {DIFFICULTY_LABEL[lesson.difficulty].label}
+                                </span>
+                                <span className="quest-card-meta-sep">·</span>
+                                <span>{lesson.targetWpm} WPM</span>
+                                <span className="quest-card-meta-sep">·</span>
+                                <span>{lesson.targetAccuracy}% ACC</span>
+                                {stats && (
+                                  <>
+                                    <span className="quest-card-meta-sep">·</span>
+                                    <span className="quest-card-best">Best {stats.bestWpm} / {stats.bestAccuracy}%</span>
+                                  </>
+                                )}
+                              </div>
+                              {allRewardsClaimed ? (
+                                <div className="quest-card-claimed">All Rewards Claimed</div>
+                              ) : showRewards ? (
+                                <div className="quest-card-rewards">
+                                  <RewardBadge icon="/Icons/sparkles.png" label="XP" value={rewards.xp} collected={done} />
+                                  <RewardBadge icon="/Icons/coin.png" label="Coins" value={rewards.coins} collected={done} />
+                                  <RewardBadge icon="/Icons/white-heart.png" label="Pet EXP" value={rewards.petExp} collected={done} />
+                                </div>
+                              ) : null}
+                            </div>
+
+                            {/* Right - Progress */}
+                            <div className="quest-card-side">
                               {unlockedL && <BigStars count={stars} />}
-                            </div>
-                            <div className="lesson-node-meta">
-                              <span
-                                className="lesson-node-diff"
-                                style={{ color: DIFFICULTY_LABEL[lesson.difficulty].color }}
-                              >
-                                {DIFFICULTY_LABEL[lesson.difficulty].label}
-                              </span>
-                              <span className="lesson-node-meta-sep">·</span>
-                              <span>{lesson.targetWpm} WPM</span>
-                              <span className="lesson-node-meta-sep">·</span>
-                              <span>{lesson.targetAccuracy}% ACC</span>
-                              {stats && (
-                                <>
-                                  <span className="lesson-node-meta-sep">·</span>
-                                  <span className="lesson-node-best">Best {stats.bestWpm} / {stats.bestAccuracy}%</span>
-                                </>
+                              {done && (
+                                <div className="quest-card-completion-badge">
+                                  <Crown size={14} /> Complete
+                                </div>
                               )}
+                              <div className={`quest-card-action ${done ? "is-done" : ""} ${!unlockedL ? "is-locked" : ""}`}>
+                                {done ? (
+                                  <>
+                                    <Crown size={16} />
+                                    Replay
+                                  </>
+                                ) : unlockedL ? (
+                                  <div className="quest-card-play-btn">
+                                    <Play size={18} />
+                                    {isCurrent ? "Continue" : "Play"}
+                                  </div>
+                                ) : (
+                                  <>
+                                    <Lock size={14} />
+                                    Locked
+                                  </>
+                                )}
+                              </div>
                             </div>
-                            <div className="lesson-node-rewards">
-                              <span className="lesson-reward-chip is-xp">+{rewards.xp} XP</span>
-                              <span className="lesson-reward-chip is-coin">+{rewards.coins} <img src="/Icons/coin.png" alt="" className="pixel-icon" /></span>
-                              <span className="lesson-reward-chip is-pet">+{rewards.petExp} PET</span>
-                            </div>
-                          </div>
-
-                          <div className="lesson-node-action" aria-hidden="true">
-                            {done ? (
-                              <Sparkles size={18} style={{ color: "var(--leaf)" }} />
-                            ) : unlockedL ? (
-                              <Play size={20} style={{ color: "var(--coin)" }} />
-                            ) : (
-                              <Lock size={16} style={{ color: "var(--muted-foreground)" }} />
-                            )}
-                          </div>
-                        </button>
-
-                        {showChestAfter && (
-                          <div className={`lesson-chest-node ${done ? "is-glow" : ""}`} aria-hidden="true">
-                            <Gift size={16} />
-                            <span>Mini-reward · streak bonus</span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               )}
             </div>
           );
@@ -339,67 +412,64 @@ export function LessonsCard() {
       {/* Lesson detail modal */}
       {detail && lessonDetail && lessonUnit && (
         <ModalShell
-          ariaLabel="Lesson details"
+          ariaLabel="Quest details"
           onClose={() => setDetail(null)}
           className="pixel-modal-shell-lesson-detail"
         >
-          <div className="lesson-detail-modal">
-            <div className="lesson-detail-header">
-              <div className="lesson-detail-emoji">{lessonDetail.emoji}</div>
-              <div className="lesson-detail-title">{lessonDetail.title}</div>
-              <div
-                className="lesson-detail-difficulty"
-                style={{ color: DIFFICULTY_LABEL[lessonDetail.difficulty].color }}
-              >
+          <div className="quest-detail-modal">
+            <div className="quest-detail-header">
+              <div className="quest-detail-emoji">{lessonEmojiImg(lessonDetail.emoji, "quest-detail-emoji-img")}</div>
+              <div className="quest-detail-title">{lessonDetail.title}</div>
+              <div className="quest-detail-difficulty" style={{ color: DIFFICULTY_LABEL[lessonDetail.difficulty].color }}>
                 {DIFFICULTY_LABEL[lessonDetail.difficulty].label}
               </div>
               {(() => {
-                const stats = loadLessonStats()[lessonDetail.id];
-                const stars = (stats ? lessonStars(stats.bestAccuracy, lessonDetail.targetAccuracy) : 0) as 0 | 1 | 2 | 3;
-                return <div className="mt-2"><BigStars count={stars} size={26} /></div>;
+                const s = loadLessonStats()[lessonDetail.id];
+                const starCount = (s ? lessonStars(s.bestAccuracy, lessonDetail.targetAccuracy) : 0) as 0 | 1 | 2 | 3;
+                return <div className="quest-detail-stars"><BigStars count={starCount} size={26} /></div>;
               })()}
-              {lessonDetail.note ? <p className="lesson-detail-note">{lessonDetail.note}</p> : null}
+              {lessonDetail.note ? <p className="quest-detail-note">{lessonDetail.note}</p> : null}
             </div>
 
-            <div className="lesson-detail-targets">
-              <div className="lesson-detail-target-card">
-                <div className="lesson-detail-target-label">Target WPM</div>
-                <div className="lesson-detail-target-value">{lessonDetail.targetWpm}</div>
+            <div className="quest-detail-targets">
+              <div className="quest-detail-target-card">
+                <div className="quest-detail-target-label">Target WPM</div>
+                <div className="quest-detail-target-value">{lessonDetail.targetWpm}</div>
               </div>
-              <div className="lesson-detail-target-card">
-                <div className="lesson-detail-target-label">Target Acc</div>
-                <div className="lesson-detail-target-value">{lessonDetail.targetAccuracy}%</div>
+              <div className="quest-detail-target-card">
+                <div className="quest-detail-target-label">Target Acc</div>
+                <div className="quest-detail-target-value">{lessonDetail.targetAccuracy}%</div>
               </div>
             </div>
 
             {(() => {
-              const stats = loadLessonStats()[lessonDetail.id];
-              if (!stats) return null;
+              const s = loadLessonStats()[lessonDetail.id];
+              if (!s) return null;
               return (
-                <div className="lesson-detail-best">
-                  <div className="lesson-detail-best-label">Best Performance</div>
-                  <div className="lesson-detail-best-row">
-                    <span>{stats.bestWpm} WPM - {stats.bestAccuracy}%</span>
+                <div className="quest-detail-best">
+                  <div className="quest-detail-best-label">Best Performance</div>
+                  <div className="quest-detail-best-row">
+                    <span>{s.bestWpm} WPM — {s.bestAccuracy}%</span>
                   </div>
                 </div>
               );
             })()}
 
             {(() => {
-              const rewards = lessonRewards(lessonDetail.difficulty, lessonDetail.words.length);
+              const r = lessonRewards(lessonDetail.difficulty, lessonDetail.words.length);
               return (
-                <div className="lesson-detail-rewards">
+                <div className="quest-detail-rewards">
                   <div>
-                    <div className="lesson-detail-reward-label">XP</div>
-                    <div className="lesson-detail-reward-value is-primary">+{rewards.xp}</div>
+                    <div className="quest-detail-reward-label">XP</div>
+                    <div className="quest-detail-reward-value is-primary">+{r.xp}</div>
                   </div>
                   <div>
-                    <div className="lesson-detail-reward-label">Coins</div>
-                    <div className="lesson-detail-reward-value is-coin">+{rewards.coins}</div>
+                    <div className="quest-detail-reward-label">Coins</div>
+                    <div className="quest-detail-reward-value is-coin">+{r.coins}</div>
                   </div>
                   <div>
-                    <div className="lesson-detail-reward-label">Pet EXP</div>
-                    <div className="lesson-detail-reward-value is-leaf">+{rewards.petExp}</div>
+                    <div className="quest-detail-reward-label">Pet EXP</div>
+                    <div className="quest-detail-reward-value is-leaf">+{r.petExp}</div>
                   </div>
                 </div>
               );
@@ -414,13 +484,12 @@ export function LessonsCard() {
                 setDetail(null);
               }}
             >
-              Start Lesson
+              Start Quest
             </PixelButton>
           </div>
         </ModalShell>
       )}
 
-      {/* Egg hatching modal */}
       {activeEgg && (
         <EggHatchModal
           milestone={activeEgg}
@@ -432,13 +501,12 @@ export function LessonsCard() {
         />
       )}
 
-      {/* Full-screen typing overlay */}
       {typing && createPortal(
         <div className="fixed inset-0 z-50" style={{ background: "var(--color-background)" }}>
           <TypingArena
             key={typing.lesson.id}
             customWords={typing.lesson.words}
-            customTitle={`${typing.unit.title} - ${typing.lesson.title}`}
+            customTitle={`${typing.unit.title} — ${typing.lesson.title}`}
             noTimer
             lessonMode
             onFinish={handleFinish}

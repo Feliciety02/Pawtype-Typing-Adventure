@@ -11,114 +11,211 @@ type CelebrationOverlayProps = {
   coins: number;
 };
 
-type ParticleConfig = {
-  glyphs: string[];
-  confetti: string[];
-  glow: string;
-  dust: string[];
+type ParticleAsset = {
+  id: string;
+  emoji: string;
+  src?: string;
 };
+
+type ParticleInstance = {
+  id: number;
+  asset: ParticleAsset;
+  left: number;
+  origin: "left" | "center" | "right";
+  delay: number;
+  duration: number;
+  drift: number;
+  rotate: number;
+  scale: number;
+  bottomBounce: number;
+};
+
+type ParticleConfig = {
+  victory: string[];
+  glow: string;
+  failure: string[];
+};
+
+const ICON_BY_EMOJI: Partial<Record<string, string>> = {
+  "✨": "/Icons/sparkles.png",
+  "⭐": "/Icons/star.png",
+  "🌟": "/Icons/glowing-star.png",
+  "🏆": "/Icons/trophy.png",
+  "🪙": "/Icons/coin.png",
+  "💰": "/Icons/coin.png",
+  "❤️": "/Icons/red-heart.png",
+  "💖": "/Icons/red-heart.png",
+  "🐾": "/Icons/paw-print.png",
+  "🌸": "/Icons/cherry-blossom.png",
+  "🍃": "/Icons/fallen-leaf.png",
+  "🍀": "/Icons/seedling.png",
+  "🌿": "/Icons/seedling.png",
+  "🌻": "/Icons/sunflower.png",
+  "🔥": "/Icons/fire.png",
+  "⚡": "/Icons/zap.png",
+  "💧": "/Icons/water-wave.png",
+  "🌊": "/Icons/water-wave.png",
+  "❄️": "/Icons/white-heart.png",
+  "💎": "/Icons/glowing-star.png",
+  "🤍": "/Icons/white-heart.png",
+};
+
+const UNIVERSAL_VICTORY = ["🎉", "🎊", "✨", "🌟", "⭐", "🏆", "🪙", "💰", "❤️", "🐾"];
+
+const FAILURE_PARTICLES = ["🍂", "💨", "🌧️", "💧", "🪨", "🩶", "🤍"];
 
 const PARTICLE_MAP: Record<WorldId, ParticleConfig> = {
   cafe: {
-    glyphs: ["*", "+", "."],
-    confetti: ["#f2b665", "#d98d53", "#f6e7c5", "#8fcf89"],
-    glow: "rgba(241, 190, 115, 0.28)",
-    dust: [".", "+", "~"],
+    victory: ["☕", "✨", "⭐", "🪙", "💖", "🍃", "🌼", "🐾"],
+    glow: "rgba(241, 190, 115, 0.32)",
+    failure: FAILURE_PARTICLES,
   },
   forest: {
-    glyphs: ["*", "v", "+"],
-    confetti: ["#7abf6f", "#a8d98f", "#d6f0c7", "#f0ce7f"],
-    glow: "rgba(120, 182, 114, 0.28)",
-    dust: [".", ":", "+"],
+    victory: ["🍃", "🌿", "🍀", "🍄", "🌼", "🦋", "🪵", "✨"],
+    glow: "rgba(120, 182, 114, 0.34)",
+    failure: FAILURE_PARTICLES,
   },
   ocean: {
-    glyphs: ["o", "*", "~"],
-    confetti: ["#6ab8e6", "#b2e6f8", "#85d2ff", "#f6e4ba"],
-    glow: "rgba(110, 189, 235, 0.28)",
-    dust: [".", "o", ":"],
+    victory: ["🫧", "💧", "🐚", "⭐", "🪸", "🌊", "✨", "🐠"],
+    glow: "rgba(110, 189, 235, 0.34)",
+    failure: FAILURE_PARTICLES,
   },
   sakura: {
-    glyphs: ["*", "x", "+"],
-    confetti: ["#f6b8c9", "#ffd6e3", "#f29fb3", "#f7e7c7"],
-    glow: "rgba(243, 174, 198, 0.3)",
-    dust: [".", "+", ":"],
+    victory: ["🌸", "🌺", "🌼", "🍃", "🍀", "✨", "⭐", "💖", "🦋"],
+    glow: "rgba(243, 174, 198, 0.36)",
+    failure: FAILURE_PARTICLES,
   },
   castle: {
-    glyphs: ["*", "+", "!"],
-    confetti: ["#ceb1ff", "#f0d87c", "#8f7de0", "#f7efd8"],
-    glow: "rgba(209, 180, 255, 0.28)",
-    dust: [".", "+", ":"],
+    victory: ["👑", "✨", "⭐", "🏆", "🪙", "💖", "⚔️", "💎"],
+    glow: "rgba(209, 180, 255, 0.32)",
+    failure: FAILURE_PARTICLES,
   },
   space: {
-    glyphs: ["*", "+", "o"],
-    confetti: ["#78cbff", "#b99bff", "#f7f2bf", "#7de0e0"],
-    glow: "rgba(129, 196, 255, 0.32)",
-    dust: [".", "*", ":"],
+    victory: ["⭐", "🌟", "✨", "💫", "☄️", "🪐", "🌙", "🌠"],
+    glow: "rgba(129, 196, 255, 0.36)",
+    failure: FAILURE_PARTICLES,
   },
   autumn: {
-    glyphs: ["*", "v", "+"],
-    confetti: ["#e8aa4e", "#ca7442", "#88b26a", "#f5d9a4"],
-    glow: "rgba(225, 165, 75, 0.3)",
-    dust: [".", "+", "~"],
+    victory: ["🍃", "🍂", "🔥", "✨", "⭐", "🪵", "🌲", "🪙"],
+    glow: "rgba(225, 165, 75, 0.34)",
+    failure: FAILURE_PARTICLES,
   },
   mushroom: {
-    glyphs: ["*", "o", "+"],
-    confetti: ["#d8a0ff", "#f7c3ea", "#95e6b2", "#ffeaa9"],
-    glow: "rgba(207, 164, 255, 0.3)",
-    dust: [".", ":", "*"],
-  },
-  sunflower: {
-    glyphs: ["*", "+", "."],
-    confetti: ["#efc64d", "#ffe494", "#88be63", "#f7f0cf"],
-    glow: "rgba(238, 201, 89, 0.3)",
-    dust: [".", "+", ":"],
-  },
-  "volcanic-forge": {
-    glyphs: ["*", "+", "!"],
-    confetti: ["#ff9d4d", "#ff6c4d", "#f7d28c", "#d6563a"],
-    glow: "rgba(255, 132, 83, 0.32)",
-    dust: [".", "+", ":"],
-  },
-  "desert-oasis": {
-    glyphs: ["*", ".", "+"],
-    confetti: ["#e7c264", "#f7e6b6", "#9ec47a", "#d8a56d"],
-    glow: "rgba(227, 193, 108, 0.3)",
-    dust: [".", ":", "~"],
-  },
-  "steam-punk-workshop": {
-    glyphs: ["*", "+", "#"],
-    confetti: ["#c78152", "#efc180", "#7db0ce", "#f5ead7"],
-    glow: "rgba(212, 152, 91, 0.3)",
-    dust: [".", "+", ":"],
-  },
-  "frostveil-kingdom": {
-    glyphs: ["*", "+", "o"],
-    confetti: ["#b7dfff", "#f4fbff", "#a8c8ff", "#d9efff"],
-    glow: "rgba(176, 221, 255, 0.3)",
-    dust: [".", "*", ":"],
+    victory: ["🍄", "✨", "⭐", "🍀", "🌸", "🦋", "💜"],
+    glow: "rgba(207, 164, 255, 0.35)",
+    failure: FAILURE_PARTICLES,
   },
   moonlit: {
-    glyphs: ["*", "+", "."],
-    confetti: ["#a7b8ff", "#d6dcff", "#7d8dd6", "#f0eaff"],
-    glow: "rgba(167, 184, 255, 0.3)",
-    dust: [".", "+", ":"],
+    victory: ["🌙", "✨", "⭐", "🌟", "💫", "🤍", "🍃"],
+    glow: "rgba(167, 184, 255, 0.34)",
+    failure: FAILURE_PARTICLES,
   },
   rainy: {
-    glyphs: ["/", "|", "."],
-    confetti: ["#8ea8c4", "#c9d8e6", "#6b8aa8", "#e8f0f6"],
-    glow: "rgba(142, 168, 196, 0.3)",
-    dust: [".", ":", "/"],
+    victory: ["🌧️", "💧", "🫧", "✨", "⭐", "🍃", "🤍"],
+    glow: "rgba(142, 168, 196, 0.34)",
+    failure: FAILURE_PARTICLES,
   },
   snowy: {
-    glyphs: ["*", "+", "."],
-    confetti: ["#e6f2ff", "#c9dfff", "#a8c8ff", "#ffffff"],
-    glow: "rgba(230, 242, 255, 0.32)",
-    dust: [".", "*", "+"],
+    victory: ["❄️", "🧊", "✨", "⭐", "💎", "🤍"],
+    glow: "rgba(230, 242, 255, 0.36)",
+    failure: FAILURE_PARTICLES,
+  },
+  sunflower: {
+    victory: ["🌻", "🌼", "🌸", "🍃", "🐝", "🦋", "✨", "💛"],
+    glow: "rgba(238, 201, 89, 0.36)",
+    failure: FAILURE_PARTICLES,
+  },
+  "volcanic-forge": {
+    victory: ["🔥", "✨", "⚡", "💥", "🪨", "❤️", "🧡", "💛"],
+    glow: "rgba(255, 132, 83, 0.38)",
+    failure: FAILURE_PARTICLES,
+  },
+  "desert-oasis": {
+    victory: ["✨", "⭐", "🌼", "🍃", "🪙", "💛", "💎", "🌵"],
+    glow: "rgba(227, 193, 108, 0.34)",
+    failure: FAILURE_PARTICLES,
+  },
+  "steam-punk-workshop": {
+    victory: ["⚙️", "🔥", "✨", "⚡", "⭐", "🪙", "💥", "🧡"],
+    glow: "rgba(212, 152, 91, 0.34)",
+    failure: FAILURE_PARTICLES,
+  },
+  "frostveil-kingdom": {
+    victory: ["❄️", "🧊", "✨", "⭐", "💎", "🤍"],
+    glow: "rgba(176, 221, 255, 0.36)",
+    failure: FAILURE_PARTICLES,
   },
 };
 
 function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
+}
+
+function assetFor(emoji: string): ParticleAsset {
+  return {
+    id: emoji,
+    emoji,
+    src: ICON_BY_EMOJI[emoji],
+  };
+}
+
+function makeParticleAssets(emojis: string[]) {
+  return emojis.map(assetFor);
+}
+
+function makeVictoryParticles(world: WorldId) {
+  const config = PARTICLE_MAP[world];
+  const assets = makeParticleAssets([...config.victory, ...UNIVERSAL_VICTORY]);
+  const originBands = [
+    { origin: "left" as const, min: -4, max: 24 },
+    { origin: "center" as const, min: 36, max: 64 },
+    { origin: "right" as const, min: 76, max: 104 },
+  ];
+
+  return Array.from({ length: 190 }, (_, index): ParticleInstance => {
+    const band = originBands[index % originBands.length];
+    return {
+      id: index,
+      asset: assets[index % assets.length],
+      left: randomBetween(band.min, band.max),
+      origin: band.origin,
+      delay: randomBetween(0, 2.65),
+      duration: randomBetween(4.2, 6),
+      drift: randomBetween(band.origin === "left" ? 20 : -58, band.origin === "right" ? -20 : 58),
+      rotate: randomBetween(-420, 420),
+      scale: randomBetween(0.86, 1.28),
+      bottomBounce: randomBetween(-42, -16),
+    };
+  });
+}
+
+function makeFailureParticles(world: WorldId) {
+  const assets = makeParticleAssets(PARTICLE_MAP[world].failure);
+
+  return Array.from({ length: 86 }, (_, index): ParticleInstance => {
+    const origin = index % 3 === 0 ? "left" : index % 3 === 1 ? "center" : "right";
+    const left = origin === "left" ? randomBetween(0, 30) : origin === "center" ? randomBetween(34, 66) : randomBetween(70, 100);
+    return {
+      id: index,
+      asset: assets[index % assets.length],
+      left,
+      origin,
+      delay: randomBetween(0, 2.2),
+      duration: randomBetween(4.4, 6.2),
+      drift: randomBetween(-28, 28),
+      rotate: randomBetween(-140, 140),
+      scale: randomBetween(0.78, 1.1),
+      bottomBounce: randomBetween(-22, -8),
+    };
+  });
+}
+
+function ParticleAssetView({ asset }: { asset: ParticleAsset }) {
+  if (asset.src) {
+    return <img src={asset.src} alt="" className="celebration-particle-img" draggable={false} />;
+  }
+
+  return <span className="celebration-particle-emoji">{asset.emoji}</span>;
 }
 
 export function PixelConfetti({
@@ -128,43 +225,30 @@ export function PixelConfetti({
   world: WorldId;
   active: boolean;
 }) {
-  const config = PARTICLE_MAP[world];
-  const pieces = useMemo(
-    () =>
-      Array.from({ length: 28 }, (_, index) => ({
-        id: index,
-        side: index % 2 === 0 ? "left" : "right",
-        left: index % 2 === 0 ? randomBetween(2, 18) : randomBetween(82, 98),
-        delay: randomBetween(0, 0.35),
-        duration: randomBetween(1.15, 1.8),
-        drift: randomBetween(index % 2 === 0 ? 18 : -28, index % 2 === 0 ? 36 : -14),
-        rotate: randomBetween(-220, 220),
-        size: randomBetween(6, 13),
-        color: config.confetti[index % config.confetti.length],
-      })),
-    [config.confetti],
-  );
+  const particles = useMemo(() => makeVictoryParticles(world), [world]);
 
   if (!active) return null;
 
   return (
-    <div className="celebration-confetti" aria-hidden="true">
-      {pieces.map((piece) => (
+    <div className="celebration-particle-field" aria-hidden="true">
+      {particles.map((particle) => (
         <span
-          key={piece.id}
-          className="celebration-confetti-piece"
+          key={particle.id}
+          className={`celebration-particle celebration-particle-${particle.origin}`}
           style={
             {
-              left: `${piece.left}%`,
-              "--particle-delay": `${piece.delay}s`,
-              "--particle-duration": `${piece.duration}s`,
-              "--particle-drift": `${piece.drift}px`,
-              "--particle-rotate": `${piece.rotate}deg`,
-              "--particle-size": `${piece.size}px`,
-              "--particle-color": piece.color,
+              left: `${particle.left}%`,
+              "--particle-delay": `${particle.delay}s`,
+              "--particle-duration": `${particle.duration}s`,
+              "--particle-drift": `${particle.drift}px`,
+              "--particle-rotate": `${particle.rotate}deg`,
+              "--particle-scale": particle.scale,
+              "--particle-bounce": `${particle.bottomBounce}px`,
             } as CSSProperties
           }
-        />
+        >
+          <ParticleAssetView asset={particle.asset} />
+        </span>
       ))}
     </div>
   );
@@ -177,46 +261,7 @@ export function BiomeParticleEmitter({
   world: WorldId;
   active: boolean;
 }) {
-  const config = PARTICLE_MAP[world];
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 24 }, (_, index) => ({
-        id: index,
-        glyph: config.glyphs[index % config.glyphs.length],
-        left: randomBetween(6, 94),
-        top: randomBetween(8, 40),
-        delay: randomBetween(0, 0.9),
-        duration: randomBetween(2.2, 4.2),
-        drift: randomBetween(-24, 24),
-        color: config.confetti[index % config.confetti.length],
-      })),
-    [config.confetti, config.glyphs],
-  );
-
-  if (!active) return null;
-
-  return (
-    <div className="celebration-biome-particles" aria-hidden="true">
-      {particles.map((particle) => (
-        <span
-          key={particle.id}
-          className="celebration-biome-particle"
-          style={
-            {
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              color: particle.color,
-              "--particle-delay": `${particle.delay}s`,
-              "--particle-duration": `${particle.duration}s`,
-              "--particle-drift": `${particle.drift}px`,
-            } as CSSProperties
-          }
-        >
-          {particle.glyph}
-        </span>
-      ))}
-    </div>
-  );
+  return <PixelConfetti active={active} world={world} />;
 }
 
 export function VictoryParticles({
@@ -233,8 +278,8 @@ export function VictoryParticles({
   const config = PARTICLE_MAP[world];
   const floaters = useMemo(
     () => [
-      { id: "xp", text: `+${xp} XP`, left: "12%", delay: "0.22s" },
-      { id: "coin", text: `+${coins} COINS`, left: "78%", delay: "0.34s" },
+      { id: "xp", text: `+${xp} XP`, left: "12%", delay: "0.42s" },
+      { id: "coin", text: `+${coins} COINS`, left: "78%", delay: "0.68s" },
     ],
     [coins, xp],
   );
@@ -245,7 +290,6 @@ export function VictoryParticles({
     <div className="celebration-victory" aria-hidden="true">
       <div className="celebration-glow" style={{ "--celebration-glow": config.glow } as CSSProperties} />
       <PixelConfetti active={active} world={world} />
-      <BiomeParticleEmitter active={active} world={world} />
       <div className="celebration-floaters">
         {floaters.map((floater) => (
           <span
@@ -268,40 +312,35 @@ export function FailureParticles({
   world: WorldId;
   active: boolean;
 }) {
-  const config = PARTICLE_MAP[world];
-  const fragments = useMemo(
-    () =>
-      Array.from({ length: 18 }, (_, index) => ({
-        id: index,
-        glyph: config.dust[index % config.dust.length],
-        left: randomBetween(12, 88),
-        top: randomBetween(14, 72),
-        delay: randomBetween(0, 0.25),
-        drift: randomBetween(-18, 18),
-      })),
-    [config.dust],
-  );
+  const particles = useMemo(() => makeFailureParticles(world), [world]);
 
   if (!active) return null;
 
   return (
     <div className="celebration-failure" aria-hidden="true">
       <div className="celebration-failure-overlay" />
-      <div className="celebration-failure-fragments">
-        {fragments.map((fragment) => (
+      <div className="celebration-sad-pet">
+        <ParticleAssetView asset={assetFor("🐾")} />
+        <span className="celebration-sad-pet-text">Try again</span>
+      </div>
+      <div className="celebration-particle-field celebration-particle-field-failure">
+        {particles.map((particle) => (
           <span
-            key={fragment.id}
-            className="celebration-failure-fragment"
+            key={particle.id}
+            className={`celebration-particle celebration-failure-fragment celebration-particle-${particle.origin}`}
             style={
               {
-                left: `${fragment.left}%`,
-                top: `${fragment.top}%`,
-                "--particle-delay": `${fragment.delay}s`,
-                "--particle-drift": `${fragment.drift}px`,
+                left: `${particle.left}%`,
+                "--particle-delay": `${particle.delay}s`,
+                "--particle-duration": `${particle.duration}s`,
+                "--particle-drift": `${particle.drift}px`,
+                "--particle-rotate": `${particle.rotate}deg`,
+                "--particle-scale": particle.scale,
+                "--particle-bounce": `${particle.bottomBounce}px`,
               } as CSSProperties
             }
           >
-            {fragment.glyph}
+            <ParticleAssetView asset={particle.asset} />
           </span>
         ))}
       </div>

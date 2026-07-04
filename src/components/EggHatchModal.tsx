@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ModalShell, PixelButton } from "./modals/ModalShell";
 import { PixelPet } from "./PixelPet";
 import { markEggClaimed, petLabel, type EggMilestone } from "../lib/game/eggs";
@@ -15,8 +15,16 @@ type Props = {
 export function EggHatchModal({ milestone, onClose }: Props) {
   const { state, dispatch } = useGame();
   const [phase, setPhase] = useState<Phase>("intro");
+  const hatchTimers = useRef<Array<ReturnType<typeof setTimeout>>>([]);
 
   const alreadyOwned = state.inventory.pets.some((p) => p.type === milestone.petType);
+
+  useEffect(() => {
+    return () => {
+      hatchTimers.current.forEach((timer) => clearTimeout(timer));
+      hatchTimers.current = [];
+    };
+  }, []);
 
   useEffect(() => {
     if (phase !== "reveal") return;
@@ -39,9 +47,13 @@ export function EggHatchModal({ milestone, onClose }: Props) {
   }, [phase, milestone, alreadyOwned, dispatch]);
 
   const startHatch = () => {
+    hatchTimers.current.forEach((timer) => clearTimeout(timer));
+    hatchTimers.current = [];
     setPhase("shake");
-    setTimeout(() => setPhase("crack"), 900);
-    setTimeout(() => setPhase("reveal"), 1900);
+    hatchTimers.current = [
+      setTimeout(() => setPhase("crack"), 900),
+      setTimeout(() => setPhase("reveal"), 1900),
+    ];
   };
 
   return (
@@ -49,7 +61,6 @@ export function EggHatchModal({ milestone, onClose }: Props) {
       ariaLabel="Egg reward"
       onClose={onClose}
       className="pixel-modal-shell-egg"
-      showCloseButton={phase === "reveal"}
     >
       <div className="egg-hatch-modal">
         <div className="egg-hatch-header">

@@ -1,4 +1,4 @@
-import { RotateCcw, ArrowLeft, ArrowRight } from "lucide-react";
+import { RotateCcw, ArrowLeft, ArrowRight, X } from "lucide-react";
 import { PixelMascot } from "../PixelMascot";
 import {
   CoachTipCard,
@@ -50,6 +50,14 @@ export function QuestResultsModal({
   return (
     <div className="quest-results-overlay animate-pixel-pop">
       <PixelFrame className="quest-results-frame">
+        <button
+          type="button"
+          className="pixel-modal-close quest-results-close"
+          onClick={onDismiss}
+          aria-label="Close quest results"
+        >
+          <X size={16} />
+        </button>
         <div className="quest-results-layout">
           <div className="quest-results-left">
             <div className="quest-results-mascot">

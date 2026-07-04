@@ -1056,6 +1056,10 @@
   box-shadow: var(--shadow-pixel-sm);
 }
 
+/* ============================================================
+   Pixel Login — Title Screen
+   ============================================================ */
+
 .pixel-login-shell {
   position: relative;
   min-height: 100dvh;
@@ -1067,120 +1071,471 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, #93d8ff 0%, #c4f1ff 50%, #fef2c9 100%);
+    radial-gradient(circle at 72% 18%, rgba(255, 239, 161, 0.34), transparent 13%),
+    linear-gradient(180deg, #91d9ff 0%, #c8f0ff 48%, #fff0c7 100%);
 }
 
+.pixel-login-cloud,
+.pixel-login-sun,
+.pixel-login-mountains,
+.pixel-login-hill,
+.pixel-login-leaf {
+  position: absolute;
+  image-rendering: pixelated;
+}
+
+.pixel-login-cloud {
+  --cloud-drift: 24px;
+  --cloud-lift: -8px;
+  --cloud-scale: 1;
+  width: 196px;
+  height: 64px;
+  background: #eefaff;
+  border: 4px solid #35526d;
+  box-shadow:
+    8px 8px 0 rgba(53, 82, 109, 0.18),
+    inset 0 -8px 0 #c9e9f8;
+  clip-path: polygon(0 64%, 8% 64%, 8% 48%, 18% 48%, 18% 30%, 32% 30%, 32% 14%, 48% 14%, 48% 0, 70% 0, 70% 18%, 86% 18%, 86% 38%, 100% 38%, 100% 82%, 0 82%);
+  animation: pixel-cloud-drift 13s ease-in-out infinite;
+}
+
+.pixel-login-cloud::before,
+.pixel-login-cloud::after {
+  content: "";
+  position: absolute;
+  background: color-mix(in oklab, white 76%, #d7f5ff);
+  border: 4px solid #35526d;
+  box-shadow: inset 0 -6px 0 #c9e9f8;
+}
+
+.pixel-login-cloud::before {
+  left: 38px;
+  top: -18px;
+  width: 58px;
+  height: 42px;
+}
+
+.pixel-login-cloud::after {
+  right: 34px;
+  top: -10px;
+  width: 54px;
+  height: 34px;
+}
+
+.pixel-login-cloud-left {
+  top: 10%;
+  left: 8%;
+  --cloud-drift: 26px;
+  --cloud-lift: -10px;
+}
+
+.pixel-login-cloud-right {
+  top: 16%;
+  right: 10%;
+  --cloud-drift: -30px;
+  --cloud-lift: -7px;
+  --cloud-scale: 0.86;
+  animation-duration: 16s;
+  animation-direction: reverse;
+}
+
+.pixel-login-sun {
+  top: 10%;
+  right: 24%;
+  width: 92px;
+  height: 92px;
+  border: 4px solid #7f4f13;
+  background: #ffd868;
+  box-shadow: 0 0 0 8px rgba(255, 216, 104, 0.35);
+}
+
+.pixel-login-mountains {
+  left: -8%;
+  right: -8%;
+  border-top: 4px solid #35526d;
+  box-shadow: inset 0 5px 0 rgba(255, 255, 255, 0.16);
+}
+
+.pixel-login-mountains-far {
+  bottom: 26%;
+  height: 26%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 12px, transparent 12px 24px),
+    linear-gradient(180deg, #8aa8c8 0%, #607b9d 100%);
+  clip-path: polygon(0 100%, 0 60%, 6% 60%, 6% 50%, 12% 50%, 12% 42%, 18% 42%, 18% 54%, 25% 54%, 25% 34%, 32% 34%, 32% 46%, 40% 46%, 40% 28%, 48% 28%, 48% 42%, 56% 42%, 56% 20%, 64% 20%, 64% 38%, 72% 38%, 72% 30%, 80% 30%, 80% 44%, 88% 44%, 88% 34%, 96% 34%, 96% 48%, 100% 48%, 100% 100%);
+  opacity: 0.9;
+}
+
+.pixel-login-mountains-near {
+  bottom: 18%;
+  height: 24%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 10px, transparent 10px 20px),
+    linear-gradient(180deg, #6b91a8 0%, #476b7f 100%);
+  clip-path: polygon(0 100%, 0 68%, 5% 68%, 5% 54%, 11% 54%, 11% 42%, 17% 42%, 17% 58%, 24% 58%, 24% 30%, 31% 30%, 31% 48%, 39% 48%, 39% 38%, 46% 38%, 46% 18%, 55% 18%, 55% 40%, 63% 40%, 63% 30%, 72% 30%, 72% 52%, 80% 52%, 80% 36%, 89% 36%, 89% 50%, 100% 50%, 100% 100%);
+}
+
+.pixel-login-hill {
+  left: -8%;
+  right: -8%;
+  bottom: 0;
+  border-top: 4px solid #35526d;
+}
+
+.pixel-login-hill-far {
+  height: 30%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 14px, transparent 14px 28px),
+    linear-gradient(180deg, #7fd88d 0%, #5aac69 100%);
+  clip-path: polygon(0 100%, 0 60%, 8% 60%, 8% 54%, 16% 54%, 16% 48%, 25% 48%, 25% 58%, 34% 58%, 34% 40%, 43% 40%, 43% 54%, 52% 54%, 52% 42%, 62% 42%, 62% 50%, 72% 50%, 72% 38%, 83% 38%, 83% 50%, 92% 50%, 92% 44%, 100% 44%, 100% 100%);
+}
+
+.pixel-login-hill-near {
+  height: 20%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 10px, transparent 10px 20px),
+    linear-gradient(180deg, #5fbd70 0%, #408952 100%);
+  clip-path: polygon(0 100%, 0 56%, 7% 56%, 7% 50%, 16% 50%, 16% 62%, 26% 62%, 26% 44%, 36% 44%, 36% 58%, 47% 58%, 47% 42%, 58% 42%, 58% 54%, 69% 54%, 69% 36%, 80% 36%, 80% 50%, 91% 50%, 91% 44%, 100% 44%, 100% 100%);
+}
+
+.pixel-login-leaf {
+  bottom: 20%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #7a6d22;
+  border-radius: 2px 8px 2px 8px;
+  background: #c8b844;
+  opacity: 0;
+  pointer-events: none;
+  animation: pixel-login-leaf-drift 9s ease-in infinite;
+}
+
+@keyframes pixel-cloud-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(var(--cloud-scale));
+  }
+  50% {
+    transform: translate3d(var(--cloud-drift), var(--cloud-lift), 0) scale(var(--cloud-scale));
+  }
+}
+
+@keyframes pixel-login-leaf-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  15%, 82% {
+    opacity: 0.58;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(42px, -72vh, 0) rotate(180deg);
+  }
+}
+
+/* --- Background layers --- */
+.pixel-login-bg {
+  position: absolute;
+  inset: 0;
+  image-rendering: pixelated;
+}
+
+.pixel-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #f7a8b8 0%, #fdd4a8 35%, #ffe8b0 65%, #d4f0d0 100%);
+}
+
+/* Clouds */
+.pixel-clouds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pixel-cloud {
+  position: absolute;
+  image-rendering: pixelated;
+}
+
+.pixel-cloud-1 {
+  top: 6%;
+  left: 5%;
+  width: 200px;
+  height: 60px;
+  background: #f8faff;
+  border: 4px solid #88aac8;
+  border-radius: 60px 60px 30px 30px;
+  box-shadow:
+    0 0 0 4px #f0f6ff,
+    inset 0 -8px 0 #d0dce8;
+  animation: cloud-drift 18s ease-in-out infinite;
+}
+
+.pixel-cloud-2 {
+  top: 12%;
+  left: 45%;
+  width: 160px;
+  height: 48px;
+  background: #f0f6ff;
+  border: 4px solid #7a9cb8;
+  border-radius: 48px 48px 24px 24px;
+  box-shadow:
+    0 0 0 4px #e8f0fc,
+    inset 0 -6px 0 #c0ccd8;
+  animation: cloud-drift 22s ease-in-out infinite reverse;
+}
+
+.pixel-cloud-3 {
+  top: 18%;
+  left: 72%;
+  width: 140px;
+  height: 42px;
+  background: #eaf2fc;
+  border: 4px solid #6a8ca8;
+  border-radius: 42px 42px 21px 21px;
+  box-shadow:
+    0 0 0 4px #e0eaf4,
+    inset 0 -6px 0 #b0bcc8;
+  animation: cloud-drift 26s ease-in-out infinite;
+}
+
+@keyframes cloud-drift {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(20px); }
+}
+
+/* Mountains (back layer) */
+.pixel-mountains {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  bottom: 32%;
+  height: 22%;
+  background:
+    linear-gradient(180deg, #7a8aaa 0%, #5a6a8a 100%);
+  border-top: 4px solid #4a5a78;
+  clip-path: polygon(
+    0% 100%, 0% 50%, 5% 42%, 10% 48%, 15% 35%, 22% 44%,
+    28% 32%, 35% 42%, 40% 28%, 48% 38%, 54% 22%, 60% 34%,
+    68% 18%, 75% 30%, 82% 24%, 88% 36%, 94% 28%, 100% 40%, 100% 100%
+  );
+  image-rendering: pixelated;
+  box-shadow: inset 0 4px 0 rgba(255,255,255,0.08);
+}
+
+/* Hills (middle layer) */
+.pixel-hills {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  bottom: 18%;
+  height: 20%;
+  background:
+    linear-gradient(180deg, #6ab87a 0%, #4a9a5a 100%);
+  border-top: 4px solid #3a7a48;
+  clip-path: polygon(
+    0% 100%, 0% 55%, 6% 48%, 14% 54%, 20% 44%, 28% 52%,
+    36% 40%, 44% 50%, 50% 38%, 58% 48%, 64% 34%, 72% 44%,
+    78% 36%, 84% 46%, 90% 32%, 96% 42%, 100% 38%, 100% 100%
+  );
+  image-rendering: pixelated;
+}
+
+/* Ground (front layer) */
+.pixel-ground {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  bottom: 0;
+  height: 20%;
+  background:
+    linear-gradient(180deg, #5aac5a 0%, #3a8a3a 50%, #4a7a3a 100%);
+  border-top: 4px solid #2a6a28;
+  image-rendering: pixelated;
+}
+
+/* Trees */
+.pixel-trees {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  height: 14%;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.pixel-trees::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 6%;
+  width: 28px;
+  height: 50px;
+  background:
+    linear-gradient(180deg, #3a8a3a 0%, #2a6a28 50%);
+  border: 3px solid #1a4a18;
+  border-radius: 14px 14px 3px 3px;
+  box-shadow:
+    120px 0 0 -3px #3a8a3a,
+    120px 0 0 0 #2a6a28,
+    120px 0 0 3px #1a4a18,
+    240px 8px 0 -2px #4a9a5a,
+    240px 8px 0 1px #3a7a48,
+    380px 2px 0 -3px #3a8a3a,
+    380px 2px 0 0 #2a6a28,
+    380px 2px 0 3px #1a4a18,
+    520px 10px 0 -2px #4a9a5a,
+    520px 10px 0 1px #3a7a48,
+    660px 0 0 -3px #3a8a3a,
+    660px 0 0 0 #2a6a28,
+    660px 0 0 3px #1a4a18,
+    800px 4px 0 -3px #3a8a3a,
+    800px 4px 0 0 #2a6a28,
+    800px 4px 0 3px #1a4a18;
+}
+
+/* Flowers */
+.pixel-flowers {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8%;
+  height: 8%;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.pixel-flowers::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 6px;
+  height: 6px;
+  background: #f0a0b0;
+  border: 2px solid #c07080;
+  border-radius: 2px;
+  box-shadow:
+    80px 0 0 0 #f0d060,
+    80px 0 0 2px #c09040,
+    160px 4px 0 0 #f0a0b0,
+    160px 4px 0 2px #c07080,
+    250px -2px 0 0 #e080a0,
+    250px -2px 0 2px #b06070,
+    340px 2px 0 0 #f0d060,
+    340px 2px 0 2px #c09040,
+    450px 0 0 0 #e080a0,
+    450px 0 0 2px #b06070,
+    560px 3px 0 0 #f0a0b0,
+    560px 3px 0 2px #c07080,
+    680px -1px 0 0 #f0d060,
+    680px -1px 0 2px #c09040,
+    780px 2px 0 0 #e080a0,
+    780px 2px 0 2px #b06070;
+}
+
+/* Floating leaves */
+.pixel-leaf {
+  position: absolute;
+  bottom: 30%;
+  width: 10px;
+  height: 10px;
+  background: #d0b040;
+  border: 2px solid #a08020;
+  border-radius: 2px 6px 2px 6px;
+  opacity: 0;
+  pointer-events: none;
+  animation: leaf-rise 9s ease-in infinite;
+}
+
+@keyframes leaf-rise {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  15%  { opacity: 0.7; }
+  85%  { opacity: 0.7; }
+  100% { transform: translateY(-90vh) rotate(180deg); opacity: 0; }
+}
+
+/* --- Layout --- */
 .pixel-login-layout {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 460px);
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(340px, 440px);
+  gap: 2rem;
   align-items: center;
   min-height: calc(100dvh - 2.5rem);
   max-width: 1240px;
   margin: 0 auto;
 }
 
+/* --- Left Hero --- */
 .pixel-login-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
   padding: 2rem 1rem;
 }
 
-.pixel-login-badge,
-.pixel-login-kicker,
-.pixel-login-marquee span,
-.pixel-login-feature span,
-.pixel-login-footnote,
-.pixel-auth-form label span,
-.pixel-auth-tabs button,
-.pixel-auth-provider,
-.pixel-auth-divider,
-.pixel-auth-error {
-  font-family: var(--font-pixel);
-}
-
-.pixel-login-badge {
-  display: inline-flex;
+.pixel-login-title-row {
+  display: flex;
   align-items: center;
-  padding: 0.35rem 0.6rem;
-  border: 2px solid var(--color-border);
-  border-radius: 999px;
-  background: color-mix(in oklab, white 72%, var(--coin));
-  box-shadow: var(--shadow-pixel-sm);
-  font-size: 0.56rem;
-  text-transform: uppercase;
+  gap: 0.75rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.15rem;
 }
 
-.pixel-login-hero h1 {
-  margin-top: 1rem;
-  font-size: clamp(4.5rem, 11vw, 8rem);
+.pixel-login-logo-mark {
+  width: clamp(76px, 8vw, 112px);
+  height: clamp(76px, 8vw, 112px);
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.pixel-login-wordmark {
+  font-size: clamp(4.2rem, 10vw, 7.4rem);
   line-height: 0.9;
   color: var(--ink);
   text-shadow: 4px 4px 0 color-mix(in oklab, white 60%, transparent);
 }
 
-.pixel-login-hero p {
-  max-width: 38rem;
-  margin-top: 0.85rem;
-  font-size: clamp(1rem, 2.4vw, 1.35rem);
-  color: color-mix(in oklab, var(--ink) 78%, black);
-}
-
-.pixel-login-feature-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
-  max-width: 42rem;
-  margin-top: 1.5rem;
-}
-
-.pixel-login-feature {
-  padding: 0.9rem;
-  border: 3px solid var(--color-border);
-  border-radius: 10px;
-  background: color-mix(in oklab, white 72%, var(--color-card));
-  box-shadow: var(--shadow-pixel);
-}
-
-.pixel-login-feature strong {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 2rem;
-  line-height: 1;
-}
-
-.pixel-login-feature span {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: 0.52rem;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-}
-
-.pixel-login-feature.is-mint strong { color: #1d8f74; }
-.pixel-login-feature.is-gold strong { color: #b67a0b; }
-.pixel-login-feature.is-pink strong { color: #c24a7f; }
-
-.pixel-login-marquee {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1rem;
-}
-
-.pixel-login-marquee span {
-  padding: 0.38rem 0.55rem;
+.pixel-login-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
   border: 2px solid var(--color-border);
-  border-radius: 6px;
-  background: color-mix(in oklab, white 65%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, white 72%, var(--coin));
   box-shadow: var(--shadow-pixel-sm);
-  font-size: 0.54rem;
+  font-family: var(--font-pixel);
+  font-size: 0.56rem;
   text-transform: uppercase;
+  width: fit-content;
 }
 
+.pixel-login-subtitle {
+  font-family: var(--font-pixel);
+  font-size: clamp(0.65rem, 1.4vw, 0.8rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  margin-top: 0.2rem;
+}
+
+.pixel-login-description {
+  max-width: 34rem;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  color: color-mix(in oklab, var(--ink) 78%, black);
+  line-height: 1.45;
+}
+
+
+
+/* --- Right Panel --- */
 .pixel-login-panel {
   position: relative;
-  padding: 1rem;
+  padding: 1.25rem;
   border: 4px solid var(--color-border);
   border-radius: 16px;
   background:
@@ -1192,48 +1547,36 @@
 
 .pixel-login-panel-head {
   display: flex;
-  gap: 0.85rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.15rem;
   margin-bottom: 1rem;
 }
 
-.pixel-login-logo {
-  width: 64px;
-  height: 64px;
-  padding: 0.45rem;
-  border: 3px solid var(--color-border);
-  border-radius: 12px;
-  background: color-mix(in oklab, white 75%, var(--coin));
-  box-shadow: var(--shadow-pixel-sm);
-}
-
 .pixel-login-kicker {
-  font-size: 0.52rem;
+  font-family: var(--font-pixel);
+  font-size: 0.5rem;
   text-transform: uppercase;
-  color: var(--muted-foreground);
+  letter-spacing: 0.12em;
+  color: var(--color-primary);
 }
 
 .pixel-login-panel h2 {
-  font-size: 2.35rem;
+  font-size: 2.1rem;
   line-height: 0.95;
 }
 
-.pixel-auth-tabs,
-.pixel-auth-provider-grid {
+.pixel-login-panel-desc {
+  font-family: var(--font-pixel);
+  font-size: 0.5rem;
+  color: var(--muted-foreground);
+  margin-top: 0.2rem;
+}
+
+/* Auth tabs */
+.pixel-auth-tabs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.55rem;
-}
-
-.pixel-auth-tabs button,
-.pixel-auth-provider,
-.pixel-auth-form input {
-  border: 2px solid var(--color-border);
-  border-radius: 10px;
-  box-shadow: var(--shadow-pixel-sm);
-}
-
-.pixel-auth-tabs {
   margin-bottom: 0.9rem;
 }
 
@@ -1241,24 +1584,31 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  min-width: 0;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0.42rem 0.7rem;
-  overflow: hidden;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
   background: color-mix(in oklab, var(--color-muted) 62%, white);
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-pixel);
   font-size: 0.58rem;
   line-height: 1.15;
-  text-align: center;
-  text-wrap: balance;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.pixel-auth-tabs button:hover {
+  box-shadow: var(--shadow-pixel);
 }
 
 .pixel-auth-tabs button.is-active {
   background: var(--color-primary);
   color: var(--color-primary-foreground);
+  box-shadow: var(--shadow-pixel);
 }
 
+/* Auth form */
 .pixel-auth-form {
   display: grid;
   gap: 0.85rem;
@@ -1270,6 +1620,7 @@
 }
 
 .pixel-auth-form label span {
+  font-family: var(--font-pixel);
   font-size: 0.5rem;
   text-transform: uppercase;
   color: var(--muted-foreground);
@@ -1278,8 +1629,13 @@
 .pixel-auth-form input {
   min-height: 46px;
   padding: 0.75rem 0.85rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
   background: color-mix(in oklab, white 82%, var(--color-muted));
-  font-size: 0.98rem;
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  transition: box-shadow 0.15s;
 }
 
 .pixel-auth-form input:focus-visible {
@@ -1288,14 +1644,52 @@
 }
 
 .pixel-auth-error {
-  color: var(--color-destructive);
+  font-family: var(--font-pixel);
   font-size: 0.52rem;
+  color: var(--color-destructive);
 }
 
+/* Enter Game button */
+.pixel-login-enter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0.6rem 1rem;
+  border: 3px solid color-mix(in oklab, var(--color-primary) 80%, black);
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--color-primary) 0%, color-mix(in oklab, var(--color-primary) 80%, black) 100%);
+  box-shadow: 0 4px 0 0 color-mix(in oklab, var(--color-primary) 60%, black), var(--shadow-pixel-sm);
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-primary-foreground);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.pixel-login-enter-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 0 color-mix(in oklab, var(--color-primary) 60%, black), var(--shadow-pixel);
+}
+
+.pixel-login-enter-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-primary) 60%, black), var(--shadow-pixel-sm);
+}
+
+.pixel-login-enter-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Divider */
 .pixel-auth-divider {
   position: relative;
   margin: 1rem 0 0.9rem;
   text-align: center;
+  font-family: var(--font-pixel);
   font-size: 0.5rem;
   text-transform: uppercase;
   color: var(--muted-foreground);
@@ -1318,110 +1712,99 @@
   background: color-mix(in oklab, var(--color-card) 94%, white);
 }
 
-.pixel-auth-provider {
+/* Social buttons */
+.pixel-auth-provider-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.pixel-login-social-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   min-height: 46px;
+  padding: 0.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
   background: color-mix(in oklab, white 78%, var(--color-muted));
+  box-shadow: var(--shadow-pixel-sm);
+  font-family: var(--font-pixel);
   font-size: 0.56rem;
   text-transform: uppercase;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
 }
 
-.pixel-auth-provider-mark {
+.pixel-login-social-btn:hover {
+  box-shadow: var(--shadow-pixel);
+}
+
+.pixel-social-mark {
   display: grid;
   place-items: center;
   width: 22px;
   height: 22px;
   border-radius: 999px;
   color: white;
-  font-size: 0.72rem;
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
   font-weight: 700;
 }
 
-.pixel-auth-provider-mark.is-google { background: #db4437; }
-.pixel-auth-provider-mark.is-facebook { background: #1877f2; }
+.pixel-social-mark.is-google { background: #db4437; }
+.pixel-social-mark.is-facebook { background: #1877f2; }
 
-.pixel-login-footnote {
-  margin-top: 0.95rem;
-  font-size: 0.48rem;
-  line-height: 1.6;
+/* Demo button */
+.pixel-login-demo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 0.7rem;
+  padding: 0.45rem 0.7rem;
+  border: 2px dashed var(--color-border);
+  border-radius: 10px;
+  background: transparent;
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
   color: var(--muted-foreground);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
 }
 
-.pixel-login-cloud,
-.pixel-login-sun,
-.pixel-login-hill {
-  position: absolute;
+.pixel-login-demo-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.pixel-login-demo-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
   image-rendering: pixelated;
 }
 
-.pixel-login-cloud {
-  width: 170px;
-  height: 54px;
-  background:
-    linear-gradient(0deg, #d7f5ff 0 100%),
-    linear-gradient(0deg, #8bc8e9 0 100%);
-  border: 4px solid #35526d;
-  box-shadow: 8px 8px 0 rgba(53, 82, 109, 0.18);
-  clip-path: polygon(0 60%, 10% 60%, 10% 40%, 22% 40%, 22% 20%, 44% 20%, 44% 0, 70% 0, 70% 20%, 86% 20%, 86% 40%, 100% 40%, 100% 80%, 0 80%);
+/* Footer */
+.pixel-login-footer-note {
+  margin-top: 0.85rem;
+  font-family: var(--font-pixel);
+  font-size: 0.48rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted-foreground);
 }
 
-.pixel-login-cloud-left {
-  top: 10%;
-  left: 8%;
-  animation: pixel-float 5s ease-in-out infinite;
-}
-
-.pixel-login-cloud-right {
-  top: 16%;
-  right: 10%;
-  transform: scale(0.9);
-  animation: pixel-float 6.5s ease-in-out infinite reverse;
-}
-
-.pixel-login-sun {
-  top: 10%;
-  right: 24%;
-  width: 92px;
-  height: 92px;
-  border: 4px solid #7f4f13;
-  background: #ffd868;
-  box-shadow: 0 0 0 8px rgba(255, 216, 104, 0.35);
-}
-
-.pixel-login-hill {
-  left: -8%;
-  right: -8%;
-  bottom: 0;
-  border-top: 4px solid #35526d;
-}
-
-.pixel-login-hill-far {
-  height: 28%;
-  background:
-    linear-gradient(180deg, #7fd88d 0%, #5aac69 100%);
-  clip-path: polygon(0 100%, 0 56%, 12% 46%, 23% 55%, 34% 36%, 47% 52%, 60% 34%, 72% 46%, 84% 28%, 100% 48%, 100% 100%);
-}
-
-.pixel-login-hill-near {
-  height: 20%;
-  background:
-    linear-gradient(180deg, #5fbd70 0%, #408952 100%);
-  clip-path: polygon(0 100%, 0 52%, 15% 62%, 29% 44%, 41% 58%, 55% 40%, 68% 55%, 81% 34%, 100% 50%, 100% 100%);
-}
-
-@keyframes pixel-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
+/* --- Responsive --- */
 @media (max-width: 900px) {
   .pixel-login-layout {
     grid-template-columns: 1fr;
-    padding-top: 3rem;
+    padding-top: 2rem;
     padding-bottom: 2rem;
+    gap: 1.5rem;
   }
 
   .pixel-login-hero {
@@ -1439,17 +1822,13 @@
     gap: 1rem;
   }
 
-  .pixel-login-feature-grid {
-    grid-template-columns: 1fr;
-  }
-
   .pixel-auth-provider-grid,
   .pixel-auth-tabs {
     grid-template-columns: 1fr;
   }
 
   .pixel-login-panel h2 {
-    font-size: 1.9rem;
+    font-size: 1.7rem;
   }
 }
 
@@ -2805,7 +3184,12 @@
   display: grid;
   grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
   gap: 1rem;
-  padding: 1.35rem;
+  padding: 1.85rem 4rem 1.35rem 1.35rem;
+}
+
+.quest-results-close {
+  top: 0.9rem;
+  right: 0.9rem;
 }
 
 .quest-results-left,
@@ -2904,19 +3288,20 @@
   inset: 0;
   z-index: 125;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .celebration-glow {
   position: absolute;
-  inset: 14% 18% 18%;
+  inset: 8% 10% 10%;
   border-radius: 32px;
   background: radial-gradient(circle at center, var(--celebration-glow), transparent 70%);
-  filter: blur(12px);
-  opacity: 0.9;
+  filter: blur(18px);
+  opacity: 0.95;
+  animation: celebration-glow-pulse 1.4s ease-out both;
 }
 
-.celebration-confetti,
-.celebration-biome-particles,
+.celebration-particle-field,
 .celebration-floaters,
 .celebration-failure-fragments {
   position: absolute;
@@ -2924,23 +3309,32 @@
   overflow: hidden;
 }
 
-.celebration-confetti-piece {
+.celebration-particle {
   position: absolute;
-  top: -10px;
-  width: var(--particle-size);
-  height: calc(var(--particle-size) * 1.45);
-  border-radius: 2px;
-  background: var(--particle-color);
-  box-shadow: 0 0 10px color-mix(in oklab, var(--particle-color) 35%, transparent);
-  animation: celebration-confetti-fall var(--particle-duration) var(--particle-delay) ease-out forwards;
+  top: -10vh;
+  display: grid;
+  place-items: center;
+  width: clamp(20px, 2.4vw, 36px);
+  height: clamp(20px, 2.4vw, 36px);
+  opacity: 0;
+  will-change: transform, opacity;
+  transform: translate3d(0, -10vh, 0) rotate(0deg) scale(var(--particle-scale));
+  animation: celebration-particle-fall var(--particle-duration) var(--particle-delay) cubic-bezier(0.19, 0.78, 0.32, 1) forwards;
 }
 
-.celebration-biome-particle {
-  position: absolute;
-  font-family: var(--font-pixel);
-  font-size: 0.8rem;
-  opacity: 0;
-  animation: celebration-biome-drift var(--particle-duration) var(--particle-delay) ease-out forwards;
+.celebration-particle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 2px 0 rgba(47, 31, 24, 0.22));
+}
+
+.celebration-particle-emoji {
+  display: block;
+  font-size: clamp(20px, 2.4vw, 36px);
+  line-height: 1;
+  filter: drop-shadow(2px 2px 0 rgba(47, 31, 24, 0.18));
 }
 
 .celebration-floater {
@@ -2955,49 +3349,90 @@
   font-size: 0.6rem;
   color: #ef8b1d;
   opacity: 0;
-  animation: celebration-floater-rise 1.35s ease-out forwards;
+  animation: celebration-floater-rise 2.2s ease-out forwards;
 }
 
 .celebration-failure-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(120, 146, 167, 0.14);
+  background:
+    radial-gradient(circle at center, transparent 18%, rgba(58, 67, 82, 0.18) 100%),
+    rgba(92, 115, 137, 0.16);
+  animation: celebration-failure-fade 360ms ease-out both;
 }
 
 .celebration-failure-fragment {
-  position: absolute;
-  color: rgba(94, 98, 107, 0.7);
-  font-family: var(--font-pixel);
-  font-size: 0.72rem;
-  opacity: 0;
-  animation: celebration-failure-drift 1s var(--particle-delay) ease-out forwards;
+  filter: grayscale(0.25) saturate(0.7);
+  animation-name: celebration-failure-fall;
+  animation-timing-function: cubic-bezier(0.25, 0.7, 0.34, 1);
 }
 
-@keyframes celebration-confetti-fall {
+.celebration-sad-pet {
+  position: absolute;
+  left: 5%;
+  bottom: 12%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.7rem;
+  border: 2px solid rgba(74, 86, 99, 0.44);
+  border-radius: 12px;
+  background: rgba(239, 246, 252, 0.72);
+  box-shadow: 3px 3px 0 rgba(53, 62, 72, 0.18);
+  opacity: 0;
+  transform: translate3d(-10px, 12px, 0);
+  animation: celebration-sad-pet-pop 2.8s 0.35s ease-out forwards;
+}
+
+.celebration-sad-pet .celebration-particle-img,
+.celebration-sad-pet .celebration-particle-emoji {
+  width: 28px;
+  height: 28px;
+  font-size: 28px;
+}
+
+.celebration-sad-pet-text {
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(62, 72, 84, 0.82);
+}
+
+@keyframes celebration-glow-pulse {
   0% {
     opacity: 0;
-    transform: translate3d(0, -10px, 0) rotate(0deg) scale(0.8);
+    transform: scale(0.88);
   }
-  12% {
+  40% {
+    opacity: 0.95;
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+}
+
+@keyframes celebration-particle-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -12vh, 0) rotate(0deg) scale(calc(var(--particle-scale) * 0.72));
+  }
+  10% {
     opacity: 1;
   }
-  100% {
-    opacity: 0;
-    transform: translate3d(var(--particle-drift), 110vh, 0) rotate(var(--particle-rotate)) scale(0.7);
+  72% {
+    opacity: 1;
+    transform: translate3d(calc(var(--particle-drift) * 0.72), 82vh, 0) rotate(calc(var(--particle-rotate) * 0.78)) scale(var(--particle-scale));
   }
-}
-
-@keyframes celebration-biome-drift {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) scale(0.8);
-  }
-  15% {
+  86% {
     opacity: 0.9;
+    transform: translate3d(var(--particle-drift), calc(100vh + var(--particle-bounce)), 0) rotate(var(--particle-rotate)) scale(calc(var(--particle-scale) * 0.94));
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--particle-drift), 120px, 0) scale(1.05);
+    transform: translate3d(calc(var(--particle-drift) * 1.08), 112vh, 0) rotate(calc(var(--particle-rotate) + 36deg)) scale(calc(var(--particle-scale) * 0.62));
   }
 }
 
@@ -3015,17 +3450,45 @@
   }
 }
 
-@keyframes celebration-failure-drift {
+@keyframes celebration-failure-fall {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, -8vh, 0) rotate(0deg) scale(calc(var(--particle-scale) * 0.78));
   }
-  22% {
-    opacity: 0.72;
+  18% {
+    opacity: 0.86;
+  }
+  76% {
+    opacity: 0.66;
+    transform: translate3d(calc(var(--particle-drift) * 0.68), 74vh, 0) rotate(calc(var(--particle-rotate) * 0.68)) scale(var(--particle-scale));
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--particle-drift), 40px, 0);
+    transform: translate3d(var(--particle-drift), 106vh, 0) rotate(var(--particle-rotate)) scale(calc(var(--particle-scale) * 0.72));
+  }
+}
+
+@keyframes celebration-failure-fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes celebration-sad-pet-pop {
+  0% {
+    opacity: 0;
+    transform: translate3d(-10px, 12px, 0) scale(0.9);
+  }
+  18%, 76% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.96);
   }
 }
 
@@ -3061,6 +3524,10 @@
   .quest-results-stats,
   .quest-results-requirements {
     grid-template-columns: 1fr;
+  }
+
+  .quest-results-layout {
+    padding: 3.7rem 1.15rem 1.15rem;
   }
 
   .adventure-runner-header {
@@ -4263,17 +4730,26 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   display: flex;
   justify-content: center;
   gap: 0.25rem;
-  font-size: 1.5rem;
-  color: #d6b18f;
 }
 
-.lesson-results-stars .is-filled {
-  color: #eea726;
+.lesson-results-stars span {
+  display: flex;
+}
+
+.lesson-results-stars .pixel-icon {
+  width: clamp(28px, 3vw, 36px);
+  height: clamp(28px, 3vw, 36px);
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.lesson-results-stars span:not(.is-filled) .pixel-icon {
+  filter: grayscale(1) opacity(0.35);
 }
 
 .lesson-results-title,
 .pet-room-modal-title,
-.lesson-detail-title {
+.quest-detail-title {
   font-size: clamp(2rem, 3.2vw, 2.8rem);
   line-height: 0.95;
   color: #4b2d27;
@@ -4325,7 +4801,7 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
 }
 
 .pet-room-modal,
-.lesson-detail-modal {
+.quest-detail-modal {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -4363,47 +4839,49 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   color: #5b392f;
 }
 
-.lesson-detail-header {
+.quest-detail-header {
   display: grid;
   gap: 0.45rem;
 }
 
-.lesson-detail-emoji {
-  font-size: 2.2rem;
+.quest-detail-emoji-img {
+  width: 40px; height: 40px;
+  image-rendering: pixelated;
+  object-fit: contain;
 }
 
-.lesson-detail-difficulty,
-.lesson-detail-note,
-.lesson-detail-target-label,
-.lesson-detail-best-label,
-.lesson-detail-reward-label {
+.quest-detail-difficulty,
+.quest-detail-note,
+.quest-detail-target-label,
+.quest-detail-best-label,
+.quest-detail-reward-label {
   font-family: var(--font-pixel);
 }
 
-.lesson-detail-note,
-.lesson-detail-best-row {
+.quest-detail-note,
+.quest-detail-best-row {
   color: #5c4035;
 }
 
-.lesson-detail-note {
+.quest-detail-note {
   font-size: 0.68rem;
   line-height: 1.75;
 }
 
-.lesson-detail-targets,
-.lesson-detail-rewards {
+.quest-detail-targets,
+.quest-detail-rewards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.85rem;
 }
 
-.lesson-detail-rewards {
+.quest-detail-rewards {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.lesson-detail-target-card,
-.lesson-detail-best,
-.lesson-detail-rewards > div {
+.quest-detail-target-card,
+.quest-detail-best,
+.quest-detail-rewards > div {
   padding: 0.95rem 1rem;
   border: 2px solid #b98a68;
   border-radius: 12px;
@@ -4411,16 +4889,16 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   box-shadow: 3px 3px 0 0 rgba(111, 73, 51, 0.35);
 }
 
-.lesson-detail-target-label,
-.lesson-detail-best-label,
-.lesson-detail-reward-label {
+.quest-detail-target-label,
+.quest-detail-best-label,
+.quest-detail-reward-label {
   font-size: 0.58rem;
   text-transform: uppercase;
   color: #7b5d4d;
 }
 
-.lesson-detail-target-value,
-.lesson-detail-reward-value {
+.quest-detail-target-value,
+.quest-detail-reward-value {
   margin-top: 0.35rem;
   font-family: var(--font-display);
   font-size: 2rem;
@@ -4428,11 +4906,11 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   color: #4f2d24;
 }
 
-.lesson-detail-reward-value.is-primary { color: var(--color-primary); }
-.lesson-detail-reward-value.is-coin { color: var(--coin); }
-.lesson-detail-reward-value.is-leaf { color: var(--leaf); }
+.quest-detail-reward-value.is-primary { color: var(--color-primary); }
+.quest-detail-reward-value.is-coin { color: var(--coin); }
+.quest-detail-reward-value.is-leaf { color: var(--leaf); }
 
-.lesson-detail-best-row {
+.quest-detail-best-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4442,7 +4920,7 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   font-size: 0.68rem;
 }
 
-.lesson-detail-stars {
+.quest-detail-stars {
   color: #eb9f1f;
 }
 
@@ -4468,12 +4946,12 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
 
   .practice-results-stats,
   .lesson-results-stats,
-  .lesson-detail-rewards {
+  .quest-detail-rewards {
     grid-template-columns: 1fr;
   }
 
   .pixel-reward-card,
-  .lesson-detail-targets {
+  .quest-detail-targets {
     grid-template-columns: 1fr;
   }
 
@@ -4518,11 +4996,18 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
    LessonsCard — pixel RPG progression
    ============================================================ */
 
-.lessons-card-root {
+.quest-log-root {
   container-type: inline-size;
 }
 
-.lesson-milestone-banner {
+.quest-chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.quest-milestone-banner {
   margin-top: 0.75rem;
   display: grid;
   grid-template-columns: auto minmax(0,1fr) auto;
@@ -4536,7 +5021,7 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
     color-mix(in oklab, var(--color-card) 92%, white);
   box-shadow: var(--shadow-pixel-sm);
 }
-.lesson-milestone-icon {
+.quest-milestone-icon {
   font-size: 1.6rem;
   filter: drop-shadow(2px 2px 0 var(--color-border));
   animation: egg-idle 3.2s ease-in-out infinite;
@@ -4545,13 +5030,13 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   0%, 100% { transform: translateY(0) rotate(-3deg); }
   50%      { transform: translateY(-3px) rotate(3deg); }
 }
-.lesson-milestone-title {
+.quest-milestone-title {
   font-family: var(--font-pixel);
   font-size: 0.62rem;
   text-transform: uppercase;
   color: var(--foreground);
 }
-.lesson-milestone-bar {
+.quest-milestone-bar {
   margin-top: 0.4rem;
   height: 10px;
   border: 2px solid var(--color-border);
@@ -4559,12 +5044,12 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   background: color-mix(in oklab, var(--color-muted) 80%, transparent);
   overflow: hidden;
 }
-.lesson-milestone-fill {
+.quest-milestone-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--coin), var(--primary));
   transition: width 0.4s ease;
 }
-.lesson-milestone-hint {
+.quest-milestone-hint {
   font-family: var(--font-pixel);
   font-size: 0.5rem;
   text-transform: uppercase;
@@ -4574,10 +5059,14 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   line-height: 1.4;
 }
 
+/* ============================================================
+   Quest Log — RPG-style Curriculum
+   ============================================================ */
+
 /* ---- Chapter (Unit) cards ---- */
-.unit-chapter-card {
+.quest-chapter {
   border: 3px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: 16px;
   background:
     linear-gradient(180deg, color-mix(in oklab, white 20%, transparent), transparent 40%),
     color-mix(in oklab, var(--color-card) 92%, white);
@@ -4585,49 +5074,60 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   overflow: hidden;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.unit-chapter-card.is-done {
+.quest-chapter.is-done {
   background:
     linear-gradient(180deg, color-mix(in oklab, var(--leaf) 22%, transparent), transparent 55%),
     color-mix(in oklab, var(--color-card) 92%, white);
 }
-.unit-chapter-card.is-locked { opacity: 0.65; }
+.quest-chapter.is-locked { opacity: 0.65; }
 
-.unit-chapter-head {
+.quest-chapter-head {
   width: 100%;
   display: grid;
   grid-template-columns: auto minmax(0,1fr) auto;
   align-items: center;
   gap: 0.9rem;
-  padding: 0.85rem 1rem;
+  padding: 1rem 1rem;
   text-align: left;
   background: transparent;
   cursor: pointer;
 }
-.unit-chapter-head:disabled { cursor: not-allowed; }
+.quest-chapter-head:disabled { cursor: not-allowed; }
 
-.unit-chapter-emblem {
-  width: 54px; height: 54px;
+.quest-chapter-emblem {
+  position: relative;
+  width: 60px; height: 60px;
   display: grid; place-items: center;
   border: 3px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: 14px;
   background: color-mix(in oklab, var(--coin) 20%, white);
   box-shadow: var(--shadow-pixel-sm);
-  font-size: 1.6rem;
   flex-shrink: 0;
 }
-.unit-chapter-card.is-done .unit-chapter-emblem {
+.quest-chapter-icon {
+  position: absolute;
+  top: -8px; right: -8px;
+  width: 22px; height: 22px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+.quest-chapter-emblem-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.quest-chapter.is-done .quest-chapter-emblem {
   background: color-mix(in oklab, var(--leaf) 32%, white);
 }
 
-.unit-chapter-body { min-width: 0; }
-.unit-chapter-eyebrow {
+.quest-chapter-body { min-width: 0; }
+.quest-chapter-eyebrow {
   display: flex; align-items: center; gap: 0.4rem;
   font-family: var(--font-pixel);
   font-size: 0.5rem;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
-.unit-chapter-done-chip {
+.quest-chapter-done-chip {
   display: inline-flex; align-items: center; gap: 0.25rem;
   padding: 0.15rem 0.4rem;
   border: 2px solid var(--color-border);
@@ -4636,174 +5136,381 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   color: white;
   font-size: 0.45rem;
 }
-.unit-chapter-title {
+.quest-chapter-title {
   font-family: var(--font-display);
   font-size: 1.5rem;
   line-height: 1.1;
   margin-top: 0.1rem;
 }
-.unit-chapter-purpose {
+.quest-chapter-purpose {
   font-family: var(--font-pixel);
   font-size: 0.55rem;
   color: var(--muted-foreground);
   margin-top: 0.25rem;
   text-transform: none;
 }
-.unit-chapter-progress {
+.quest-chapter-progress {
   margin-top: 0.55rem;
   display: flex; align-items: center; gap: 0.55rem;
 }
-.unit-chapter-bar {
+.quest-chapter-bar {
   flex: 1;
   min-width: 0;
-  max-width: 220px;
+  max-width: 200px;
   height: 8px;
   border: 2px solid var(--color-border);
   border-radius: 999px;
   background: color-mix(in oklab, var(--color-muted) 80%, transparent);
   overflow: hidden;
 }
-.unit-chapter-fill {
+.quest-chapter-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--leaf), var(--coin));
   transition: width 0.4s ease;
 }
-.unit-chapter-count {
+.quest-chapter-count {
   font-family: var(--font-pixel);
   font-size: 0.55rem;
   color: var(--muted-foreground);
 }
-.unit-chapter-caret {
+.quest-chapter-caret {
   display: grid; place-items: center;
   width: 32px; height: 32px;
   color: var(--muted-foreground);
 }
 
-.unit-lesson-list {
-  padding: 0.35rem 0.75rem 0.9rem;
-  display: flex; flex-direction: column; gap: 0.5rem;
+/* ---- Mini Adventure Path ---- */
+.quest-adventure-path {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.25rem 0.5rem;
+  gap: 0;
+  overflow-x: auto;
+}
+.quest-path-node-wrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.quest-path-connector {
+  width: 20px;
+  height: 0;
+  border-top: 2px dotted color-mix(in oklab, var(--color-border) 50%, transparent);
+  flex-shrink: 0;
+}
+.quest-path-node {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, white 80%, var(--color-muted));
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+.quest-path-node.is-done {
+  border-color: var(--leaf);
+  background: color-mix(in oklab, var(--leaf) 25%, white);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--leaf) 40%, transparent);
+}
+.quest-path-node.is-current {
+  border-color: var(--coin);
+  background: color-mix(in oklab, var(--coin) 25%, white);
+  animation: path-bounce 1.6s ease-in-out infinite;
+}
+.quest-path-node.is-locked {
+  opacity: 0.35;
+  filter: grayscale(0.8);
+}
+@keyframes path-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.quest-path-icon {
+  width: 16px; height: 16px;
+  image-rendering: pixelated;
+  object-fit: contain;
 }
 
-/* ---- Lesson node cards ---- */
-.lesson-node-row { display: contents; }
+/* ---- Quest Card List ---- */
+.quest-card-list {
+  padding: 0.25rem 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
 
-.lesson-node-card {
+.quest-card-row {
+  position: relative;
+  display: block;
+}
+
+/* ---- Quest Card ---- */
+.quest-card {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0,1fr) auto;
-  align-items: center;
-  gap: 0.85rem;
+  grid-template-columns: minmax(92px, 0.18fr) minmax(0, 1fr) minmax(160px, 0.24fr);
+  align-items: stretch;
+  gap: clamp(1rem, 2vw, 1.4rem);
   width: 100%;
-  padding: 0.75rem 0.85rem;
+  padding: clamp(1.1rem, 2vw, 1.45rem);
   text-align: left;
   border: 3px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: 16px;
   background:
     linear-gradient(180deg, color-mix(in oklab, white 22%, transparent), transparent 50%),
     color-mix(in oklab, var(--color-card) 94%, white);
   box-shadow: var(--shadow-pixel-sm);
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  overflow: hidden;
 }
-.lesson-node-card:hover:not(:disabled) {
+.quest-card:hover:not(:disabled) {
   transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0 0 var(--color-border);
+  box-shadow: 5px 5px 0 0 var(--color-border);
 }
-.lesson-node-card:active:not(:disabled) {
+.quest-card:active:not(:disabled) {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 0 var(--color-border);
 }
-.lesson-node-card:disabled { cursor: not-allowed; opacity: 0.55; }
-
-.lesson-node-card.is-done {
-  background:
-    linear-gradient(180deg, color-mix(in oklab, var(--leaf) 22%, transparent), transparent 60%),
-    color-mix(in oklab, var(--color-card) 94%, white);
-  animation: lesson-done-glow 3.6s ease-in-out infinite;
+.quest-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
-@keyframes lesson-done-glow {
+
+/* Completed quest */
+.quest-card.is-done {
+  background:
+    linear-gradient(135deg, color-mix(in oklab, #a8764a 18%, transparent), transparent 36%),
+    linear-gradient(180deg, color-mix(in oklab, var(--leaf) 20%, transparent), transparent 60%),
+    color-mix(in oklab, var(--color-card) 94%, white);
+  animation: quest-done-glow 3.6s ease-in-out infinite;
+}
+@keyframes quest-done-glow {
   0%, 100% { box-shadow: var(--shadow-pixel-sm), 0 0 0 0 color-mix(in oklab, var(--leaf) 40%, transparent); }
   50%      { box-shadow: var(--shadow-pixel-sm), 0 0 18px 2px color-mix(in oklab, var(--leaf) 45%, transparent); }
 }
-.lesson-node-card.is-perfect {
+
+/* Perfect (3-star) quest */
+.quest-card.is-perfect {
   background:
     linear-gradient(180deg, color-mix(in oklab, var(--coin) 30%, transparent), transparent 55%),
     color-mix(in oklab, var(--color-card) 94%, white);
-  animation: lesson-golden-glow 3.2s ease-in-out infinite;
+  animation: quest-golden-glow 3.2s ease-in-out infinite;
 }
-@keyframes lesson-golden-glow {
+@keyframes quest-golden-glow {
   0%, 100% { box-shadow: var(--shadow-pixel-sm), 0 0 0 0 color-mix(in oklab, var(--coin) 45%, transparent); }
   50%      { box-shadow: var(--shadow-pixel-sm), 0 0 22px 3px color-mix(in oklab, var(--coin) 55%, transparent); }
 }
-.lesson-node-card.is-current { border-color: var(--coin); }
-.lesson-node-card.is-boss {
+
+/* Current quest — animated border, breathing, glow */
+.quest-card.is-current:not(.is-done) {
+  border-color: var(--coin);
+  transform: scale(1.01);
+  animation: quest-current-breathe 2.4s ease-in-out infinite;
+}
+@keyframes quest-current-breathe {
+  0%, 100% { box-shadow: var(--shadow-pixel-sm), 0 0 0 0 color-mix(in oklab, var(--coin) 35%, transparent); }
+  50%      { box-shadow: var(--shadow-pixel-sm), 0 0 14px 2px color-mix(in oklab, var(--coin) 45%, transparent); }
+}
+
+/* Boss quest */
+.quest-card.is-boss {
   border-color: var(--color-primary);
   background:
     linear-gradient(180deg, color-mix(in oklab, var(--color-primary) 22%, transparent), transparent 60%),
     color-mix(in oklab, var(--color-card) 94%, white);
 }
 
-.lesson-node-emblem {
+/* Locked quest — stone, faded */
+.quest-card.is-locked {
+  filter: grayscale(0.6) contrast(0.85);
+  opacity: 0.65;
+  background:
+    linear-gradient(180deg, rgba(124, 130, 132, 0.18), rgba(124, 130, 132, 0.05)),
+    color-mix(in oklab, var(--color-muted) 74%, white);
+}
+.quest-card.is-locked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.28), transparent 22%),
+    radial-gradient(circle at 72% 72%, rgba(255, 255, 255, 0.18), transparent 28%);
+}
+
+/* ---- Decorative Scenery ---- */
+.quest-card-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.quest-card-scene::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background:
+    radial-gradient(2px 2px at 10% 80%, color-mix(in oklab, var(--leaf) 30%, transparent) 50%, transparent),
+    radial-gradient(2px 2px at 25% 90%, color-mix(in oklab, var(--leaf) 25%, transparent) 50%, transparent),
+    radial-gradient(2px 2px at 50% 85%, color-mix(in oklab, var(--coin) 20%, transparent) 50%, transparent),
+    radial-gradient(2px 2px at 70% 88%, color-mix(in oklab, var(--color-primary) 20%, transparent) 50%, transparent),
+    radial-gradient(2px 2px at 88% 82%, color-mix(in oklab, var(--leaf) 28%, transparent) 50%, transparent);
+}
+
+/* ---- Quest Card - Artwork ---- */
+.quest-card-art {
   position: relative;
-  width: 52px; height: 52px;
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.quest-card-art-inner {
+  width: clamp(64px, 6.2vw, 72px);
+  height: clamp(64px, 6.2vw, 72px);
   display: grid; place-items: center;
   border: 3px solid var(--color-border);
-  border-radius: 12px;
-  background: color-mix(in oklab, white 85%, var(--color-muted));
-  font-size: 1.4rem;
-  flex-shrink: 0;
-}
-.lesson-node-card.is-done .lesson-node-emblem {
-  background: var(--leaf); color: white;
-}
-.lesson-node-card.is-perfect .lesson-node-emblem {
-  background: var(--coin); color: var(--ink);
-}
-.lesson-node-card.is-boss .lesson-node-emblem {
-  background: var(--color-primary); color: var(--color-primary-foreground);
-}
-.lesson-node-check {
-  font-family: var(--font-pixel);
-  font-size: 1.2rem;
-  font-weight: 900;
-}
-
-.lesson-node-pulse {
-  position: absolute; inset: -6px;
   border-radius: 14px;
-  border: 3px solid var(--coin);
-  animation: lesson-pulse 1.4s ease-in-out infinite;
-  pointer-events: none;
+  background: color-mix(in oklab, white 85%, var(--color-muted));
+  box-shadow: var(--shadow-pixel-sm);
 }
-@keyframes lesson-pulse {
-  0%, 100% { opacity: 0.9; transform: scale(1); }
-  50%      { opacity: 0.2; transform: scale(1.15); }
+.quest-card.is-done .quest-card-art-inner {
+  background: var(--leaf);
+  border-color: color-mix(in oklab, var(--leaf) 60%, black);
+}
+.quest-card.is-perfect .quest-card-art-inner {
+  background: var(--coin);
+  border-color: color-mix(in oklab, var(--coin) 60%, black);
+}
+.quest-card.is-boss .quest-card-art-inner {
+  background: var(--color-primary);
+  border-color: color-mix(in oklab, var(--color-primary) 60%, black);
+}
+.quest-card.is-locked .quest-card-art-inner {
+  background: color-mix(in oklab, #8a8a8a 30%, white);
+  border-color: #a0a0a0;
 }
 
-.lesson-node-sparkle {
-  position: absolute; top: -6px; right: -6px;
-  width: 14px; height: 14px;
+.quest-card-emoji {
+  width: 38px; height: 38px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.quest-card-status-chip {
+  min-width: 74px;
+  padding: 0.25rem 0.45rem;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, white 82%, var(--color-card));
+  box-shadow: 2px 2px 0 color-mix(in oklab, var(--color-border) 30%, transparent);
+  font-family: var(--font-pixel);
+  font-size: 0.43rem;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.quest-card.is-current .quest-card-status-chip {
+  background: color-mix(in oklab, var(--coin) 24%, white);
+  color: color-mix(in oklab, var(--coin) 50%, var(--foreground));
+}
+.quest-card.is-done .quest-card-status-chip {
+  background: color-mix(in oklab, var(--leaf) 24%, white);
+  color: color-mix(in oklab, var(--leaf) 52%, var(--foreground));
+}
+
+/* Shield completion badge */
+.quest-card-shield {
+  display: grid; place-items: center;
+  width: 32px; height: 32px;
+  border: 3px solid color-mix(in oklab, var(--leaf) 50%, black);
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--leaf) 0%, color-mix(in oklab, var(--leaf) 70%, green) 100%);
+  box-shadow: inset 0 -2px 0 color-mix(in oklab, var(--leaf) 50%, black);
+}
+.quest-card-shield-check {
+  color: white;
+  font-family: var(--font-pixel);
+  font-size: 1rem;
+  font-weight: 900;
+  text-shadow: 1px 1px 0 color-mix(in oklab, var(--leaf) 50%, black);
+}
+
+/* Locked icon + vines */
+.quest-card-locked-icon {
+  display: grid; place-items: center;
+  color: #a0a0a0;
+}
+.quest-card-vine {
+  position: absolute;
+  width: 12px; height: 2px;
+  background: color-mix(in oklab, var(--leaf) 30%, transparent);
+  border-radius: 1px;
+  top: 70%; left: 10%;
+  transform: rotate(-30deg);
+}
+.quest-card-vine-2 {
+  top: 60%; left: 65%;
+  transform: rotate(25deg);
+}
+
+/* Floating sparkles on current quest */
+.quest-card-sparkle {
+  position: absolute;
+  width: 8px; height: 8px;
   background: var(--coin);
   clip-path: polygon(50% 0%,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0% 50%,40% 40%);
-  animation: lesson-sparkle 1.8s ease-in-out infinite;
+  animation: quest-sparkle-float 2.2s ease-in-out infinite;
+  pointer-events: none;
+  top: -4px; right: -4px;
 }
-@keyframes lesson-sparkle {
-  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  50%      { transform: scale(1.4) rotate(45deg); opacity: 0.6; }
+.quest-card-sparkle-2 {
+  top: 20%; left: -6px;
+  width: 6px; height: 6px;
+  animation-delay: -0.7s;
+}
+.quest-card-sparkle-3 {
+  bottom: 20%; right: -5px;
+  width: 7px; height: 7px;
+  animation-delay: -1.4s;
+}
+@keyframes quest-sparkle-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+  50%      { transform: translateY(-6px) scale(1.3); opacity: 0.4; }
 }
 
-.lesson-node-body { min-width: 0; }
-.lesson-node-titlerow {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 0.5rem; flex-wrap: wrap;
+/* ---- Quest Card - Body ---- */
+.quest-card-body {
+  min-width: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 0.1rem;
 }
-.lesson-node-title {
+.quest-card-title-row {
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.quest-card-title {
   font-family: var(--font-pixel);
-  font-size: 0.72rem;
+  font-size: clamp(0.78rem, 1.35vw, 0.96rem);
   line-height: 1.25;
   display: inline-flex; align-items: center; gap: 0.4rem;
 }
-.lesson-node-boss-tag {
+.quest-card:hover .quest-card-title {
+  color: var(--color-primary);
+}
+.quest-card-boss-tag {
   padding: 0.15rem 0.4rem;
   border: 2px solid var(--color-border);
   border-radius: 6px;
@@ -4812,89 +5519,231 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
   font-size: 0.45rem;
   letter-spacing: 0.08em;
 }
-.lesson-node-meta {
-  margin-top: 0.35rem;
-  display: flex; flex-wrap: wrap; align-items: center;
-  gap: 0.35rem;
+
+.quest-card-desc {
+  margin-top: 0.55rem;
   font-family: var(--font-pixel);
-  font-size: 0.5rem;
+  font-size: clamp(0.52rem, 1vw, 0.62rem);
+  color: var(--muted-foreground);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.quest-card-meta {
+  margin-top: 0.65rem;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.42rem;
+  font-family: var(--font-pixel);
+  font-size: 0.54rem;
   color: var(--muted-foreground);
 }
-.lesson-node-meta-sep { opacity: 0.5; }
-.lesson-node-best { color: var(--leaf); }
-.lesson-node-diff { font-weight: 700; }
+.quest-card-meta-sep { opacity: 0.5; }
+.quest-card-best { color: var(--leaf); }
+.quest-card-diff { font-weight: 700; }
 
-.lesson-node-rewards {
-  margin-top: 0.5rem;
-  display: flex; flex-wrap: wrap; gap: 0.35rem;
+/* ---- Reward Badges ---- */
+.quest-card-rewards {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(92px, 1fr));
+  gap: 0.55rem;
+  max-width: 420px;
 }
-.lesson-reward-chip {
-  padding: 0.2rem 0.45rem;
+.quest-reward-badge {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "icon value"
+    "icon label";
+  align-items: center;
+  gap: 0.1rem 0.45rem;
+  min-height: 56px;
+  padding: 0.45rem 0.55rem;
   border: 2px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--coin) 12%, transparent), transparent 70%),
+    color-mix(in oklab, white 84%, var(--color-muted));
+  box-shadow: 2px 2px 0 0 var(--color-border);
   font-family: var(--font-pixel);
-  font-size: 0.5rem;
-  background: color-mix(in oklab, white 82%, var(--color-muted));
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
-.lesson-reward-chip.is-xp   { background: color-mix(in oklab, var(--color-primary) 22%, white); }
-.lesson-reward-chip.is-coin { background: color-mix(in oklab, var(--coin) 28%, white); }
-.lesson-reward-chip.is-pet  { background: color-mix(in oklab, var(--leaf) 24%, white); }
+.quest-reward-badge.is-collected {
+  filter: saturate(0.72);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--leaf) 12%, transparent), transparent 70%),
+    color-mix(in oklab, white 78%, var(--color-muted));
+}
+.quest-reward-icon {
+  grid-area: icon;
+  width: 24px; height: 24px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+.quest-reward-value {
+  grid-area: value;
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 0.9;
+  color: color-mix(in oklab, var(--coin) 76%, var(--foreground));
+}
+.quest-reward-label {
+  grid-area: label;
+  color: var(--muted-foreground);
+  font-size: 0.42rem;
+  text-transform: uppercase;
+}
+.quest-card:hover .quest-reward-badge {
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 0 0 var(--color-border);
+}
 
-.lesson-node-action {
-  width: 36px; height: 36px;
-  display: grid; place-items: center;
-  border: 2px solid var(--color-border);
-  border-radius: 10px;
-  background: color-mix(in oklab, white 78%, var(--color-muted));
+.quest-card-claimed {
+  width: fit-content;
+  margin-top: 0.9rem;
+  padding: 0.45rem 0.7rem;
+  border: 2px solid color-mix(in oklab, var(--leaf) 58%, var(--color-border));
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--leaf) 18%, white);
+  box-shadow: 2px 2px 0 color-mix(in oklab, var(--color-border) 28%, transparent);
+  font-family: var(--font-pixel);
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--leaf) 52%, var(--foreground));
+}
+.quest-card-claimed::before {
+  content: "✓ ";
+}
+
+/* ---- Quest Card - Side ---- */
+.quest-card-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
   flex-shrink: 0;
+  z-index: 1;
+  min-width: 0;
+}
+.quest-card-action {
+  min-width: 132px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: color-mix(in oklab, white 78%, var(--color-muted));
+  box-shadow: 2px 2px 0 0 var(--color-border);
+  font-family: var(--font-pixel);
+  font-size: 0.54rem;
+  line-height: 1;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+}
+.quest-card-action.is-done {
+  background: color-mix(in oklab, var(--leaf) 20%, white);
+  border-color: var(--leaf);
+  color: color-mix(in oklab, var(--leaf) 62%, var(--foreground));
+}
+.quest-card-action.is-locked {
+  color: var(--muted-foreground);
+}
+.quest-card-play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%; height: 100%;
+  color: var(--coin);
+}
+.quest-card:not(:disabled):hover .quest-card-play-btn {
+  animation: play-btn-bounce 0.6s ease-in-out infinite;
 }
 
-/* Big stars */
-.lesson-big-stars {
+.quest-card-completion-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 30px;
+  padding: 0.3rem 0.55rem;
+  border: 2px solid #6b3f25;
+  border-radius: 9px;
+  background:
+    linear-gradient(180deg, #b87845, #7b4b2e);
+  box-shadow: 2px 2px 0 color-mix(in oklab, var(--color-border) 28%, transparent);
+  font-family: var(--font-pixel);
+  font-size: 0.46rem;
+  text-transform: uppercase;
+  color: #fff2c8;
+}
+@keyframes play-btn-bounce {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.2); }
+}
+
+/* ---- Big Stars (used in cards + detail modal) ---- */
+.quest-big-stars {
   display: inline-flex; align-items: center; gap: 0.15rem;
   filter: drop-shadow(1px 1px 0 var(--color-border));
 }
-.lesson-big-star.is-empty { color: color-mix(in oklab, var(--muted-foreground) 60%, transparent); }
-.lesson-big-star.is-filled { color: var(--coin); }
-.lesson-big-star.is-golden {
-  color: #f7c948;
-  filter: drop-shadow(0 0 4px color-mix(in oklab, var(--coin) 80%, transparent));
-  animation: star-shine 2.4s ease-in-out infinite;
+.quest-big-star {
+  image-rendering: pixelated;
+  object-fit: contain;
 }
-@keyframes star-shine {
+.quest-big-star.is-empty {
+  filter: grayscale(1) opacity(0.35);
+}
+.quest-big-star.is-filled {
+  filter: none;
+}
+.quest-big-star.is-golden {
+  filter: brightness(1.15) drop-shadow(0 0 4px color-mix(in oklab, var(--coin) 75%, transparent));
+  animation: quest-star-shine 2.4s ease-in-out infinite;
+}
+@keyframes quest-star-shine {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.12); }
 }
 
-/* Chest reward node between lessons */
-.lesson-chest-node {
-  align-self: center;
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  margin: 0.15rem auto;
-  padding: 0.35rem 0.7rem;
-  border: 2px dashed var(--color-border);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--coin) 20%, white);
-  font-family: var(--font-pixel);
-  font-size: 0.5rem;
-  color: var(--ink);
-}
-.lesson-chest-node.is-glow {
-  border-style: solid;
-  background: color-mix(in oklab, var(--coin) 40%, white);
-  animation: chest-glow 2.4s ease-in-out infinite;
-}
-@keyframes chest-glow {
-  0%,100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--coin) 50%, transparent); }
-  50%     { box-shadow: 0 0 14px 2px color-mix(in oklab, var(--coin) 60%, transparent); }
-}
-
 /* Mobile */
-@container (max-width: 520px) {
-  .lesson-node-card { grid-template-columns: auto minmax(0,1fr); gap: 0.6rem; }
-  .lesson-node-action { display: none; }
-  .lesson-node-emblem { width: 44px; height: 44px; font-size: 1.2rem; }
-  .unit-chapter-title { font-size: 1.2rem; }
+@media (max-width: 640px) {
+  .quest-card {
+    grid-template-columns: 1fr;
+    padding: 0.85rem;
+  }
+  .quest-card-art {
+    grid-template-columns: auto auto;
+    justify-content: start;
+    min-height: auto;
+  }
+  .quest-card-side {
+    align-items: stretch;
+  }
+  .quest-card-rewards {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+  .quest-card-action {
+    width: 100%;
+  }
+  .quest-adventure-path {
+    padding: 0.15rem 0.75rem 0.35rem;
+  }
+  .quest-path-node {
+    width: 26px; height: 26px;
+  }
+  .quest-chapter-title {
+    font-size: 1.2rem;
+  }
 }
 
 /* ============================================================
