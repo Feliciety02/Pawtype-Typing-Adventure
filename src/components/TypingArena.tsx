@@ -305,7 +305,7 @@ export function TypingArena({
     });
   }, [mistakeChars]);
 
-  const reset = useCallback((newDuration?: (typeof DURATIONS)[number], drillWords?: string[]) => {
+  const reset = useCallback((_newDuration?: (typeof DURATIONS)[number], drillWords?: string[]) => {
     const base = drillWords
       ?? (customWords && customWords.length ? customWords : (generatedText ? makeWordsFrom(generatedText) : makeWords()));
     setWords(base);
@@ -323,7 +323,6 @@ export function TypingArena({
     setBestCombo(0);
     setMood("idle");
     setKeystrokes([]);
-    if (newDuration) setDuration(newDuration);
     setTimeout(() => inputRef.current?.focus(), 0);
   }, [generatedText, customWords]);
 

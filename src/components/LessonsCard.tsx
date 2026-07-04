@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, ChevronRight, Lock, Play, Star } from "lucide-react";
+import { ChevronDown, ChevronRight, Lock, Play, Star, Crown, Gift, Swords, Sparkles } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
 import {
   UNITS,
@@ -20,6 +20,16 @@ import {
 import { TypingArena } from "./TypingArena";
 import { ModalShell, PixelButton } from "./modals/ModalShell";
 import { useGame } from "../lib/game/store";
+import {
+  getUnclaimedMilestones,
+  queuePendingEgg,
+  loadPendingEggs,
+  milestoneForIndex,
+  progressTowardNextEgg,
+  LESSONS_PER_EGG,
+  type EggMilestone,
+} from "../lib/game/eggs";
+import { EggHatchModal } from "./EggHatchModal";
 
 const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string }> = {
   beginner:     { label: "Beginner",     color: "var(--leaf)" },
@@ -30,28 +40,67 @@ const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string 
   master:       { label: "Master",       color: "var(--color-destructive)" },
 };
 
+// Big star row (used on lesson cards + detail modal)
+function BigStars({ count, size = 22 }: { count: 0 | 1 | 2 | 3; size?: number }) {
+  return (
+    <div className="lesson-big-stars" aria-label={`${count} of 3 stars`}>
+      {[0, 1, 2].map((i) => {
+        const filled = i < count;
+        const golden = count === 3;
+        return (
+          <Star
+            key={i}
+            size={size}
+            className={`lesson-big-star ${filled ? "is-filled" : "is-empty"} ${golden && filled ? "is-golden" : ""}`}
+            strokeWidth={2.5}
+            fill={filled ? "currentColor" : "none"}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export function LessonsCard() {
   const { dispatch } = useGame();
   const [completed, setCompleted] = useState<Set<string>>(() => loadCompletedLessons());
   const [openUnits, setOpenUnits] = useState<Set<string>>(() => new Set([UNITS[0].id]));
   const [detail, setDetail] = useState<{ unit: Unit; lesson: Lesson } | null>(null);
   const [typing, setTyping] = useState<{ unit: Unit; lesson: Lesson } | null>(null);
+  const [activeEgg, setActiveEgg] = useState<EggMilestone | null>(null);
 
   useEffect(() => {
     const refresh = () => setCompleted(loadCompletedLessons());
     window.addEventListener("pawtype-lesson-completed", refresh);
+    window.addEventListener("pawtype-egg-claimed", refresh);
     window.addEventListener("storage", refresh);
     return () => {
       window.removeEventListener("pawtype-lesson-completed", refresh);
+      window.removeEventListener("pawtype-egg-claimed", refresh);
       window.removeEventListener("storage", refresh);
     };
   }, []);
+
+  // Check for any pending/unclaimed eggs on mount and after completion
+  useEffect(() => {
+    if (activeEgg) return;
+    const unclaimed = getUnclaimedMilestones(completed.size);
+    if (unclaimed.length === 0) return;
+    // queue extras, present the first
+    unclaimed.forEach((m) => queuePendingEgg(m.index));
+    const pending = [...loadPendingEggs()].sort((a, b) => a - b);
+    if (pending.length > 0) {
+      setActiveEgg(milestoneForIndex(pending[0]));
+    }
+  }, [completed, activeEgg]);
 
   const totals = useMemo(() => {
     const total = UNITS.reduce((n, u) => n + u.lessons.length, 0);
     const done = UNITS.reduce((n, u) => n + u.lessons.filter((l) => completed.has(l.id)).length, 0);
     return { done, total };
   }, [completed]);
+
+  const eggProgress = useMemo(() => progressTowardNextEgg(totals.done), [totals.done]);
 
   const toggleUnit = (id: string) => {
     setOpenUnits((prev) => {
@@ -64,14 +113,23 @@ export function LessonsCard() {
 
   const handleFinish = useCallback((wpm: number, accuracy: number) => {
     if (!typing) return;
+    const wasCompleted = completed.has(typing.lesson.id);
     markLessonCompleted(typing.lesson.id);
     saveLessonStats(typing.lesson.id, wpm, accuracy);
     const rewards = lessonRewards(typing.lesson.difficulty, typing.lesson.words.length);
     dispatch({ type: "ADD_XP", amount: rewards.xp });
     dispatch({ type: "EARN_COINS", amount: rewards.coins });
     dispatch({ type: "ADD_PET_XP", amount: rewards.petExp });
+
+    // Check milestone (only on first-time completion)
+    if (!wasCompleted) {
+      const newCount = completed.size + 1;
+      if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
+        queuePendingEgg(newCount / LESSONS_PER_EGG);
+      }
+    }
     setCompleted(loadCompletedLessons());
-  }, [typing, dispatch]);
+  }, [typing, dispatch, completed]);
 
   const closeTyping = () => setTyping(null);
 
@@ -94,167 +152,183 @@ export function LessonsCard() {
   const lessonDetail = detail?.lesson;
   const lessonUnit = detail?.unit;
 
+  // Find "current" lesson (first unlocked, incomplete lesson) for pulse
+  const currentLessonId = useMemo(() => {
+    for (const u of UNITS) {
+      if (!isUnitUnlocked(u.number, completed)) continue;
+      for (let i = 0; i < u.lessons.length; i++) {
+        const l = u.lessons[i];
+        if (!completed.has(l.id) && isLessonUnlocked(u, i, completed)) return l.id;
+      }
+    }
+    return null;
+  }, [completed]);
+
   return (
-    <div className="pixel-card p-5">
+    <div className="pixel-card p-5 lessons-card-root">
       <SectionHeader
         title="Curriculum"
         subtitle={`A guided path from home row to graduation - ${totals.done}/${totals.total} lessons complete`}
       />
 
-      <div className="flex flex-col gap-4 mt-2">
-        {UNITS.map((unit, uIdx) => {
+      {/* Egg milestone progress banner */}
+      <div className="lesson-milestone-banner">
+        <div className="lesson-milestone-icon" aria-hidden="true">🥚</div>
+        <div className="lesson-milestone-body">
+          <div className="lesson-milestone-title">
+            Egg #{eggProgress.nextIndex} · {eggProgress.progress}/{eggProgress.total} lessons
+          </div>
+          <div className="lesson-milestone-bar">
+            <div
+              className="lesson-milestone-fill"
+              style={{ width: `${(eggProgress.progress / eggProgress.total) * 100}%` }}
+            />
+          </div>
+        </div>
+        <div className="lesson-milestone-hint">Every 10 lessons = 1 pet egg</div>
+      </div>
+
+      <div className="flex flex-col gap-4 mt-4">
+        {UNITS.map((unit) => {
           const open = openUnits.has(unit.id);
           const prog = unitProgress(unit, completed);
           const unlocked = isUnitUnlocked(unit.number, completed);
           const isDone = prog.done === prog.total;
 
           return (
-            <div key={unit.id} className="pixel-card-sm overflow-hidden">
+            <div key={unit.id} className={`unit-chapter-card ${isDone ? "is-done" : ""} ${!unlocked ? "is-locked" : ""}`}>
               <button
                 type="button"
                 onClick={() => unlocked && toggleUnit(unit.id)}
-                className="w-full flex items-center gap-3 p-3 text-left"
-                style={{ opacity: unlocked ? 1 : 0.5, cursor: unlocked ? "pointer" : "not-allowed" }}
+                className="unit-chapter-head"
                 aria-expanded={open}
+                disabled={!unlocked}
               >
-                <div
-                  className="grid place-items-center text-xl shrink-0"
-                  style={{
-                    width: 44, height: 44,
-                    background: unlocked ? "color-mix(in oklab, var(--color-muted) 60%, transparent)" : "var(--color-muted)",
-                    border: "2px solid var(--color-border)",
-                    borderRadius: 8,
-                  }}
-                >
-                  {unlocked ? unit.emoji : <Lock size={16} />}
+                <div className="unit-chapter-emblem">
+                  {unlocked ? <span>{unit.emoji}</span> : <Lock size={18} />}
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div className="font-pixel text-sm truncate">
-                    Unit {unit.number} - {unit.title}
-                    {isDone && <span className="ml-2" style={{ color: "var(--leaf)" }}>DONE</span>}
+                <div className="unit-chapter-body">
+                  <div className="unit-chapter-eyebrow">
+                    Chapter {unit.number}
+                    {isDone && (
+                      <span className="unit-chapter-done-chip">
+                        <Crown size={10} /> Cleared
+                      </span>
+                    )}
                   </div>
-                  <div className="font-pixel text-[0.55rem] text-muted-foreground mt-1">{unit.purpose}</div>
-                  {/* progress bar */}
-                  <div
-                    className="mt-1.5"
-                    style={{
-                      height: 6,
-                      background: "var(--color-muted)",
-                      borderRadius: 999,
-                      maxWidth: 160,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${prog.total > 0 ? (prog.done / prog.total) * 100 : 0}%`,
-                        height: "100%",
-                        background: isDone ? "var(--leaf)" : "var(--coin)",
-                        borderRadius: 999,
-                        transition: "width 0.3s",
-                      }}
-                    />
+                  <div className="unit-chapter-title">{unit.title}</div>
+                  <div className="unit-chapter-purpose">{unit.purpose}</div>
+                  <div className="unit-chapter-progress">
+                    <div className="unit-chapter-bar">
+                      <div
+                        className="unit-chapter-fill"
+                        style={{ width: `${prog.total ? (prog.done / prog.total) * 100 : 0}%` }}
+                      />
+                    </div>
+                    <span className="unit-chapter-count">{prog.done}/{prog.total}</span>
                   </div>
                 </div>
-                <div className="font-pixel text-[0.6rem] shrink-0" style={{ color: "var(--muted-foreground)" }}>
-                  {prog.done}/{prog.total}
+                <div className="unit-chapter-caret" aria-hidden="true">
+                  {open ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                 </div>
-                {open ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
               </button>
 
               {open && unlocked && (
-                <div className="px-3 pb-3">
-                  {/* vertical lesson path */}
-                  <div className="relative flex flex-col items-center">
-                    {/* vertical connector line */}
-                    <div
-                      className="absolute"
-                      style={{
-                        top: 0, bottom: 0, width: 3,
-                        background: "color-mix(in oklab, var(--color-border) 30%, transparent)",
-                        borderRadius: 999,
-                      }}
-                    />
-                    {unit.lessons.map((lesson, lIdx) => {
-                      const done = completed.has(lesson.id);
-                      const unlocked = isLessonUnlocked(unit, lIdx, completed);
-                      const stats = loadLessonStats()[lesson.id];
+                <div className="unit-lesson-list">
+                  {unit.lessons.map((lesson, lIdx) => {
+                    const done = completed.has(lesson.id);
+                    const unlockedL = isLessonUnlocked(unit, lIdx, completed);
+                    const stats = loadLessonStats()[lesson.id];
+                    const stars = (stats
+                      ? lessonStars(stats.bestAccuracy, lesson.targetAccuracy)
+                      : 0) as 0 | 1 | 2 | 3;
+                    const isCurrent = lesson.id === currentLessonId;
+                    const rewards = lessonRewards(lesson.difficulty, lesson.words.length);
+                    const isBoss = lIdx === unit.lessons.length - 1;
+                    const showChestAfter = (lIdx + 1) % 5 === 0 && lIdx !== unit.lessons.length - 1;
 
-                      return (
+                    return (
+                      <div key={lesson.id} className="lesson-node-row">
                         <button
-                          key={lesson.id}
                           type="button"
-                          onClick={() => unlocked && setDetail({ unit, lesson })}
-                          disabled={!unlocked}
-                          className="relative flex items-center gap-3 w-full text-left py-2 px-3"
-                          style={{
-                            cursor: unlocked ? "pointer" : "not-allowed",
-                            opacity: unlocked ? 1 : 0.45,
-                          }}
+                          onClick={() => unlockedL && setDetail({ unit, lesson })}
+                          disabled={!unlockedL}
+                          className={[
+                            "lesson-node-card",
+                            done ? "is-done" : "",
+                            !unlockedL ? "is-locked" : "",
+                            isCurrent ? "is-current" : "",
+                            isBoss ? "is-boss" : "",
+                            stars === 3 ? "is-perfect" : "",
+                          ].join(" ").trim()}
                         >
-                          {/* node circle */}
-                          <div
-                            className="shrink-0 grid place-items-center"
-                            style={{
-                              width: 38, height: 38, borderRadius: "50%",
-                              border: `3px solid ${
-                                done ? "var(--leaf)" : unlocked ? "var(--coin)" : "var(--color-border)"
-                              }`,
-                              background: done
-                                ? "var(--leaf)"
-                                : unlocked
-                                  ? "color-mix(in oklab, var(--coin) 12%, transparent)"
-                                  : "var(--color-muted)",
-                              color: done ? "white" : "var(--muted-foreground)",
-                              zIndex: 1,
-                              transition: "background 0.2s, border-color 0.2s",
-                            }}
-                          >
+                          <div className="lesson-node-emblem">
                             {done ? (
-                              <span className="font-pixel text-[0.55rem] font-bold">OK</span>
-                            ) : unlocked ? (
-                              <span className="text-base">{lesson.emoji}</span>
+                              <span className="lesson-node-check">✓</span>
+                            ) : !unlockedL ? (
+                              <Lock size={18} />
+                            ) : isBoss ? (
+                              <Swords size={20} />
                             ) : (
-                              <Lock size={12} />
+                              <span>{lesson.emoji}</span>
                             )}
+                            {isCurrent && !done && <span className="lesson-node-pulse" aria-hidden="true" />}
+                            {done && <span className="lesson-node-sparkle" aria-hidden="true" />}
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="font-pixel text-[0.7rem] truncate">{lesson.title}</div>
-                            <div className="flex items-center gap-2 mt-0.5">
+
+                          <div className="lesson-node-body">
+                            <div className="lesson-node-titlerow">
+                              <div className="lesson-node-title">
+                                {isBoss && <span className="lesson-node-boss-tag">BOSS</span>}
+                                {lesson.title}
+                              </div>
+                              {unlockedL && <BigStars count={stars} />}
+                            </div>
+                            <div className="lesson-node-meta">
                               <span
-                                className="font-pixel text-[0.5rem]"
+                                className="lesson-node-diff"
                                 style={{ color: DIFFICULTY_LABEL[lesson.difficulty].color }}
                               >
                                 {DIFFICULTY_LABEL[lesson.difficulty].label}
                               </span>
+                              <span className="lesson-node-meta-sep">·</span>
+                              <span>{lesson.targetWpm} WPM</span>
+                              <span className="lesson-node-meta-sep">·</span>
+                              <span>{lesson.targetAccuracy}% ACC</span>
                               {stats && (
-                                <span className="font-pixel text-[0.5rem] text-muted-foreground">
-                                  Best: {stats.bestWpm} WPM - {stats.bestAccuracy}%
-                                </span>
+                                <>
+                                  <span className="lesson-node-meta-sep">·</span>
+                                  <span className="lesson-node-best">Best {stats.bestWpm} / {stats.bestAccuracy}%</span>
+                                </>
                               )}
                             </div>
+                            <div className="lesson-node-rewards">
+                              <span className="lesson-reward-chip is-xp">+{rewards.xp} XP</span>
+                              <span className="lesson-reward-chip is-coin">+{rewards.coins} 🪙</span>
+                              <span className="lesson-reward-chip is-pet">+{rewards.petExp} PET</span>
+                            </div>
                           </div>
-                          <div className="shrink-0">
+
+                          <div className="lesson-node-action" aria-hidden="true">
                             {done ? (
-                              <span className="font-pixel text-[0.6rem]" style={{ color: "var(--leaf)" }}>
-                                {Array.from({ length: 3 }, (_, i) => {
-                                  const stars = lessonStars(
-                                    loadLessonStats()[lesson.id]?.bestAccuracy ?? 0,
-                                    lesson.targetAccuracy
-                                  );
-                                  return i < stars ? "*" : ".";
-                                }).join("")}
-                              </span>
-                            ) : unlocked ? (
-                              <Play size={14} className="shrink-0" style={{ color: "var(--coin)" }} />
+                              <Sparkles size={18} style={{ color: "var(--leaf)" }} />
+                            ) : unlockedL ? (
+                              <Play size={20} style={{ color: "var(--coin)" }} />
                             ) : (
-                              <Lock size={12} className="shrink-0" style={{ color: "var(--muted-foreground)" }} />
+                              <Lock size={16} style={{ color: "var(--muted-foreground)" }} />
                             )}
                           </div>
                         </button>
-                      );
-                    })}
-                  </div>
+
+                        {showChestAfter && (
+                          <div className={`lesson-chest-node ${done ? "is-glow" : ""}`} aria-hidden="true">
+                            <Gift size={16} />
+                            <span>Mini-reward · streak bonus</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -263,7 +337,7 @@ export function LessonsCard() {
       </div>
 
       {/* Lesson detail modal */}
-            {detail && lessonDetail && (
+      {detail && lessonDetail && lessonUnit && (
         <ModalShell
           ariaLabel="Lesson details"
           onClose={() => setDetail(null)}
@@ -279,6 +353,11 @@ export function LessonsCard() {
               >
                 {DIFFICULTY_LABEL[lessonDetail.difficulty].label}
               </div>
+              {(() => {
+                const stats = loadLessonStats()[lessonDetail.id];
+                const stars = (stats ? lessonStars(stats.bestAccuracy, lessonDetail.targetAccuracy) : 0) as 0 | 1 | 2 | 3;
+                return <div className="mt-2"><BigStars count={stars} size={26} /></div>;
+              })()}
               {lessonDetail.note ? <p className="lesson-detail-note">{lessonDetail.note}</p> : null}
             </div>
 
@@ -296,15 +375,11 @@ export function LessonsCard() {
             {(() => {
               const stats = loadLessonStats()[lessonDetail.id];
               if (!stats) return null;
-              const stars = lessonStars(stats.bestAccuracy, lessonDetail.targetAccuracy);
               return (
                 <div className="lesson-detail-best">
                   <div className="lesson-detail-best-label">Best Performance</div>
                   <div className="lesson-detail-best-row">
                     <span>{stats.bestWpm} WPM - {stats.bestAccuracy}%</span>
-                    <span className="lesson-detail-stars">
-                      {Array.from({ length: 3 }, (_, i) => (i < stars ? "*" : ".")).join("")}
-                    </span>
                   </div>
                 </div>
               );
@@ -335,7 +410,7 @@ export function LessonsCard() {
               className="w-full"
               icon={<Play size={16} />}
               onClick={() => {
-                setTyping({ unit: lessonUnit!, lesson: lessonDetail });
+                setTyping({ unit: lessonUnit, lesson: lessonDetail });
                 setDetail(null);
               }}
             >
@@ -343,6 +418,18 @@ export function LessonsCard() {
             </PixelButton>
           </div>
         </ModalShell>
+      )}
+
+      {/* Egg hatching modal */}
+      {activeEgg && (
+        <EggHatchModal
+          milestone={activeEgg}
+          onClose={() => {
+            const pending = [...loadPendingEggs()].sort((a, b) => a - b);
+            const next = pending.find((i) => i !== activeEgg.index);
+            setActiveEgg(next ? milestoneForIndex(next) : null);
+          }}
+        />
       )}
 
       {/* Full-screen typing overlay */}

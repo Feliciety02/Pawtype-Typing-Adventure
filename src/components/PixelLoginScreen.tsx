@@ -80,14 +80,42 @@ export function PixelLoginScreen() {
         <span className="pixel-login-sun" />
         <span className="pixel-login-hill pixel-login-hill-far" />
         <span className="pixel-login-hill pixel-login-hill-near" />
+        {/* twinkling stars */}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <span
+            key={`twinkle-${i}`}
+            className="pixel-login-twinkle"
+            style={{
+              left: `${(i * 83) % 100}%`,
+              top: `${(i * 37) % 60}%`,
+              animationDelay: `${(i * 0.35) % 2.5}s`,
+            }}
+          />
+        ))}
+        {/* floating paw prints */}
+        {Array.from({ length: 6 }).map((_, i) => (
+          <span
+            key={`paw-${i}`}
+            className="pixel-login-paw"
+            style={{
+              left: `${5 + i * 16}%`,
+              animationDelay: `${i * 1.4}s`,
+              animationDuration: `${9 + (i % 3)}s`,
+            }}
+            aria-hidden="true"
+          >
+            🐾
+          </span>
+        ))}
       </div>
 
       <div className="pixel-login-layout">
         <div className="pixel-login-hero">
           <span className="pixel-login-badge">Press Start To Type</span>
           <h1>Pawtype</h1>
+          <p className="pixel-login-tagline">A cozy pixel typing quest.</p>
           <p>
-            A cozy pixel typing world with quests, pets, and cloud-synced progress.
+            Level up your keys with quests, pets, and cloud-synced progress.
           </p>
           <div className="pixel-login-feature-grid">
             {FEATURE_CARDS.map((card) => (
@@ -105,7 +133,7 @@ export function PixelLoginScreen() {
           </div>
         </div>
 
-        <div className="pixel-login-panel">
+        <div className="pixel-login-panel pixel-login-panel-cozy">
           <div className="pixel-login-panel-head">
             <img src="/Logo.png" alt="Pawtype" className="pixel-login-logo" />
             <div>
