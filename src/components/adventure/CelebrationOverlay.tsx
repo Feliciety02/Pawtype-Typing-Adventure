@@ -97,6 +97,24 @@ const PARTICLE_MAP: Record<WorldId, ParticleConfig> = {
     glow: "rgba(176, 221, 255, 0.3)",
     dust: [".", "*", ":"],
   },
+  moonlit: {
+    glyphs: ["*", "+", "."],
+    confetti: ["#a7b8ff", "#d6dcff", "#7d8dd6", "#f0eaff"],
+    glow: "rgba(167, 184, 255, 0.3)",
+    dust: [".", "+", ":"],
+  },
+  rainy: {
+    glyphs: ["/", "|", "."],
+    confetti: ["#8ea8c4", "#c9d8e6", "#6b8aa8", "#e8f0f6"],
+    glow: "rgba(142, 168, 196, 0.3)",
+    dust: [".", ":", "/"],
+  },
+  snowy: {
+    glyphs: ["*", "+", "."],
+    confetti: ["#e6f2ff", "#c9dfff", "#a8c8ff", "#ffffff"],
+    glow: "rgba(230, 242, 255, 0.32)",
+    dust: [".", "*", "+"],
+  },
 };
 
 function randomBetween(min: number, max: number) {
