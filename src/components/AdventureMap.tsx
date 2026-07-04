@@ -1,9 +1,11 @@
 ﻿import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { useGame } from "../lib/game/store";
 import { generateAdventureWords, generateQuestText } from "../lib/game/textGenerator";
 import { precomputeGoals, getCachedGoals } from "../lib/game/ai/difficulty";
+import { ModalShell, PixelButton } from "./modals/ModalShell";
+import { CelebrationOverlay } from "./adventure/CelebrationOverlay";
+import { QuestResultsModal } from "./adventure/QuestResultsModal";
 
 type Difficulty = "Easy" | "Normal" | "Hard" | "Boss";
 
@@ -672,6 +674,7 @@ function StageRunner({
   onClose: () => void;
   onWin: () => void;
 }) {
+  const currentWorld = WORLDS.find((entry) => entry.id === world);
   const [targetWords, setTargetWords] = useState(() => expandWords(stage.words, 72));
   const [isGeneratingWords, setIsGeneratingWords] = useState(false);
   const target = useMemo(() => targetWords.join(" "), [targetWords]);
@@ -698,6 +701,7 @@ function StageRunner({
   const [bossIntro, setBossIntro] = useState(isBoss);
   const [questText, setQuestText] = useState<string | null>(null);
   const [winHandled, setWinHandled] = useState(false);
+  const [resultsOpen, setResultsOpen] = useState(false);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -721,6 +725,7 @@ function StageRunner({
     setBossIntro(isBoss);
     setIsGeneratingWords(false);
     setWinHandled(false);
+    setResultsOpen(false);
   }, [isBoss, stage.id, stage.words]);
 
   useEffect(() => {
@@ -787,6 +792,15 @@ function StageRunner({
     }
   }, [acc, done, elapsed, minAcc, onWin, stage.goal, startedAt, timeLimit, winHandled, wpm]);
 
+  useEffect(() => {
+    if (!done) {
+      setResultsOpen(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setResultsOpen(true), 280);
+    return () => window.clearTimeout(timer);
+  }, [done]);
+
   const reset = () => {
     setTyped("");
     setStartedAt(null);
@@ -797,11 +811,12 @@ function StageRunner({
     setTargetWords(expandWords(stage.words, 72));
     setIsGeneratingWords(false);
     setWinHandled(false);
+    setResultsOpen(false);
     setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (done || bossIntro) return;
+    if (done || bossIntro || resultsOpen) return;
     const next = event.target.value.slice(0, totalTarget);
 
     if (!startedAt && next.length > 0) {
@@ -820,146 +835,178 @@ function StageRunner({
   };
 
   if (bossIntro) {
-    return createPortal(
-      <div className="adventure-modal">
-        <div className="adventure-runner-card pixel-card animate-pixel-pop">
-          <div className="adventure-runner-header">
-            <span className="adventure-boss-emoji">{stage.emoji}</span>
-            <button className="pixel-btn pixel-btn-secondary adventure-close-btn" onClick={onClose} type="button">X</button>
-          </div>
-          <div className="font-display text-4xl leading-none mb-2">{stage.name}</div>
-          <p className="font-pixel text-[0.65rem] text-muted-foreground mb-4">{questText || "A boss stage appears. Type fast and stay accurate."}</p>
+    return (
+      <ModalShell
+        ariaLabel={`${stage.name} boss intro`}
+        onClose={onClose}
+        className="pixel-modal-shell-adventure"
+        frameClassName="pixel-modal-frame-adventure"
+      >
+        <div className="adventure-runner-card animate-pixel-pop">
+          <div className="adventure-boss-emoji">{stage.emoji}</div>
+          <div className="font-display text-4xl leading-none mb-2 text-center">{stage.name}</div>
+          <p className="font-pixel text-[0.65rem] text-muted-foreground mb-4 text-center">
+            {questText || "A boss stage appears. Type fast and stay accurate."}
+          </p>
           <div className="grid grid-cols-3 gap-3 mb-4">
             <MiniStat label="WPM" value={`>=${stage.goal}`} accent="var(--color-primary)" />
             <MiniStat label="Acc" value={`>=${minAcc}%`} accent="var(--leaf)" />
             <MiniStat label="Time" value={`<=${timeLimit}s`} accent="var(--coin)" />
           </div>
-          <button className="pixel-btn" onClick={() => { setBossIntro(false); inputRef.current?.focus(); }} type="button">
+          <PixelButton
+            variant="primary"
+            className="mx-auto min-w-[220px]"
+            onClick={() => {
+              setBossIntro(false);
+              inputRef.current?.focus();
+            }}
+          >
             Fight
-          </button>
+          </PixelButton>
         </div>
-      </div>
-    , document.body);
+      </ModalShell>
+    );
   }
 
-  return createPortal(
-    <div className="adventure-modal">
-      <div className="adventure-runner-card pixel-card animate-pixel-pop">
-        <div className="adventure-runner-header">
-          <div className="flex items-center gap-2">
-            <span className="text-3xl">{isBoss ? phaseEmojis[currentPhase] : stage.emoji}</span>
-            <div>
-              <div className="font-display text-2xl leading-none">{stage.name}</div>
-              <div className="font-pixel text-[0.6rem] text-muted-foreground mt-1">
-                {isBoss
-                  ? `Boss phase ${currentPhase + 1}/3 - ${timeLimit}s timer`
-                  : `Goal: ${stage.goal} WPM - ${minAcc}%+ accuracy - ${timeLimit}s timer`}
+  return (
+      <ModalShell
+        ariaLabel={`${stage.name} quest`}
+        onClose={onClose}
+        className="pixel-modal-shell-adventure"
+        frameClassName="pixel-modal-frame-adventure"
+      >
+      <div className="adventure-runner-scene">
+        <CelebrationOverlay
+          active={done !== null}
+          result={done}
+          world={world}
+          xp={xpReward}
+          coins={coinReward}
+        />
+        <div className={`adventure-runner-card animate-pixel-pop ${done ? `is-complete is-${done}` : ""}`}>
+          <div className="adventure-runner-header">
+            <div className="adventure-runner-heading">
+              <div className="adventure-runner-heading-top">
+                <span className="adventure-runner-chip">{isBoss ? "Boss Quest" : `${stage.difficulty} Quest`}</span>
+                {currentWorld ? (
+                  <span className="adventure-runner-chip is-muted">{currentWorld.name}</span>
+                ) : null}
+              </div>
+              <div className="adventure-runner-title-row">
+                <div>
+                  <div className="font-display text-2xl leading-none">{stage.name}</div>
+                  <div className="font-pixel text-[0.6rem] text-muted-foreground mt-1">
+                    {isBoss
+                      ? `Boss phase ${currentPhase + 1}/3 - ${timeLimit}s timer`
+                      : `Goal: ${stage.goal} WPM - ${minAcc}%+ accuracy - ${timeLimit}s timer`}
+                  </div>
+                </div>
               </div>
               {questText && (
-                <div className="font-pixel text-[0.55rem] text-muted-foreground mt-1 italic leading-tight">
+                <div className="adventure-runner-flavor">
                   {questText}
                 </div>
               )}
             </div>
           </div>
-          <button className="pixel-btn pixel-btn-secondary adventure-close-btn" onClick={onClose} type="button">X</button>
+
+          {isBoss && (
+            <div className="mb-4">
+              <div className="flex justify-between font-pixel text-[0.55rem] mb-1">
+                <span className="text-muted-foreground">Boss HP</span>
+                <span style={{ color: hpColor }}>{Math.round(bossHp)}%</span>
+              </div>
+              <div className="pixel-bar" style={{ height: 12 }}>
+                <div className="h-full transition-all duration-200" style={{ width: `${bossHp}%`, background: hpColor }} />
+              </div>
+            </div>
+          )}
+
+          <div className="adventure-type-wrap" onClick={() => inputRef.current?.focus()}>
+            <div className="adventure-type-progress" aria-hidden="true">
+              <div style={{ width: `${timePercent}%` }} />
+            </div>
+            <div className="adventure-typing-panel">
+              <div className="adventure-word-stream">
+                {visibleWords.map((entry) => {
+                  const wordState =
+                    typedLen > entry.end
+                      ? "complete"
+                      : typedLen >= entry.start && typedLen <= entry.end
+                        ? "current"
+                        : "pending";
+
+                  return (
+                    <span className={`adventure-word adventure-word-${wordState}`} key={`${entry.word}-${entry.start}`}>
+                      {entry.word.split("").map((char, charIndex) => {
+                        const index = entry.start + charIndex;
+                        const typedChar = typed[index];
+                        const state = typedChar == null ? "pending" : typedChar === char ? "correct" : "wrong";
+                        const isCursor = index === typedLen;
+                        return (
+                          <span className={`adventure-char adventure-char-${state} ${isCursor ? "adventure-char-current" : ""}`} key={`${char}-${index}`}>
+                            {char}
+                          </span>
+                        );
+                      })}
+                      {typedLen === entry.end && <span className="adventure-space-cursor" aria-hidden="true" />}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <input
+            ref={inputRef}
+            value={typed}
+            onChange={handleChange}
+            disabled={done !== null}
+            autoFocus
+            spellCheck={false}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            id="stage-input"
+            name="stage-input"
+            aria-label="Type the stage text"
+            className="absolute opacity-0 pointer-events-none"
+          />
         </div>
-
-        {isBoss && (
-          <div className="mb-4">
-            <div className="flex justify-between font-pixel text-[0.55rem] mb-1">
-              <span className="text-muted-foreground">Boss HP</span>
-              <span style={{ color: hpColor }}>{Math.round(bossHp)}%</span>
-            </div>
-            <div className="pixel-bar" style={{ height: 12 }}>
-              <div className="h-full transition-all duration-200" style={{ width: `${bossHp}%`, background: hpColor }} />
-            </div>
-          </div>
-        )}
-
-        <div className="adventure-type-wrap" onClick={() => inputRef.current?.focus()}>
-          <div className="adventure-type-progress" aria-hidden="true">
-            <div style={{ width: `${timePercent}%` }} />
-          </div>
-          <div className="adventure-typing-panel">
-            <div className="adventure-word-stream">
-              {visibleWords.map((entry) => {
-                const wordState =
-                  typedLen > entry.end
-                    ? "complete"
-                    : typedLen >= entry.start && typedLen <= entry.end
-                      ? "current"
-                      : "pending";
-
-                return (
-                  <span className={`adventure-word adventure-word-${wordState}`} key={`${entry.word}-${entry.start}`}>
-                    {entry.word.split("").map((char, charIndex) => {
-                      const index = entry.start + charIndex;
-                      const typedChar = typed[index];
-                      const state = typedChar == null ? "pending" : typedChar === char ? "correct" : "wrong";
-                      const isCursor = index === typedLen;
-                      return (
-                        <span className={`adventure-char adventure-char-${state} ${isCursor ? "adventure-char-current" : ""}`} key={`${char}-${index}`}>
-                          {char}
-                        </span>
-                      );
-                    })}
-                    {typedLen === entry.end && <span className="adventure-space-cursor" aria-hidden="true" />}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        <input
-          ref={inputRef}
-          value={typed}
-          onChange={handleChange}
-          autoFocus
-          spellCheck={false}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          id="stage-input"
-          name="stage-input"
-          aria-label="Type the stage text"
-          className="absolute opacity-0 pointer-events-none"
+        <QuestResultsModal
+          open={resultsOpen}
+          result={done}
+          stageName={stage.name}
+          goal={stage.goal}
+          minAccuracy={minAcc}
+          wpm={wpm}
+          accuracy={acc}
+          elapsedSeconds={elapsed}
+          xp={xpReward}
+          coins={coinReward}
+          alreadyCompleted={alreadyCompleted}
+          message={
+            done === "win"
+              ? alreadyCompleted
+                ? "You cleared it again. Replay clears stay rewarding, but they do not add extra XP or coins."
+                : "Clean work. The next stretch of the path is now unlocked."
+              : `You need ${stage.goal} WPM and ${minAcc}% accuracy before time runs out.`
+          }
+          coachTip={
+            done === "win"
+              ? acc >= 95
+                ? "Your rhythm stayed clean. Keep that same cadence into the next quest."
+                : "You had the speed. Trim a few misses and this route gets much safer."
+              : wpm < stage.goal
+                ? "You need a little more speed here. Focus on smooth bursts before chasing the timer."
+                : "Your speed was close enough. Slow down slightly and land cleaner inputs."
+          }
+          onReplay={reset}
+          onDismiss={onClose}
         />
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-          <MiniStat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
-          <MiniStat label="Acc" value={`${acc}%`} accent="var(--leaf)" />
-          <MiniStat label="Time" value={`${timeRemaining}s`} accent="var(--coin)" />
-          <MiniStat label="Goal" value={`${stage.goal}`} accent="var(--color-destructive)" />
-        </div>
-
-        {done && (
-          <div className="adventure-result pixel-card-sm">
-            <div className="text-4xl mb-2">{done === "win" ? "ðŸ†" : "ðŸ’”"}</div>
-            <div className="font-display text-2xl leading-none mb-1">
-              {done === "win" ? "Stage Cleared!" : "Try Again"}
-            </div>
-            <p className="font-pixel text-[0.65rem] text-muted-foreground mb-3">
-              {done === "win"
-                ? alreadyCompleted
-                  ? "Replay clear only. No extra XP or coins for completed quests."
-                  : `+${xpReward} XP - +${coinReward} coins`
-                : `Need ${stage.goal} WPM and ${minAcc}% accuracy before time runs out.`}
-            </p>
-            <div className="flex justify-center gap-2">
-              <button className="pixel-btn" onClick={reset} type="button">{done === "win" ? "Replay" : "Retry"}</button>
-            </div>
-            {done === "win" && (
-              <p className="font-pixel text-[0.55rem] text-muted-foreground mt-3">
-                Press Esc or click X to leave this quest.
-              </p>
-            )}
-          </div>
-        )}
       </div>
-    </div>
-  , document.body);
+    </ModalShell>
+  );
 }
 
 function MiniStat({ label, value, accent }: { label: string; value: string; accent: string }) {

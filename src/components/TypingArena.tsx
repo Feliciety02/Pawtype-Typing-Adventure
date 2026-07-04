@@ -5,6 +5,8 @@ import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelMascot } from "./PixelMascot";
 import { PixelCloud } from "./PixelCloud";
 import { PetRoom } from "./PetRoom";
+import { ModalShell, PixelButton, RewardCard, StatCard } from "./modals/ModalShell";
+import { PracticeResultsModal } from "./modals/PracticeResultsModal";
 import { useGame } from "../lib/game/store";
 import { saveSession, type KeystrokeEvent } from "../lib/game/stats";
 import { Confetti } from "./Confetti";
@@ -727,222 +729,127 @@ export function TypingArena({
       </>
       )}
 
-      {finished && resultsOpen && createPortal(
-        <div className="results-overlay" role="dialog" aria-modal="true" aria-label="Typing results">
-          <div className="results-card">
+      {finished && resultsOpen && (
+        lessonMode ? (
+          <ModalShell
+            ariaLabel="Lesson results"
+            onClose={() => setResultsOpen(false)}
+            className="pixel-modal-shell-lesson"
+            frameClassName="pixel-modal-frame-lesson"
+          >
+            <div className="lesson-results-layout">
+              {(() => {
+                const stars = (() => {
+                  if (lessonTargetAccuracy == null) return 1;
+                  if (accuracy >= Math.min(lessonTargetAccuracy + 5, 100)) return 3;
+                  if (accuracy >= lessonTargetAccuracy) return 2;
+                  return 1;
+                })();
+                return (
+                  <div className="lesson-results-stars">
+                    {[1, 2, 3].map((star) => (
+                      <span
+                        key={star}
+                        className={star <= stars ? "is-filled" : ""}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                );
+              })()}
 
-            {/* Celebration particles */}
-            <div className="results-particles" aria-hidden="true">
-              {particles.map((p) => (
-                <span
-                  key={p.id}
-                  className={`results-particle ${p.shape === "star" ? "results-particle-star" : ""}`}
-                  style={{
-                    left: `${p.x}%`,
-                    width: p.size,
-                    height: p.size,
-                    background: p.color,
-                    animationDelay: `${p.delay}s`,
-                  }}
-                />
-              ))}
+              <div className="lesson-results-title">Lesson Complete!</div>
+
+              <div className="lesson-results-stats">
+                <StatCard icon={<span className="pixel-stat-emoji">⌨</span>} label="WPM" value={String(wpm)} />
+                <StatCard icon={<img src="/Icons/dart.png" alt="" className="pixel-stat-art" />} label="Accuracy" value={`${accuracy}%`} valueClassName="is-sky" />
+                <StatCard icon={<span className="pixel-stat-emoji">🔥</span>} label="Combo" value={String(bestCombo)} valueClassName="is-gold" />
+              </div>
+
+              {(() => {
+                const rewards = lessonDifficulty && lessonWordCount
+                  ? (() => {
+                      const base: Record<string, number> = {
+                        beginner: 25,
+                        easy: 50,
+                        intermediate: 75,
+                        advanced: 100,
+                        expert: 150,
+                        master: 200,
+                      };
+                      const rewardXp = (base[lessonDifficulty] ?? 50) + Math.floor(lessonWordCount / 5);
+                      const rewardCoins = Math.round(rewardXp / 2);
+                      const rewardPetExp = Math.max(1, Math.floor(lessonWordCount / 10));
+                      return { rewardXp, rewardCoins, rewardPetExp };
+                    })()
+                  : null;
+
+                if (!rewards) return null;
+
+                return (
+                  <div className="lesson-results-bonus">
+                    <RewardCard xp={rewards.rewardXp} coins={rewards.rewardCoins} />
+                    <div className="lesson-results-pet-exp">
+                      <span>Pet EXP</span>
+                      <strong>+{rewards.rewardPetExp}</strong>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              <div className="lesson-results-tip">
+                {coachLoading
+                  ? "Analyzing your run..."
+                  : coachError
+                    ? "Keep typing and I’ll have feedback ready!"
+                    : coachInsight?.text ?? "Great work out there!"}
+              </div>
+
+              <div className="lesson-results-actions">
+                <PixelButton variant="secondary" onClick={() => reset()} icon={<span>↻</span>}>
+                  Retry
+                </PixelButton>
+                {hasNext ? (
+                  <PixelButton variant="primary" onClick={() => onNextLesson?.()} icon={<span>▶</span>}>
+                    Next Lesson
+                  </PixelButton>
+                ) : (
+                  <PixelButton variant="primary" onClick={() => onClose?.()} icon={<span>↩</span>}>
+                    Back to Lessons
+                  </PixelButton>
+                )}
+              </div>
             </div>
-
-            {lessonMode ? (
-              /* --- Lesson Results --- */
-              <div className="flex flex-col items-center gap-4 py-4 px-2">
-                {/* Stars */}
-                {(() => {
-                  const stars = (() => {
-                    if (lessonTargetAccuracy == null) return 1;
-                    if (accuracy >= Math.min(lessonTargetAccuracy + 5, 100)) return 3;
-                    if (accuracy >= lessonTargetAccuracy) return 2;
-                    return 1;
-                  })();
-                  return (
-                    <div className="flex gap-1">
-                      {[1, 2, 3].map((s) => (
-                        <span
-                          key={s}
-                          className="font-pixel"
-                          style={{
-                            fontSize: "clamp(1.2rem, 3vw, 1.8rem)",
-                            color: s <= stars ? "var(--coin)" : "var(--muted-foreground)",
-                            filter: s <= stars ? "drop-shadow(0 0 4px var(--coin))" : "none",
-                            transition: "all 0.3s",
-                          }}
-                        >
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                  );
-                })()}
-
-                <div className="results-title" style={{ margin: 0 }}>Lesson Complete!</div>
-
-                {/* Stats row */}
-                <div className="flex gap-4 justify-center">
-                  <div className="text-center">
-                    <div className="font-pixel text-[0.5rem] text-muted-foreground">WPM</div>
-                    <div className="font-display text-2xl">{wpm}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-pixel text-[0.5rem] text-muted-foreground">Accuracy</div>
-                    <div className="font-display text-2xl" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-pixel text-[0.5rem] text-muted-foreground">Combo</div>
-                    <div className="font-display text-2xl" style={{ color: "var(--coin)" }}>{bestCombo}</div>
-                  </div>
-                </div>
-
-                {/* Rewards */}
-                {(() => {
-                  const r = lessonDifficulty && lessonWordCount
-                    ? (() => {
-                        const base: Record<string, number> = { beginner: 25, easy: 50, intermediate: 75, advanced: 100, expert: 150, master: 200 };
-                        const xp = (base[lessonDifficulty] ?? 50) + Math.floor(lessonWordCount / 5);
-                        const coins = Math.round(xp / 2);
-                        const petExp = Math.max(1, Math.floor(lessonWordCount / 10));
-                        return { xp, coins, petExp };
-                      })()
-                    : null;
-                  if (!r) return null;
-                  return (
-                    <div className="flex gap-4 justify-center">
-                      <div className="text-center">
-                        <div className="font-pixel text-[0.5rem] text-muted-foreground">XP</div>
-                        <div className="font-pixel text-base" style={{ color: "var(--color-primary)" }}>+{r.xp}</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="font-pixel text-[0.5rem] text-muted-foreground">Coins</div>
-                        <div className="font-pixel text-base" style={{ color: "var(--coin)" }}>+{r.coins}</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="font-pixel text-[0.5rem] text-muted-foreground">Pet EXP</div>
-                        <div className="font-pixel text-base" style={{ color: "var(--leaf)" }}>+{r.petExp}</div>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Coach */}
-                <div className="results-speech-bubble" style={{ maxWidth: 300 }}>
-                  <div className="results-speech-tail" />
-                  {coachLoading ? (
-                    <p className="results-speech-text">Analyzing your run...</p>
-                  ) : coachError ? (
-                    <p className="results-speech-text">Keep typing and I&apos;ll have feedback ready!</p>
-                  ) : coachInsight ? (
-                    <p className="results-speech-text">{coachInsight.text}</p>
-                  ) : (
-                    <p className="results-speech-text">Great work out there!</p>
-                  )}
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-2">
-                  <button className="pixel-btn pixel-btn-secondary" onClick={() => reset()} type="button">
-                    ↻ Retry
-                  </button>
-                  {hasNext && (
-                    <button className="pixel-btn results-btn-primary" onClick={() => onNextLesson?.()} type="button">
-                      Next Lesson →
-                    </button>
-                  )}
-                  {!hasNext && (
-                    <button className="pixel-btn results-btn-primary" onClick={() => onClose?.()} type="button">
-                      Back to Lessons
-                    </button>
-                  )}
-                </div>
-              </div>
-            ) : (
-              /* --- Practice Results --- */
-              <div className="results-grid">
-                {/* Left Column — Mascot, Title, Coach Speech Bubble */}
-                <div className="results-left">
-                  <div className="flex justify-center">
-                    <PixelMascot mood="happy" size={56} />
-                  </div>
-                  <div className="results-title">Practice Complete!</div>
-                  <p className="results-subtitle">{mascotLine ?? perfMessage}</p>
-
-                  {/* Coach Speech Bubble */}
-                  <div className="results-coach-bubble">
-                    <div className="results-coach-pet">
-                      <PixelMascot mood="idle" size={30} />
-                    </div>
-                    <div className="results-speech-bubble">
-                      <div className="results-speech-tail" />
-                      {coachLoading ? (
-                        <p className="results-speech-text">Analyzing your run...</p>
-                      ) : coachError ? (
-                        <p className="results-speech-text">Keep typing and I&apos;ll have feedback ready!</p>
-                      ) : coachInsight ? (
-                        <p className="results-speech-text">{coachInsight.text}</p>
-                      ) : (
-                        <p className="results-speech-text">Great work out there!</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column — Stats, Rewards, Buttons */}
-                <div className="results-right">
-                  <div className="results-stats">
-                    <div className="results-stat">
-                      <img src="/Icons/dart.png" alt="" className="results-stat-icon" />
-                      <div className="results-stat-label">Accuracy</div>
-                      <div className="results-stat-value" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
-                    </div>
-                    <div className="results-stat">
-                      <span className="results-stat-icon">🔥</span>
-                      <div className="results-stat-label">Best Combo</div>
-                      <div className="results-stat-value" style={{ color: "var(--coin)" }}>{bestCombo}</div>
-                    </div>
-                    <div className="results-stat">
-                      <img src="/Icons/hourglass.png" alt="" className="results-stat-icon" />
-                      <div className="results-stat-label">Time</div>
-                      <div className="results-stat-value" style={{ color: "var(--sky)" }}>{elapsed.toFixed(0)}s</div>
-                    </div>
-                  </div>
-
-                  <div className="results-rewards-panel">
-                    <div className="results-reward">
-                      <img src="/Icons/star.png" alt="" className="results-reward-icon" />
-                      <span className="results-reward-value">+{xp}</span>
-                      <span className="results-reward-label">XP</span>
-                    </div>
-                    <div className="results-reward-divider" />
-                    <div className="results-reward">
-                      <img src="/Icons/coin.png" alt="" className="results-reward-icon" />
-                      <span className="results-reward-value">+{coins}</span>
-                      <span className="results-reward-label">Coins</span>
-                    </div>
-                  </div>
-
-                  <div className="results-actions">
-                    {mistakeChars.length > 0 && (
-                      <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={handleWeakSpotDrill} type="button">
-                        🎯 Practice: {mistakeChars.join(", ")}
-                      </button>
-                    )}
-                    <button className="pixel-btn results-btn-primary" onClick={() => reset()} type="button">
-                      ▶ Continue Practice
-                    </button>
-                    <button className="pixel-btn pixel-btn-secondary results-btn-secondary" onClick={() => reset()} type="button">
-                      ↻ Try Again
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-          </div>
-        </div>
-      , document.body)}
+          </ModalShell>
+        ) : (
+          <PracticeResultsModal
+            accuracy={accuracy}
+            bestCombo={bestCombo}
+            elapsedSeconds={elapsed}
+            xp={xp}
+            coins={coins}
+            feedbackMessage={mascotLine ?? perfMessage}
+            coachTip={
+              coachLoading
+                ? "Analyzing your run..."
+                : coachError
+                  ? "Keep typing and I'll have feedback ready!"
+                  : coachInsight?.text ?? "Great work out there!"
+            }
+            practicedKeys={mistakeChars}
+            onContinue={() => {
+              if (mistakeChars.length > 0) {
+                handleWeakSpotDrill();
+                return;
+              }
+              reset();
+            }}
+            onRetry={() => reset()}
+            onClose={() => setResultsOpen(false)}
+          />
+        )
+      )}
 
       <Confetti active={showConfetti} onFinish={() => setShowConfetti(false)} />
       {petRoomOpen && <PetRoom onClose={() => setPetRoomOpen(false)} />}
