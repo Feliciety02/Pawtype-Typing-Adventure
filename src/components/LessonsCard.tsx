@@ -270,7 +270,7 @@ export function LessonsCard() {
                             ) : isBoss ? (
                               <Swords size={20} />
                             ) : (
-                              <span>{lesson.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : lesson.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : lesson.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : lesson.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : lesson.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : lesson.emoji}</span>
+                              <span>{lesson.emoji === "🔥" ? <img src="/Icons/fire.png" alt="" className="pixel-icon" /> : lesson.emoji === "🌊" ? <img src="/Icons/water-wave.png" alt="" className="pixel-icon" /> : lesson.emoji === "⏰" ? <img src="/Icons/alarm-clock.png" alt="" className="pixel-icon" /> : lesson.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : lesson.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : lesson.emoji}</span>
                             )}
                             {isCurrent && !done && <span className="lesson-node-pulse" aria-hidden="true" />}
                             {done && <span className="lesson-node-sparkle" aria-hidden="true" />}

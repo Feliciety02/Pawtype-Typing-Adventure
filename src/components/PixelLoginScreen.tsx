@@ -92,21 +92,6 @@ export function PixelLoginScreen() {
             }}
           />
         ))}
-        {/* floating paw prints */}
-        {Array.from({ length: 6 }).map((_, i) => (
-          <span
-            key={`paw-${i}`}
-            className="pixel-login-paw"
-            style={{
-              left: `${5 + i * 16}%`,
-              animationDelay: `${i * 1.4}s`,
-              animationDuration: `${9 + (i % 3)}s`,
-            }}
-            aria-hidden="true"
-          >
-            <img src="/Icons/paw-print.png" alt="" className="pixel-icon" />
-          </span>
-        ))}
       </div>
 
       <div className="pixel-login-layout">

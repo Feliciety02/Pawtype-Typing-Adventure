@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Maximize2, X } from "lucide-react";
 import { PixelKeyboard } from "./PixelKeyboard";
@@ -174,9 +174,9 @@ export function TypingArena({
     if (accuracy === 100) setShowConfetti(true);
 
     pushNotification({
-      emoji: accuracy === 100 ? "✨" : "🎯",
-      title: customTitle ? `Lesson · ${customTitle}` : "Test complete",
-      body: `${wpm} WPM · ${accuracy}% acc · +${xp} XP · +${coins}🪙`,
+      emoji: accuracy === 100 ? "?" : "??",
+      title: customTitle ? `Lesson x ${customTitle}` : "Test complete",
+      body: `${wpm} WPM x ${accuracy}% acc x +${xp} XP x +${coins}??`,
     });
 
     saveSession({
@@ -195,7 +195,7 @@ export function TypingArena({
   useEffect(() => {
     if (state.player.level > prevLevelRef.current) {
       pushNotification({
-        emoji: "⬆",
+        emoji: "?",
         title: `Level ${state.player.level}!`,
         body: "You leveled up. Keep that rhythm going.",
       });
@@ -222,7 +222,7 @@ export function TypingArena({
     return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
 
-  // Idle → sleep after a while
+  // Idle ? sleep after a while
   useEffect(() => {
     if (startedAt || finished) return;
     const t = setTimeout(() => setMood("sleep"), 6000);
@@ -397,12 +397,12 @@ export function TypingArena({
   const coins = useMemo(() => Math.round(wpm / 2), [wpm]);
 
   const perfMessage = useMemo(() => {
-    if (accuracy === 100) return "⭐ Flawless victory!";
-    if (accuracy >= 95) return "✨ Incredible precision!";
-    if (accuracy >= 90) return "🌟 Great focus today!";
-    if (accuracy >= 80) return "👍 Solid effort!";
-    if (accuracy >= 70) return "💪 Keep it up!";
-    return "🌱 Room to grow!";
+    if (accuracy === 100) return "? Flawless victory!";
+    if (accuracy >= 95) return "? Incredible precision!";
+    if (accuracy >= 90) return "?? Great focus today!";
+    if (accuracy >= 80) return "?? Solid effort!";
+    if (accuracy >= 70) return "?? Keep it up!";
+    return "?? Room to grow!";
   }, [accuracy]);
 
   type Particle = { id: number; x: number; delay: number; size: number; shape: "star" | "dot"; color: string };
@@ -601,7 +601,7 @@ export function TypingArena({
               aria-label="New test"
               title="New test"
             >
-              ↻
+              ?
             </button>
           </div>
 
@@ -715,7 +715,7 @@ export function TypingArena({
               title="Open pet room"
               onClick={() => setPetRoomOpen(true)}
             >
-              🏡 Pet Room
+              ?? Pet Room
             </button>
           </div>
         </div>
@@ -761,9 +761,9 @@ export function TypingArena({
               <div className="lesson-results-title">Lesson Complete!</div>
 
               <div className="lesson-results-stats">
-                <StatCard icon={<img src="/Icons/nav/practice.png" alt="" className="pixel-stat-art" />} label="WPM" value={String(wpm)} />
-                <StatCard icon={<img src="/Icons/dart.png" alt="" className="pixel-stat-art" />} label="Accuracy" value={`${accuracy}%`} valueClassName="is-sky" />
-                <StatCard icon={<img src="/Icons/flame.png" alt="" className="pixel-stat-art" />} label="Combo" value={String(bestCombo)} valueClassName="is-gold" />
+                <StatCard icon={<img src="/Icons/nav/keyboard.png" alt="" className="pixel-stat-art" />} label="WPM" value={String(wpm)} />
+                <StatCard icon={<img src="/Icons/target.png" alt="" className="pixel-stat-art" />} label="Accuracy" value={`${accuracy}%`} valueClassName="is-sky" />
+                <StatCard icon={<img src="/Icons/fire.png" alt="" className="pixel-stat-art" />} label="Combo" value={String(bestCombo)} valueClassName="is-gold" />
               </div>
 
               {(() => {
@@ -801,20 +801,20 @@ export function TypingArena({
                 {coachLoading
                   ? "Analyzing your run..."
                   : coachError
-                    ? "Keep typing and I’ll have feedback ready!"
+                    ? "Keep typing and Ixll have feedback ready!"
                     : coachInsight?.text ?? "Great work out there!"}
               </div>
 
               <div className="lesson-results-actions">
-                <PixelButton variant="secondary" onClick={() => reset()} icon={<span>↻</span>}>
+                <PixelButton variant="secondary" onClick={() => reset()} icon={<span>?</span>}>
                   Retry
                 </PixelButton>
                 {hasNext ? (
-                  <PixelButton variant="primary" onClick={() => onNextLesson?.()} icon={<span>▶</span>}>
+                  <PixelButton variant="primary" onClick={() => onNextLesson?.()} icon={<span>?</span>}>
                     Next Lesson
                   </PixelButton>
                 ) : (
-                  <PixelButton variant="primary" onClick={() => onClose?.()} icon={<span>↩</span>}>
+                  <PixelButton variant="primary" onClick={() => onClose?.()} icon={<span>?</span>}>
                     Back to Lessons
                   </PixelButton>
                 )}

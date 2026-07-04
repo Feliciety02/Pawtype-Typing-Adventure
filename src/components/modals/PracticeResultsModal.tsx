@@ -64,13 +64,13 @@ export function PracticeResultsModal({
         <div className="practice-results-right">
           <div className="practice-results-stats">
             <StatCard
-              icon={<img src="/Icons/dart.png" alt="" className="pixel-stat-art" />}
+              icon={<img src="/Icons/target.png" alt="" className="pixel-stat-art" />}
               label="Accuracy"
               value={`${accuracy}%`}
               valueClassName="is-sky"
             />
             <StatCard
-              icon={<img src="/Icons/flame.png" alt="" className="pixel-stat-art" />}
+              icon={<img src="/Icons/fire.png" alt="" className="pixel-stat-art" />}
               label="Best Combo"
               value={String(bestCombo)}
               valueClassName="is-gold"
@@ -86,7 +86,7 @@ export function PracticeResultsModal({
           <RewardCard xp={xp} coins={coins} />
 
           <div className="practice-results-practiced">
-            <img src="/Icons/dart.png" alt="" className="practice-results-practiced-icon" />
+            <img src="/Icons/target.png" alt="" className="practice-results-practiced-icon" />
             <span className="practice-results-practiced-label">Practiced:</span>
             <span className="practice-results-practiced-value">{practicedSummary}</span>
           </div>

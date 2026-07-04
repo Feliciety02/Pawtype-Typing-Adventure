@@ -3071,6 +3071,9 @@
 
   .adventure-runner-header-side {
     width: 100%;
+    max-width: 180px;
+    min-width: 0;
+    justify-content: flex-start;
   }
 
   .adventure-runner-node-card {
@@ -3101,13 +3104,27 @@
 
   .adventure-runner-card {
     width: min(100vw - 1.1rem, 1120px);
+    height: calc(100dvh - 1.1rem);
     min-height: calc(100dvh - 1.1rem);
     max-height: calc(100dvh - 1.1rem);
     padding: 0.9rem;
   }
 
   .adventure-live-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adventure-live-stats .pixel-card-sm {
+    min-height: 70px;
+  }
+
+  .adventure-type-wrap {
+    grid-template-rows: auto minmax(300px, 1fr) auto;
+  }
+
+  .adventure-typing-panel {
+    min-height: 300px;
+    font-size: clamp(1.7rem, 7vw, 2.35rem);
   }
 
   .adventure-node-grid {
@@ -4435,6 +4452,7 @@ html[data-time-of-day="night"] main { background: color-mix(in oklab, var(--back
 
 .pixel-modal-shell-adventure .adventure-runner-card {
   width: min(1120px, calc(100vw - 2rem));
+  height: auto;
   min-height: min(760px, calc(100dvh - 4rem));
   max-height: calc(100dvh - 4rem);
   overflow: auto;

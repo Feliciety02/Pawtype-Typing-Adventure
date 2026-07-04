@@ -69,7 +69,7 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
           <div className="flex items-center justify-between">
             <div>
               <div className="font-display text-3xl leading-none" suppressHydrationWarning>Level {player.level}</div>
-              <p className="font-pixel text-[0.6rem] text-muted-foreground mt-1">{currentWorld.emoji === "☕" ? <img src="/Icons/coffee-cup.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌲" ? <img src="/Icons/pine-tree.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌸" ? <img src="/Icons/sakura-blossom.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌻" ? <img src="/Icons/sunflower.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🍂" ? <img src="/Icons/autumn-leaf.png" alt="" className="pixel-icon" /> : currentWorld.emoji} Exploring · {currentWorld.name}</p>
+              <p className="font-pixel text-[0.6rem] text-muted-foreground mt-1">{currentWorld.emoji === "☕" ? <img src="/Icons/coffee.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌲" ? <img src="/Icons/evergreen-tree.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌊" ? <img src="/Icons/water-wave.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌸" ? <img src="/Icons/cherry-blossom.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌻" ? <img src="/Icons/sunflower.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🍂" ? <img src="/Icons/fallen-leaf.png" alt="" className="pixel-icon" /> : currentWorld.emoji} Exploring · {currentWorld.name}</p>
             </div>
             <div className="text-right">
               <div className="font-pixel text-[0.65rem] uppercase" style={{ color: "var(--muted-foreground)" }}>Typist</div>
@@ -98,7 +98,7 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
             </div>
             <div className="pixel-card-sm p-2 text-center">
               <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase">Streak</div>
-              <div className="font-display text-lg" style={{ color: "var(--coin)" }} suppressHydrationWarning><img src="/Icons/flame.png" alt="" className="pixel-icon" /> {player.streak}</div>
+              <div className="font-display text-lg" style={{ color: "var(--coin)" }} suppressHydrationWarning><img src="/Icons/fire.png" alt="" className="pixel-icon" /> {player.streak}</div>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
         style={{ border: `2px dashed ${canClaim ? "var(--coin)" : "var(--color-border)"}`, opacity: canClaim ? 1 : 0.6 }}
         onClick={() => canClaim && dispatch({ type: "CLAIM_DAILY_REWARD" })}>
         <div className="flex items-center gap-3">
-          <span className="text-3xl">{canClaim ? <img src="/Icons/giftbox.png" alt="" className="pixel-icon" /> : <img src="/Icons/checkmark.png" alt="" className="pixel-icon" />}</span>
+          <span className="text-3xl">{canClaim ? <img src="/Icons/gift.png" alt="" className="pixel-icon" /> : <img src="/Icons/check-mark.png" alt="" className="pixel-icon" />}</span>
           <div>
             <div className="font-pixel text-sm">{canClaim ? "Daily Reward Available!" : "Daily Reward Claimed"}</div>
             <p className="font-pixel text-[0.6rem] text-muted-foreground">
@@ -133,10 +133,10 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
             }`
           }}>
           <span className="text-3xl">
-            {suggestion.type === "speed" ? <img src="/Icons/lightning-bolt.png" alt="" className="pixel-icon" /> :
-             suggestion.type === "accuracy" ? <img src="/Icons/dart.png" alt="" className="pixel-icon" /> :
-             suggestion.type === "weakness" ? <img src="/Icons/flexedarm.png" alt="" className="pixel-icon" /> :
-             suggestion.type === "warmup" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : <img src="/Icons/lightbulb.png" alt="" className="pixel-icon" />}
+            {suggestion.type === "speed" ? <img src="/Icons/zap.png" alt="" className="pixel-icon" /> :
+             suggestion.type === "accuracy" ? <img src="/Icons/target.png" alt="" className="pixel-icon" /> :
+             suggestion.type === "weakness" ? <img src="/Icons/flex.png" alt="" className="pixel-icon" /> :
+             suggestion.type === "warmup" ? <img src="/Icons/fire.png" alt="" className="pixel-icon" /> : <img src="/Icons/bulb.png" alt="" className="pixel-icon" />}
           </span>
           <div className="flex-1 min-w-0">
             <div className="font-pixel text-sm">{suggestion.title}</div>
@@ -151,7 +151,7 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
           <div key={q.title} className="pixel-card-sm p-3">
             <div className="flex items-center justify-between mb-1.5">
               <span className="font-pixel text-[0.65rem]">
-                {q.icon === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> :
+                {q.icon === "🔥" ? <img src="/Icons/fire.png" alt="" className="pixel-icon" /> :
                  q.icon === "🪙" ? <img src="/Icons/coin.png" alt="" className="pixel-icon" /> :
                  q.icon === "⭐" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> :
                  q.icon} {q.title}
@@ -169,12 +169,12 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
           <button key={action.view} onClick={() => onViewChange(action.view)}
             className="pixel-card-sm p-4 text-center flex flex-col items-center gap-2 transition-transform hover:-translate-y-1">
             <span className="text-3xl">
-              {action.emoji === "⌨" ? <img src="/Icons/nav/practice.png" alt="" className="pixel-icon" /> :
-               action.emoji === "🗺" ? <img src="/Icons/nav/adventure.png" alt="" className="pixel-icon" /> :
-               action.emoji === "📖" ? <img src="/Icons/nav/lessons.png" alt="" className="pixel-icon" /> :
-               action.emoji === "🛒" ? <img src="/Icons/nav/shop.png" alt="" className="pixel-icon" /> :
+              {action.emoji === "⌨" ? <img src="/Icons/nav/keyboard.png" alt="" className="pixel-icon" /> :
+               action.emoji === "🗺" ? <img src="/Icons/nav/map.png" alt="" className="pixel-icon" /> :
+               action.emoji === "📖" ? <img src="/Icons/nav/book.png" alt="" className="pixel-icon" /> :
+               action.emoji === "🛒" ? <img src="/Icons/nav/cart.png" alt="" className="pixel-icon" /> :
                action.emoji === "★" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> :
-               action.emoji === "📊" ? <img src="/Icons/nav/stats.png" alt="" className="pixel-icon" /> :
+               action.emoji === "📊" ? <img src="/Icons/nav/chart.png" alt="" className="pixel-icon" /> :
                action.emoji}
             </span>
             <span className="font-pixel text-[0.7rem]">{action.label}</span>

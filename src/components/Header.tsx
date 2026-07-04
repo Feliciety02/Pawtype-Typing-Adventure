@@ -58,11 +58,11 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
   }, [profileOpen, showAuth]);
 
   const NAV_ITEMS: { iconSrc: string; label: string; view: Exclude<View, "stats" | "settings"> }[] = [
-    { iconSrc: "/Icons/nav/hub.png", label: "Camp", view: "hub" },
-    { iconSrc: "/Icons/nav/practice.png", label: "Train", view: "practice" },
-    { iconSrc: "/Icons/nav/adventure.png", label: "Quest", view: "adventure" },
-    { iconSrc: "/Icons/nav/lessons.png", label: "Learn", view: "lessons" },
-    { iconSrc: "/Icons/nav/shop.png", label: "Shop", view: "shop" },
+    { iconSrc: "/Icons/nav/home.png", label: "Camp", view: "hub" },
+    { iconSrc: "/Icons/nav/keyboard.png", label: "Train", view: "practice" },
+    { iconSrc: "/Icons/nav/map.png", label: "Quest", view: "adventure" },
+    { iconSrc: "/Icons/nav/book.png", label: "Learn", view: "lessons" },
+    { iconSrc: "/Icons/nav/cart.png", label: "Shop", view: "shop" },
     { iconSrc: "/Icons/nav/achievements.png", label: "Awards", view: "achievements" },
   ];
 
@@ -150,7 +150,7 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
         </div>
         <div className="hud-notif-wrap" ref={notifRef}>
           <button className={`hud-notif-btn ${notifOpen ? "is-active" : ""}`} onClick={() => setNotifOpen((o) => !o)}>
-            <img src="/Icons/notification.png" alt="" className="hud-notif-icon" />
+            <img src="/Icons/bell.png" alt="" className="hud-notif-icon" />
             {unread > 0 && <span className="hud-badge">{unread > 9 ? "9+" : unread}</span>}
           </button>
           {notifOpen && <NotificationsPanel onClose={() => setNotifOpen(false)} />}

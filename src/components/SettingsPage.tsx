@@ -145,7 +145,7 @@ export function SettingsPage() {
                         onClick={() => setWorld(item.id)}
                         type="button"
                       >
-                        <span className="settings-world-emoji">{item.emoji === "☕" ? <img src="/Icons/coffee-cup.png" alt="" className="pixel-icon" /> : item.emoji === "🌲" ? <img src="/Icons/pine-tree.png" alt="" className="pixel-icon" /> : item.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : item.emoji === "🌸" ? <img src="/Icons/sakura-blossom.png" alt="" className="pixel-icon" /> : item.emoji === "🌻" ? <img src="/Icons/sunflower.png" alt="" className="pixel-icon" /> : item.emoji === "🍂" ? <img src="/Icons/autumn-leaf.png" alt="" className="pixel-icon" /> : item.emoji}</span>
+                        <span className="settings-world-emoji">{item.emoji === "☕" ? <img src="/Icons/coffee.png" alt="" className="pixel-icon" /> : item.emoji === "🌲" ? <img src="/Icons/evergreen-tree.png" alt="" className="pixel-icon" /> : item.emoji === "🌊" ? <img src="/Icons/water-wave.png" alt="" className="pixel-icon" /> : item.emoji === "🌸" ? <img src="/Icons/cherry-blossom.png" alt="" className="pixel-icon" /> : item.emoji === "🌻" ? <img src="/Icons/sunflower.png" alt="" className="pixel-icon" /> : item.emoji === "🍂" ? <img src="/Icons/fallen-leaf.png" alt="" className="pixel-icon" /> : item.emoji}</span>
                         <span className="settings-world-name">{item.name}</span>
                         <span className="settings-world-blurb">{item.blurb}</span>
                         <span className="settings-swatches" aria-hidden="true">
@@ -205,7 +205,7 @@ export function SettingsPage() {
                   </div>
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Streak</span>
-                    <strong><img src="/Icons/flame.png" alt="" className="pixel-icon" /> {player.streak}</strong>
+                    <strong><img src="/Icons/fire.png" alt="" className="pixel-icon" /> {player.streak}</strong>
                   </div>
                   {authLoading ? null : user || isDemo ? (
                     <div className="flex items-center gap-3 text-[0.65rem] font-pixel pt-1 border-t border-[var(--color-border)]">

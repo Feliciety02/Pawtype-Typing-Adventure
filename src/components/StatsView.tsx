@@ -26,7 +26,7 @@ export function StatsView() {
   if (sessions.length === 0) {
     return (
       <div className="pixel-card p-8 text-center">
-        <img src="/Icons/nav/stats.png" alt="" className="pixel-icon" />
+        <img src="/Icons/nav/chart.png" alt="" className="pixel-icon" />
         <h2 className="text-3xl mt-4 mb-2">No Data Yet</h2>
         <p className="font-pixel text-[0.65rem] text-muted-foreground max-w-md mx-auto">
           Complete a typing test to see your stats here.
@@ -70,10 +70,10 @@ export function StatsView() {
     <div className="space-y-6">
       {/* Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <SummaryCard label="Tests" value={String(totalTests)} emoji={<img src="/Icons/nav/practice.png" alt="" className="pixel-icon" />} />
-        <SummaryCard label="Best WPM" value={String(bestWpm)} emoji={<img src="/Icons/lightning-bolt.png" alt="" className="pixel-icon" />} accent="var(--color-primary)" />
-        <SummaryCard label="Avg WPM" value={String(avgWpm)} emoji={<img src="/Icons/nav/practice.png" alt="" className="pixel-icon" />} accent="var(--leaf)" />
-        <SummaryCard label="Avg Acc" value={`${avgAcc}%`} emoji={<img src="/Icons/dart.png" alt="" className="pixel-icon" />} accent="var(--coin)" />
+        <SummaryCard label="Tests" value={String(totalTests)} emoji={<img src="/Icons/nav/keyboard.png" alt="" className="pixel-icon" />} />
+        <SummaryCard label="Best WPM" value={String(bestWpm)} emoji={<img src="/Icons/zap.png" alt="" className="pixel-icon" />} accent="var(--color-primary)" />
+        <SummaryCard label="Avg WPM" value={String(avgWpm)} emoji={<img src="/Icons/nav/keyboard.png" alt="" className="pixel-icon" />} accent="var(--leaf)" />
+        <SummaryCard label="Avg Acc" value={`${avgAcc}%`} emoji={<img src="/Icons/target.png" alt="" className="pixel-icon" />} accent="var(--coin)" />
       </div>
 
       {/* WPM Chart */}

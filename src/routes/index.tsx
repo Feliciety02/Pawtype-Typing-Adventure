@@ -72,7 +72,7 @@ function Index() {
       </div>
 
       <footer className="mt-16 mb-6 text-center font-pixel text-[0.65rem] text-muted-foreground">
-        Made with <img src="/Icons/sakura-blossom.png" alt="" className="pixel-icon" /> in a cozy pixel cabin · Pawtype v0.1
+        Made with <img src="/Icons/cherry-blossom.png" alt="" className="pixel-icon" /> in a cozy pixel cabin · Pawtype v0.1
       </footer>
     </main>
   );

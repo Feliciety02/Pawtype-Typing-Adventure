@@ -1,4 +1,4 @@
-﻿import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useWorld, WORLDS, type WorldId } from "./WorldTheme";
 import { createPortal } from "react-dom";
 import { useGame } from "../lib/game/store";
@@ -161,96 +161,96 @@ const WORLD_WORDS: Partial<Record<WorldId, string[]>> = {
 
 const STAGE_DEFS: Partial<Record<WorldId, Array<{ name: string; emoji: string; difficulty: Difficulty }>>> = {
   cafe: [
-    { name: "Cafe Corner", emoji: "â˜•", difficulty: "Easy" },
-    { name: "Roast Ridge", emoji: "ðŸ«˜", difficulty: "Easy" },
-    { name: "Latte Lake", emoji: "ðŸ¥›", difficulty: "Normal" },
-    { name: "Bean Garden", emoji: "ðŸŒ±", difficulty: "Hard" },
-    { name: "Mocha Manor", emoji: "ðŸ‘‘", difficulty: "Boss" },
+    { name: "Cafe Corner", emoji: "☕", difficulty: "Easy" },
+    { name: "Roast Ridge", emoji: "🫘", difficulty: "Easy" },
+    { name: "Latte Lake", emoji: "🥛", difficulty: "Normal" },
+    { name: "Bean Garden", emoji: "🌱", difficulty: "Hard" },
+    { name: "Mocha Manor", emoji: "👑", difficulty: "Boss" },
   ],
   forest: [
-    { name: "Mossy Trail", emoji: "ðŸŒ¿", difficulty: "Easy" },
-    { name: "Fern Grove", emoji: "ðŸŒ²", difficulty: "Easy" },
-    { name: "Fox Hollow", emoji: "ðŸ¦Š", difficulty: "Normal" },
-    { name: "Whisper Woods", emoji: "ðŸƒ", difficulty: "Hard" },
-    { name: "Elder Tree", emoji: "🌳", difficulty: "Boss" },
+    { name: "Mossy Trail", emoji: "🌿", difficulty: "Easy" },
+    { name: "Fern Grove", emoji: "🌲", difficulty: "Easy" },
+    { name: "Fox Hollow", emoji: "🦊", difficulty: "Normal" },
+    { name: "Whisper Woods", emoji: "🍃", difficulty: "Hard" },
+    { name: "Elder Tree", emoji: "??", difficulty: "Boss" },
   ],
   ocean: [
-    { name: "Tide Pool", emoji: "ðŸš", difficulty: "Easy" },
-    { name: "Coral Reef", emoji: "ðŸª¸", difficulty: "Easy" },
-    { name: "Pearl Grotto", emoji: "ðŸ¦ª", difficulty: "Normal" },
-    { name: "Deep Abyss", emoji: "ðŸ™", difficulty: "Hard" },
-    { name: "Sea Palace", emoji: "ðŸ³", difficulty: "Boss" },
+    { name: "Tide Pool", emoji: "🐚", difficulty: "Easy" },
+    { name: "Coral Reef", emoji: "🪸", difficulty: "Easy" },
+    { name: "Pearl Grotto", emoji: "🦪", difficulty: "Normal" },
+    { name: "Deep Abyss", emoji: "🐙", difficulty: "Hard" },
+    { name: "Sea Palace", emoji: "🐳", difficulty: "Boss" },
   ],
   sakura: [
-    { name: "Blossom Path", emoji: "ðŸŒ¸", difficulty: "Easy" },
-    { name: "Lotus Pond", emoji: "ðŸª·", difficulty: "Easy" },
-    { name: "Tea Garden", emoji: "ðŸµ", difficulty: "Normal" },
-    { name: "Shrine Hill", emoji: "â›©ï¸", difficulty: "Hard" },
-    { name: "Sakura Sanctuary", emoji: "ðŸ‘˜", difficulty: "Boss" },
+    { name: "Blossom Path", emoji: "🌸", difficulty: "Easy" },
+    { name: "Lotus Pond", emoji: "🪷", difficulty: "Easy" },
+    { name: "Tea Garden", emoji: "🍵", difficulty: "Normal" },
+    { name: "Shrine Hill", emoji: "⛩️", difficulty: "Hard" },
+    { name: "Sakura Sanctuary", emoji: "👘", difficulty: "Boss" },
   ],
   castle: [
-    { name: "Castle Gate", emoji: "ðŸ°", difficulty: "Easy" },
-    { name: "Royal Courtyard", emoji: "ðŸ‘‘", difficulty: "Easy" },
-    { name: "Knight's Hall", emoji: "âš”ï¸", difficulty: "Normal" },
-    { name: "King's Keep", emoji: "ðŸ›¡ï¸", difficulty: "Hard" },
-    { name: "Crown Citadel", emoji: "ðŸ‰", difficulty: "Boss" },
+    { name: "Castle Gate", emoji: "🏰", difficulty: "Easy" },
+    { name: "Royal Courtyard", emoji: "👑", difficulty: "Easy" },
+    { name: "Knight's Hall", emoji: "⚔️", difficulty: "Normal" },
+    { name: "King's Keep", emoji: "🛡️", difficulty: "Hard" },
+    { name: "Crown Citadel", emoji: "🐉", difficulty: "Boss" },
   ],
   space: [
-    { name: "Star Glade", emoji: "â­", difficulty: "Easy" },
-    { name: "Nebula Grove", emoji: "ðŸŒŒ", difficulty: "Easy" },
-    { name: "Galaxy Pool", emoji: "ðŸª", difficulty: "Normal" },
-    { name: "Cosmic Ruins", emoji: "â˜„ï¸", difficulty: "Hard" },
-    { name: "Astral Observatory", emoji: "ðŸ‘¾", difficulty: "Boss" },
+    { name: "Star Glade", emoji: "⭐", difficulty: "Easy" },
+    { name: "Nebula Grove", emoji: "🌌", difficulty: "Easy" },
+    { name: "Galaxy Pool", emoji: "🪐", difficulty: "Normal" },
+    { name: "Cosmic Ruins", emoji: "☄️", difficulty: "Hard" },
+    { name: "Astral Observatory", emoji: "👾", difficulty: "Boss" },
   ],
   mushroom: [
-    { name: "Mushroom Trail", emoji: "ðŸ„", difficulty: "Easy" },
-    { name: "Fairy Hollow", emoji: "ðŸ§š", difficulty: "Easy" },
-    { name: "Glow Grove", emoji: "âœ¨", difficulty: "Normal" },
-    { name: "Crystal Thicket", emoji: "ðŸ’Ž", difficulty: "Hard" },
-    { name: "Fairy Queen's Tree", emoji: "ðŸ‘‘", difficulty: "Boss" },
+    { name: "Mushroom Trail", emoji: "🍄", difficulty: "Easy" },
+    { name: "Fairy Hollow", emoji: "🧚", difficulty: "Easy" },
+    { name: "Glow Grove", emoji: "✨", difficulty: "Normal" },
+    { name: "Crystal Thicket", emoji: "💎", difficulty: "Hard" },
+    { name: "Fairy Queen's Tree", emoji: "👑", difficulty: "Boss" },
   ],
   sunflower: [
-    { name: "Daisy Path", emoji: "ðŸŒ¼", difficulty: "Easy" },
-    { name: "Sunflower Field", emoji: "ðŸŒ»", difficulty: "Easy" },
-    { name: "Windmill Hill", emoji: "ðŸŒ¬ï¸", difficulty: "Normal" },
-    { name: "Golden Harvest", emoji: "ðŸŒ¾", difficulty: "Hard" },
-    { name: "Harvest Haven", emoji: "ðŸ¡", difficulty: "Boss" },
+    { name: "Daisy Path", emoji: "🌼", difficulty: "Easy" },
+    { name: "Sunflower Field", emoji: "🌻", difficulty: "Easy" },
+    { name: "Windmill Hill", emoji: "🌬️", difficulty: "Normal" },
+    { name: "Golden Harvest", emoji: "🌾", difficulty: "Hard" },
+    { name: "Harvest Haven", emoji: "🏡", difficulty: "Boss" },
   ],
   "volcanic-forge": [
-    { name: "Ember Trail", emoji: "🔥", difficulty: "Easy" },
-    { name: "Lava Cavern", emoji: "🕳️", difficulty: "Easy" },
-    { name: "Molten Crossing", emoji: "🌊", difficulty: "Normal" },
-    { name: "Magma Summit", emoji: "⛰️", difficulty: "Hard" },
-    { name: "Inferno Forge", emoji: "⚒️", difficulty: "Boss" },
+    { name: "Ember Trail", emoji: "??", difficulty: "Easy" },
+    { name: "Lava Cavern", emoji: "???", difficulty: "Easy" },
+    { name: "Molten Crossing", emoji: "??", difficulty: "Normal" },
+    { name: "Magma Summit", emoji: "??", difficulty: "Hard" },
+    { name: "Inferno Forge", emoji: "??", difficulty: "Boss" },
   ],
   "desert-oasis": [
-    { name: "Sandy Trail", emoji: "🐪", difficulty: "Easy" },
-    { name: "Cactus Camp", emoji: "⛺", difficulty: "Easy" },
-    { name: "Oasis Spring", emoji: "🌴", difficulty: "Normal" },
-    { name: "Sunstone Dunes", emoji: "🏜️", difficulty: "Hard" },
-    { name: "Golden Pyramid", emoji: "🔺", difficulty: "Boss" },
+    { name: "Sandy Trail", emoji: "??", difficulty: "Easy" },
+    { name: "Cactus Camp", emoji: "?", difficulty: "Easy" },
+    { name: "Oasis Spring", emoji: "??", difficulty: "Normal" },
+    { name: "Sunstone Dunes", emoji: "???", difficulty: "Hard" },
+    { name: "Golden Pyramid", emoji: "??", difficulty: "Boss" },
   ],
   autumn: [
-    { name: "Camp Entrance", emoji: "ðŸ•ï¸", difficulty: "Easy" },
-    { name: "Pine Camp", emoji: "ðŸŒ²", difficulty: "Easy" },
-    { name: "Campfire Circle", emoji: "ðŸ”¥", difficulty: "Normal" },
-    { name: "Bear Ridge", emoji: "ðŸ»", difficulty: "Hard" },
-    { name: "Ranger's Lookout", emoji: "ðŸ§­", difficulty: "Boss" },
+    { name: "Camp Entrance", emoji: "🏕️", difficulty: "Easy" },
+    { name: "Pine Camp", emoji: "🌲", difficulty: "Easy" },
+    { name: "Campfire Circle", emoji: "🔥", difficulty: "Normal" },
+    { name: "Bear Ridge", emoji: "🐻", difficulty: "Hard" },
+    { name: "Ranger's Lookout", emoji: "🧭", difficulty: "Boss" },
   ],
 
   "steam-punk-workshop": [
-    { name: "Gear Yard", emoji: "⚙️", difficulty: "Easy" },
-    { name: "Boiler Room", emoji: "🛡️", difficulty: "Easy" },
-    { name: "Copper Works", emoji: "⚙️", difficulty: "Normal" },
-    { name: "Steam Forge", emoji: "🔥", difficulty: "Hard" },
-    { name: "Clockwork Core", emoji: "⏰", difficulty: "Boss" },
+    { name: "Gear Yard", emoji: "??", difficulty: "Easy" },
+    { name: "Boiler Room", emoji: "???", difficulty: "Easy" },
+    { name: "Copper Works", emoji: "??", difficulty: "Normal" },
+    { name: "Steam Forge", emoji: "??", difficulty: "Hard" },
+    { name: "Clockwork Core", emoji: "?", difficulty: "Boss" },
   ],
   "frostveil-kingdom": [
-    { name: "Frost Path", emoji: "❄️", difficulty: "Easy" },
-    { name: "Crystal Grove", emoji: "💎", difficulty: "Easy" },
-    { name: "Frozen Falls", emoji: "💧", difficulty: "Normal" },
-    { name: "Ice Citadel", emoji: "🏰", difficulty: "Hard" },
-    { name: "Frostveil Palace", emoji: "👑", difficulty: "Boss" },
+    { name: "Frost Path", emoji: "??", difficulty: "Easy" },
+    { name: "Crystal Grove", emoji: "??", difficulty: "Easy" },
+    { name: "Frozen Falls", emoji: "??", difficulty: "Normal" },
+    { name: "Ice Citadel", emoji: "??", difficulty: "Hard" },
+    { name: "Frostveil Palace", emoji: "??", difficulty: "Boss" },
   ],
 };
 
@@ -267,17 +267,17 @@ const STAGES_BY_WORLD: Partial<Record<WorldId, Stage[]>> = Object.fromEntries(
 ) as Partial<Record<WorldId, Stage[]>>;
 
 const BOSS_PHASE_EMOJIS: Record<string, [string, string, string]> = {
-  "ðŸ‘‘": ["ðŸ‘‘", "âš”ï¸", "âœ¨"],
-  "ðŸŒ³": ["ðŸŒ³", "ðŸƒ", "ðŸŒ•"],
-  "ðŸ”ï¸": ["ðŸ”ï¸", "â„ï¸", "ðŸ’«"],
-  "ðŸ³": ["ðŸ³", "ðŸŒŠ", "ðŸ’«"],
-  "ðŸ‘˜": ["ðŸ‘˜", "ðŸŽ€", "ðŸŒ¸"],
-  "ðŸ‰": ["ðŸ‰", "ðŸ”¥", "âš¡"],
-  "ðŸ‘¾": ["ðŸ‘¾", "ðŸ’¥", "â˜„ï¸"],
-  "ðŸ¡": ["ðŸ¡", "ðŸŒ¾", "ðŸŒ»"],
-  "ðŸ”®": ["ðŸ”®", "ðŸ“–", "âœ¨"],
-  "ðŸ§­": ["ðŸ§­", "ðŸ”¥", "ðŸŒ²"],
-  "ðŸ¯": ["ðŸ¯", "ðŸŒ™", "âœ¨"],
+  "👑": ["👑", "⚔️", "✨"],
+  "🌳": ["🌳", "🍃", "🌕"],
+  "🏔️": ["🏔️", "❄️", "💫"],
+  "🐳": ["🐳", "🌊", "💫"],
+  "👘": ["👘", "🎀", "🌸"],
+  "🐉": ["🐉", "🔥", "⚡"],
+  "👾": ["👾", "💥", "☄️"],
+  "🏡": ["🏡", "🌾", "🌻"],
+  "🔮": ["🔮", "📖", "✨"],
+  "🧭": ["🧭", "🔥", "🌲"],
+  "🏯": ["🏯", "🌙", "✨"],
 };
 
 function wordsFor(world: WorldId, stageId: number) {
@@ -286,7 +286,7 @@ function wordsFor(world: WorldId, stageId: number) {
 }
 
 function bossEmojis(emoji: string): [string, string, string] {
-  return BOSS_PHASE_EMOJIS[emoji] ?? [emoji, "ðŸ’¢", "ðŸ’«"];
+  return BOSS_PHASE_EMOJIS[emoji] ?? [emoji, "💢", "💫"];
 }
 
 function rewardsFor(stage: Stage): { xp: number; coins: number } {
@@ -638,7 +638,7 @@ function StageNode({
         {image ? (
           <AdventureNodeImage src={image} alt={`${stage.name} node`} className="adventure-node-img" />
         ) : (
-          <span className="adventure-node-fallback">{stage.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : stage.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : stage.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</span>
+          <span className="adventure-node-fallback">{stage.emoji === "??" ? <img src="/Icons/fire.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/water-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "?" ? <img src="/Icons/alarm-clock.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</span>
         )}
         {status === "locked" && (
           <span className="adventure-node-overlay">
@@ -847,7 +847,7 @@ function StageRunner({
         frameClassName="pixel-modal-frame-adventure"
       >
         <div className="adventure-runner-card animate-pixel-pop">
-          <div className="adventure-boss-emoji">{stage.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : stage.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : stage.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</div>
+          <div className="adventure-boss-emoji">{stage.emoji === "??" ? <img src="/Icons/fire.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/water-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "?" ? <img src="/Icons/alarm-clock.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</div>
           <div className="font-display text-4xl leading-none mb-2 text-center">{stage.name}</div>
           <p className="font-pixel text-[0.65rem] text-muted-foreground mb-4 text-center">
             {questText || "A boss stage appears. Type fast and stay accurate."}
@@ -889,7 +889,7 @@ function StageRunner({
             onClick={onClose}
             aria-label="Close quest"
           >
-            ×
+            x
           </button>
 
           <div className="adventure-runner-header">
@@ -926,7 +926,7 @@ function StageRunner({
                     draggable={false}
                   />
                 ) : (
-                  <span className="adventure-runner-node-fallback">{stage.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : stage.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : stage.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</span>
+                  <span className="adventure-runner-node-fallback">{stage.emoji === "??" ? <img src="/Icons/fire.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/water-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "?" ? <img src="/Icons/alarm-clock.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "??" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</span>
                 )}
               </div>
             </div>

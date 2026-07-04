@@ -66,13 +66,13 @@ export function QuestResultsModal({
           <div className="quest-results-right">
             <div className="quest-results-stats">
               <StatCard
-                icon={<img src="/Icons/nav/practice.png" alt="" className="pixel-stat-art" />}
+                icon={<img src="/Icons/nav/keyboard.png" alt="" className="pixel-stat-art" />}
                 label="WPM"
                 value={String(wpm)}
                 valueClassName={success ? "is-sky" : undefined}
               />
               <StatCard
-                icon={<img src="/Icons/dart.png" alt="" className="pixel-stat-art" />}
+                icon={<img src="/Icons/target.png" alt="" className="pixel-stat-art" />}
                 label="Accuracy"
                 value={`${accuracy}%`}
                 valueClassName={accuracy >= minAccuracy ? "is-sky" : undefined}
