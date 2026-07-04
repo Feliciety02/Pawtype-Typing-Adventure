@@ -70,7 +70,7 @@ export function PracticeResultsModal({
               valueClassName="is-sky"
             />
             <StatCard
-              icon={<span className="pixel-stat-emoji">🔥</span>}
+              icon={<img src="/Icons/flame.png" alt="" className="pixel-stat-art" />}
               label="Best Combo"
               value={String(bestCombo)}
               valueClassName="is-gold"

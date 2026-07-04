@@ -69,7 +69,7 @@ export function Hub({ onViewChange }: { onViewChange: (v: View) => void }) {
           <div className="flex items-center justify-between">
             <div>
               <div className="font-display text-3xl leading-none" suppressHydrationWarning>Level {player.level}</div>
-              <p className="font-pixel text-[0.6rem] text-muted-foreground mt-1">{currentWorld.emoji} Exploring · {currentWorld.name}</p>
+              <p className="font-pixel text-[0.6rem] text-muted-foreground mt-1">{currentWorld.emoji === "☕" ? <img src="/Icons/coffee-cup.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌲" ? <img src="/Icons/pine-tree.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌸" ? <img src="/Icons/sakura-blossom.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🌻" ? <img src="/Icons/sunflower.png" alt="" className="pixel-icon" /> : currentWorld.emoji === "🍂" ? <img src="/Icons/autumn-leaf.png" alt="" className="pixel-icon" /> : currentWorld.emoji} Exploring · {currentWorld.name}</p>
             </div>
             <div className="text-right">
               <div className="font-pixel text-[0.65rem] uppercase" style={{ color: "var(--muted-foreground)" }}>Typist</div>

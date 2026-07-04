@@ -58,7 +58,7 @@ export function AchievementsCard() {
   return (
     <div className="pixel-card p-5 sm:p-6">
       <div className="mb-5">
-        <h2 className="text-3xl leading-none">🏆 Badges</h2>
+        <h2 className="text-3xl leading-none"><img src="/Icons/trophy.png" alt="" className="pixel-icon" /> Badges</h2>
         <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">
           Collect them all — {unlocked} / {achievements.length} unlocked.
         </p>

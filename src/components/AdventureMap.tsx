@@ -638,7 +638,7 @@ function StageNode({
         {image ? (
           <AdventureNodeImage src={image} alt={`${stage.name} node`} className="adventure-node-img" />
         ) : (
-          <span className="adventure-node-fallback">{stage.emoji}</span>
+          <span className="adventure-node-fallback">{stage.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : stage.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : stage.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</span>
         )}
         {status === "locked" && (
           <span className="adventure-node-overlay">
@@ -847,7 +847,7 @@ function StageRunner({
         frameClassName="pixel-modal-frame-adventure"
       >
         <div className="adventure-runner-card animate-pixel-pop">
-          <div className="adventure-boss-emoji">{stage.emoji}</div>
+          <div className="adventure-boss-emoji">{stage.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : stage.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : stage.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</div>
           <div className="font-display text-4xl leading-none mb-2 text-center">{stage.name}</div>
           <p className="font-pixel text-[0.65rem] text-muted-foreground mb-4 text-center">
             {questText || "A boss stage appears. Type fast and stay accurate."}
@@ -896,6 +896,7 @@ function StageRunner({
             <div className="adventure-runner-heading">
               <div className="adventure-runner-heading-top">
                 <span className="adventure-runner-chip">{isBoss ? "Boss Quest" : `${stage.difficulty} Quest`}</span>
+                <span className="adventure-runner-chip is-node">Node {stage.id}/5</span>
                 {currentWorld ? (
                   <span className="adventure-runner-chip is-muted">{currentWorld.name}</span>
                 ) : null}
@@ -905,12 +906,14 @@ function StageRunner({
                   <div className="font-display text-2xl leading-none">{stage.name}</div>
                   <div className="font-pixel text-[0.6rem] text-muted-foreground mt-1">
                     {isBoss
-                      ? `Boss phase ${currentPhase + 1}/3 - ${timeLimit}s timer`
+                      ? `Goal: ${stage.goal} WPM - ${minAcc}%+ accuracy - boss phase ${currentPhase + 1}/3 - ${timeLimit}s timer`
                       : `Goal: ${stage.goal} WPM - ${minAcc}%+ accuracy - ${timeLimit}s timer`}
                   </div>
                 </div>
               </div>
-              {questText && <div className="adventure-runner-flavor">{questText}</div>}
+              <div className="adventure-runner-flavor">
+                {currentWorld?.blurb ?? questText ?? "Stay focused and keep a clean rhythm."}
+              </div>
             </div>
 
             <div className="adventure-runner-header-side">
@@ -923,7 +926,7 @@ function StageRunner({
                     draggable={false}
                   />
                 ) : (
-                  <span className="adventure-runner-node-fallback">{stage.emoji}</span>
+                  <span className="adventure-runner-node-fallback">{stage.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : stage.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : stage.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : stage.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage.emoji}</span>
                 )}
               </div>
             </div>
@@ -944,13 +947,6 @@ function StageRunner({
           <div className="adventure-type-wrap" onClick={() => inputRef.current?.focus()}>
             <div className="adventure-type-progress" aria-hidden="true">
               <div style={{ width: `${timePercent}%` }} />
-            </div>
-
-            <div className="adventure-live-stats" aria-label="Live quest stats">
-              <MiniStat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
-              <MiniStat label="Accuracy" value={`${acc}%`} accent="var(--leaf)" />
-              <MiniStat label="Time" value={`${timeRemaining}s`} accent="var(--coin)" />
-              <MiniStat label="Goal" value={`${stage.goal}`} accent="var(--color-destructive)" />
             </div>
 
             <div className="adventure-typing-panel">
@@ -981,6 +977,13 @@ function StageRunner({
                   );
                 })}
               </div>
+            </div>
+
+            <div className="adventure-live-stats" aria-label="Live quest stats">
+              <MiniStat label="WPM" value={String(wpm)} accent="var(--color-primary)" />
+              <MiniStat label="Accuracy" value={`${acc}%`} accent="var(--leaf)" />
+              <MiniStat label="Time" value={`${timeRemaining}s`} accent="var(--coin)" />
+              <MiniStat label="Goal" value={`${stage.goal}`} accent="var(--color-destructive)" />
             </div>
           </div>
 

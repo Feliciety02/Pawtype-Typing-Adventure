@@ -2458,8 +2458,9 @@
 
 .adventure-runner-card {
   width: min(1120px, calc(100vw - 2rem));
-  min-height: min(760px, calc(100dvh - 4rem));
-  max-height: calc(100dvh - 4rem);
+  height: min(780px, calc(100dvh - 2rem));
+  min-height: min(680px, calc(100dvh - 2rem));
+  max-height: calc(100dvh - 2rem);
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -2509,14 +2510,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 1.15rem;
+  margin-bottom: 0.85rem;
   padding-right: 4.25rem;
 }
 
 .adventure-runner-heading {
   display: grid;
-  gap: 0.45rem;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 0.42rem;
 }
 
 .adventure-runner-heading-top {
@@ -2553,6 +2556,11 @@
   color: color-mix(in oklab, var(--muted-foreground) 88%, transparent);
 }
 
+.adventure-runner-chip.is-node {
+  border-color: color-mix(in oklab, var(--coin) 58%, var(--color-border));
+  background: linear-gradient(180deg, color-mix(in oklab, var(--coin) 16%, var(--color-card)), color-mix(in oklab, var(--color-muted) 72%, transparent));
+}
+
 .adventure-runner-flavor {
   max-width: 72ch;
   font-family: var(--font-pixel);
@@ -2564,17 +2572,20 @@
 }
 
 .adventure-runner-header-side {
-  flex: 0 0 auto;
+  flex: 0 1 24%;
+  max-width: 24%;
+  min-width: 118px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .adventure-runner-node-card {
   display: grid;
   place-items: center;
-  width: clamp(112px, 13vw, 162px);
-  height: clamp(96px, 10vw, 132px);
-  padding: 0.55rem;
+  width: min(100%, clamp(116px, 13vw, 152px));
+  aspect-ratio: 4 / 3;
+  padding: 0.45rem;
   border: 2px solid color-mix(in oklab, var(--color-border) 84%, transparent);
   border-radius: 12px;
   background: linear-gradient(180deg, color-mix(in oklab, var(--color-card) 94%, white), color-mix(in oklab, var(--color-muted) 68%, transparent));
@@ -2614,19 +2625,26 @@
 
 .adventure-live-stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.7rem;
+  grid-template-columns: repeat(4, minmax(118px, 1fr));
+  gap: 0.65rem;
+  align-items: stretch;
 }
 
 .adventure-live-stats .pixel-card-sm {
-  padding: 0.55rem 0.65rem;
+  min-height: 76px;
+  max-height: 88px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.18rem;
+  padding: 0.45rem 0.6rem;
   border-radius: 10px;
   background: linear-gradient(180deg, color-mix(in oklab, var(--color-card) 90%, white), color-mix(in oklab, var(--color-muted) 74%, transparent));
   box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 24%, transparent);
 }
 
 .adventure-live-stats .font-display {
-  font-size: 1.65rem;
+  font-size: clamp(1.28rem, 2vw, 1.58rem);
 }
 
 .adventure-close-btn {
@@ -2637,8 +2655,8 @@
 .adventure-type-wrap {
   flex: 1;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 0.8rem;
+  grid-template-rows: auto minmax(340px, 1fr) auto;
+  gap: 0.7rem;
   cursor: text;
   margin-top: 0.25rem;
   min-height: 0;
@@ -2666,16 +2684,16 @@
 }
 
 .adventure-typing-panel {
-  min-height: 0;
+  min-height: clamp(340px, 46dvh, 470px);
   height: 100%;
-  padding: 1.8rem 1.9rem;
+  padding: clamp(1.25rem, 2.2vw, 1.9rem);
   border: 2px solid color-mix(in oklab, var(--color-border) 75%, transparent);
   border-radius: 8px;
   background:
     radial-gradient(circle at 12% 0%, color-mix(in oklab, var(--color-primary) 8%, transparent), transparent 32%),
     color-mix(in oklab, var(--color-muted) 64%, transparent);
   font-family: var(--font-sans);
-  font-size: clamp(2rem, 2.8vw, 2.85rem);
+  font-size: clamp(2.15rem, 3vw, 3rem);
   line-height: 1.62;
   letter-spacing: 0.08em;
   cursor: text;

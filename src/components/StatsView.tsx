@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { getSessions, type TypingSession } from "../lib/game/stats";
 
@@ -26,7 +26,7 @@ export function StatsView() {
   if (sessions.length === 0) {
     return (
       <div className="pixel-card p-8 text-center">
-        <span className="text-5xl">📊</span>
+        <img src="/Icons/nav/stats.png" alt="" className="pixel-icon" />
         <h2 className="text-3xl mt-4 mb-2">No Data Yet</h2>
         <p className="font-pixel text-[0.65rem] text-muted-foreground max-w-md mx-auto">
           Complete a typing test to see your stats here.
@@ -70,10 +70,10 @@ export function StatsView() {
     <div className="space-y-6">
       {/* Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <SummaryCard label="Tests" value={String(totalTests)} emoji="📝" />
-        <SummaryCard label="Best WPM" value={String(bestWpm)} emoji="⚡" accent="var(--color-primary)" />
-        <SummaryCard label="Avg WPM" value={String(avgWpm)} emoji="⌨" accent="var(--leaf)" />
-        <SummaryCard label="Avg Acc" value={`${avgAcc}%`} emoji="🎯" accent="var(--coin)" />
+        <SummaryCard label="Tests" value={String(totalTests)} emoji={<img src="/Icons/nav/practice.png" alt="" className="pixel-icon" />} />
+        <SummaryCard label="Best WPM" value={String(bestWpm)} emoji={<img src="/Icons/lightning-bolt.png" alt="" className="pixel-icon" />} accent="var(--color-primary)" />
+        <SummaryCard label="Avg WPM" value={String(avgWpm)} emoji={<img src="/Icons/nav/practice.png" alt="" className="pixel-icon" />} accent="var(--leaf)" />
+        <SummaryCard label="Avg Acc" value={`${avgAcc}%`} emoji={<img src="/Icons/dart.png" alt="" className="pixel-icon" />} accent="var(--coin)" />
       </div>
 
       {/* WPM Chart */}
@@ -169,7 +169,7 @@ export function StatsView() {
 
 function SummaryCard({
   label, value, emoji, accent,
-}: { label: string; value: string; emoji: string; accent?: string }) {
+}: { label: string; value: string;   emoji: React.ReactNode; accent?: string }) {
   return (
     <div className="pixel-card-sm p-3 text-center" style={accent ? { borderLeft: `4px solid ${accent}` } : undefined}>
       <div className="text-2xl mb-1">{emoji}</div>

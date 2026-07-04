@@ -66,7 +66,7 @@ export function QuestResultsModal({
           <div className="quest-results-right">
             <div className="quest-results-stats">
               <StatCard
-                icon={<span className="pixel-stat-emoji">⌨</span>}
+                icon={<img src="/Icons/nav/practice.png" alt="" className="pixel-stat-art" />}
                 label="WPM"
                 value={String(wpm)}
                 valueClassName={success ? "is-sky" : undefined}

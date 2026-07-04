@@ -40,7 +40,7 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
                     }}
                   >
                     <PixelPet pet={pet} size={72} />
-                    {isActive ? <span className="pet-room-active-label">★ Active</span> : null}
+                    {isActive ? <span className="pet-room-active-label"><img src="/Icons/star.png" alt="" className="pixel-icon" /> Active</span> : null}
                   </button>
                 );
               })}

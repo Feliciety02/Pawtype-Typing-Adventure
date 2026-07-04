@@ -751,7 +751,7 @@ export function TypingArena({
                         key={star}
                         className={star <= stars ? "is-filled" : ""}
                       >
-                        ★
+                        <img src="/Icons/star.png" alt="" className="pixel-icon" />
                       </span>
                     ))}
                   </div>
@@ -761,9 +761,9 @@ export function TypingArena({
               <div className="lesson-results-title">Lesson Complete!</div>
 
               <div className="lesson-results-stats">
-                <StatCard icon={<span className="pixel-stat-emoji">⌨</span>} label="WPM" value={String(wpm)} />
+                <StatCard icon={<img src="/Icons/nav/practice.png" alt="" className="pixel-stat-art" />} label="WPM" value={String(wpm)} />
                 <StatCard icon={<img src="/Icons/dart.png" alt="" className="pixel-stat-art" />} label="Accuracy" value={`${accuracy}%`} valueClassName="is-sky" />
-                <StatCard icon={<span className="pixel-stat-emoji">🔥</span>} label="Combo" value={String(bestCombo)} valueClassName="is-gold" />
+                <StatCard icon={<img src="/Icons/flame.png" alt="" className="pixel-stat-art" />} label="Combo" value={String(bestCombo)} valueClassName="is-gold" />
               </div>
 
               {(() => {

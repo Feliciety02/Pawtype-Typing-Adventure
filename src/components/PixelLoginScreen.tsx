@@ -104,7 +104,7 @@ export function PixelLoginScreen() {
             }}
             aria-hidden="true"
           >
-            🐾
+            <img src="/Icons/paw-print.png" alt="" className="pixel-icon" />
           </span>
         ))}
       </div>

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { getCoachFeedback, type CoachInsight } from "../lib/game/coach";
 
-const INSIGHT_STYLES: Record<CoachInsight["type"], { emoji: string; accent: string }> = {
-  praise: { emoji: "🌟", accent: "var(--color-primary)" },
-  tip: { emoji: "💡", accent: "var(--coin)" },
-  warning: { emoji: "⚠️", accent: "var(--color-destructive)" },
-  milestone: { emoji: "🏆", accent: "var(--leaf)" },
-  trend: { emoji: "📈", accent: "var(--color-primary)" },
+const INSIGHT_STYLES: Record<CoachInsight["type"], { emoji: string; icon: string; accent: string }> = {
+  praise: { emoji: "🌟", icon: "/Icons/glowing-star.png", accent: "var(--color-primary)" },
+  tip: { emoji: "💡", icon: "/Icons/lightbulb.png", accent: "var(--coin)" },
+  warning: { emoji: "⚠️", icon: "", accent: "var(--color-destructive)" },
+  milestone: { emoji: "🏆", icon: "/Icons/trophy.png", accent: "var(--leaf)" },
+  trend: { emoji: "📈", icon: "", accent: "var(--color-primary)" },
 };
 
 type Props = {
@@ -58,7 +58,7 @@ export function AICoach(props: Props) {
   if (loading) {
     return (
       <div className="pixel-card-sm p-3 flex items-center gap-2">
-        <span className="font-pixel text-[0.55rem] animate-sparkle">🧠</span>
+        <span className="font-pixel text-[0.55rem] animate-sparkle"><img src="/Icons/brain.png" alt="" className="pixel-icon" /></span>
         <span className="font-pixel text-[0.6rem] text-muted-foreground">Coach is checking your run...</span>
       </div>
     );
@@ -67,7 +67,7 @@ export function AICoach(props: Props) {
   if (error || !insight) {
     return (
       <div className="pixel-card-sm p-3 flex items-center gap-2" style={{ opacity: 0.6 }}>
-        <span className="font-pixel text-[0.55rem]">🤖</span>
+        <span className="font-pixel text-[0.55rem]"><img src="/Icons/robot-head.png" alt="" className="pixel-icon" /></span>
         <span className="font-pixel text-[0.6rem] text-muted-foreground">
           {error ? "Coach feedback is unavailable right now." : "Keep typing and I'll have feedback ready!"}
         </span>
@@ -82,7 +82,7 @@ export function AICoach(props: Props) {
       className="pixel-card-sm p-3 flex items-start gap-2"
       style={{ borderLeft: `3px solid ${style.accent}` }}
     >
-      <span className="font-pixel text-sm shrink-0 mt-0.5">{style.emoji}</span>
+      <span className="font-pixel text-sm shrink-0 mt-0.5">{style.icon ? <img src={style.icon} alt="" className="pixel-icon" /> : style.emoji}</span>
       <div>
         <div className="font-pixel text-[0.55rem] uppercase mb-0.5" style={{ color: style.accent }}>
           Coach

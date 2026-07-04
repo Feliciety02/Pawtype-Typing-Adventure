@@ -270,7 +270,7 @@ export function LessonsCard() {
                             ) : isBoss ? (
                               <Swords size={20} />
                             ) : (
-                              <span>{lesson.emoji}</span>
+                              <span>{lesson.emoji === "🔥" ? <img src="/Icons/flame.png" alt="" className="pixel-icon" /> : lesson.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : lesson.emoji === "⏰" ? <img src="/Icons/clock.png" alt="" className="pixel-icon" /> : lesson.emoji === "💎" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : lesson.emoji === "👑" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : lesson.emoji}</span>
                             )}
                             {isCurrent && !done && <span className="lesson-node-pulse" aria-hidden="true" />}
                             {done && <span className="lesson-node-sparkle" aria-hidden="true" />}
@@ -304,7 +304,7 @@ export function LessonsCard() {
                             </div>
                             <div className="lesson-node-rewards">
                               <span className="lesson-reward-chip is-xp">+{rewards.xp} XP</span>
-                              <span className="lesson-reward-chip is-coin">+{rewards.coins} 🪙</span>
+                              <span className="lesson-reward-chip is-coin">+{rewards.coins} <img src="/Icons/coin.png" alt="" className="pixel-icon" /></span>
                               <span className="lesson-reward-chip is-pet">+{rewards.petExp} PET</span>
                             </div>
                           </div>

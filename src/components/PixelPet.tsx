@@ -53,7 +53,7 @@ export function PixelPet({ pet, size = 96, showDetails = true }: Props) {
         <>
           <div className="flex items-center gap-1.5">
             <span className="font-pixel text-[0.55rem] text-muted-foreground">
-              {EVO_EMOJI[stage]} {EVO_LABEL[stage]}
+              {stage === "baby" ? "🥚" : stage === "adult" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : stage === "evolved" ? <img src="/Icons/glowing-star.png" alt="" className="pixel-icon" /> : stage === "legendary" ? <img src="/Icons/star.png" alt="" className="pixel-icon" /> : EVO_EMOJI[stage]} {EVO_LABEL[stage]}
             </span>
           </div>
 

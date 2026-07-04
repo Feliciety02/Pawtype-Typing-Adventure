@@ -145,7 +145,7 @@ export function SettingsPage() {
                         onClick={() => setWorld(item.id)}
                         type="button"
                       >
-                        <span className="settings-world-emoji">{item.emoji}</span>
+                        <span className="settings-world-emoji">{item.emoji === "☕" ? <img src="/Icons/coffee-cup.png" alt="" className="pixel-icon" /> : item.emoji === "🌲" ? <img src="/Icons/pine-tree.png" alt="" className="pixel-icon" /> : item.emoji === "🌊" ? <img src="/Icons/ocean-wave.png" alt="" className="pixel-icon" /> : item.emoji === "🌸" ? <img src="/Icons/sakura-blossom.png" alt="" className="pixel-icon" /> : item.emoji === "🌻" ? <img src="/Icons/sunflower.png" alt="" className="pixel-icon" /> : item.emoji === "🍂" ? <img src="/Icons/autumn-leaf.png" alt="" className="pixel-icon" /> : item.emoji}</span>
                         <span className="settings-world-name">{item.name}</span>
                         <span className="settings-world-blurb">{item.blurb}</span>
                         <span className="settings-swatches" aria-hidden="true">
