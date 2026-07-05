@@ -76,40 +76,97 @@
   opacity: 0.7;
 }
 
-/* --- Buildings --------------------------------------------- */
+/* --- Buildings (PNG sprites) -------------------------------- */
 .camp-building {
   position: absolute;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.camp-building[data-glow="true"] {
+  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--coin) 60%, transparent));
+  animation: camp-building-glow-pulse 2.4s ease-in-out infinite;
+}
+
+.camp-building-btn {
+  position: relative;
+  display: block;
   padding: 0;
   border: 0;
   background: transparent;
-  transition: transform 180ms ease, filter 180ms ease;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 200ms cubic-bezier(.34,1.56,.64,1), filter 200ms ease;
   will-change: transform;
-}
-
-.camp-building:hover {
-  transform: translateY(-4px) scale(1.04);
-  filter: drop-shadow(0 0 12px color-mix(in oklab, var(--coin) 55%, transparent));
-}
-
-.camp-building:focus-visible {
-  outline: none;
-  filter: drop-shadow(0 0 14px var(--color-primary));
-}
-
-.camp-building-sprite {
-  font-size: clamp(38px, 6vw, 72px);
-  line-height: 1;
   image-rendering: pixelated;
-  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.35));
+}
+
+.camp-building-btn:hover:not(:disabled) {
+  transform: translateY(-7px) scale(1.04);
+  filter: drop-shadow(0 6px 18px color-mix(in oklab, var(--coin) 50%, transparent));
+}
+
+.camp-building-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.camp-building-btn:active:not(:disabled) {
+  transition-duration: 80ms;
+  transform: scale(0.93);
+}
+
+.camp-building[data-clicking="true"] .camp-building-btn {
+  animation: camp-building-squash 300ms ease;
+}
+
+.camp-building-img {
+  display: block;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.4));
+  transition: opacity 200ms ease;
   user-select: none;
+}
+
+.camp-building[data-locked="true"] .camp-building-img {
+  opacity: 0.4;
+}
+
+.camp-building-lock {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  pointer-events: none;
+  opacity: 0.7;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+}
+
+.camp-building-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 70%;
+  height: 10px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%);
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.camp-building-btn:hover:not(:disabled) ~ .camp-building-shadow,
+.camp-building-btn:focus-visible ~ .camp-building-shadow {
+  opacity: 0.5;
+  transform: translateX(-50%) scale(1.2);
 }
 
 .camp-building-tag {
   position: absolute;
-  top: -22px;
+  top: -28px;
   left: 50%;
   transform: translateX(-50%);
   padding: 3px 8px;
@@ -125,42 +182,59 @@
   box-shadow: 0 2px 0 0 var(--color-border);
 }
 
-.camp-building:hover .camp-building-tag,
-.camp-building:focus-visible .camp-building-tag {
+.camp-building-btn:hover:not(:disabled) ~ .camp-building-tag,
+.camp-building-btn:focus-visible ~ .camp-building-tag {
   opacity: 1;
   transform: translate(-50%, -4px);
 }
 
-/* --- Campfire (central HUD) -------------------------------- */
-.camp-campfire {
+.camp-building-particle {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  font-size: 14px;
+  pointer-events: none;
+  animation: camp-particle-fly 700ms ease-out forwards;
+  opacity: 0;
+}
+
+.camp-building-sparkle-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.camp-building-sparkle {
   position: absolute;
   left: 50%;
-  bottom: 6%;
-  transform: translateX(-50%);
-  display: grid;
-  place-items: center;
-  gap: 6px;
+  top: 50%;
+  font-size: 16px;
+  animation: camp-sparkle-burst 400ms ease-out forwards;
+  opacity: 0;
 }
 
-.camp-campfire-flame {
-  font-size: clamp(42px, 7vw, 84px);
-  line-height: 1;
-  filter: drop-shadow(0 0 18px rgba(255, 160, 40, 0.55));
-  animation: camp-flame-flicker 1.2s ease-in-out infinite;
+/* --- Campfire (central PNG sprite) ------------------------- */
+.camp-building[data-id="campfire"] {
+  z-index: 0;
 }
 
-.camp-campfire-glow {
+.camp-building[data-id="campfire"] .camp-building-btn {
+  cursor: default;
+  animation: camp-flame-flicker 1.6s ease-in-out infinite;
+}
+
+.camp-building[data-id="campfire"] .camp-building-btn::after {
+  content: "";
   position: absolute;
-  width: 220px;
-  height: 220px;
+  left: 50%;
+  top: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle,
-    rgba(255,180,60,0.35) 0%,
-    rgba(255,140,40,0.15) 40%,
-    transparent 70%);
+  background: radial-gradient(circle, rgba(255,180,60,0.25) 0%, transparent 60%);
   pointer-events: none;
   animation: camp-glow-pulse 2.4s ease-in-out infinite;
-  z-index: -1;
 }
 
 .camp-hud-card {
@@ -397,10 +471,35 @@
   50%     { transform: rotate(2deg); }
 }
 
+@keyframes camp-building-squash {
+  0%   { transform: scale(1); }
+  20%  { transform: scale(0.88, 1.12); }
+  50%  { transform: scale(1.06, 0.94); }
+  100% { transform: scale(1); }
+}
+
+@keyframes camp-building-glow-pulse {
+  0%,100% { opacity: 0.7; }
+  50%     { opacity: 1; }
+}
+
+@keyframes camp-particle-fly {
+  0%   { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--px, 0px)), var(--py, -20px)); opacity: 0; }
+}
+
+@keyframes camp-sparkle-burst {
+  0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--sx, 0px)), calc(-50% + var(--sy, -10px))) scale(1.1); opacity: 0; }
+}
+
 /* --- Reduced motion ---------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .camp-campfire-flame,
   .camp-campfire-glow,
+  .camp-building[data-id="campfire"] .camp-building-btn,
+  .camp-building[data-glow="true"],
+  .camp-building-btn:hover:not(:disabled),
   .camp-pet-inner,
   .camp-butterfly,
   .camp-firefly,
