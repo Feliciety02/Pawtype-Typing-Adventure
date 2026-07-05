@@ -45,7 +45,7 @@ export function ThemeSetsSection({ activeWorld, onSelectWorld }: { activeWorld: 
                   <div className="font-pixel text-[0.7rem] leading-7">
                     <div><span style={{ background: "color-mix(in oklab, var(--color-primary) 18%, transparent)" }}>pixel</span> glow willow ivory</div>
                     <div>garden cloud cinnamon moon</div>
-                    <div>{theme.id === "forest" ? "forest moss leaf" : theme.id === "ocean" ? "ocean tide wave" : theme.id === "sakura" ? "sakura blossom petal" : theme.id === "castle" ? "castle king crown" : theme.id === "space" ? "stardust galaxy star" : theme.id === "autumn" ? "autumn leaf cider" : theme.id === "mushroom" ? "mushroom glow spore" : theme.id === "moonlit" ? "moonbeam jasmine dew" : theme.id === "rainy" ? "rainy window book" : theme.id === "snowy" ? "snowy frost cabin" : theme.id === "sunflower" ? "sunflower golden bee" : "latte cozy brew"}</div>
+                    <div>{theme.id === "forest" ? "forest moss leaf" : theme.id === "ocean" ? "ocean tide wave" : theme.id === "sakura" ? "sakura blossom petal" : theme.id === "castle" ? "castle king crown" : theme.id === "space" ? "stardust galaxy star" : theme.id === "autumn" ? "autumn leaf cider" : theme.id === "mushroom" ? "mushroom glow spore" : theme.id === "sunflower" ? "sunflower golden bee" : "latte cozy brew"}</div>
                   </div>
                 </div>
                 <div className="rounded-md border-2 overflow-hidden" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-card)" }}>

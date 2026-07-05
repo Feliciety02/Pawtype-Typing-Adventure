@@ -58,9 +58,6 @@ export const DEFAULT_INVENTORY: Inventory = {
   items: [
     "theme-autumn",
     "theme-mushroom",
-    "theme-moonlit",
-    "theme-rainy",
-    "theme-snowy",
     "theme-sunflower",
   ],
   pets: [DEFAULT_STARTER_PET],

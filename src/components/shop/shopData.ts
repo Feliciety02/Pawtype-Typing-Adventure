@@ -67,9 +67,6 @@ export const THEMES: ThemeItem[] = [
   { id: "theme-space-preview",  worldId: "space",     name: "Stardust",         emoji: "🌌",  price: 0,    category: "space",  unlockLevel: 1, description: "Neon comets in deep night." },
   { id: "theme-autumn",         worldId: "autumn",    name: "Autumn Cottage",   emoji: "🍂",  price: 150,  category: "forest", unlockLevel: 3, description: "Crisp air & golden leaves." },
   { id: "theme-mushroom",       worldId: "mushroom",  name: "Mushroom Village", emoji: "🍄",  price: 150,  category: "forest", unlockLevel: 5, description: "Glowing spores & twisted roots." },
-  { id: "theme-moonlit",        worldId: "moonlit",   name: "Moonlit Garden",   emoji: "🌙",  price: 150,  category: "garden", unlockLevel: 4, description: "Silver beams & jasmine scent." },
-  { id: "theme-rainy",          worldId: "rainy",     name: "Rainy Library",    emoji: "🌧️", price: 150,  category: "special",unlockLevel: 6, description: "Steamy windows & old paper." },
-  { id: "theme-snowy",          worldId: "snowy",     name: "Snowy Cabin",      emoji: "❄️", price: 150,  category: "snow",   unlockLevel: 4, description: "Frosted glass & crackling fire." },
   { id: "theme-sunflower",      worldId: "sunflower", name: "Sunflower Meadow", emoji: "🌻",  price: 150,  category: "garden", unlockLevel: 3, description: "Golden fields & buzzing bees." },
 ];
 
