@@ -10,8 +10,4 @@ export const THEME_BACKGROUND: Partial<Record<WorldId, string>> = {
   autumn: "/theme/cozy-campsite.png",
   mushroom: "/theme/fairy-mushroom-village.png",
   sunflower: "/theme/sunflower-meadow.png",
-  "volcanic-forge": "/theme/volcanic-forge.png",
-  "desert-oasis": "/theme/desert-oasis.png",
-  "steam-punk-workshop": "/theme/steam-punk-workshop.png",
-  "frostveil-kingdom": "/theme/frostveil-kingdom.png",
 };
