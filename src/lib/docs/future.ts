@@ -6,6 +6,9 @@ Planned features and high-potential additions to expand the game.
 
 ## âœ… Shipped
 
+### Adventure Scene Intro Timing Fix
+✅ **Shipped** - The adventure quest gameplay card no longer reuses the immediate \`animate-pixel-pop\` utility during the full-scene intro. Its dedicated delayed \`card-pop-in\` sequence now stays hidden while the biome artwork fades in, holds for the showcase, and dims before the typing card appears.
+
 ### Pixel RPG Modal Refresh
 âœ… **Shipped** - Practice results, compact lesson results, lesson popups, pet room, egg rewards, and wider adventure quest overlays now share a reusable parchment-style pixel modal system with layered frames, corner ornaments, visible X controls, Escape support, stronger close behavior, safer close-button spacing, and a premium cozy RPG presentation.
 
@@ -48,6 +51,8 @@ Planned features and high-potential additions to expand the game.
 
 ### ðŸ” Cloud Sync & Auth
 âœ… **Shipped** - Sign-in/sign-up form with Supabase auth (email/password), Google and Facebook OAuth entry points, PKCE browser auth flow, server-backed auth cookies, safer callback redirects, stronger signup password rules, cloud save/load of game state on login/logout, and automatic 2-second debounced cloud sync while playing. Accessible from Header profile menu and Settings -> Account.
+
+âœ… **Shipped** - Supabase auth/cloud save now treat deployment env setup as optional at runtime: missing or placeholder \`SUPABASE_*\` / \`VITE_SUPABASE_*\` values no longer crash the app shell, and the auth callback shows a direct setup error instead.
 
 ### ðŸ•¹ Pixel Login Gate
 âœ… **Shipped** - Dedicated full-screen pixel-art login page before the main game, with Google and Facebook OAuth entry points plus a local demo account mode for instant access without cloud sync. The title-screen backdrop uses the cozy sky, fluffy pixel clouds, sun, stepped mountain and hill layers, twinkles, and drifting leaves.

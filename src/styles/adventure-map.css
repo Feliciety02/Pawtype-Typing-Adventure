@@ -504,6 +504,23 @@
   position: relative;
 }
 
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bg-showcase {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+@keyframes card-pop-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .adventure-scene-overlay {
   position: fixed;
   inset: 0;
@@ -515,6 +532,24 @@
     radial-gradient(circle at 50% 0%, color-mix(in oklab, var(--sky) 16%, transparent), transparent 34%),
     color-mix(in oklab, var(--background) 72%, transparent);
   backdrop-filter: blur(6px);
+  animation: overlay-fade-in 300ms ease forwards;
+}
+
+.adventure-scene-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--adventure-bg-img, none);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+  animation: bg-showcase 4000ms ease 200ms forwards;
+}
+
+.adventure-runner-card {
+  animation: card-pop-in 500ms cubic-bezier(.2,1.4,.4,1) 3200ms both;
 }
 
 .adventure-runner-card.is-complete {

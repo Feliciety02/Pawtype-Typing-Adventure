@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useGame } from "../../lib/game/store";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
-import { THEME_PREVIEW_ASSETS } from "../../lib/game/themeAssets";
+import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
 import { useLocal } from "../../lib/hooks/useLocal";
 import { THEMES, DOODADS, THEME_CATEGORIES, DOODAD_CATEGORIES, type ThemeItem, type DoodadItem, type ThemeCategory, type DoodadCategory } from "./shopData";
 import { OwnedBadge, PriceBadge, SectionHeader } from "./shopHelpers";
@@ -63,7 +63,7 @@ export function ThemesPage() {
             const equipped = themeEquipped(t);
             const locked = themeLocked(t);
             const canAfford = player.coins >= t.price;
-            const preview = THEME_PREVIEW_ASSETS[t.worldId];
+            const preview = THEME_BACKGROUND[t.worldId];
             return (
               <div key={t.id} className="pixel-card-sm p-3 flex flex-col gap-2" style={{ opacity: locked ? 0.85 : 1 }}>
                 <div

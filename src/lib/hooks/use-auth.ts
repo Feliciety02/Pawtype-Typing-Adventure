@@ -6,7 +6,10 @@ import { useEffect, useState } from "react";
 import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { signIn, signOut, signUp } from "@/lib/supabase/auth";
 import { isDemoModeEnabled, setDemoModeEnabled, subscribeToDemoMode } from "@/lib/auth/demo";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import {
+  getSupabaseBrowserClient,
+  isSupabaseBrowserConfigured,
+} from "@/lib/supabase/client";
 import { signInWithOAuth, type OAuthProvider } from "@/lib/supabase/oauth";
 
 export function useAuth() {
@@ -19,6 +22,12 @@ export function useAuth() {
   useEffect(() => subscribeToDemoMode(() => setIsDemo(isDemoModeEnabled())), []);
 
   useEffect(() => {
+    if (!isSupabaseBrowserConfigured()) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+
     const supabase = getSupabaseBrowserClient();
     let mounted = true;
 
@@ -65,6 +74,12 @@ export function useAuth() {
     },
     onSuccess: async () => {
       setDemoModeEnabled(false);
+      if (!isSupabaseBrowserConfigured()) {
+        setUser(null);
+        router.invalidate();
+        return;
+      }
+
       const supabase = getSupabaseBrowserClient();
       const { data } = await supabase.auth.getUser();
       setUser(data.user ?? null);

@@ -27,7 +27,7 @@ export type VisibleImageBounds = {
 export const LOCK_ICON = "/Icons/lock.png";
 export const NODE_IMAGE_BOUNDS_CACHE = new Map<string, VisibleImageBounds>();
 
-export const NODE_IMAGES: Partial<Partial<Record<WorldId, string[]>>> = {
+export const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
   cafe: [
     "/node-level/cozy-cafe/cozy-cafe-01-cafe-corner.png",
     "/node-level/cozy-cafe/cozy-cafe-02-roast-ridge.png",
@@ -120,6 +120,27 @@ export const NODE_IMAGES: Partial<Partial<Record<WorldId, string[]>>> = {
     "/node-level/frostveil-kingdom/frostveil-kingdom-05-frostveil-palace.png",
   ],
 };
+
+const SCENE_BG_DIRS: Partial<Record<WorldId, string>> = {
+  cafe: "cozy-cafe-background",
+  forest: "mosy-forest-background",
+  ocean: "tide-pool-background",
+};
+
+const SCENE_NAME_OVERRIDES: Record<string, string> = {
+  "Mossy Trail": "moss-trail",
+};
+
+export function sceneImage(world: WorldId, stageName: string): string | undefined {
+  const dir = SCENE_BG_DIRS[world];
+  if (!dir) return undefined;
+  const slug = SCENE_NAME_OVERRIDES[stageName] ?? stageName
+    .toLowerCase()
+    .replace(/['']/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+  return `/theme/${dir}/${slug}.png`;
+}
 
 export const DIFFICULTY_TIME_LIMITS: Record<Difficulty, number> = {
   Easy: 35,

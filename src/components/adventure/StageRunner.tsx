@@ -1,6 +1,6 @@
-import { type ChangeEvent, useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
+import { WORLDS, type WorldId } from "../shared/WorldTheme";
 import { useGame } from "../../lib/game/store";
 import { generateAdventureWords, generateQuestText } from "../../lib/game/textGenerator";
 import { ModalShell, PixelButton } from "../modals/ModalShell";
@@ -9,6 +9,8 @@ import { QuestResultsModal } from "./QuestResultsModal";
 import { expandWords, bossEmojis, rewardsFor, DIFFICULTY_TIME_LIMITS, type Stage } from "./adventureData";
 import { MiniStat } from "./MiniStat";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { sceneImage } from "./adventureData";
+import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
 
 export function StageRunner({
   stage,
@@ -105,6 +107,11 @@ export function StageRunner({
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
   }, []);
 
   useEffect(() => {
@@ -250,7 +257,7 @@ export function StageRunner({
   }
 
   return createPortal(
-    <div className="adventure-scene-overlay" role="dialog" aria-modal="true" aria-label={`${stage.name} quest`}>
+    <div className="adventure-scene-overlay" role="dialog" aria-modal="true" aria-label={`${stage.name} quest`} style={(() => { const bg = sceneImage(world, stage.name) ?? THEME_BACKGROUND[world]; return bg ? { "--adventure-bg-img": `url("${bg}")` } as React.CSSProperties : undefined; })()}>
       <div className="adventure-runner-scene">
         <CelebrationOverlay
           active={done !== null}
@@ -260,7 +267,7 @@ export function StageRunner({
           xp={xpReward}
           coins={coinReward}
         />
-        <div className={`adventure-runner-card animate-pixel-pop ${done ? `is-complete is-${done}` : ""}`}>
+        <div className={`adventure-runner-card ${done ? `is-complete is-${done}` : ""}`}>
           <button
             type="button"
             className="adventure-scene-close"

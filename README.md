@@ -52,6 +52,21 @@ What exists:
 - `src/lib/supabase/auth.ts` and `src/lib/supabase/game.ts` provide server functions for auth and cloud persistence
 - Supabase handles authentication, session cookies, and cloud game-state storage
 
+### Environment requirements
+
+Supabase auth and cloud save require both server and browser env vars at build/deploy time:
+
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+Notes:
+
+- `VITE_*` vars are required for the browser bundle. If they are missing in the hosting environment, the app can render but social auth and cloud sync will stay disabled.
+- Do not leave placeholder values such as `your-project-url` or `your-anon-key` in active env files.
+- After changing deployment env vars, rebuild/redeploy so Vite can embed the browser-facing values.
+
 What does not exist:
 
 - no REST API

@@ -1,5 +1,5 @@
 import { WORLDS, type WorldId } from "../shared/WorldTheme";
-import { THEME_PREVIEW_ASSETS } from "../../lib/game/themeAssets";
+import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
 
 export function ThemeSetsSection({ activeWorld, onSelectWorld }: { activeWorld: WorldId; onSelectWorld: (world: WorldId) => void }) {
   return (
@@ -49,7 +49,7 @@ export function ThemeSetsSection({ activeWorld, onSelectWorld }: { activeWorld: 
                   </div>
                 </div>
                 <div className="rounded-md border-2 overflow-hidden" style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-card)" }}>
-                  <div aria-hidden="true" style={{ width: "100%", aspectRatio: "1 / 1", backgroundImage: `url("${THEME_PREVIEW_ASSETS[theme.id]}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
+                  <div aria-hidden="true" style={{ width: "100%", aspectRatio: "1 / 1", backgroundImage: `url("${THEME_BACKGROUND[theme.id]}")`, backgroundSize: "cover", backgroundPosition: "center" }} />
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-2 mt-3">

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import {
+  getSupabaseBrowserClient,
+  isSupabaseBrowserConfigured,
+} from "@/lib/supabase/client";
 import {
   clearStashedPostAuthPath,
   readStashedPostAuthPath,
@@ -19,6 +22,14 @@ function AuthCallbackPage() {
     let cancelled = false;
 
     const completeOAuth = async () => {
+      if (!isSupabaseBrowserConfigured()) {
+        setError(
+          "Supabase auth is not configured for this deployment. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY, then rebuild.",
+        );
+        clearStashedPostAuthPath();
+        return;
+      }
+
       const url = new URL(window.location.href);
       const providerError =
         url.searchParams.get("error_description") ?? url.searchParams.get("error");

@@ -12,7 +12,8 @@ import { getCoachFeedback, type CoachInsight } from "../../lib/game/coach";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
 import { generateWorldText, generateMascotLine, generateWeakSpotWords, generateNextWords } from "../../lib/game/textGenerator";
 import { pushNotification } from "../../lib/game/notifications";
-import { DURATIONS, makeWords, makeWordsFrom, WORLD_ART_URL, type Mood } from "./typingArenaData";
+import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
+import { DURATIONS, makeWords, makeWordsFrom, type Mood } from "./typingArenaData";
 import { LessonResultsModal } from "./LessonResultsModal";
 
 type Props = {
@@ -37,7 +38,7 @@ export function TypingArena({
   const { state, dispatch } = useGame();
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
-  const worldArtUrl = WORLD_ART_URL[world];
+  const worldArtUrl = THEME_BACKGROUND[world];
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
   const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : []));
   const [typed, setTyped] = useState("");
