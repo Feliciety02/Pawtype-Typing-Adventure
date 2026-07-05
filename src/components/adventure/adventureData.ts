@@ -85,11 +85,11 @@ export const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
     "/node-level/fairy-mushroom-village/fairy-mushroom-village-05-fairy-queens-tree.png",
   ],
   sunflower: [
-    "/node-level/sunflower-meadow/sunflower-meadow-01-sunflower-path.png",
-    "/node-level/sunflower-meadow/sunflower-meadow-02-sunflower-field.png",
-    "/node-level/sunflower-meadow/sunflower-meadow-03-windmill-hill.png",
-    "/node-level/sunflower-meadow/sunflower-meadow-04-golden-harvest.png",
-    "/node-level/sunflower-meadow/sunflower-meadow-05-harvest-haven.png",
+    "/node-level/sunflower-meadow/sunflower-meadow-01-sunpetal-path.png",
+    "/node-level/sunflower-meadow/sunflower-meadow-02-golden-bloom-field.png",
+    "/node-level/sunflower-meadow/sunflower-meadow-03-sunwheel-windmill.png",
+    "/node-level/sunflower-meadow/sunflower-meadow-04-sunspire-fields.png",
+    "/node-level/sunflower-meadow/sunflower-meadow-05-sunheart-sanctuary.png",
   ],
   "volcanic-forge": [
     "/node-level/volcanic-forge/volcanic-forge-01-ember-trail.png",
@@ -227,11 +227,11 @@ export const STAGE_DEFS: Partial<Record<WorldId, Array<{ name: string; emoji: st
     { name: "Fairy Queen's Tree", emoji: "👑", difficulty: "Boss" },
   ],
   sunflower: [
-    { name: "Sunflower Path", emoji: "🌼", difficulty: "Easy" },
-    { name: "Sunflower Field", emoji: "🌻", difficulty: "Easy" },
-    { name: "Windmill Hill", emoji: "🌬️", difficulty: "Normal" },
-    { name: "Golden Harvest", emoji: "🌾", difficulty: "Hard" },
-    { name: "Harvest Haven", emoji: "🏡", difficulty: "Boss" },
+    { name: "Sunpetal Path", emoji: "🌼", difficulty: "Easy" },
+    { name: "Golden Bloom Field", emoji: "🌻", difficulty: "Easy" },
+    { name: "Sunwheel Windmill", emoji: "🌬️", difficulty: "Normal" },
+    { name: "Sunspire Fields", emoji: "🌾", difficulty: "Hard" },
+    { name: "Sunheart Sanctuary", emoji: "🏡", difficulty: "Boss" },
   ],
   "volcanic-forge": [
     { name: "Ember Trail", emoji: "🔥", difficulty: "Easy" },
