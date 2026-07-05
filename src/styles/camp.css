@@ -32,6 +32,15 @@
       color-mix(in oklab, var(--color-muted) 35%, var(--color-card)) 100%);
 }
 
+.camp-scene-background {
+  z-index: 0;
+  background-image: var(--camp-scene-bg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: opacity 700ms ease, filter 700ms ease, background-image 700ms ease;
+}
+
 .camp-scene[data-theme-fading="true"] .camp-layer {
   animation: camp-theme-fade 700ms ease both;
 }
@@ -40,6 +49,10 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.camp-layer .camp-building {
+  z-index: 1;
 }
 
 .camp-layer > * { pointer-events: auto; }

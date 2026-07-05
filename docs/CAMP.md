@@ -1,17 +1,17 @@
 # Camp - Living Home Base
 
-Camp is PawType's home screen: a living pixel campsite scene that grows with the player.
+Camp is PawType's home screen: a living pixel campsite scene that grows with the player and now uses painted time-of-day background art inside the scene itself.
 
 ## Layout
 
-- **Scene (`CampScene`)** - Full-bleed interactive pixel environment. Buildings, decor, wandering pet, and ambient particles all live here. No dashboard cards or bottom dock.
+- **Scene (`CampScene`)** - Full-bleed interactive pixel environment with background art for morning, afternoon, and evening/night, plus hand-placed buildings aligned to the campsite composition. No dashboard cards or bottom dock.
 
 ## Files
 
 | Path | Role |
 | --- | --- |
 | `src/components/hub/Hub.tsx` | Hosts the camp scene as the hub home view. |
-| `src/components/camp/CampScene.tsx` | Renders sky and ground layers, buildings, campfire HUD, pet, and time overlay. |
+| `src/components/camp/CampScene.tsx` | Selects the background art by time of day, places buildings to match the campsite composition, and renders the HUD, pet, and overlay. |
 | `src/components/camp/WanderingPet.tsx` | Autonomous pet that walks between waypoints and jumps on `pawtype-pet-celebrate`. |
 | `src/components/camp/ambient/AmbientLayer.tsx` | Theme-driven particles such as butterflies, fireflies, petals, leaves, clouds, and stars. |
 | `src/components/camp/modals/CampModals.tsx` | One modal per building (Cabin, Painter's Tent, Pet Nursery, Training Board, Supply Wagon). |
@@ -21,8 +21,8 @@ Camp is PawType's home screen: a living pixel campsite scene that grows with the
 
 ## Interaction Model
 
-- Buildings are `<button>` sprites positioned absolutely. Clicking a building opens its modal via the shared `ModalShell`.
-- Building anchors are staggered so large sprites do not crowd each other, with the supply wagon pushed farther from the Painter's Tent for cleaner separation and click space.
+- Buildings are `<button>` sprites positioned absolutely on top of the painted camp background. Clicking a building opens its modal via the shared `ModalShell`.
+- Building anchors are mapped to the illustrated campsite composition so the library, cabin, tent, wagon, nursery, mailbox, blacksmith, and campfire sit in the same visual zones as the reference scene.
 - Painter's Tent wraps `ThemeSetsSection`; selecting a theme triggers a 700 ms crossfade of the scene.
 - Supply Wagon opens a chest with shake, burst, and reward flow; it dispatches `pawtype-pet-celebrate` so the pet jumps.
 - The pet's wandering loop is self-contained and does not write game state.
@@ -43,7 +43,7 @@ Tiers unlock at levels 1 / 10 / 20 / 35 / 50 / 75 / 100. Each tier adds decor sp
 
 ## Time Of Day
 
-`getTimeOfDay()` reads the local clock. A soft-light gradient overlay tints the scene. Fireflies spawn at night.
+`getTimeOfDay()` reads the local clock. `CampScene` swaps background art for morning, afternoon, and evening, and reuses the evening art for night with a darker overlay tint. Fireflies spawn at night.
 
 ## Adding Future Features
 

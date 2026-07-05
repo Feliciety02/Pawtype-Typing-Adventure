@@ -19,7 +19,21 @@ import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { useWorld } from "../shared/WorldTheme";
 import { CampBuilding } from "./CampBuilding";
 
-type OpenBuilding = "blacksmith" | "cabin" | "library" | "mailbox" | "nursery" | "tent" | "wagon";
+type OpenBuilding =
+  | "blacksmith"
+  | "cabin"
+  | "library"
+  | "mailbox"
+  | "nursery"
+  | "tent"
+  | "wagon";
+
+const CAMP_BACKGROUND_BY_TIME = {
+  morning: "/camp-scene/campscene-background-morning.png",
+  afternoon: "/camp-scene/campscene-background-afternoon.png",
+  evening: "/camp-scene/campscene-background-evening.png",
+  night: "/camp-scene/campscene-background-evening.png",
+} as const;
 
 export function CampScene() {
   const { state, dispatch } = useGame();
@@ -57,97 +71,16 @@ export function CampScene() {
   const xpPct = needed > 0 ? Math.min(Math.round((player.xp / needed) * 100), 100) : 0;
   const nextTier = nextTierLevel(player.level);
   const open = (building: OpenBuilding) => setOpenBuilding(building);
+  const sceneBackground = CAMP_BACKGROUND_BY_TIME[time];
 
   return (
-    <div className="camp-scene" data-theme-fading={fading}>
+    <div
+      className="camp-scene"
+      data-theme-fading={fading}
+      style={{ ["--camp-scene-bg" as string]: `url("${sceneBackground}")` }}
+    >
+      <div className="camp-scene-background camp-layer" aria-hidden="true" />
       <AmbientLayer world={world} time={time} />
-
-      <div className="camp-ground camp-layer" aria-hidden="true">
-        {tier.hasStonePaths && <div className="camp-path" />}
-      </div>
-
-      <div className="camp-layer" aria-hidden="true">
-        <span className="camp-decor" style={{ left: "3%", bottom: "34%" }}>
-          🌲
-        </span>
-        <span className="camp-decor" style={{ right: "3%", bottom: "36%" }}>
-          🌳
-        </span>
-        {tier.hasGarden && (
-          <span className="camp-decor" style={{ left: "48%", bottom: "10%" }}>
-            🌷
-          </span>
-        )}
-        {tier.hasFlowerBeds && (
-          <>
-            <span className="camp-decor" style={{ left: "30%", bottom: "8%" }}>
-              🌼
-            </span>
-            <span className="camp-decor" style={{ right: "30%", bottom: "8%" }}>
-              🌺
-            </span>
-          </>
-        )}
-        {tier.hasPond && (
-          <span className="camp-decor is-fixed" style={{ left: "58%", bottom: "16%" }}>
-            💧
-          </span>
-        )}
-        {tier.hasBridge && (
-          <span
-            className="camp-decor is-fixed"
-            style={{ left: "50%", bottom: "22%", transform: "translateX(-50%)" }}
-          >
-            🌉
-          </span>
-        )}
-        {tier.hasLanterns && (
-          <>
-            <span className="camp-decor is-fixed" style={{ left: "18%", bottom: "26%" }}>
-              🏮
-            </span>
-            <span className="camp-decor is-fixed" style={{ right: "18%", bottom: "26%" }}>
-              🏮
-            </span>
-          </>
-        )}
-        {tier.hasFence && (
-          <span
-            className="camp-decor is-fixed"
-            style={{ left: "10%", bottom: "6%", fontSize: 24, opacity: 0.75 }}
-          >
-            ▬▬▬▬▬
-          </span>
-        )}
-        {tier.hasStatues && (
-          <span className="camp-decor is-fixed" style={{ right: "48%", bottom: "34%" }}>
-            🗿
-          </span>
-        )}
-        {tier.hasCrystals && (
-          <span className="camp-decor" style={{ right: "44%", bottom: "12%" }}>
-            💎
-          </span>
-        )}
-        {tier.hasWatchtower && (
-          <span className="camp-decor is-fixed" style={{ left: "72%", bottom: "40%" }}>
-            🗼
-          </span>
-        )}
-        {tier.hasSanctuary && (
-          <span
-            className="camp-decor"
-            style={{ left: "50%", top: "10%", transform: "translateX(-50%)", fontSize: 44 }}
-          >
-            ✨
-          </span>
-        )}
-        {tier.hasVisitors && time !== "night" && (
-          <span className="camp-decor" style={{ left: "70%", bottom: "8%" }}>
-            🐿️
-          </span>
-        )}
-      </div>
 
       <div className="camp-layer">
         <CampBuilding
@@ -156,16 +89,16 @@ export function CampScene() {
           label="Library"
           x={50}
           y={24}
-          width={140}
+          width={172}
           onClick={() => open("library")}
         />
         <CampBuilding
           id="cabin"
           asset={CampBuildings.cabin}
           label="The Cabin"
-          x={18}
-          y={38}
-          width={132}
+          x={22}
+          y={39}
+          width={164}
           locked={!tier.hasCabin}
           onClick={() => open("cabin")}
         />
@@ -173,27 +106,27 @@ export function CampScene() {
           id="tent"
           asset={CampBuildings.paintersTent}
           label="Painter's Tent"
-          x={86}
-          y={36}
-          width={136}
+          x={72}
+          y={34}
+          width={170}
           onClick={() => open("tent")}
         />
         <CampBuilding
           id="nursery"
           asset={CampBuildings.petNursery}
           label="Pet Nursery"
-          x={10}
-          y={58}
-          width={132}
+          x={22}
+          y={64}
+          width={158}
           onClick={() => open("nursery")}
         />
         <CampBuilding
           id="wagon"
           asset={CampBuildings.supplyWagon}
           label={canClaim ? "Supply Wagon · Ready!" : "Supply Wagon"}
-          x={91}
-          y={56}
-          width={136}
+          x={87}
+          y={47}
+          width={170}
           glow={canClaim}
           onClick={() => open("wagon")}
         />
@@ -201,9 +134,9 @@ export function CampScene() {
           id="mailbox"
           asset={CampBuildings.mailbox}
           label="Mailbox"
-          x={32}
-          y={68}
-          width={120}
+          x={35}
+          y={63}
+          width={126}
           locked={!tier.hasMailbox}
           onClick={() => open("mailbox")}
         />
@@ -211,9 +144,9 @@ export function CampScene() {
           id="blacksmith"
           asset={CampBuildings.blacksmith}
           label="Blacksmith"
-          x={70}
-          y={66}
-          width={134}
+          x={66}
+          y={61}
+          width={162}
           onClick={() => open("blacksmith")}
         />
       </div>
@@ -224,8 +157,8 @@ export function CampScene() {
           asset={CampBuildings.campfire}
           label="Campfire"
           x={50}
-          y={57}
-          width={144}
+          y={50}
+          width={164}
         />
       </div>
 
