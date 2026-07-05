@@ -85,7 +85,7 @@ export const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
     "/node-level/fairy-mushroom-village/fairy-mushroom-village-05-fairy-queens-tree.png",
   ],
   sunflower: [
-    "/node-level/sunflower-meadow/sunflower-meadow-01-daisy-path.png",
+    "/node-level/sunflower-meadow/sunflower-meadow-01-sunflower-path.png",
     "/node-level/sunflower-meadow/sunflower-meadow-02-sunflower-field.png",
     "/node-level/sunflower-meadow/sunflower-meadow-03-windmill-hill.png",
     "/node-level/sunflower-meadow/sunflower-meadow-04-golden-harvest.png",
@@ -227,7 +227,7 @@ export const STAGE_DEFS: Partial<Record<WorldId, Array<{ name: string; emoji: st
     { name: "Fairy Queen's Tree", emoji: "👑", difficulty: "Boss" },
   ],
   sunflower: [
-    { name: "Daisy Path", emoji: "🌼", difficulty: "Easy" },
+    { name: "Sunflower Path", emoji: "🌼", difficulty: "Easy" },
     { name: "Sunflower Field", emoji: "🌻", difficulty: "Easy" },
     { name: "Windmill Hill", emoji: "🌬️", difficulty: "Normal" },
     { name: "Golden Harvest", emoji: "🌾", difficulty: "Hard" },
