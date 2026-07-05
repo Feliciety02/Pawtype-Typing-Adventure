@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { WorldId } from "../../components/shared/WorldTheme";
-import type { TimeOfDay } from "../../lib/camp/timeOfDay";
+import type { WorldId } from "../../shared/WorldTheme";
+import type { TimeOfDay } from "../../../lib/camp/timeOfDay";
 
 /**
  * AmbientLayer — theme + time-of-day driven particles.
