@@ -4,7 +4,11 @@ Planned features and high-potential additions to expand the game.
 
 ---
 
-## âœ… Shipped
+## ✅ Shipped
+
+### 🏕️ Camp — Living Home Base
+✅ **Shipped** - The Camp (Hub) is no longer a dashboard of cards. It is now a two-zone living pixel campsite: an interactive scene (buildings, wandering pet, ambient particles, time-of-day lighting) with an RPG-style dock below. Buildings — Painter's Tent (themes), Pet Nursery, Supply Wagon (daily reward chest with shake/burst animation), Training Board (stats), Cabin (unlocks at Lv 20), Mailbox (Lv 10), Windmill (Lv 35) — open modals via click. The active pet wanders the ground autonomously and jumps on rewards. Ambient particles change per theme (butterflies in the meadow, petals under sakura, fireflies at night, stars in space, etc.). Selecting a theme in the tent triggers a scene crossfade. Camp visibly evolves through 7 progression tiers at levels 1/10/20/35/50/75/100, adding fence → cabin → windmill → stone paths → statues → sanctuary as the player levels up.
+
 
 ### Adventure Scene Intro Timing Fix
 ✅ **Shipped** - The adventure quest gameplay card no longer reuses the immediate \`animate-pixel-pop\` utility during the full-scene intro. Its dedicated delayed \`card-pop-in\` sequence now stays hidden while the biome artwork fades in, holds for the showcase, and dims before the typing card appears.
