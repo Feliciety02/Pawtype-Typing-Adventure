@@ -129,6 +129,7 @@ const SCENE_BG_DIRS: Partial<Record<WorldId, string>> = {
   castle: "medieval-castle-background",
   space: "stardust-background",
   mushroom: "fairy-mushroom-village-background",
+  sunflower: "sunflower-meadow-background",
 };
 
 const SCENE_NAME_OVERRIDES: Record<string, string> = {
