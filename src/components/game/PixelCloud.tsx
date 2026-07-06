@@ -36,9 +36,9 @@ const COLORS = [
 export function PixelCloud({ count = 3 }: Props) {
   const clouds = Array.from({ length: count }, (_, i) => {
     const cloudIndex = i % CLOUD_SHAPES.length;
-    const left = 5 + (i * 25) + Math.sin(i * 2.3) * 8;
+    const left = 5 + i * 25 + Math.sin(i * 2.3) * 8;
     const top = 5 + Math.cos(i * 1.7) * 10 + 8;
-    const duration = 18 + (i * 3) % 7;
+    const duration = 18 + ((i * 3) % 7);
     const delay = i * 4;
     const size = 40 + (i % 3) * 20;
 

@@ -102,11 +102,15 @@ function contextLine(ctx: MascotContext): string | null {
 
 export function generateMascotLine(mood: string, ctx?: MascotContext): string | null {
   const pool =
-    mood === "idle" ? IDLE_LINES :
-    mood === "happy" ? HAPPY_LINES :
-    mood === "oops" ? OOPS_LINES :
-    mood === "sleep" ? SLEEP_LINES :
-    null;
+    mood === "idle"
+      ? IDLE_LINES
+      : mood === "happy"
+        ? HAPPY_LINES
+        : mood === "oops"
+          ? OOPS_LINES
+          : mood === "sleep"
+            ? SLEEP_LINES
+            : null;
 
   if (!pool) return null;
 

@@ -19,5 +19,10 @@ export type WorldLexicon = {
   seeds: string[];
 };
 export const DIFFICULTY_ORDER: Record<Difficulty, number> = {
-  beginner: 0, easy: 1, intermediate: 2, advanced: 3, expert: 4, master: 5,
+  beginner: 0,
+  easy: 1,
+  intermediate: 2,
+  advanced: 3,
+  expert: 4,
+  master: 5,
 };

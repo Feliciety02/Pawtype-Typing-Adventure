@@ -7,25 +7,47 @@ export function pick<T>(arr: T[]): T {
 }
 
 function conjugate(verb: string): string {
-  if (verb.endsWith("s") || verb.endsWith("x") || verb.endsWith("ch") || verb.endsWith("sh")) return verb + "es";
+  if (verb.endsWith("s") || verb.endsWith("x") || verb.endsWith("ch") || verb.endsWith("sh"))
+    return verb + "es";
   if (verb.endsWith("y") && !/[aeiou]y/.test(verb)) return verb.slice(0, -1) + "ies";
   return verb + "s";
 }
 
 function pluralize(word: string): string {
-  if (word.endsWith("s") || word.endsWith("x") || word.endsWith("ch") || word.endsWith("sh")) return word + "es";
+  if (word.endsWith("s") || word.endsWith("x") || word.endsWith("ch") || word.endsWith("sh"))
+    return word + "es";
   if (word.endsWith("y") && !/[aeiou]y/.test(word)) return word.slice(0, -1) + "ies";
   return word + "s";
 }
 
 export function fillTemplate(tpl: string, bank: WordBank): string {
   let result = tpl
-    .replace(/\{noun\}s/g, () => { const w = pick(pickFresh(bank.nouns, 30)); trackUsed([w]); return pluralize(w); })
-    .replace(/\{noun\}/g, () => { const w = pick(pickFresh(bank.nouns, 30)); trackUsed([w]); return w; })
-    .replace(/\{adj\}/g, () => { const w = pick(pickFresh(bank.adjs, 20)); trackUsed([w]); return w; })
+    .replace(/\{noun\}s/g, () => {
+      const w = pick(pickFresh(bank.nouns, 30));
+      trackUsed([w]);
+      return pluralize(w);
+    })
+    .replace(/\{noun\}/g, () => {
+      const w = pick(pickFresh(bank.nouns, 30));
+      trackUsed([w]);
+      return w;
+    })
+    .replace(/\{adj\}/g, () => {
+      const w = pick(pickFresh(bank.adjs, 20));
+      trackUsed([w]);
+      return w;
+    })
     .replace(/\{adv\}/g, () => pick(bank.advs))
-    .replace(/\{vrb\}/g, () => { const w = pick(pickFresh(bank.verbs, 25)); trackUsed([w]); return w; })
-    .replace(/\{verb\}/g, () => { const w = pick(pickFresh(bank.verbs, 25)); trackUsed([w]); return conjugate(w); })
+    .replace(/\{vrb\}/g, () => {
+      const w = pick(pickFresh(bank.verbs, 25));
+      trackUsed([w]);
+      return w;
+    })
+    .replace(/\{verb\}/g, () => {
+      const w = pick(pickFresh(bank.verbs, 25));
+      trackUsed([w]);
+      return conjugate(w);
+    })
     .replace(/\{prep\}/g, () => pick(bank.preps));
 
   // Handle determiner variants
@@ -43,5 +65,3 @@ export function fillTemplate(tpl: string, bank: WordBank): string {
 
   return result;
 }
-
-

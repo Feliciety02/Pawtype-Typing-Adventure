@@ -1,9 +1,23 @@
 import { useRef, useState, useEffect, useMemo } from "react";
-import { measureVisibleImageBounds, NODE_IMAGE_BOUNDS_CACHE, type VisibleImageBounds } from "./adventureData";
+import {
+  measureVisibleImageBounds,
+  NODE_IMAGE_BOUNDS_CACHE,
+  type VisibleImageBounds,
+} from "@/lib/adventure/adventureData";
 
-export function AdventureNodeImage({ src, alt, className }: { src: string; alt: string; className: string }) {
+export function AdventureNodeImage({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt: string;
+  className: string;
+}) {
   const imageRef = useRef<HTMLImageElement>(null);
-  const [bounds, setBounds] = useState<VisibleImageBounds | null>(NODE_IMAGE_BOUNDS_CACHE.get(src) ?? null);
+  const [bounds, setBounds] = useState<VisibleImageBounds | null>(
+    NODE_IMAGE_BOUNDS_CACHE.get(src) ?? null,
+  );
   const [frameSize, setFrameSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -42,7 +56,10 @@ export function AdventureNodeImage({ src, alt, className }: { src: string; alt: 
   const measuredStyle = useMemo(() => {
     if (!bounds || frameSize.width === 0 || frameSize.height === 0) return undefined;
 
-    const scale = Math.min(frameSize.width / bounds.naturalWidth, frameSize.height / bounds.naturalHeight);
+    const scale = Math.min(
+      frameSize.width / bounds.naturalWidth,
+      frameSize.height / bounds.naturalHeight,
+    );
     const width = bounds.naturalWidth * scale;
     const height = bounds.naturalHeight * scale;
     const left = (frameSize.width - width) / 2;

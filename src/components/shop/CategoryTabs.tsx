@@ -1,6 +1,12 @@
 export function CategoryTabs<T extends string>({
-  items, value, onChange,
-}: { items: { id: T; label: string }[]; value: T; onChange: (v: T) => void }) {
+  items,
+  value,
+  onChange,
+}: {
+  items: { id: T; label: string }[];
+  value: T;
+  onChange: (v: T) => void;
+}) {
   return (
     <div className="flex flex-wrap gap-2">
       {items.map((c) => {

@@ -6,11 +6,15 @@ export function useLocal<T>(key: string, initial: T): [T, (v: T) => void] {
     try {
       const raw = localStorage.getItem(key);
       return raw ? (JSON.parse(raw) as T) : initial;
-    } catch { return initial; }
+    } catch {
+      return initial;
+    }
   });
   const set = (n: T) => {
     setV(n);
-    try { localStorage.setItem(key, JSON.stringify(n)); } catch {}
+    try {
+      localStorage.setItem(key, JSON.stringify(n));
+    } catch {}
   };
   return [v, set];
 }

@@ -80,4 +80,3 @@ export const TEMPLATES: Record<Difficulty, string[]> = {
     "After the {noun} {verb} the {adj} {noun} begins to {vrb} {adv}.",
   ],
 };
-

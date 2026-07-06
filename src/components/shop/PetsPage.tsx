@@ -1,8 +1,15 @@
 import { useMemo } from "react";
 import { useGame } from "../../lib/game/store";
-import { useLocal } from "../../lib/hooks/useLocal";
-import { PETS, RARITY_COLOR, RARITY_ORDER, type PetItem, type PetCategory, type PetSort } from "./shopData";
-import { RarityBadge, OwnedBadge, PriceBadge, SectionHeader } from "./shopHelpers";
+import { useLocal } from "../../hooks/useLocal";
+import {
+  PETS,
+  RARITY_COLOR,
+  RARITY_ORDER,
+  type PetItem,
+  type PetCategory,
+  type PetSort,
+} from "@/lib/shop/shopData";
+import { RarityBadge, OwnedBadge, PriceBadge, SectionHeader } from "@/lib/shop/shopHelpers";
 
 export function PetsPage() {
   const { state, dispatch } = useGame();
@@ -28,17 +35,27 @@ export function PetsPage() {
   const filtered = useMemo(() => {
     let list = [...PETS];
     if (category !== "all") {
-      list = list.filter((p) => p.species === category || (category === "dragon" && p.species === "dragon"));
+      list = list.filter(
+        (p) => p.species === category || (category === "dragon" && p.species === "dragon"),
+      );
     }
     if (owned && !notOwned) list = list.filter(isOwned);
     if (notOwned && !owned) list = list.filter((p) => !isOwned(p));
     if (favOnly) list = list.filter((p) => isFav(p.id));
 
     switch (sort) {
-      case "newest": list.sort((a, b) => b.addedAt - a.addedAt); break;
-      case "price":  list.sort((a, b) => a.price - b.price); break;
-      case "rarity": list.sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]); break;
-      case "alpha":  list.sort((a, b) => a.name.localeCompare(b.name)); break;
+      case "newest":
+        list.sort((a, b) => b.addedAt - a.addedAt);
+        break;
+      case "price":
+        list.sort((a, b) => a.price - b.price);
+        break;
+      case "rarity":
+        list.sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
+        break;
+      case "alpha":
+        list.sort((a, b) => a.name.localeCompare(b.name));
+        break;
     }
     return list;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,11 +78,23 @@ export function PetsPage() {
   };
 
   const totals: Record<PetCategory, [number, number]> = {
-    all:    [PETS.filter(isOwned).length, PETS.length],
-    cat:    [PETS.filter((p) => p.species === "cat" && isOwned(p)).length, PETS.filter((p) => p.species === "cat").length],
-    dog:    [PETS.filter((p) => p.species === "dog" && isOwned(p)).length, PETS.filter((p) => p.species === "dog").length],
-    rabbit: [PETS.filter((p) => p.species === "rabbit" && isOwned(p)).length, PETS.filter((p) => p.species === "rabbit").length],
-    dragon: [PETS.filter((p) => p.species === "dragon" && isOwned(p)).length, PETS.filter((p) => p.species === "dragon").length],
+    all: [PETS.filter(isOwned).length, PETS.length],
+    cat: [
+      PETS.filter((p) => p.species === "cat" && isOwned(p)).length,
+      PETS.filter((p) => p.species === "cat").length,
+    ],
+    dog: [
+      PETS.filter((p) => p.species === "dog" && isOwned(p)).length,
+      PETS.filter((p) => p.species === "dog").length,
+    ],
+    rabbit: [
+      PETS.filter((p) => p.species === "rabbit" && isOwned(p)).length,
+      PETS.filter((p) => p.species === "rabbit").length,
+    ],
+    dragon: [
+      PETS.filter((p) => p.species === "dragon" && isOwned(p)).length,
+      PETS.filter((p) => p.species === "dragon").length,
+    ],
   };
 
   return (
@@ -75,7 +104,7 @@ export function PetsPage() {
         <div>
           <div className="font-pixel text-[0.6rem] text-muted-foreground mb-2">Categories</div>
           <div className="flex flex-col gap-1">
-            {(["all","cat","dog","rabbit","dragon"] as PetCategory[]).map((c) => {
+            {(["all", "cat", "dog", "rabbit", "dragon"] as PetCategory[]).map((c) => {
               const label = c === "all" ? "All Pets" : c.charAt(0).toUpperCase() + c.slice(1) + "s";
               const active = c === category;
               return (
@@ -98,13 +127,24 @@ export function PetsPage() {
         <div>
           <div className="font-pixel text-[0.6rem] text-muted-foreground mb-2">Filters</div>
           <label className="flex items-center gap-2 font-pixel text-[0.65rem] py-1 cursor-pointer">
-            <input type="checkbox" checked={owned} onChange={(e) => setOwned(e.target.checked)} /> Owned
+            <input type="checkbox" checked={owned} onChange={(e) => setOwned(e.target.checked)} />{" "}
+            Owned
           </label>
           <label className="flex items-center gap-2 font-pixel text-[0.65rem] py-1 cursor-pointer">
-            <input type="checkbox" checked={notOwned} onChange={(e) => setNotOwned(e.target.checked)} /> Not Owned
+            <input
+              type="checkbox"
+              checked={notOwned}
+              onChange={(e) => setNotOwned(e.target.checked)}
+            />{" "}
+            Not Owned
           </label>
           <label className="flex items-center gap-2 font-pixel text-[0.65rem] py-1 cursor-pointer">
-            <input type="checkbox" checked={favOnly} onChange={(e) => setFavOnly(e.target.checked)} /> Favorites
+            <input
+              type="checkbox"
+              checked={favOnly}
+              onChange={(e) => setFavOnly(e.target.checked)}
+            />{" "}
+            Favorites
           </label>
         </div>
 
@@ -151,7 +191,10 @@ export function PetsPage() {
                     {equipped && <OwnedBadge label="Equipped" color="var(--sky)" />}
                     {!equipped && ownedP && <OwnedBadge />}
                     <button
-                      onClick={(e) => { e.stopPropagation(); toggleFav(p.id); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFav(p.id);
+                      }}
                       className="text-sm leading-none"
                       title="Favorite"
                     >
@@ -186,7 +229,10 @@ export function PetsPage() {
                     className={`pixel-btn ${ownedP ? "pixel-btn-secondary" : ""}`}
                     style={{ padding: "6px 10px", fontSize: "0.6rem" }}
                     disabled={ownedP || locked || !canAfford}
-                    onClick={(e) => { e.stopPropagation(); buy(p); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      buy(p);
+                    }}
                   >
                     {ownedP ? "Owned" : locked ? "Locked" : !canAfford ? "Need 🪙" : "Buy"}
                   </button>
@@ -207,15 +253,22 @@ export function PetsPage() {
             <SectionHeader title="Mystery Eggs" subtitle="Random pet — coming soon" />
             <div className="grid grid-cols-5 gap-2">
               {[
-                { r: "common",    emoji: "🥚", color: RARITY_COLOR.common },
-                { r: "rare",      emoji: "🥚", color: RARITY_COLOR.rare },
-                { r: "epic",      emoji: "🥚", color: RARITY_COLOR.epic },
+                { r: "common", emoji: "🥚", color: RARITY_COLOR.common },
+                { r: "rare", emoji: "🥚", color: RARITY_COLOR.rare },
+                { r: "epic", emoji: "🥚", color: RARITY_COLOR.epic },
                 { r: "legendary", emoji: "🥚", color: RARITY_COLOR.legendary },
-                { r: "mythic",    emoji: "🥚", color: RARITY_COLOR.mythic },
+                { r: "mythic", emoji: "🥚", color: RARITY_COLOR.mythic },
               ].map((e) => (
-                <div key={e.r} className="pixel-card-sm p-2 grid place-items-center text-center gap-1">
-                  <div style={{ fontSize: 32, filter: `drop-shadow(0 0 6px ${e.color})` }}>{e.emoji}</div>
-                  <div className="font-pixel text-[0.5rem]" style={{ color: e.color }}>{e.r.toUpperCase()}</div>
+                <div
+                  key={e.r}
+                  className="pixel-card-sm p-2 grid place-items-center text-center gap-1"
+                >
+                  <div style={{ fontSize: 32, filter: `drop-shadow(0 0 6px ${e.color})` }}>
+                    {e.emoji}
+                  </div>
+                  <div className="font-pixel text-[0.5rem]" style={{ color: e.color }}>
+                    {e.r.toUpperCase()}
+                  </div>
                 </div>
               ))}
             </div>
@@ -224,17 +277,32 @@ export function PetsPage() {
           <div className="pixel-card-sm p-4">
             <SectionHeader title="Collection Progress" />
             <div className="space-y-2">
-              {(["cat","dog","rabbit","dragon"] as PetCategory[]).map((c) => {
+              {(["cat", "dog", "rabbit", "dragon"] as PetCategory[]).map((c) => {
                 const [have, total] = totals[c];
                 const pct = total > 0 ? Math.round((have / total) * 100) : 0;
                 return (
                   <div key={c}>
                     <div className="flex justify-between font-pixel text-[0.6rem] mb-1">
                       <span>{c.charAt(0).toUpperCase() + c.slice(1)}s</span>
-                      <span>{have} / {total}</span>
+                      <span>
+                        {have} / {total}
+                      </span>
                     </div>
-                    <div style={{ height: 8, background: "var(--color-muted)", border: "2px solid var(--color-border)", borderRadius: 4 }}>
-                      <div style={{ width: `${pct}%`, height: "100%", background: "var(--color-primary)" }} />
+                    <div
+                      style={{
+                        height: 8,
+                        background: "var(--color-muted)",
+                        border: "2px solid var(--color-border)",
+                        borderRadius: 4,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: `${pct}%`,
+                          height: "100%",
+                          background: "var(--color-primary)",
+                        }}
+                      />
                     </div>
                   </div>
                 );
@@ -255,8 +323,13 @@ export function PetsPage() {
             <>
               <div className="flex items-center justify-between">
                 <RarityBadge rarity={p.rarity} />
-                {equipped ? <OwnedBadge label="✓ Equipped" color="var(--sky)" /> :
-                 ownedP ? <OwnedBadge /> : locked ? <OwnedBadge label={`Lv ${p.unlockLevel}`} color="var(--muted-foreground)" /> : null}
+                {equipped ? (
+                  <OwnedBadge label="✓ Equipped" color="var(--sky)" />
+                ) : ownedP ? (
+                  <OwnedBadge />
+                ) : locked ? (
+                  <OwnedBadge label={`Lv ${p.unlockLevel}`} color="var(--muted-foreground)" />
+                ) : null}
               </div>
               <div
                 className="grid place-items-center rounded"
@@ -277,14 +350,19 @@ export function PetsPage() {
                 </div>
               </div>
               <p className="font-pixel text-[0.6rem] leading-relaxed">
-                {locked ? `Reach player level ${p.unlockLevel} to reveal this companion.` : p.description}
+                {locked
+                  ? `Reach player level ${p.unlockLevel} to reveal this companion.`
+                  : p.description}
               </p>
               <div className="flex items-center justify-between">
                 <PriceBadge price={p.price} />
                 <button
                   onClick={() => toggleFav(p.id)}
                   className="font-pixel text-[0.6rem] px-2 py-1 rounded"
-                  style={{ background: "var(--color-muted)", border: "2px solid var(--color-border)" }}
+                  style={{
+                    background: "var(--color-muted)",
+                    border: "2px solid var(--color-border)",
+                  }}
                 >
                   {isFav(p.id) ? "❤️ Favorited" : "🤍 Favorite"}
                 </button>

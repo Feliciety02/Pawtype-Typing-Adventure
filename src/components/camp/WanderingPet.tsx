@@ -22,7 +22,10 @@ export function WanderingPet({ pet }: { pet: PetState | null }) {
       if (!container) return;
       const width = container.clientWidth;
       const petWidth = 90;
-      const target = Math.max(10, Math.min(width - petWidth - 10, Math.random() * (width - petWidth)));
+      const target = Math.max(
+        10,
+        Math.min(width - petWidth - 10, Math.random() * (width - petWidth)),
+      );
       setPos((prev) => ({ x: target, flipped: target < prev.x }));
     };
     wander();
@@ -59,7 +62,9 @@ export function WanderingPet({ pet }: { pet: PetState | null }) {
       role="button"
       tabIndex={0}
       aria-label={`${pet.name} — click to play`}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") click(); }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") click();
+      }}
     >
       <div className="camp-pet-inner">
         <PixelPet pet={pet} size={70} showDetails={false} />

@@ -14,15 +14,36 @@ export type BigramStats = {
   accuracy: number;
 };
 
-export type KeyboardZone = "left-top" | "left-home" | "left-bottom" | "right-top" | "right-home" | "right-bottom";
+export type KeyboardZone =
+  "left-top" | "left-home" | "left-bottom" | "right-top" | "right-home" | "right-bottom";
 
 const KEYBOARD_MAP: Record<string, KeyboardZone> = {
-  q: "left-top", w: "left-top", e: "left-top", r: "left-top", t: "left-top",
-  a: "left-home", s: "left-home", d: "left-home", f: "left-home", g: "left-home",
-  z: "left-bottom", x: "left-bottom", c: "left-bottom", v: "left-bottom", b: "left-bottom",
-  y: "right-top", u: "right-top", i: "right-top", o: "right-top", p: "right-top",
-  h: "right-home", j: "right-home", k: "right-home", l: "right-home",
-  n: "right-bottom", m: "right-bottom",
+  q: "left-top",
+  w: "left-top",
+  e: "left-top",
+  r: "left-top",
+  t: "left-top",
+  a: "left-home",
+  s: "left-home",
+  d: "left-home",
+  f: "left-home",
+  g: "left-home",
+  z: "left-bottom",
+  x: "left-bottom",
+  c: "left-bottom",
+  v: "left-bottom",
+  b: "left-bottom",
+  y: "right-top",
+  u: "right-top",
+  i: "right-top",
+  o: "right-top",
+  p: "right-top",
+  h: "right-home",
+  j: "right-home",
+  k: "right-home",
+  l: "right-home",
+  n: "right-bottom",
+  m: "right-bottom",
 };
 
 export type ZoneStats = {
@@ -70,7 +91,10 @@ function computeCharStats(events: KeystrokeEvent[]): CharStats[] {
       char,
       attempts: data.attempts,
       mistakes: data.mistakes,
-      accuracy: data.attempts > 0 ? Math.round(((data.attempts - data.mistakes) / data.attempts) * 10000) / 100 : 100,
+      accuracy:
+        data.attempts > 0
+          ? Math.round(((data.attempts - data.mistakes) / data.attempts) * 10000) / 100
+          : 100,
     }))
     .sort((a, b) => a.accuracy - b.accuracy);
 }
@@ -92,7 +116,10 @@ function computeBigramStats(events: KeystrokeEvent[]): BigramStats[] {
       pair,
       attempts: data.attempts,
       mistakes: data.mistakes,
-      accuracy: data.attempts > 0 ? Math.round(((data.attempts - data.mistakes) / data.attempts) * 10000) / 100 : 100,
+      accuracy:
+        data.attempts > 0
+          ? Math.round(((data.attempts - data.mistakes) / data.attempts) * 10000) / 100
+          : 100,
     }))
     .filter((b) => b.attempts >= 3)
     .sort((a, b) => a.accuracy - b.accuracy);
@@ -116,7 +143,10 @@ function computeZoneStats(events: KeystrokeEvent[]): ZoneStats[] {
       zone,
       total: data.total,
       mistakes: data.mistakes,
-      accuracy: data.total > 0 ? Math.round(((data.total - data.mistakes) / data.total) * 10000) / 100 : 100,
+      accuracy:
+        data.total > 0
+          ? Math.round(((data.total - data.mistakes) / data.total) * 10000) / 100
+          : 100,
       label: ZONE_LABELS[zone],
     }))
     .filter((z) => z.total > 0)
@@ -150,7 +180,10 @@ export async function analyzePatterns(sessionCount = 30): Promise<PatternReport 
 
 export function drillRecommendation(report: PatternReport): string | null {
   if (report.topWeakChars.length === 0) return null;
-  const chars = report.topWeakChars.slice(0, 3).map((c) => `"${c.char}"`).join(", ");
+  const chars = report.topWeakChars
+    .slice(0, 3)
+    .map((c) => `"${c.char}"`)
+    .join(", ");
   if (report.weakestZone && report.weakestZone.accuracy < 85) {
     return `Focus on ${chars}. Your ${report.weakestZone.label.toLowerCase()} zone needs work (${report.weakestZone.accuracy}% accuracy). Try slow, deliberate drills on those keys.`;
   }

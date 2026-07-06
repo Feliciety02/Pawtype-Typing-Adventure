@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useReducer, useRef, useCallback, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useCallback,
+  type ReactNode,
+} from "react";
 import {
   type GameState,
   type PetState,
@@ -10,7 +18,7 @@ import {
   getDailyReward,
 } from "./types";
 import { persistence } from "./persistence";
-import { useAuth } from "@/lib/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { saveGameState, loadGameState } from "@/lib/supabase/game";
 
 export type GameAction =
@@ -202,7 +210,8 @@ function initializeGame(): GameState {
   const inventory = hasPets
     ? {
         ...savedInventory,
-        activePet: savedInventory.activePet ?? savedInventory.pets[0]?.type ?? DEFAULT_STARTER_PET.type,
+        activePet:
+          savedInventory.activePet ?? savedInventory.pets[0]?.type ?? DEFAULT_STARTER_PET.type,
       }
     : {
         ...savedInventory,

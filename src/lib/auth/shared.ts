@@ -4,8 +4,7 @@ export const PASSWORD_MIN_LENGTH = 8;
 export const PASSWORD_MAX_LENGTH = 72;
 export const EMAIL_MAX_LENGTH = 254;
 
-export const passwordHint =
-  "Use 8+ characters with uppercase, lowercase, a number, and a symbol.";
+export const passwordHint = "Use 8+ characters with uppercase, lowercase, a number, and a symbol.";
 
 export const emailSchema = z
   .string()
@@ -22,10 +21,7 @@ export const signInPasswordSchema = z
 
 export const signUpPasswordSchema = z
   .string()
-  .min(
-    PASSWORD_MIN_LENGTH,
-    `Password must be at least ${PASSWORD_MIN_LENGTH} characters.`,
-  )
+  .min(PASSWORD_MIN_LENGTH, `Password must be at least ${PASSWORD_MIN_LENGTH} characters.`)
   .max(PASSWORD_MAX_LENGTH, "Password is too long.")
   .regex(/[a-z]/, "Password must include a lowercase letter.")
   .regex(/[A-Z]/, "Password must include an uppercase letter.")

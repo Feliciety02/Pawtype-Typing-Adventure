@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
-import {
-  getSupabaseBrowserClient,
-  isSupabaseBrowserConfigured,
-} from "@/lib/supabase/client";
+import { getSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/client";
 import {
   clearStashedPostAuthPath,
   readStashedPostAuthPath,
@@ -44,9 +41,7 @@ function AuthCallbackPage() {
         const supabase = getSupabaseBrowserClient();
         const { data } = await supabase.auth.getUser();
         if (data.user) {
-          const next = sanitizeAuthPath(
-            url.searchParams.get("next") ?? readStashedPostAuthPath(),
-          );
+          const next = sanitizeAuthPath(url.searchParams.get("next") ?? readStashedPostAuthPath());
           clearStashedPostAuthPath();
           window.location.replace(next);
           return;
@@ -64,9 +59,7 @@ function AuthCallbackPage() {
       }
 
       if (!cancelled) {
-        const next = sanitizeAuthPath(
-          url.searchParams.get("next") ?? readStashedPostAuthPath(),
-        );
+        const next = sanitizeAuthPath(url.searchParams.get("next") ?? readStashedPostAuthPath());
         clearStashedPostAuthPath();
         window.location.replace(next);
       }

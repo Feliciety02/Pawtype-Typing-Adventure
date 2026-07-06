@@ -6,10 +6,16 @@ import { generateAdventureWords, generateQuestText } from "../../lib/game/textGe
 import { ModalShell, PixelButton } from "../modals/ModalShell";
 import { CelebrationOverlay } from "./CelebrationOverlay";
 import { QuestResultsModal } from "./QuestResultsModal";
-import { expandWords, bossEmojis, rewardsFor, DIFFICULTY_TIME_LIMITS, type Stage } from "./adventureData";
+import {
+  expandWords,
+  bossEmojis,
+  rewardsFor,
+  DIFFICULTY_TIME_LIMITS,
+  type Stage,
+} from "@/lib/adventure/adventureData";
 import { MiniStat } from "./MiniStat";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
-import { sceneImage } from "./adventureData";
+import { sceneImage } from "@/lib/adventure/adventureData";
 import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
 
 export function StageRunner({
@@ -100,7 +106,9 @@ export function StageRunner({
   }, [isBoss, stage.id, stage.name, stage.words, world]);
 
   const onCloseRef = useRef(onClose);
-  useEffect(() => { onCloseRef.current = onClose; });
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") onCloseRef.current();
@@ -111,7 +119,9 @@ export function StageRunner({
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   useEffect(() => {
@@ -143,7 +153,16 @@ export function StageRunner({
     return () => {
       cancelled = true;
     };
-  }, [bossIntro, done, stage.name, stage.words, target.length, targetWords.length, typed.length, world]);
+  }, [
+    bossIntro,
+    done,
+    stage.name,
+    stage.words,
+    target.length,
+    targetWords.length,
+    typed.length,
+    world,
+  ]);
 
   const elapsed = startedAt ? (now - startedAt) / 1000 : 0;
   const wpm = Math.round(correct / 5 / Math.max(elapsed / 60, 1 / 60));
@@ -151,7 +170,8 @@ export function StageRunner({
   const totalTarget = target.length;
   const typedLen = typed.length;
   const currentWordIndex = wordEntries.findIndex((entry) => typedLen <= entry.end);
-  const safeCurrentWordIndex = currentWordIndex === -1 ? wordEntries.length - 1 : Math.max(0, currentWordIndex);
+  const safeCurrentWordIndex =
+    currentWordIndex === -1 ? wordEntries.length - 1 : Math.max(0, currentWordIndex);
   const visibleWordStart = Math.max(0, safeCurrentWordIndex - 2);
   const visibleWords = wordEntries.slice(visibleWordStart, visibleWordStart + 12);
   const timeLimit = DIFFICULTY_TIME_LIMITS[stage.difficulty];
@@ -160,7 +180,8 @@ export function StageRunner({
   const targetCharsForClear = Math.max(1, Math.ceil((stage.goal * timeLimit * 5) / 60));
   const clearPercent = Math.min(100, (typedLen / targetCharsForClear) * 100);
   const bossHp = isBoss ? Math.max(0, 100 - clearPercent) : 0;
-  const hpColor = bossHp > 66 ? "var(--leaf)" : bossHp > 33 ? "var(--coin)" : "var(--color-destructive)";
+  const hpColor =
+    bossHp > 66 ? "var(--leaf)" : bossHp > 33 ? "var(--coin)" : "var(--color-destructive)";
   const currentPhase = isBoss ? Math.min(Math.floor(clearPercent / 34), 2) : 0;
 
   useEffect(() => {
@@ -231,7 +252,9 @@ export function StageRunner({
         frameClassName="pixel-modal-frame-adventure"
       >
         <div className="adventure-runner-card animate-pixel-pop">
-          <div className="adventure-boss-emoji"><PixelIcon emoji={stage.emoji} /></div>
+          <div className="adventure-boss-emoji">
+            <PixelIcon emoji={stage.emoji} />
+          </div>
           <div className="font-display text-4xl leading-none mb-2 text-center">{stage.name}</div>
           <p className="font-pixel text-[0.65rem] text-muted-foreground mb-4 text-center">
             {questText || "A boss stage appears. Type fast and stay accurate."}
@@ -257,7 +280,16 @@ export function StageRunner({
   }
 
   return createPortal(
-    <div className="adventure-scene-overlay" role="dialog" aria-modal="true" aria-label={`${stage.name} quest`} style={(() => { const bg = sceneImage(world, stage.name) ?? THEME_BACKGROUND[world]; return bg ? { "--adventure-bg-img": `url("${bg}")` } as React.CSSProperties : undefined; })()}>
+    <div
+      className="adventure-scene-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${stage.name} quest`}
+      style={(() => {
+        const bg = sceneImage(world, stage.name) ?? THEME_BACKGROUND[world];
+        return bg ? ({ "--adventure-bg-img": `url("${bg}")` } as React.CSSProperties) : undefined;
+      })()}
+    >
       <div className="adventure-runner-scene">
         <CelebrationOverlay
           active={done !== null}
@@ -280,7 +312,9 @@ export function StageRunner({
           <div className="adventure-runner-header">
             <div className="adventure-runner-heading">
               <div className="adventure-runner-heading-top">
-                <span className="adventure-runner-chip">{isBoss ? "Boss Quest" : `${stage.difficulty} Quest`}</span>
+                <span className="adventure-runner-chip">
+                  {isBoss ? "Boss Quest" : `${stage.difficulty} Quest`}
+                </span>
                 <span className="adventure-runner-chip is-node">Node {stage.id}/5</span>
                 {currentWorld ? (
                   <span className="adventure-runner-chip is-muted">{currentWorld.name}</span>
@@ -311,7 +345,9 @@ export function StageRunner({
                     draggable={false}
                   />
                 ) : (
-                  <span className="adventure-runner-node-fallback"><PixelIcon emoji={stage.emoji} /></span>
+                  <span className="adventure-runner-node-fallback">
+                    <PixelIcon emoji={stage.emoji} />
+                  </span>
                 )}
               </div>
             </div>
@@ -324,7 +360,10 @@ export function StageRunner({
                 <span style={{ color: hpColor }}>{Math.round(bossHp)}%</span>
               </div>
               <div className="pixel-bar" style={{ height: 12 }}>
-                <div className="h-full transition-all duration-200" style={{ width: `${bossHp}%`, background: hpColor }} />
+                <div
+                  className="h-full transition-all duration-200"
+                  style={{ width: `${bossHp}%`, background: hpColor }}
+                />
               </div>
             </div>
           )}
@@ -345,19 +384,28 @@ export function StageRunner({
                         : "pending";
 
                   return (
-                    <span className={`adventure-word adventure-word-${wordState}`} key={`${entry.word}-${entry.start}`}>
+                    <span
+                      className={`adventure-word adventure-word-${wordState}`}
+                      key={`${entry.word}-${entry.start}`}
+                    >
                       {entry.word.split("").map((char, charIndex) => {
                         const index = entry.start + charIndex;
                         const typedChar = typed[index];
-                        const state = typedChar == null ? "pending" : typedChar === char ? "correct" : "wrong";
+                        const state =
+                          typedChar == null ? "pending" : typedChar === char ? "correct" : "wrong";
                         const isCursor = index === typedLen;
                         return (
-                          <span className={`adventure-char adventure-char-${state} ${isCursor ? "adventure-char-current" : ""}`} key={`${char}-${index}`}>
+                          <span
+                            className={`adventure-char adventure-char-${state} ${isCursor ? "adventure-char-current" : ""}`}
+                            key={`${char}-${index}`}
+                          >
                             {char}
                           </span>
                         );
                       })}
-                      {typedLen === entry.end && <span className="adventure-space-cursor" aria-hidden="true" />}
+                      {typedLen === entry.end && (
+                        <span className="adventure-space-cursor" aria-hidden="true" />
+                      )}
                     </span>
                   );
                 })}

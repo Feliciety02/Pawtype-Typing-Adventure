@@ -57,11 +57,7 @@ export function EggHatchModal({ milestone, onClose }: Props) {
   };
 
   return (
-    <ModalShell
-      ariaLabel="Egg reward"
-      onClose={onClose}
-      className="pixel-modal-shell-egg"
-    >
+    <ModalShell ariaLabel="Egg reward" onClose={onClose} className="pixel-modal-shell-egg">
       <div className="egg-hatch-modal">
         <div className="egg-hatch-header">
           <div className="egg-hatch-kicker">Milestone Reward</div>

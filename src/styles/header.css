@@ -17,9 +17,10 @@
   border-radius: 8px;
   background:
     linear-gradient(180deg, color-mix(in oklab, white 16%, transparent), transparent 54%),
-    radial-gradient(circle at 20% 0%, var(--hud-glow), transparent 36%),
-    var(--hud-surface);
-  box-shadow: var(--shadow-pixel), 0 0 20px var(--hud-glow);
+    radial-gradient(circle at 20% 0%, var(--hud-glow), transparent 36%), var(--hud-surface);
+  box-shadow:
+    var(--shadow-pixel),
+    0 0 20px var(--hud-glow);
   overflow: visible;
 }
 
@@ -27,9 +28,23 @@
   --hud-trim: var(--coin);
   --hud-decoration: "?";
   background:
-    repeating-linear-gradient(90deg, transparent 0 52px, color-mix(in oklab, var(--coin) 6%, transparent) 52px 54px, transparent 54px 74px),
-    linear-gradient(180deg, color-mix(in oklab, var(--coin) 10%, transparent) 0 4px, transparent 8px),
-    linear-gradient(90deg, color-mix(in oklab, var(--coin) 18%, transparent), transparent 24% 76%, color-mix(in oklab, var(--primary) 14%, transparent)),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 52px,
+      color-mix(in oklab, var(--coin) 6%, transparent) 52px 54px,
+      transparent 54px 74px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--coin) 10%, transparent) 0 4px,
+      transparent 8px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--coin) 18%, transparent),
+      transparent 24% 76%,
+      color-mix(in oklab, var(--primary) 14%, transparent)
+    ),
     var(--hud-surface);
 }
 
@@ -37,8 +52,16 @@
   --hud-trim: var(--leaf);
   --hud-decoration: "?";
   background:
-    repeating-linear-gradient(135deg, color-mix(in oklab, var(--leaf) 10%, transparent) 0 8px, transparent 8px 18px),
-    linear-gradient(180deg, color-mix(in oklab, var(--leaf) 8%, transparent) 0 3px, transparent 6px),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--leaf) 10%, transparent) 0 8px,
+      transparent 8px 18px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--leaf) 8%, transparent) 0 3px,
+      transparent 6px
+    ),
     var(--hud-surface);
 }
 
@@ -46,8 +69,16 @@
   --hud-trim: var(--sky);
   --hud-decoration: "?";
   background:
-    radial-gradient(circle at 12% 40%, color-mix(in oklab, var(--sky) 26%, transparent) 0 5px, transparent 6px),
-    radial-gradient(circle at 88% 58%, color-mix(in oklab, var(--sky) 22%, transparent) 0 4px, transparent 5px),
+    radial-gradient(
+      circle at 12% 40%,
+      color-mix(in oklab, var(--sky) 26%, transparent) 0 5px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 88% 58%,
+      color-mix(in oklab, var(--sky) 22%, transparent) 0 4px,
+      transparent 5px
+    ),
     linear-gradient(180deg, color-mix(in oklab, var(--sky) 8%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
@@ -57,7 +88,11 @@
   --hud-decoration: "?";
   background:
     linear-gradient(110deg, color-mix(in oklab, var(--sakura) 22%, transparent), transparent 32%),
-    linear-gradient(180deg, color-mix(in oklab, var(--sakura) 10%, transparent) 0 3px, transparent 6px),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--sakura) 10%, transparent) 0 3px,
+      transparent 6px
+    ),
     var(--hud-surface);
 }
 
@@ -66,8 +101,19 @@
   --hud-decoration: "?";
   background:
     linear-gradient(180deg, color-mix(in oklab, var(--coin) 18%, transparent), transparent 42%),
-    linear-gradient(90deg, transparent 0 12%, color-mix(in oklab, var(--primary) 16%, transparent) 12% 14%, transparent 14% 86%, color-mix(in oklab, var(--primary) 16%, transparent) 86% 88%, transparent 88%),
-    linear-gradient(180deg, color-mix(in oklab, var(--coin) 8%, transparent) 0 3px, transparent 6px),
+    linear-gradient(
+      90deg,
+      transparent 0 12%,
+      color-mix(in oklab, var(--primary) 16%, transparent) 12% 14%,
+      transparent 14% 86%,
+      color-mix(in oklab, var(--primary) 16%, transparent) 86% 88%,
+      transparent 88%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--coin) 8%, transparent) 0 3px,
+      transparent 6px
+    ),
     var(--hud-surface);
 }
 
@@ -75,10 +121,26 @@
   --hud-trim: var(--accent);
   --hud-decoration: "?";
   background:
-    radial-gradient(circle at 16% 35%, color-mix(in oklab, var(--coin) 44%, transparent) 0 2px, transparent 3px),
-    radial-gradient(circle at 78% 28%, color-mix(in oklab, var(--accent) 42%, transparent) 0 2px, transparent 3px),
-    radial-gradient(circle at 50% 90%, color-mix(in oklab, var(--primary) 20%, transparent), transparent 38%),
-    linear-gradient(180deg, color-mix(in oklab, var(--accent) 8%, transparent) 0 3px, transparent 6px),
+    radial-gradient(
+      circle at 16% 35%,
+      color-mix(in oklab, var(--coin) 44%, transparent) 0 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 78% 28%,
+      color-mix(in oklab, var(--accent) 42%, transparent) 0 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      color-mix(in oklab, var(--primary) 20%, transparent),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--accent) 8%, transparent) 0 3px,
+      transparent 6px
+    ),
     var(--hud-surface);
 }
 
@@ -86,8 +148,16 @@
   --hud-trim: var(--coin);
   --hud-decoration: "^";
   background:
-    repeating-linear-gradient(45deg, color-mix(in oklab, var(--coin) 10%, transparent) 0 6px, transparent 6px 14px),
-    linear-gradient(180deg, color-mix(in oklab, var(--coin) 8%, transparent) 0 3px, transparent 6px),
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in oklab, var(--coin) 10%, transparent) 0 6px,
+      transparent 6px 14px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--coin) 8%, transparent) 0 3px,
+      transparent 6px
+    ),
     var(--hud-surface);
 }
 
@@ -95,9 +165,21 @@
   --hud-trim: var(--primary);
   --hud-decoration: "??";
   background:
-    radial-gradient(circle at 24% 50%, color-mix(in oklab, var(--sakura) 24%, transparent) 0 4px, transparent 5px),
-    radial-gradient(circle at 76% 30%, color-mix(in oklab, var(--primary) 20%, transparent) 0 4px, transparent 5px),
-    linear-gradient(180deg, color-mix(in oklab, var(--sakura) 8%, transparent) 0 3px, transparent 6px),
+    radial-gradient(
+      circle at 24% 50%,
+      color-mix(in oklab, var(--sakura) 24%, transparent) 0 4px,
+      transparent 5px
+    ),
+    radial-gradient(
+      circle at 76% 30%,
+      color-mix(in oklab, var(--primary) 20%, transparent) 0 4px,
+      transparent 5px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--sakura) 8%, transparent) 0 3px,
+      transparent 6px
+    ),
     var(--hud-surface);
 }
 
@@ -105,7 +187,11 @@
   --hud-trim: var(--sky);
   --hud-decoration: "??";
   background:
-    radial-gradient(circle at 50% 20%, color-mix(in oklab, var(--sky) 28%, transparent) 0 8px, transparent 10px),
+    radial-gradient(
+      circle at 50% 20%,
+      color-mix(in oklab, var(--sky) 28%, transparent) 0 8px,
+      transparent 10px
+    ),
     linear-gradient(180deg, color-mix(in oklab, var(--sky) 6%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
@@ -114,8 +200,17 @@
   --hud-trim: var(--accent);
   --hud-decoration: "?";
   background:
-    repeating-linear-gradient(105deg, transparent 0 8px, color-mix(in oklab, var(--accent) 8%, transparent) 8px 10px, transparent 10px 20px),
-    linear-gradient(180deg, color-mix(in oklab, var(--accent) 6%, transparent) 0 2px, transparent 5px),
+    repeating-linear-gradient(
+      105deg,
+      transparent 0 8px,
+      color-mix(in oklab, var(--accent) 8%, transparent) 8px 10px,
+      transparent 10px 20px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--accent) 6%, transparent) 0 2px,
+      transparent 5px
+    ),
     var(--hud-surface);
 }
 
@@ -123,8 +218,16 @@
   --hud-trim: var(--sky);
   --hud-decoration: "?";
   background:
-    radial-gradient(circle at 20% 40%, color-mix(in oklab, var(--sky) 20%, transparent) 0 3px, transparent 4px),
-    radial-gradient(circle at 70% 60%, color-mix(in oklab, var(--sky) 16%, transparent) 0 3px, transparent 4px),
+    radial-gradient(
+      circle at 20% 40%,
+      color-mix(in oklab, var(--sky) 20%, transparent) 0 3px,
+      transparent 4px
+    ),
+    radial-gradient(
+      circle at 70% 60%,
+      color-mix(in oklab, var(--sky) 16%, transparent) 0 3px,
+      transparent 4px
+    ),
     linear-gradient(180deg, color-mix(in oklab, var(--sky) 6%, transparent) 0 3px, transparent 6px),
     var(--hud-surface);
 }
@@ -133,9 +236,22 @@
   --hud-trim: var(--coin);
   --hud-decoration: "??";
   background:
-    repeating-linear-gradient(135deg, color-mix(in oklab, var(--coin) 12%, transparent) 0 6px, transparent 6px 16px),
-    linear-gradient(180deg, color-mix(in oklab, var(--coin) 8%, transparent) 0 3px, transparent 6px),
-    linear-gradient(90deg, color-mix(in oklab, var(--leaf) 10%, transparent), transparent 24% 76%, color-mix(in oklab, var(--coin) 10%, transparent)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--coin) 12%, transparent) 0 6px,
+      transparent 6px 16px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--coin) 8%, transparent) 0 3px,
+      transparent 6px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--leaf) 10%, transparent),
+      transparent 24% 76%,
+      color-mix(in oklab, var(--coin) 10%, transparent)
+    ),
     var(--hud-surface);
 }
 
@@ -173,7 +289,9 @@
   background: none;
   cursor: pointer;
   text-align: left;
-  transition: transform 120ms ease, background 120ms ease;
+  transition:
+    transform 120ms ease,
+    background 120ms ease;
 }
 
 .hud-profile-btn:hover {
@@ -202,12 +320,19 @@
   border: 2px solid color-mix(in oklab, var(--leaf) 72%, var(--color-border));
   border-radius: 12px;
   background:
-    radial-gradient(circle at 50% 22%, color-mix(in oklab, white 22%, transparent), transparent 52%),
+    radial-gradient(
+      circle at 50% 22%,
+      color-mix(in oklab, white 22%, transparent),
+      transparent 52%
+    ),
     color-mix(in oklab, var(--cream) 72%, var(--color-card));
   box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 42%, transparent);
 }
 
-.hud-avatar-wrap .hud-avatar > div { gap: 0; filter: drop-shadow(1px 1px 0 color-mix(in oklab, var(--color-border) 85%, transparent)); }
+.hud-avatar-wrap .hud-avatar > div {
+  gap: 0;
+  filter: drop-shadow(1px 1px 0 color-mix(in oklab, var(--color-border) 85%, transparent));
+}
 
 .hud-level-badge {
   position: absolute;
@@ -291,8 +416,9 @@
 .hud-xp-bar > div {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, color-mix(in oklab, white 24%, transparent), transparent),
-              linear-gradient(90deg, #ff9b7d, #ff6a54 55%, #d33c3c);
+  background:
+    linear-gradient(90deg, color-mix(in oklab, white 24%, transparent), transparent),
+    linear-gradient(90deg, #ff9b7d, #ff6a54 55%, #d33c3c);
 }
 
 .hud-xp-label {
@@ -348,7 +474,11 @@
   line-height: 1;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
+    background 120ms ease,
+    box-shadow 120ms ease;
 }
 
 .hud-nav-btn:hover {
@@ -369,7 +499,9 @@
     linear-gradient(180deg, color-mix(in oklab, white 14%, transparent), transparent 56%),
     color-mix(in oklab, var(--hud-trim) 60%, var(--color-card));
   color: var(--color-primary-foreground);
-  box-shadow: 2px 2px 0 0 var(--color-border), 0 0 9px color-mix(in oklab, var(--hud-glow) 58%, transparent);
+  box-shadow:
+    2px 2px 0 0 var(--color-border),
+    0 0 9px color-mix(in oklab, var(--hud-glow) 58%, transparent);
   animation: hud-active-idle 2.4s ease-in-out infinite;
 }
 
@@ -452,7 +584,9 @@
   box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 30%, transparent);
   color: var(--color-foreground);
   cursor: pointer;
-  transition: transform 100ms ease, background 100ms ease;
+  transition:
+    transform 100ms ease,
+    background 100ms ease;
 }
 
 .hud-notif-btn:hover,
@@ -502,7 +636,9 @@
   background:
     linear-gradient(180deg, color-mix(in oklab, white 12%, transparent), transparent 52%),
     color-mix(in oklab, var(--color-card) 94%, transparent);
-  box-shadow: var(--shadow-pixel), 0 0 18px var(--hud-glow);
+  box-shadow:
+    var(--shadow-pixel),
+    0 0 18px var(--hud-glow);
 }
 
 .hud-dropdown::before {
@@ -574,7 +710,8 @@
 /* Sparkle particles */
 .hud-particle {
   position: absolute;
-  width: 3px; height: 3px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   background: var(--coin);
   pointer-events: none;
@@ -586,14 +723,21 @@
   animation: view-fade-in 300ms ease-out both;
 }
 @keyframes view-fade-in {
-  0% { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Hover sparkle particles for nav */
 .hud-nav-particle {
   position: absolute;
-  width: 3px; height: 3px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   background: var(--coin);
   pointer-events: none;
@@ -601,16 +745,34 @@
   z-index: 10;
 }
 @keyframes nav-sparkle-fly {
-  0% { opacity: 1; transform: translate(0, 0) scale(1); }
-  100% { opacity: 0; transform: translate(var(--dx, 12px), var(--dy, -10px)) scale(0); }
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, 12px), var(--dy, -10px)) scale(0);
+  }
 }
 
 @keyframes hud-active-idle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-1px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
 }
 
 @keyframes hud-particle-drift {
-  0%, 100% { opacity: 0.45; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(-3px); }
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
 }

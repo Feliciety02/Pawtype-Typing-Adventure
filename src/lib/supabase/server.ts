@@ -13,23 +13,19 @@ export function getSupabaseServerClient() {
     );
   }
 
-  return createServerClient<Database>(
-    url,
-    anonKey,
-    {
-      cookies: {
-        getAll() {
-          return Object.entries(getCookies()).map(([name, value]) => ({
-            name,
-            value,
-          }));
-        },
-        setAll(cookies) {
-          cookies.forEach((cookie) => {
-            setCookie(cookie.name, cookie.value, cookie.options);
-          });
-        },
+  return createServerClient<Database>(url, anonKey, {
+    cookies: {
+      getAll() {
+        return Object.entries(getCookies()).map(([name, value]) => ({
+          name,
+          value,
+        }));
+      },
+      setAll(cookies) {
+        cookies.forEach((cookie) => {
+          setCookie(cookie.name, cookie.value, cookie.options);
+        });
       },
     },
-  );
+  });
 }

@@ -3,24 +3,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/lib/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { getAuthErrorMessage } from "@/lib/auth/errors";
-import {
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
-  passwordHint,
-} from "@/lib/auth/shared";
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, passwordHint } from "@/lib/auth/shared";
 
 export function AuthForm() {
-  const {
-    login,
-    signUp,
-    loginWithProvider,
-    enterDemo,
-    isLoggingIn,
-    isSigningUp,
-    isSocialLoading,
-  } = useAuth();
+  const { login, signUp, loginWithProvider, enterDemo, isLoggingIn, isSigningUp, isSocialLoading } =
+    useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -133,11 +122,7 @@ export function AuthForm() {
           ) : null}
           {error && <p className="text-sm text-destructive">{error}</p>}
           <Button type="submit" className="w-full" disabled={isBusy}>
-            {isBusy
-              ? "Please wait..."
-              : mode === "login"
-                ? "Sign In"
-                : "Create Account"}
+            {isBusy ? "Please wait..." : mode === "login" ? "Sign In" : "Create Account"}
           </Button>
           <div className="grid grid-cols-2 gap-2">
             <Button

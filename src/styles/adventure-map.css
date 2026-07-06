@@ -3,9 +3,21 @@
   isolation: isolate;
   min-height: 430px;
   background:
-    radial-gradient(circle at 18% 16%, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 28%),
-    radial-gradient(circle at 84% 72%, color-mix(in oklab, var(--leaf) 14%, transparent), transparent 30%),
-    linear-gradient(135deg, color-mix(in oklab, var(--color-card) 95%, transparent), color-mix(in oklab, var(--color-muted) 52%, var(--color-card)));
+    radial-gradient(
+      circle at 18% 16%,
+      color-mix(in oklab, var(--color-primary) 12%, transparent),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 84% 72%,
+      color-mix(in oklab, var(--leaf) 14%, transparent),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-card) 95%, transparent),
+      color-mix(in oklab, var(--color-muted) 52%, var(--color-card))
+    );
 }
 
 .adventure-shell::before {
@@ -14,7 +26,11 @@
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(90deg, color-mix(in oklab, var(--color-border) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--color-border) 5%, transparent) 1px,
+      transparent 1px
+    ),
     linear-gradient(color-mix(in oklab, var(--color-border) 5%, transparent) 1px, transparent 1px);
   background-size: 18px 18px;
   mask-image: radial-gradient(circle at center, black, transparent 82%);
@@ -69,7 +85,11 @@
 .adventure-progress-bar > div {
   height: 100%;
   background:
-    repeating-linear-gradient(90deg, color-mix(in oklab, white 24%, transparent) 0 5px, transparent 5px 9px),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, white 24%, transparent) 0 5px,
+      transparent 5px 9px
+    ),
     linear-gradient(90deg, var(--leaf), var(--coin));
   box-shadow: 0 0 10px color-mix(in oklab, var(--leaf) 36%, transparent);
   transition: width 260ms ease;
@@ -109,7 +129,11 @@
   border: 2px solid color-mix(in oklab, var(--color-border) 68%, transparent);
   border-radius: 10px;
   background:
-    radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--color-primary) 10%, transparent), transparent 28%),
+    radial-gradient(
+      circle at 10% 0%,
+      color-mix(in oklab, var(--color-primary) 10%, transparent),
+      transparent 28%
+    ),
     color-mix(in oklab, var(--color-card) 70%, transparent);
   box-shadow: var(--shadow-pixel-sm);
   overflow: visible;
@@ -171,7 +195,11 @@
 .adventure-map-glow {
   position: absolute;
   inset: 10%;
-  background: radial-gradient(ellipse at center, color-mix(in oklab, var(--color-primary) 12%, transparent), transparent 68%);
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklab, var(--color-primary) 12%, transparent),
+    transparent 68%
+  );
   filter: blur(12px);
   pointer-events: none;
 }
@@ -197,7 +225,9 @@
 }
 
 @keyframes adventure-route-drift {
-  to { stroke-dashoffset: -36; }
+  to {
+    stroke-dashoffset: -36;
+  }
 }
 
 .adventure-node-grid {
@@ -222,15 +252,26 @@
   border: 3px solid var(--stage-accent);
   border-radius: 7px;
   background:
-    radial-gradient(circle at 18% 12%, color-mix(in oklab, white 26%, transparent), transparent 24%),
-    linear-gradient(180deg, color-mix(in oklab, var(--color-card) 96%, transparent), color-mix(in oklab, var(--color-muted) 30%, var(--color-card))),
+    radial-gradient(
+      circle at 18% 12%,
+      color-mix(in oklab, white 26%, transparent),
+      transparent 24%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-card) 96%, transparent),
+      color-mix(in oklab, var(--color-muted) 30%, var(--color-card))
+    ),
     var(--color-card);
   cursor: pointer;
   overflow: visible;
   box-shadow:
     4px 4px 0 0 color-mix(in oklab, var(--color-border) 74%, transparent),
     inset 0 0 0 1px color-mix(in oklab, white 36%, transparent);
-  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    filter 140ms ease;
 }
 
 .adventure-node:hover:not(:disabled) {
@@ -382,9 +423,7 @@
   height: clamp(58px, 6vw, 82px);
   object-fit: contain;
   image-rendering: pixelated;
-  filter:
-    saturate(1.2)
-    drop-shadow(0 0 10px color-mix(in oklab, var(--coin) 22%, transparent))
+  filter: saturate(1.2) drop-shadow(0 0 10px color-mix(in oklab, var(--coin) 22%, transparent))
     drop-shadow(3px 3px 0 color-mix(in oklab, var(--color-border) 46%, transparent));
 }
 
@@ -505,20 +544,38 @@
 }
 
 @keyframes overlay-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes bg-showcase {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  75% { opacity: 1; }
-  100% { opacity: 0.5; }
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes card-pop-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .adventure-scene-overlay {
@@ -529,7 +586,11 @@
   place-items: center;
   padding: 1rem;
   background:
-    radial-gradient(circle at 50% 0%, color-mix(in oklab, var(--sky) 16%, transparent), transparent 34%),
+    radial-gradient(
+      circle at 50% 0%,
+      color-mix(in oklab, var(--sky) 16%, transparent),
+      transparent 34%
+    ),
     color-mix(in oklab, var(--background) 72%, transparent);
   backdrop-filter: blur(6px);
   animation: overlay-fade-in 300ms ease forwards;
@@ -549,7 +610,7 @@
 }
 
 .adventure-runner-card {
-  animation: card-pop-in 500ms cubic-bezier(.2,1.4,.4,1) 3200ms both;
+  animation: card-pop-in 500ms cubic-bezier(0.2, 1.4, 0.4, 1) 3200ms both;
 }
 
 .adventure-runner-card.is-complete {
@@ -605,7 +666,11 @@
   padding: 0.28rem 0.62rem;
   border: 2px solid color-mix(in oklab, var(--color-border) 84%, transparent);
   border-radius: 999px;
-  background: linear-gradient(180deg, color-mix(in oklab, var(--color-card) 92%, white), color-mix(in oklab, var(--color-muted) 70%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-card) 92%, white),
+    color-mix(in oklab, var(--color-muted) 70%, transparent)
+  );
   box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 26%, transparent);
   font-family: var(--font-pixel);
   font-size: 0.52rem;
@@ -615,13 +680,21 @@
 }
 
 .adventure-runner-chip.is-muted {
-  background: linear-gradient(180deg, color-mix(in oklab, var(--color-card) 86%, transparent), color-mix(in oklab, var(--sky) 14%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-card) 86%, transparent),
+    color-mix(in oklab, var(--sky) 14%, transparent)
+  );
   color: color-mix(in oklab, var(--muted-foreground) 88%, transparent);
 }
 
 .adventure-runner-chip.is-node {
   border-color: color-mix(in oklab, var(--coin) 58%, var(--color-border));
-  background: linear-gradient(180deg, color-mix(in oklab, var(--coin) 16%, var(--color-card)), color-mix(in oklab, var(--color-muted) 72%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--coin) 16%, var(--color-card)),
+    color-mix(in oklab, var(--color-muted) 72%, transparent)
+  );
 }
 
 .adventure-runner-flavor {
@@ -651,7 +724,11 @@
   padding: 0.45rem;
   border: 2px solid color-mix(in oklab, var(--color-border) 84%, transparent);
   border-radius: 12px;
-  background: linear-gradient(180deg, color-mix(in oklab, var(--color-card) 94%, white), color-mix(in oklab, var(--color-muted) 68%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-card) 94%, white),
+    color-mix(in oklab, var(--color-muted) 68%, transparent)
+  );
   box-shadow: 3px 3px 0 0 color-mix(in oklab, var(--color-border) 28%, transparent);
 }
 
@@ -702,7 +779,11 @@
   gap: 0.18rem;
   padding: 0.45rem 0.6rem;
   border-radius: 10px;
-  background: linear-gradient(180deg, color-mix(in oklab, var(--color-card) 90%, white), color-mix(in oklab, var(--color-muted) 74%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-card) 90%, white),
+    color-mix(in oklab, var(--color-muted) 74%, transparent)
+  );
   box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 24%, transparent);
 }
 
@@ -730,8 +811,11 @@
   padding: 2px;
   border: 2px solid color-mix(in oklab, var(--color-border) 70%, transparent);
   border-radius: 999px;
-  background:
-    linear-gradient(90deg, color-mix(in oklab, var(--color-card) 82%, transparent), color-mix(in oklab, var(--color-muted) 68%, transparent));
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--color-card) 82%, transparent),
+    color-mix(in oklab, var(--color-muted) 68%, transparent)
+  );
   box-shadow: inset 0 0 0 1px color-mix(in oklab, white 22%, transparent);
   overflow: hidden;
 }
@@ -740,7 +824,11 @@
   height: 100%;
   border-radius: inherit;
   background:
-    repeating-linear-gradient(90deg, color-mix(in oklab, white 34%, transparent) 0 5px, transparent 5px 9px),
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, white 34%, transparent) 0 5px,
+      transparent 5px 9px
+    ),
     linear-gradient(90deg, var(--color-primary), var(--coin), var(--leaf));
   box-shadow: 0 0 12px color-mix(in oklab, var(--color-primary) 36%, transparent);
   transition: width 120ms linear;
@@ -753,7 +841,11 @@
   border: 2px solid color-mix(in oklab, var(--color-border) 75%, transparent);
   border-radius: 8px;
   background:
-    radial-gradient(circle at 12% 0%, color-mix(in oklab, var(--color-primary) 8%, transparent), transparent 32%),
+    radial-gradient(
+      circle at 12% 0%,
+      color-mix(in oklab, var(--color-primary) 8%, transparent),
+      transparent 32%
+    ),
     color-mix(in oklab, var(--color-muted) 64%, transparent);
   font-family: var(--font-sans);
   font-size: clamp(2.15rem, 3vw, 3rem);
@@ -784,7 +876,10 @@
   position: relative;
   align-items: baseline;
   border-radius: 6px;
-  transition: opacity 140ms ease, transform 140ms ease, background 140ms ease;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease,
+    background 140ms ease;
 }
 
 .adventure-word-complete {
@@ -1005,7 +1100,8 @@
   opacity: 0;
   will-change: transform, opacity;
   transform: translate3d(0, -10vh, 0) rotate(0deg) scale(var(--particle-scale));
-  animation: celebration-particle-fall var(--particle-duration) var(--particle-delay) cubic-bezier(0.19, 0.78, 0.32, 1) forwards;
+  animation: celebration-particle-fall var(--particle-duration) var(--particle-delay)
+    cubic-bezier(0.19, 0.78, 0.32, 1) forwards;
 }
 
 .celebration-victory .celebration-particle {
@@ -1119,15 +1215,18 @@
   }
   72% {
     opacity: 1;
-    transform: translate3d(calc(var(--particle-drift) * 0.72), 82vh, 0) rotate(calc(var(--particle-rotate) * 0.78)) scale(var(--particle-scale));
+    transform: translate3d(calc(var(--particle-drift) * 0.72), 82vh, 0)
+      rotate(calc(var(--particle-rotate) * 0.78)) scale(var(--particle-scale));
   }
   86% {
     opacity: 0.9;
-    transform: translate3d(var(--particle-drift), calc(100vh + var(--particle-bounce)), 0) rotate(var(--particle-rotate)) scale(calc(var(--particle-scale) * 0.94));
+    transform: translate3d(var(--particle-drift), calc(100vh + var(--particle-bounce)), 0)
+      rotate(var(--particle-rotate)) scale(calc(var(--particle-scale) * 0.94));
   }
   100% {
     opacity: 0;
-    transform: translate3d(calc(var(--particle-drift) * 1.08), 112vh, 0) rotate(calc(var(--particle-rotate) + 36deg)) scale(calc(var(--particle-scale) * 0.62));
+    transform: translate3d(calc(var(--particle-drift) * 1.08), 112vh, 0)
+      rotate(calc(var(--particle-rotate) + 36deg)) scale(calc(var(--particle-scale) * 0.62));
   }
 }
 
@@ -1138,58 +1237,48 @@
   }
   7% {
     opacity: 1;
-    transform:
-      translate3d(
+    transform: translate3d(
         calc(-50% + (var(--particle-burst-x) * 0.72)),
         calc(-50% + (var(--particle-burst-y) * 0.72)),
         0
       )
-      rotate(calc(var(--particle-rotate) * 0.34))
-      scale(calc(var(--particle-scale) * 1.24));
+      rotate(calc(var(--particle-rotate) * 0.34)) scale(calc(var(--particle-scale) * 1.24));
   }
   22% {
     opacity: 1;
-    transform:
-      translate3d(
+    transform: translate3d(
         calc(-50% + var(--particle-burst-x)),
         calc(-50% + var(--particle-burst-y) + 4vh),
         0
       )
-      rotate(calc(var(--particle-rotate) * 0.62))
-      scale(var(--particle-scale));
+      rotate(calc(var(--particle-rotate) * 0.62)) scale(var(--particle-scale));
   }
   54% {
     opacity: 0.96;
-    transform:
-      translate3d(
+    transform: translate3d(
         calc(-50% + var(--particle-burst-x) + (var(--particle-drift) * 0.54)),
         calc(-50% + var(--particle-burst-y) + 42vh),
         0
       )
-      rotate(calc(var(--particle-rotate) * 0.84))
-      scale(calc(var(--particle-scale) * 0.98));
+      rotate(calc(var(--particle-rotate) * 0.84)) scale(calc(var(--particle-scale) * 0.98));
   }
   82% {
     opacity: 0.7;
-    transform:
-      translate3d(
+    transform: translate3d(
         calc(-50% + var(--particle-burst-x) + (var(--particle-drift) * 0.86)),
         calc(-50% + var(--particle-burst-y) + 74vh),
         0
       )
-      rotate(var(--particle-rotate))
-      scale(calc(var(--particle-scale) * 0.82));
+      rotate(var(--particle-rotate)) scale(calc(var(--particle-scale) * 0.82));
   }
   100% {
     opacity: 0;
-    transform:
-      translate3d(
+    transform: translate3d(
         calc(-50% + var(--particle-burst-x) + (var(--particle-drift) * 1.14)),
         calc(-50% + var(--particle-burst-y) + 108vh),
         0
       )
-      rotate(calc(var(--particle-rotate) + 130deg))
-      scale(calc(var(--particle-scale) * 0.52));
+      rotate(calc(var(--particle-rotate) + 130deg)) scale(calc(var(--particle-scale) * 0.52));
   }
 }
 
@@ -1217,11 +1306,13 @@
   }
   76% {
     opacity: 0.66;
-    transform: translate3d(calc(var(--particle-drift) * 0.68), 74vh, 0) rotate(calc(var(--particle-rotate) * 0.68)) scale(var(--particle-scale));
+    transform: translate3d(calc(var(--particle-drift) * 0.68), 74vh, 0)
+      rotate(calc(var(--particle-rotate) * 0.68)) scale(var(--particle-scale));
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--particle-drift), 106vh, 0) rotate(var(--particle-rotate)) scale(calc(var(--particle-scale) * 0.72));
+    transform: translate3d(var(--particle-drift), 106vh, 0) rotate(var(--particle-rotate))
+      scale(calc(var(--particle-scale) * 0.72));
   }
 }
 
@@ -1239,7 +1330,8 @@
     opacity: 0;
     transform: translate3d(-10px, 12px, 0) scale(0.9);
   }
-  18%, 76% {
+  18%,
+  76% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
@@ -1250,11 +1342,22 @@
 }
 
 @keyframes adventure-fail-shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-3px); }
-  40% { transform: translateX(3px); }
-  60% { transform: translateX(-2px); }
-  80% { transform: translateX(2px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
 }
 
 @media (max-width: 900px) {

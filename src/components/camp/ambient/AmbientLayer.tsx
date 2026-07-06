@@ -10,19 +10,19 @@ import type { TimeOfDay } from "../../../lib/camp/timeOfDay";
 type ParticleKind = "butterfly" | "firefly" | "leaf" | "petal" | "cloud" | "star";
 
 const THEME_PARTICLES: Record<WorldId, ParticleKind[]> = {
-  cafe:     ["butterfly", "cloud"],
-  forest:   ["leaf", "butterfly", "firefly"],
-  ocean:    ["cloud"],
-  sakura:   ["petal", "petal", "cloud"],
-  castle:   ["cloud", "firefly"],
-  space:    ["star", "star", "star"],
-  autumn:   ["leaf", "leaf", "cloud"],
+  cafe: ["butterfly", "cloud"],
+  forest: ["leaf", "butterfly", "firefly"],
+  ocean: ["cloud"],
+  sakura: ["petal", "petal", "cloud"],
+  castle: ["cloud", "firefly"],
+  space: ["star", "star", "star"],
+  autumn: ["leaf", "leaf", "cloud"],
   mushroom: ["firefly", "firefly"],
-  sunflower:["butterfly", "butterfly", "cloud"],
-  "volcanic-forge":     ["firefly"],
-  "desert-oasis":       ["cloud"],
-  "steam-punk-workshop":["firefly"],
-  "frostveil-kingdom":  ["petal", "star"],
+  sunflower: ["butterfly", "butterfly", "cloud"],
+  "volcanic-forge": ["firefly"],
+  "desert-oasis": ["cloud"],
+  "steam-punk-workshop": ["firefly"],
+  "frostveil-kingdom": ["petal", "star"],
 };
 
 const EMOJI: Record<ParticleKind, string> = {
@@ -34,7 +34,14 @@ const EMOJI: Record<ParticleKind, string> = {
   star: "⭐",
 };
 
-type Particle = { kind: ParticleKind; id: number; top: number; left: number; delay: number; dur: number };
+type Particle = {
+  kind: ParticleKind;
+  id: number;
+  top: number;
+  left: number;
+  delay: number;
+  dur: number;
+};
 
 export function AmbientLayer({ world, time }: { world: WorldId; time: TimeOfDay }) {
   const particles = useMemo<Particle[]>(() => {
@@ -48,15 +55,22 @@ export function AmbientLayer({ world, time }: { world: WorldId; time: TimeOfDay 
         out.push({
           kind,
           id: id++,
-          top: kind === "cloud" ? 5 + Math.random() * 25 :
-               kind === "star"  ? 5 + Math.random() * 45 :
-               10 + Math.random() * 55,
+          top:
+            kind === "cloud"
+              ? 5 + Math.random() * 25
+              : kind === "star"
+                ? 5 + Math.random() * 45
+                : 10 + Math.random() * 55,
           left: Math.random() * 90,
           delay: Math.random() * 6 + idx * 0.5,
-          dur: kind === "cloud" ? 55 + Math.random() * 20 :
-               kind === "butterfly" ? 10 + Math.random() * 6 :
-               kind === "leaf" || kind === "petal" ? 12 + Math.random() * 6 :
-               8 + Math.random() * 5,
+          dur:
+            kind === "cloud"
+              ? 55 + Math.random() * 20
+              : kind === "butterfly"
+                ? 10 + Math.random() * 6
+                : kind === "leaf" || kind === "petal"
+                  ? 12 + Math.random() * 6
+                  : 8 + Math.random() * 5,
         });
       }
     });
@@ -64,8 +78,12 @@ export function AmbientLayer({ world, time }: { world: WorldId; time: TimeOfDay 
     if (time === "night") {
       for (let i = 0; i < 10; i++) {
         out.push({
-          kind: "firefly", id: id++, top: 20 + Math.random() * 60, left: Math.random() * 95,
-          delay: Math.random() * 5, dur: 6 + Math.random() * 4,
+          kind: "firefly",
+          id: id++,
+          top: 20 + Math.random() * 60,
+          left: Math.random() * 95,
+          delay: Math.random() * 5,
+          dur: 6 + Math.random() * 4,
         });
       }
     }

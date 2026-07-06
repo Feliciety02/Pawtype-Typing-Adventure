@@ -41,7 +41,11 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
                     }}
                   >
                     <PixelPet pet={pet} size={72} />
-                    {isActive ? <span className="pet-room-active-label"><PixelIcon emoji="⭐" /> Active</span> : null}
+                    {isActive ? (
+                      <span className="pet-room-active-label">
+                        <PixelIcon emoji="⭐" /> Active
+                      </span>
+                    ) : null}
                   </button>
                 );
               })}
@@ -51,7 +55,9 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
                 className="w-full"
                 disabled={treatCount === 0 || !inventory.activePet}
                 onClick={feed}
-                title={treatCount === 0 ? "No treats - collect from daily rewards" : "Feed active pet"}
+                title={
+                  treatCount === 0 ? "No treats - collect from daily rewards" : "Feed active pet"
+                }
               >
                 Feed Treat ({treatCount}) +25 XP
               </PixelButton>

@@ -47,6 +47,7 @@ Every badge must follow these principles:
 **Crest Theme:** Feathers, wings, wind currents, lightning, storms, meteors, celestial speed.
 
 **Progression:**
+
 | Badge          | Meaning                                             |
 | -------------- | --------------------------------------------------- |
 | Tiny Feather   | First signs of quick typing.                        |
@@ -107,6 +108,7 @@ Every badge must follow these principles:
 **Crest Theme:** Each crest reflects its biome.
 
 Examples:
+
 - Forest → Oak
 - Café → Coffee beans
 - Ocean → Shells
@@ -181,6 +183,7 @@ Example:
 Use lowercase snake_case for all badge assets.
 
 Examples:
+
 - `badge_speed_tiny_feather.png`
 - `badge_speed_hyper_velocity.png`
 - `badge_accuracy_bullseye.png`

@@ -1,13 +1,7 @@
 import { Play, RotateCcw } from "lucide-react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { PixelMascot } from "../coach/PixelMascot";
-import {
-  CoachTipCard,
-  ModalShell,
-  PixelButton,
-  RewardCard,
-  StatCard,
-} from "./ModalShell";
+import { CoachTipCard, ModalShell, PixelButton, RewardCard, StatCard } from "./ModalShell";
 
 type PracticeResultsModalProps = {
   accuracy: number;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { LogIn, LogOut, Settings, BarChart3, ChevronDown } from "lucide-react";
 import { useGame } from "../../lib/game/store";
-import { useAuth } from "../../lib/hooks/use-auth";
+import { useAuth } from "../../hooks/use-auth";
 import { AuthForm } from "../auth/AuthForm";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { SparkleTrail } from "../shared/SparkleTrail";
@@ -10,14 +10,17 @@ import { xpForLevel } from "../../lib/game/types";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { getNotifications, subscribeNotifications } from "../../lib/game/notifications";
 
-export type View = "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings";
+export type View =
+  "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings";
 
 export function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) => void }) {
   const { state } = useGame();
   const { player, inventory } = state;
-  const activePet = inventory.pets.find((pet) => pet.type === inventory.activePet) ?? inventory.pets[0] ?? null;
+  const activePet =
+    inventory.pets.find((pet) => pet.type === inventory.activePet) ?? inventory.pets[0] ?? null;
   const playerXpNeeded = xpForLevel(player.level);
-  const playerXpPct = playerXpNeeded > 0 ? Math.min(Math.round((player.xp / playerXpNeeded) * 100), 100) : 0;
+  const playerXpPct =
+    playerXpNeeded > 0 ? Math.min(Math.round((player.xp / playerXpNeeded) * 100), 100) : 0;
   const { user, isDemo, accountLabel, isLoading: authLoading, logout, isLoggingOut } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
@@ -37,25 +40,40 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
   useEffect(() => {
     if (!notifOpen) return;
     const close = (e: MouseEvent | KeyboardEvent) => {
-      if (e instanceof KeyboardEvent || !notifRef.current?.contains(e.target as Node)) setNotifOpen(false);
+      if (e instanceof KeyboardEvent || !notifRef.current?.contains(e.target as Node))
+        setNotifOpen(false);
     };
-    const closeKey = (e: KeyboardEvent) => { if (e.key === "Escape") setNotifOpen(false); };
+    const closeKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setNotifOpen(false);
+    };
     document.addEventListener("mousedown", close);
     document.addEventListener("keydown", closeKey);
-    return () => { document.removeEventListener("mousedown", close); document.removeEventListener("keydown", closeKey); };
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", closeKey);
+    };
   }, [notifOpen]);
 
   useEffect(() => {
     if (!profileOpen && !showAuth) return;
     const close = (e: MouseEvent | KeyboardEvent) => {
       if (e instanceof KeyboardEvent || !profileRef.current?.contains(e.target as Node)) {
-        setProfileOpen(false); setShowAuth(false);
+        setProfileOpen(false);
+        setShowAuth(false);
       }
     };
-    const closeKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setProfileOpen(false); setShowAuth(false); } };
+    const closeKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setProfileOpen(false);
+        setShowAuth(false);
+      }
+    };
     document.addEventListener("mousedown", close);
     document.addEventListener("keydown", closeKey);
-    return () => { document.removeEventListener("mousedown", close); document.removeEventListener("keydown", closeKey); };
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", closeKey);
+    };
   }, [profileOpen, showAuth]);
 
   const NAV_ITEMS: { emoji: string; label: string; view: Exclude<View, "stats" | "settings"> }[] = [
@@ -88,11 +106,18 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
       <div className="hud-left" ref={profileRef}>
         <button
           className={`hud-profile-btn ${profileOpen ? "is-active" : ""}`}
-          onClick={() => { setProfileOpen((o) => !o); setShowAuth(false); }}
+          onClick={() => {
+            setProfileOpen((o) => !o);
+            setShowAuth(false);
+          }}
         >
           <div className="hud-avatar-wrap">
             <div className="hud-avatar">
-              {activePet ? <PixelPet pet={activePet} size={50} showDetails={false} /> : <div className="hud-avatar-fallback">P</div>}
+              {activePet ? (
+                <PixelPet pet={activePet} size={50} showDetails={false} />
+              ) : (
+                <div className="hud-avatar-fallback">P</div>
+              )}
             </div>
             <span className="hud-level-badge">Lv.{player.level}</span>
           </div>
@@ -100,7 +125,9 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
             <span className="hud-profile-name">{accountLabel ?? "Demo Adventurer"}</span>
             <span className="hud-profile-role">Forest Explorer</span>
             <div className="hud-xp-row">
-              <div className="hud-xp-bar"><div style={{ width: `${playerXpPct}%` }} /></div>
+              <div className="hud-xp-bar">
+                <div style={{ width: `${playerXpPct}%` }} />
+              </div>
               <span className="hud-xp-label">{playerXpPct}%</span>
             </div>
           </div>
@@ -110,22 +137,67 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
         {profileOpen && (
           <div className="hud-dropdown">
             <div className="hud-dropdown-title">Profile</div>
-            <div className="hud-dropdown-row"><span>Player</span><strong>{accountLabel ?? "Guest Explorer"}</strong></div>
-            <div className="hud-dropdown-row"><span>Level</span><strong>{player.level}</strong></div>
-            <div className="hud-dropdown-row"><span>Coins</span><strong suppressHydrationWarning>{player.coins.toLocaleString()}</strong></div>
-            <div className="hud-dropdown-row"><span>Streak</span><strong>{player.streak}</strong></div>
+            <div className="hud-dropdown-row">
+              <span>Player</span>
+              <strong>{accountLabel ?? "Guest Explorer"}</strong>
+            </div>
+            <div className="hud-dropdown-row">
+              <span>Level</span>
+              <strong>{player.level}</strong>
+            </div>
+            <div className="hud-dropdown-row">
+              <span>Coins</span>
+              <strong suppressHydrationWarning>{player.coins.toLocaleString()}</strong>
+            </div>
+            <div className="hud-dropdown-row">
+              <span>Streak</span>
+              <strong>{player.streak}</strong>
+            </div>
             <div className="hud-dropdown-actions">
-              <button className="pixel-btn" onClick={() => { onViewChange("stats"); setProfileOpen(false); }}><BarChart3 size={14} /><span>Stats</span></button>
-              <button className="pixel-btn" onClick={() => { onViewChange("settings"); setProfileOpen(false); }}><Settings size={14} /><span>Settings</span></button>
+              <button
+                className="pixel-btn"
+                onClick={() => {
+                  onViewChange("stats");
+                  setProfileOpen(false);
+                }}
+              >
+                <BarChart3 size={14} />
+                <span>Stats</span>
+              </button>
+              <button
+                className="pixel-btn"
+                onClick={() => {
+                  onViewChange("settings");
+                  setProfileOpen(false);
+                }}
+              >
+                <Settings size={14} />
+                <span>Settings</span>
+              </button>
               {authLoading ? null : user || isDemo ? (
-                <button className="pixel-btn" disabled={isLoggingOut} onClick={async () => { await logout(); setProfileOpen(false); }}>
-                  <LogOut size={14} /><span>{isLoggingOut ? "Leaving..." : "Sign Out"}</span>
+                <button
+                  className="pixel-btn"
+                  disabled={isLoggingOut}
+                  onClick={async () => {
+                    await logout();
+                    setProfileOpen(false);
+                  }}
+                >
+                  <LogOut size={14} />
+                  <span>{isLoggingOut ? "Leaving..." : "Sign Out"}</span>
                 </button>
               ) : (
-                <button className="pixel-btn" onClick={() => setShowAuth((o) => !o)}><LogIn size={14} /><span>Sign In</span></button>
+                <button className="pixel-btn" onClick={() => setShowAuth((o) => !o)}>
+                  <LogIn size={14} />
+                  <span>Sign In</span>
+                </button>
               )}
             </div>
-            {showAuth && <div className="hud-dropdown-auth"><AuthForm /></div>}
+            {showAuth && (
+              <div className="hud-dropdown-auth">
+                <AuthForm />
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -147,10 +219,15 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
       <div className="hud-right">
         <div className="hud-coins">
           <PixelIcon emoji="🪙" className="hud-coins-icon" />
-          <strong className="hud-coins-value" suppressHydrationWarning>{player.coins.toLocaleString()}</strong>
+          <strong className="hud-coins-value" suppressHydrationWarning>
+            {player.coins.toLocaleString()}
+          </strong>
         </div>
         <div className="hud-notif-wrap" ref={notifRef}>
-          <button className={`hud-notif-btn ${notifOpen ? "is-active" : ""}`} onClick={() => setNotifOpen((o) => !o)}>
+          <button
+            className={`hud-notif-btn ${notifOpen ? "is-active" : ""}`}
+            onClick={() => setNotifOpen((o) => !o)}
+          >
             <PixelIcon emoji="🔔" className="hud-notif-icon" />
             {unread > 0 && <span className="hud-badge">{unread > 9 ? "9+" : unread}</span>}
           </button>

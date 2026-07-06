@@ -1,20 +1,32 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 import { getSessions, type TypingSession } from "../../lib/game/stats";
 
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 
-const CHAR_GRID = "abcdefghijklmnopqrstuvwxyz.,;:'\"!?-()[]{}1234567890@#$%^&*_+=/\\|`~<>".split("");
+const CHAR_GRID = "abcdefghijklmnopqrstuvwxyz.,;:'\"!?-()[]{}1234567890@#$%^&*_+=/\\|`~<>".split(
+  "",
+);
 
 export function StatsView() {
   const [sessions, setSessions] = useState<TypingSession[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getSessions(100).then((s) => {
-      setSessions(s);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    getSessions(100)
+      .then((s) => {
+        setSessions(s);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -73,9 +85,24 @@ export function StatsView() {
       {/* Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <SummaryCard label="Tests" value={String(totalTests)} emoji={<PixelIcon emoji="⌨" />} />
-        <SummaryCard label="Best WPM" value={String(bestWpm)} emoji={<PixelIcon emoji="⚡" />} accent="var(--color-primary)" />
-        <SummaryCard label="Avg WPM" value={String(avgWpm)} emoji={<PixelIcon emoji="⌨" />} accent="var(--leaf)" />
-        <SummaryCard label="Avg Acc" value={`${avgAcc}%`} emoji={<PixelIcon emoji="🎯" />} accent="var(--coin)" />
+        <SummaryCard
+          label="Best WPM"
+          value={String(bestWpm)}
+          emoji={<PixelIcon emoji="⚡" />}
+          accent="var(--color-primary)"
+        />
+        <SummaryCard
+          label="Avg WPM"
+          value={String(avgWpm)}
+          emoji={<PixelIcon emoji="⌨" />}
+          accent="var(--leaf)"
+        />
+        <SummaryCard
+          label="Avg Acc"
+          value={`${avgAcc}%`}
+          emoji={<PixelIcon emoji="🎯" />}
+          accent="var(--coin)"
+        />
       </div>
 
       {/* WPM Chart */}
@@ -95,7 +122,13 @@ export function StatsView() {
                   fontSize: 12,
                 }}
               />
-              <Line type="monotone" dataKey="wpm" stroke="var(--color-primary)" strokeWidth={2} dot={{ r: 3 }} />
+              <Line
+                type="monotone"
+                dataKey="wpm"
+                stroke="var(--color-primary)"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -153,12 +186,23 @@ export function StatsView() {
               {sessions.slice(0, 15).map((s) => (
                 <tr key={s.id} className="border-t" style={{ borderColor: "var(--color-border)" }}>
                   <td className="py-2 pr-3 text-muted-foreground">
-                    {new Date(s.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                    {new Date(s.timestamp).toLocaleDateString(undefined, {
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </td>
-                  <td className="text-right py-2 pr-3" style={{ color: "var(--color-primary)" }}>{s.wpm}</td>
-                  <td className="text-right py-2 pr-3" style={{ color: "var(--leaf)" }}>{s.accuracy}%</td>
-                  <td className="text-right py-2 pr-3 text-muted-foreground">{Math.round(s.duration)}s</td>
-                  <td className="text-right py-2 text-muted-foreground">{s.correctChars + s.mistakes}</td>
+                  <td className="text-right py-2 pr-3" style={{ color: "var(--color-primary)" }}>
+                    {s.wpm}
+                  </td>
+                  <td className="text-right py-2 pr-3" style={{ color: "var(--leaf)" }}>
+                    {s.accuracy}%
+                  </td>
+                  <td className="text-right py-2 pr-3 text-muted-foreground">
+                    {Math.round(s.duration)}s
+                  </td>
+                  <td className="text-right py-2 text-muted-foreground">
+                    {s.correctChars + s.mistakes}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -170,12 +214,26 @@ export function StatsView() {
 }
 
 function SummaryCard({
-  label, value, emoji, accent,
-}: { label: string; value: string;   emoji: React.ReactNode; accent?: string }) {
+  label,
+  value,
+  emoji,
+  accent,
+}: {
+  label: string;
+  value: string;
+  emoji: React.ReactNode;
+  accent?: string;
+}) {
   return (
-    <div className="pixel-card-sm p-3 text-center" style={accent ? { borderLeft: `4px solid ${accent}` } : undefined}>
+    <div
+      className="pixel-card-sm p-3 text-center"
+      style={accent ? { borderLeft: `4px solid ${accent}` } : undefined}
+    >
       <div className="text-2xl mb-1">{emoji}</div>
-      <div className="font-display text-xl leading-tight" style={{ color: accent ?? "var(--color-foreground)" }}>
+      <div
+        className="font-display text-xl leading-tight"
+        style={{ color: accent ?? "var(--color-foreground)" }}
+      >
         {value}
       </div>
       <div className="font-pixel text-[0.55rem] text-muted-foreground uppercase mt-1">{label}</div>

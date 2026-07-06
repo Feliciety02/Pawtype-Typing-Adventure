@@ -20,7 +20,10 @@ function TableOfContents({ doc }: { doc: DocEntry }) {
         {headings.map((h) => (
           <a
             key={h}
-            href={`#${h.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`}
+            href={`#${h
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/(^-|-$)/g, "")}`}
             className="font-pixel text-[0.55rem] text-muted-foreground hover:text-foreground transition-colors pl-2 border-l-2 border-transparent hover:border-current"
           >
             {h}
@@ -76,7 +79,10 @@ export function DocsViewer() {
               </h1>
             ),
             h2: ({ children, ...props }) => {
-              const id = String(children).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+              const id = String(children)
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/(^-|-$)/g, "");
               return (
                 <h2 id={id} className="font-display text-xl leading-tight mt-6 mb-3" {...props}>
                   {children}
@@ -94,12 +100,18 @@ export function DocsViewer() {
               </p>
             ),
             ul: ({ children, ...props }) => (
-              <ul className="font-pixel text-[0.65rem] leading-relaxed my-2 pl-4 space-y-1" {...props}>
+              <ul
+                className="font-pixel text-[0.65rem] leading-relaxed my-2 pl-4 space-y-1"
+                {...props}
+              >
                 {children}
               </ul>
             ),
             ol: ({ children, ...props }) => (
-              <ol className="font-pixel text-[0.65rem] leading-relaxed my-2 pl-4 space-y-1" {...props}>
+              <ol
+                className="font-pixel text-[0.65rem] leading-relaxed my-2 pl-4 space-y-1"
+                {...props}
+              >
                 {children}
               </ol>
             ),
@@ -130,7 +142,10 @@ export function DocsViewer() {
             pre: ({ children }) => <>{children}</>,
             table: ({ children }) => (
               <div className="overflow-x-auto my-3">
-                <table className="w-full text-[0.65rem] font-pixel pixel-card-sm" style={{ borderCollapse: "collapse" }}>
+                <table
+                  className="w-full text-[0.65rem] font-pixel pixel-card-sm"
+                  style={{ borderCollapse: "collapse" }}
+                >
                   {children}
                 </table>
               </div>
@@ -146,7 +161,9 @@ export function DocsViewer() {
               </td>
             ),
             hr: () => <hr className="my-6 border-[var(--color-border)]" />,
-            strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+            strong: ({ children }) => (
+              <strong className="font-semibold text-foreground">{children}</strong>
+            ),
             em: ({ children }) => <em className="italic text-muted-foreground">{children}</em>,
             a: ({ href, children }) => (
               <a href={href} className="text-[var(--color-primary)] underline hover:no-underline">

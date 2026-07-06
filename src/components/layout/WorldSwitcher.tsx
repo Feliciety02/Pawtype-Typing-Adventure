@@ -41,7 +41,10 @@ export function WorldSwitcher() {
               return (
                 <button
                   key={w.id}
-                  onClick={() => { setWorld(w.id); setOpen(false); }}
+                  onClick={() => {
+                    setWorld(w.id);
+                    setOpen(false);
+                  }}
                   className="pixel-card-sm p-2 text-left transition-transform hover:-translate-y-0.5"
                   style={
                     active
@@ -58,7 +61,8 @@ export function WorldSwitcher() {
                       <span
                         key={i}
                         style={{
-                          width: 16, height: 16,
+                          width: 16,
+                          height: 16,
                           background: c,
                           border: "1.5px solid var(--color-border)",
                           borderRadius: 2,

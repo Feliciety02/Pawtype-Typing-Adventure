@@ -1,5 +1,5 @@
-import { useLocal } from "../../lib/hooks/useLocal";
-import { type ShopTab } from "./shopData";
+import { useLocal } from "../../hooks/useLocal";
+import { type ShopTab } from "@/lib/shop/shopData";
 import { SegmentedSwitcher } from "./SegmentedSwitcher";
 import { PetsPage } from "./PetsPage";
 import { ThemesPage } from "./ThemesPage";

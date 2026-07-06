@@ -6,10 +6,7 @@ import { useEffect, useState } from "react";
 import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { signIn, signOut, signUp } from "@/lib/supabase/auth";
 import { isDemoModeEnabled, setDemoModeEnabled, subscribeToDemoMode } from "@/lib/auth/demo";
-import {
-  getSupabaseBrowserClient,
-  isSupabaseBrowserConfigured,
-} from "@/lib/supabase/client";
+import { getSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/client";
 import { signInWithOAuth, type OAuthProvider } from "@/lib/supabase/oauth";
 
 export function useAuth() {
@@ -92,9 +89,7 @@ export function useAuth() {
       try {
         return await signUp({ data });
       } catch (error) {
-        throw new Error(
-          getAuthErrorMessage(error, "Unable to create your account right now."),
-        );
+        throw new Error(getAuthErrorMessage(error, "Unable to create your account right now."));
       }
     },
     onSuccess: () => {
@@ -117,9 +112,7 @@ export function useAuth() {
       setDemoModeEnabled(false);
       await signInWithOAuth(provider);
     } catch (error) {
-      throw new Error(
-        getAuthErrorMessage(error, "Unable to open social sign-in right now."),
-      );
+      throw new Error(getAuthErrorMessage(error, "Unable to open social sign-in right now."));
     } finally {
       setIsSocialLoading(false);
     }

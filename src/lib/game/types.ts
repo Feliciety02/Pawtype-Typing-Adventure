@@ -55,11 +55,7 @@ export const DEFAULT_STARTER_PET: PetState = {
 };
 
 export const DEFAULT_INVENTORY: Inventory = {
-  items: [
-    "theme-autumn",
-    "theme-mushroom",
-    "theme-sunflower",
-  ],
+  items: ["theme-autumn", "theme-mushroom", "theme-sunflower"],
   pets: [DEFAULT_STARTER_PET],
   activePet: DEFAULT_STARTER_PET.type,
 };
@@ -115,6 +111,6 @@ export const PET_NAMES: Record<PetType, string> = {
 };
 
 export function getDailyReward(streakDay: number): DailyReward {
-  const idx = ((streakDay - 1) % DAILY_REWARDS.length);
+  const idx = (streakDay - 1) % DAILY_REWARDS.length;
   return DAILY_REWARDS[idx];
 }

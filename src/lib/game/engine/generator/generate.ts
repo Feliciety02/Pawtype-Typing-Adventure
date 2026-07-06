@@ -68,7 +68,10 @@ export async function generateWorldText(worldId: WorldId): Promise<string | null
  * Generate a quest-themed sentence.
  * Preserves original signature.
  */
-export async function generateQuestText(stageName: string, worldId: WorldId): Promise<string | null> {
+export async function generateQuestText(
+  stageName: string,
+  worldId: WorldId,
+): Promise<string | null> {
   const lexicon = LEXICONS[worldId];
   if (!lexicon) return null;
 
@@ -156,4 +159,3 @@ export async function generateWeakSpotSentences(weakChars: string[]): Promise<st
 // Re-export WordLexicon type for compatibility
 // ============================================================
 export type { WorldLexicon };
-

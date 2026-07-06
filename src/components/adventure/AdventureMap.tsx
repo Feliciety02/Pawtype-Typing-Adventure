@@ -2,7 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
 import { useGame } from "../../lib/game/store";
 import { precomputeGoals, getCachedGoals } from "../../lib/game/engine/difficulty";
-import { type Difficulty, type Stage, type Status, STAGE_DEFS, NODE_IMAGES, rewardsFor, wordsFor } from "./adventureData";
+import {
+  type Difficulty,
+  type Stage,
+  type Status,
+  STAGE_DEFS,
+  NODE_IMAGES,
+  rewardsFor,
+  wordsFor,
+} from "@/lib/adventure/adventureData";
 import { StageNode } from "./StageNode";
 import { StageRunner } from "./StageRunner";
 
@@ -12,26 +20,38 @@ export function AdventureMap() {
   const [adaptiveGoals, setAdaptiveGoals] = useState<Record<Difficulty, number> | null>(null);
 
   useEffect(() => {
-    precomputeGoals().then(setAdaptiveGoals).catch(() => console.warn("Failed to precompute adaptive goals"));
+    precomputeGoals()
+      .then(setAdaptiveGoals)
+      .catch(() => console.warn("Failed to precompute adaptive goals"));
   }, []);
 
   const goals = adaptiveGoals ?? getCachedGoals();
-  const stagesForWorld = useCallback((worldId: WorldId): Stage[] =>
-    (STAGE_DEFS[worldId] ?? STAGE_DEFS.cafe ?? []).map((stage, index) => ({
-      id: index + 1,
-      ...stage,
-      goal: goals[stage.difficulty] + (index === 1 ? 5 : 0),
-      words: wordsFor(worldId, index + 1),
-    })),
-  [goals]);
+  const stagesForWorld = useCallback(
+    (worldId: WorldId): Stage[] =>
+      (STAGE_DEFS[worldId] ?? STAGE_DEFS.cafe ?? []).map((stage, index) => ({
+        id: index + 1,
+        ...stage,
+        goal: goals[stage.difficulty] + (index === 1 ? 5 : 0),
+        words: wordsFor(worldId, index + 1),
+      })),
+    [goals],
+  );
 
   const orderedWorlds = [
     ...WORLDS.filter((item) => item.id === world),
     ...WORLDS.filter((item) => item.id !== world),
   ];
-  const allStages = useMemo(() => orderedWorlds.flatMap((item) => stagesForWorld(item.id)), [orderedWorlds, stagesForWorld]);
-  const totalCleared = orderedWorlds.reduce((sum, item) => sum + (state.adventures[item.id]?.length ?? 0), 0);
-  const [active, setActive] = useState<{ stage: Stage; world: WorldId; image?: string } | null>(null);
+  const allStages = useMemo(
+    () => orderedWorlds.flatMap((item) => stagesForWorld(item.id)),
+    [orderedWorlds, stagesForWorld],
+  );
+  const totalCleared = orderedWorlds.reduce(
+    (sum, item) => sum + (state.adventures[item.id]?.length ?? 0),
+    0,
+  );
+  const [active, setActive] = useState<{ stage: Stage; world: WorldId; image?: string } | null>(
+    null,
+  );
 
   const statusOf = (worldId: WorldId, stage: Stage, index: number): Status => {
     const stages = stagesForWorld(worldId);
@@ -46,7 +66,9 @@ export function AdventureMap() {
     stagesForWorld(item.id).some((stage, index) => statusOf(item.id, stage, index) === "available"),
   );
   const nextStage = nextWorld
-    ? stagesForWorld(nextWorld.id).find((stage, index) => statusOf(nextWorld.id, stage, index) === "available")
+    ? stagesForWorld(nextWorld.id).find(
+        (stage, index) => statusOf(nextWorld.id, stage, index) === "available",
+      )
     : undefined;
 
   return (
@@ -62,15 +84,21 @@ export function AdventureMap() {
 
         <div className="adventure-progress-card">
           <div className="flex items-center justify-between gap-3">
-            <span className="font-pixel text-[0.55rem] uppercase text-muted-foreground">All Worlds</span>
-            <strong className="font-display text-2xl leading-none">{totalCleared}/{allStages.length}</strong>
+            <span className="font-pixel text-[0.55rem] uppercase text-muted-foreground">
+              All Worlds
+            </span>
+            <strong className="font-display text-2xl leading-none">
+              {totalCleared}/{allStages.length}
+            </strong>
           </div>
           <div className="pixel-bar adventure-progress-bar">
             <div style={{ width: `${clearedPercent}%` }} />
           </div>
           <div className="adventure-next-line">
             <span>{nextStage ? "Next stage" : "All clear"}</span>
-            <strong>{nextStage ? `${nextWorld?.name}: ${nextStage.name}` : "All worlds complete"}</strong>
+            <strong>
+              {nextStage ? `${nextWorld?.name}: ${nextStage.name}` : "All worlds complete"}
+            </strong>
           </div>
         </div>
       </div>
@@ -93,7 +121,9 @@ export function AdventureMap() {
                   <p>{theme.blurb}</p>
                 </div>
                 <div className="adventure-world-progress">
-                  <strong>{completed.length}/{stages.length}</strong>
+                  <strong>
+                    {completed.length}/{stages.length}
+                  </strong>
                   <span>cleared</span>
                   <div className="pixel-bar adventure-progress-bar">
                     <div style={{ width: `${worldClearedPercent}%` }} />
@@ -114,7 +144,9 @@ export function AdventureMap() {
                         index={index}
                         status={status}
                         image={image}
-                        onPlay={() => status !== "locked" && setActive({ stage, world: theme.id, image })}
+                        onPlay={() =>
+                          status !== "locked" && setActive({ stage, world: theme.id, image })
+                        }
                       />
                     );
                   })}
@@ -133,7 +165,9 @@ export function AdventureMap() {
           alreadyCompleted={(state.adventures[active.world] ?? []).includes(active.stage.id)}
           onClose={() => setActive(null)}
           onWin={() => {
-            const alreadyCompleted = (state.adventures[active.world] ?? []).includes(active.stage.id);
+            const alreadyCompleted = (state.adventures[active.world] ?? []).includes(
+              active.stage.id,
+            );
             if (!alreadyCompleted) {
               const { xp, coins } = rewardsFor(active.stage);
               dispatch({ type: "ADD_XP", amount: xp });

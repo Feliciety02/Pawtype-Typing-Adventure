@@ -1,8 +1,14 @@
-import { type ShopTab } from "./shopData";
+import { type ShopTab } from "@/lib/shop/shopData";
 
-export function SegmentedSwitcher({ value, onChange }: { value: ShopTab; onChange: (t: ShopTab) => void }) {
+export function SegmentedSwitcher({
+  value,
+  onChange,
+}: {
+  value: ShopTab;
+  onChange: (t: ShopTab) => void;
+}) {
   const tabs: { id: ShopTab; label: string; icon: string }[] = [
-    { id: "pets",   label: "Pets",             icon: "🐾" },
+    { id: "pets", label: "Pets", icon: "🐾" },
     { id: "themes", label: "Themes & Doodads", icon: "🏡" },
   ];
   return (

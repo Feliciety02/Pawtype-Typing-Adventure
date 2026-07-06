@@ -1,8 +1,14 @@
-import { useEffect, useRef, type ButtonHTMLAttributes, type HTMLAttributes, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
-import { cn } from "../../lib/ui/utils";
+import { cn } from "@/lib/utils/utils";
 
 export function PixelCornerOrnaments() {
   return (
@@ -15,11 +21,7 @@ export function PixelCornerOrnaments() {
   );
 }
 
-export function PixelFrame({
-  className,
-  children,
-  ...props
-}: HTMLAttributes<HTMLDivElement>) {
+export function PixelFrame({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn("pixel-frame", className)} {...props}>
       <PixelCornerOrnaments />
@@ -62,7 +64,9 @@ export function ModalShell({
 
     const shell = shellRef.current;
     if (shell) {
-      const first = shell.querySelector<HTMLElement>("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+      const first = shell.querySelector<HTMLElement>(
+        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+      );
       first?.focus();
     }
 
@@ -74,7 +78,9 @@ export function ModalShell({
       if (event.key !== "Tab") return;
       const shell = shellRef.current;
       if (!shell) return;
-      const focusable = shell.querySelectorAll<HTMLElement>("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+      const focusable = shell.querySelectorAll<HTMLElement>(
+        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+      );
       if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
@@ -104,7 +110,11 @@ export function ModalShell({
       aria-label={ariaLabel}
       onClick={onClose}
     >
-      <div ref={shellRef} className={cn("pixel-modal-shell", className)} onClick={(event) => event.stopPropagation()}>
+      <div
+        ref={shellRef}
+        className={cn("pixel-modal-shell", className)}
+        onClick={(event) => event.stopPropagation()}
+      >
         <PixelFrame className={cn("pixel-modal-frame", frameClassName)}>
           {showCloseButton && (
             <button

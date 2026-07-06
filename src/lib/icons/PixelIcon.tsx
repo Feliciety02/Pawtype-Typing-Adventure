@@ -14,15 +14,14 @@ export function PixelIcon({ emoji, className = "pixel-icon", alt, src: srcProp }
   const path = srcProp || iconFor(emoji);
 
   if (failed || !path) {
-    return <span className={className} role="img" aria-label={alt || emoji}>{emoji}</span>;
+    return (
+      <span className={className} role="img" aria-label={alt || emoji}>
+        {emoji}
+      </span>
+    );
   }
 
   return (
-    <img
-      src={path}
-      className={className}
-      alt={alt || emoji}
-      onError={() => setFailed(true)}
-    />
+    <img src={path} className={className} alt={alt || emoji} onError={() => setFailed(true)} />
   );
 }

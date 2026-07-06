@@ -9,7 +9,7 @@ export function getAuthErrorMessage(
   if (
     lower.includes("provider is not enabled") ||
     lower.includes("unsupported provider") ||
-    lower.includes("oauth") && lower.includes("provider")
+    (lower.includes("oauth") && lower.includes("provider"))
   ) {
     return "This social login is not enabled yet. Turn on the provider in Supabase Auth and add the Pawtype callback URL.";
   }

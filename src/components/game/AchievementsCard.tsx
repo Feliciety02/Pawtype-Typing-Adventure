@@ -1,8 +1,21 @@
 import { useGame } from "../../lib/game/store";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
-import { computeAchievements, CATEGORY_META, type BadgeCategory } from "../../lib/game/achievements";
+import {
+  computeAchievements,
+  CATEGORY_META,
+  type BadgeCategory,
+} from "../../lib/game/achievements";
 
-const CATEGORIES: BadgeCategory[] = ["speed", "accuracy", "combo", "pet", "adventure", "learning", "streak", "challenge"];
+const CATEGORIES: BadgeCategory[] = [
+  "speed",
+  "accuracy",
+  "combo",
+  "pet",
+  "adventure",
+  "learning",
+  "streak",
+  "challenge",
+];
 
 const BADGE_BASE = "/Badge Collection";
 
@@ -20,7 +33,17 @@ const TIER_COLORS: Record<number, string> = {
   11: "#a855f7",
 };
 
-function BadgeIcon({ assetName, category, unlocked, tier }: { assetName: string; category: string; unlocked: boolean; tier: number }) {
+function BadgeIcon({
+  assetName,
+  category,
+  unlocked,
+  tier,
+}: {
+  assetName: string;
+  category: string;
+  unlocked: boolean;
+  tier: number;
+}) {
   return (
     <div
       style={{
@@ -34,14 +57,22 @@ function BadgeIcon({ assetName, category, unlocked, tier }: { assetName: string;
         <img
           src={`${BADGE_BASE}/${category}/${assetName}`}
           alt={`${category} badge tier ${tier}`}
-          style={{ width: "100%", height: "100%", objectFit: "contain", imageRendering: "pixelated" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            imageRendering: "pixelated",
+          }}
         />
       ) : (
         <img
           src={`${BADGE_BASE}/${category}/${assetName}`}
           alt={`${category} badge tier ${tier} (locked)`}
           style={{
-            width: "100%", height: "100%", objectFit: "contain", imageRendering: "pixelated",
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            imageRendering: "pixelated",
             filter: "brightness(0.15) saturate(0.2)",
             opacity: 0.6,
           }}
@@ -59,16 +90,19 @@ export function AchievementsCard() {
   return (
     <div className="pixel-card p-5 sm:p-6">
       <div className="mb-5">
-        <h2 className="text-3xl leading-none"><PixelIcon emoji="🏆" /> Badges</h2>
+        <h2 className="text-3xl leading-none">
+          <PixelIcon emoji="🏆" /> Badges
+        </h2>
         <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">
           Collect them all — {unlocked} / {achievements.length} unlocked.
         </p>
-
       </div>
 
       <div className="space-y-8">
         {CATEGORIES.map((cat) => {
-          const catBadges = achievements.filter((a) => a.category === cat).sort((a, b) => a.tier - b.tier);
+          const catBadges = achievements
+            .filter((a) => a.category === cat)
+            .sort((a, b) => a.tier - b.tier);
           const catUnlocked = catBadges.filter((a) => a.unlocked).length;
           const meta = CATEGORY_META[cat];
 
@@ -98,11 +132,23 @@ export function AchievementsCard() {
                       title={a.description}
                       style={a.unlocked ? undefined : { opacity: 0.85 }}
                     >
-                      <BadgeIcon assetName={a.assetName} category={a.category} unlocked={a.unlocked} tier={a.tier} />
+                      <BadgeIcon
+                        assetName={a.assetName}
+                        category={a.category}
+                        unlocked={a.unlocked}
+                        tier={a.tier}
+                      />
                       <div className="font-pixel text-[0.75rem] leading-tight text-center font-bold">
                         {a.title}
                       </div>
-                      <span className="font-pixel text-[0.5rem]" style={{ color: a.unlocked ? TIER_COLORS[a.tier] ?? "#888" : "var(--muted-foreground)" }}>
+                      <span
+                        className="font-pixel text-[0.5rem]"
+                        style={{
+                          color: a.unlocked
+                            ? (TIER_COLORS[a.tier] ?? "#888")
+                            : "var(--muted-foreground)",
+                        }}
+                      >
                         {a.rarity}
                       </span>
                       {a.progress && !a.unlocked && (
@@ -110,7 +156,10 @@ export function AchievementsCard() {
                           <div className="pixel-bar" style={{ height: 4, width: "80%" }}>
                             <div
                               className="h-full transition-all"
-                              style={{ width: `${pct}%`, background: TIER_COLORS[a.tier] ?? "var(--coin)" }}
+                              style={{
+                                width: `${pct}%`,
+                                background: TIER_COLORS[a.tier] ?? "var(--coin)",
+                              }}
                             />
                           </div>
                           <span className="font-pixel text-[0.4rem] text-muted-foreground">
@@ -119,7 +168,10 @@ export function AchievementsCard() {
                         </>
                       )}
                       {a.unlocked && (
-                        <span className="font-pixel text-[0.5rem]" style={{ color: TIER_COLORS[a.tier] ?? "var(--leaf)" }}>
+                        <span
+                          className="font-pixel text-[0.5rem]"
+                          style={{ color: TIER_COLORS[a.tier] ?? "var(--leaf)" }}
+                        >
                           ✓ Unlocked
                         </span>
                       )}

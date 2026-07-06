@@ -2,9 +2,18 @@ import { useEffect } from "react";
 import { useGame } from "../../lib/game/store";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
 import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
-import { useLocal } from "../../lib/hooks/useLocal";
-import { THEMES, DOODADS, THEME_CATEGORIES, DOODAD_CATEGORIES, type ThemeItem, type DoodadItem, type ThemeCategory, type DoodadCategory } from "./shopData";
-import { OwnedBadge, PriceBadge, SectionHeader } from "./shopHelpers";
+import { useLocal } from "../../hooks/useLocal";
+import {
+  THEMES,
+  DOODADS,
+  THEME_CATEGORIES,
+  DOODAD_CATEGORIES,
+  type ThemeItem,
+  type DoodadItem,
+  type ThemeCategory,
+  type DoodadCategory,
+} from "@/lib/shop/shopData";
+import { OwnedBadge, PriceBadge, SectionHeader } from "@/lib/shop/shopHelpers";
 import { CategoryTabs } from "./CategoryTabs";
 
 export function ThemesPage() {
@@ -65,7 +74,11 @@ export function ThemesPage() {
             const canAfford = player.coins >= t.price;
             const preview = THEME_BACKGROUND[t.worldId];
             return (
-              <div key={t.id} className="pixel-card-sm p-3 flex flex-col gap-2" style={{ opacity: locked ? 0.85 : 1 }}>
+              <div
+                key={t.id}
+                className="pixel-card-sm p-3 flex flex-col gap-2"
+                style={{ opacity: locked ? 0.85 : 1 }}
+              >
                 <div
                   className="rounded overflow-hidden relative"
                   style={{
@@ -80,22 +93,33 @@ export function ThemesPage() {
                       alt={t.name}
                       loading="lazy"
                       className="w-full h-full object-cover"
-                      style={{ imageRendering: "pixelated", filter: locked ? "brightness(0.2) grayscale(1)" : "none" }}
+                      style={{
+                        imageRendering: "pixelated",
+                        filter: locked ? "brightness(0.2) grayscale(1)" : "none",
+                      }}
                     />
                   )}
                   {locked && (
-                    <div className="absolute inset-0 grid place-items-center font-pixel text-[0.8rem]" style={{ color: "var(--color-primary-foreground)" }}>
+                    <div
+                      className="absolute inset-0 grid place-items-center font-pixel text-[0.8rem]"
+                      style={{ color: "var(--color-primary-foreground)" }}
+                    >
                       🔒 Lv {t.unlockLevel}
                     </div>
                   )}
                   <div className="absolute top-2 left-2">
-                    {equipped ? <OwnedBadge label="✓ Equipped" color="var(--sky)" /> :
-                     ownedT ? <OwnedBadge /> : null}
+                    {equipped ? (
+                      <OwnedBadge label="✓ Equipped" color="var(--sky)" />
+                    ) : ownedT ? (
+                      <OwnedBadge />
+                    ) : null}
                   </div>
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <div className="font-pixel text-[0.7rem] truncate">{t.emoji} {locked ? "???" : t.name}</div>
+                    <div className="font-pixel text-[0.7rem] truncate">
+                      {t.emoji} {locked ? "???" : t.name}
+                    </div>
                     <div className="font-pixel text-[0.55rem] text-muted-foreground truncate">
                       {locked ? `Unlock at Level ${t.unlockLevel}` : t.description}
                     </div>
@@ -107,7 +131,15 @@ export function ThemesPage() {
                   disabled={locked || (ownedT ? equipped : !canAfford)}
                   onClick={() => (ownedT ? equipTheme(t) : buyTheme(t))}
                 >
-                  {equipped ? "Equipped" : ownedT ? "Equip" : locked ? "Locked" : !canAfford ? "Need 🪙" : "Buy"}
+                  {equipped
+                    ? "Equipped"
+                    : ownedT
+                      ? "Equip"
+                      : locked
+                        ? "Locked"
+                        : !canAfford
+                          ? "Need 🪙"
+                          : "Buy"}
                 </button>
               </div>
             );
@@ -120,18 +152,24 @@ export function ThemesPage() {
         <SectionHeader
           title="Enchanted Doodads"
           subtitle="Little decorations for your pet's room."
-          right={<CategoryTabs items={DOODAD_CATEGORIES} value={doodadCat} onChange={setDoodadCat} />}
+          right={
+            <CategoryTabs items={DOODAD_CATEGORIES} value={doodadCat} onChange={setDoodadCat} />
+          }
         />
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {filteredDoodads.map((d) => {
             const ownedD = doodadOwned(d);
             const canAfford = state.player.coins >= d.price;
             return (
-              <div key={d.id} className="pixel-card-sm p-3 flex flex-col items-center text-center gap-2">
+              <div
+                key={d.id}
+                className="pixel-card-sm p-3 flex flex-col items-center text-center gap-2"
+              >
                 <div
                   className="grid place-items-center rounded"
                   style={{
-                    width: "100%", aspectRatio: "1 / 1",
+                    width: "100%",
+                    aspectRatio: "1 / 1",
                     background: "var(--color-muted)",
                     border: "2px solid var(--color-border)",
                     fontSize: 36,

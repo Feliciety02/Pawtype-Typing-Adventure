@@ -1,13 +1,7 @@
 import { RotateCcw, ArrowLeft, ArrowRight, X } from "lucide-react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { PixelMascot } from "../coach/PixelMascot";
-import {
-  CoachTipCard,
-  PixelButton,
-  PixelFrame,
-  RewardCard,
-  StatCard,
-} from "../modals/ModalShell";
+import { CoachTipCard, PixelButton, PixelFrame, RewardCard, StatCard } from "../modals/ModalShell";
 
 type QuestResultsModalProps = {
   open: boolean;
@@ -65,9 +59,7 @@ export function QuestResultsModal({
               <PixelMascot mood={success ? "happy" : "oops"} size={72} />
             </div>
             <div className="quest-results-kicker">{stageName}</div>
-            <h2 className="quest-results-title">
-              {success ? "Stage Cleared!" : "Quest Failed"}
-            </h2>
+            <h2 className="quest-results-title">{success ? "Stage Cleared!" : "Quest Failed"}</h2>
             <p className="quest-results-message">{message}</p>
             <CoachTipCard>{coachTip}</CoachTipCard>
           </div>

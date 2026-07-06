@@ -3,12 +3,12 @@ import type { View } from "../layout/Header";
 type DockItem = { icon: string; label: string; view: View };
 
 const DOCK_ITEMS: DockItem[] = [
-  { icon: "⌨", label: "Train",   view: "practice" },
-  { icon: "🗺", label: "Quest",   view: "adventure" },
-  { icon: "📖", label: "Learn",   view: "lessons" },
-  { icon: "🛒", label: "Shop",    view: "shop" },
+  { icon: "⌨", label: "Train", view: "practice" },
+  { icon: "🗺", label: "Quest", view: "adventure" },
+  { icon: "📖", label: "Learn", view: "lessons" },
+  { icon: "🛒", label: "Shop", view: "shop" },
   { icon: "🎖️", label: "Awards", view: "achievements" },
-  { icon: "⚙",  label: "Settings",view: "settings" },
+  { icon: "⚙", label: "Settings", view: "settings" },
 ];
 
 export function CampDock({ onViewChange }: { onViewChange: (v: View) => void }) {

@@ -2,7 +2,9 @@ import type { CoachInsight, SessionData } from "./types";
 import { loadRecentSessions, computeTrends, personalBestWpm } from "./history";
 import { analyzePatterns, drillRecommendation } from "./patterns";
 
-function topMistakeChar(keystrokes: SessionData["keystrokes"]): { char: string; count: number } | null {
+function topMistakeChar(
+  keystrokes: SessionData["keystrokes"],
+): { char: string; count: number } | null {
   const counts = new Map<string, number>();
   for (const k of keystrokes) {
     if (!k.correct) {
@@ -13,7 +15,10 @@ function topMistakeChar(keystrokes: SessionData["keystrokes"]): { char: string; 
   return sorted.length > 0 ? { char: sorted[0][0], count: sorted[0][1] } : null;
 }
 
-function buildTrendInsight(session: SessionData, trends: NonNullable<ReturnType<typeof computeTrends>>): CoachInsight | null {
+function buildTrendInsight(
+  session: SessionData,
+  trends: NonNullable<ReturnType<typeof computeTrends>>,
+): CoachInsight | null {
   const { wpm, accuracy } = trends;
 
   if (wpm.direction === "up" && wpm.change >= 3) {

@@ -2,14 +2,19 @@
 
 /* Cozy Café — warm glow shimmer */
 .world-cafe .ambient-glow {
-  background: radial-gradient(ellipse at 50% 30%, color-mix(in oklab, var(--coin) 12%, transparent) 0%, transparent 60%);
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    color-mix(in oklab, var(--coin) 12%, transparent) 0%,
+    transparent 60%
+  );
   pointer-events: none;
 }
 
 /* Mossy Forest — floating fireflies */
 .world-forest .ambient-particle {
   position: absolute;
-  width: 4px; height: 4px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: var(--coin);
   opacity: 0;
@@ -17,16 +22,30 @@
   pointer-events: none;
 }
 @keyframes forest-firefly {
-  0%, 100% { opacity: 0; transform: translate(0, 0); }
-  25% { opacity: 0.8; transform: translate(20px, -10px); }
-  50% { opacity: 0.3; transform: translate(10px, -20px); }
-  75% { opacity: 0.9; transform: translate(-10px, -15px); }
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  25% {
+    opacity: 0.8;
+    transform: translate(20px, -10px);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translate(10px, -20px);
+  }
+  75% {
+    opacity: 0.9;
+    transform: translate(-10px, -15px);
+  }
 }
 
 /* Tide Pool — rising bubbles */
 .world-ocean .ambient-particle {
   position: absolute;
-  width: 3px; height: 3px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   border: 1.5px solid color-mix(in oklab, var(--sky) 50%, transparent);
   background: transparent;
@@ -34,16 +53,27 @@
   pointer-events: none;
 }
 @keyframes ocean-bubble {
-  0% { opacity: 0; transform: translateY(0) scale(0.5); }
-  20% { opacity: 0.7; }
-  80% { opacity: 0.5; }
-  100% { opacity: 0; transform: translateY(-30px) scale(1.2); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  20% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(1.2);
+  }
 }
 
 /* Sakura Park — falling petals */
 .world-sakura .ambient-particle {
   position: absolute;
-  width: 5px; height: 5px;
+  width: 5px;
+  height: 5px;
   border-radius: 2px 50% 50% 50%;
   background: var(--sakura);
   opacity: 0;
@@ -51,41 +81,69 @@
   pointer-events: none;
 }
 @keyframes sakura-petal {
-  0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
-  10% { opacity: 0.8; }
-  90% { opacity: 0.4; }
-  100% { opacity: 0; transform: translate(30px, 40px) rotate(180deg); }
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(30px, 40px) rotate(180deg);
+  }
 }
 
 /* Royal Castle — candle flicker */
 .world-castle .ambient-glow {
-  background: radial-gradient(ellipse at 50% 50%, color-mix(in oklab, var(--coin) 8%, transparent) 0%, transparent 60%);
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    color-mix(in oklab, var(--coin) 8%, transparent) 0%,
+    transparent 60%
+  );
   animation: castle-flicker 2s ease-in-out infinite;
   pointer-events: none;
 }
 @keyframes castle-flicker {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 /* Stardust — twinkling stars */
 .world-space .ambient-particle {
   position: absolute;
-  width: 2px; height: 2px;
+  width: 2px;
+  height: 2px;
   border-radius: 50%;
   background: var(--coin);
   animation: space-twinkle 2s ease-in-out infinite;
   pointer-events: none;
 }
 @keyframes space-twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1.5); }
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
 }
 
 /* Cozy Campsite — floating embers */
 .world-autumn .ambient-particle {
   position: absolute;
-  width: 4px; height: 4px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: var(--coin);
   opacity: 0;
@@ -94,16 +152,27 @@
   pointer-events: none;
 }
 @keyframes autumn-ember {
-  0% { opacity: 0; transform: translate(0, 8px) scale(0.7); }
-  20% { opacity: 0.85; }
-  80% { opacity: 0.45; }
-  100% { opacity: 0; transform: translate(18px, -26px) scale(1.15); }
+  0% {
+    opacity: 0;
+    transform: translate(0, 8px) scale(0.7);
+  }
+  20% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(18px, -26px) scale(1.15);
+  }
 }
 
 /* Fairy Mushroom Village — glowing spores */
 .world-mushroom .ambient-particle {
   position: absolute;
-  width: 3px; height: 3px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   background: var(--sakura);
   box-shadow: 0 0 4px var(--sakura);
@@ -112,16 +181,27 @@
   pointer-events: none;
 }
 @keyframes mushroom-spore {
-  0% { opacity: 0; transform: scale(0.3); }
-  20% { opacity: 0.9; }
-  80% { opacity: 0.5; }
-  100% { opacity: 0; transform: scale(1.4) translateY(-20px); }
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  20% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4) translateY(-20px);
+  }
 }
 
 /* Moonlit Garden — floating fireflies */
 .world-moonlit .ambient-particle {
   position: absolute;
-  width: 4px; height: 4px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: var(--sky);
   opacity: 0;
@@ -129,29 +209,56 @@
   pointer-events: none;
 }
 @keyframes moonlit-flicker {
-  0%, 100% { opacity: 0; transform: translate(0, 0); }
-  25% { opacity: 0.7; transform: translate(15px, -8px); }
-  50% { opacity: 0.9; transform: translate(8px, -18px); }
-  75% { opacity: 0.4; transform: translate(-12px, -10px); }
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  25% {
+    opacity: 0.7;
+    transform: translate(15px, -8px);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(8px, -18px);
+  }
+  75% {
+    opacity: 0.4;
+    transform: translate(-12px, -10px);
+  }
 }
 
 /* Rainy Library — drifting steam */
 .world-rainy .ambient-glow {
   background:
-    radial-gradient(ellipse at 30% 80%, color-mix(in oklab, var(--accent) 10%, transparent) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 60%, color-mix(in oklab, var(--accent) 8%, transparent) 0%, transparent 40%);
+    radial-gradient(
+      ellipse at 30% 80%,
+      color-mix(in oklab, var(--accent) 10%, transparent) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 70% 60%,
+      color-mix(in oklab, var(--accent) 8%, transparent) 0%,
+      transparent 40%
+    );
   pointer-events: none;
   animation: rainy-steam 6s ease-in-out infinite;
 }
 @keyframes rainy-steam {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.9; }
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
 /* Snowy Cabin — falling snow */
 .world-snowy .ambient-particle {
   position: absolute;
-  width: 3px; height: 3px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   background: white;
   opacity: 0;
@@ -159,16 +266,27 @@
   pointer-events: none;
 }
 @keyframes snowy-flake {
-  0% { opacity: 0; transform: translateY(0) scale(0.5); }
-  15% { opacity: 0.8; }
-  85% { opacity: 0.6; }
-  100% { opacity: 0; transform: translateY(35px) scale(1.1) translateX(10px); }
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(35px) scale(1.1) translateX(10px);
+  }
 }
 
 /* Sunflower Meadow — floating pollen */
 .world-sunflower .ambient-particle {
   position: absolute;
-  width: 2px; height: 2px;
+  width: 2px;
+  height: 2px;
   border-radius: 50%;
   background: var(--coin);
   opacity: 0;
@@ -176,8 +294,18 @@
   pointer-events: none;
 }
 @keyframes sunflower-pollen {
-  0% { opacity: 0; transform: translate(0, 0); }
-  20% { opacity: 0.8; }
-  80% { opacity: 0.3; }
-  100% { opacity: 0; transform: translate(25px, -15px); }
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(25px, -15px);
+  }
 }

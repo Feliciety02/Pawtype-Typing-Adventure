@@ -10,7 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/ui/lovable-error-reporting";
+import { reportLovableError } from "@/lib/utils/lovable-error-reporting";
 import { WorldProvider } from "../components/shared/WorldTheme";
 import { GameProvider } from "../lib/game/store";
 import { Toaster } from "../components/ui/sonner";
@@ -81,15 +81,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Pawtype Studio" },
-      { name: "description", content: "PixelType Studio is a modern, pixel-art typing tutor website that gamifies learning touch typing." },
+      {
+        name: "description",
+        content:
+          "PixelType Studio is a modern, pixel-art typing tutor website that gamifies learning touch typing.",
+      },
       { name: "author", content: "Pawtype Studio" },
       { property: "og:title", content: "Pawtype Studio" },
-      { property: "og:description", content: "PixelType Studio is a modern, pixel-art typing tutor website that gamifies learning touch typing." },
+      {
+        property: "og:description",
+        content:
+          "PixelType Studio is a modern, pixel-art typing tutor website that gamifies learning touch typing.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@PawtypeStudio" },
       { name: "twitter:title", content: "Pawtype Studio" },
-      { name: "twitter:description", content: "PixelType Studio is a modern, pixel-art typing tutor website that gamifies learning touch typing." },
+      {
+        name: "twitter:description",
+        content:
+          "PixelType Studio is a modern, pixel-art typing tutor website that gamifies learning touch typing.",
+      },
       { property: "og:image", content: "/Logo.png" },
       { name: "twitter:image", content: "/Logo.png" },
     ],
@@ -133,10 +145,7 @@ function RootComponent() {
   useEffect(() => {
     const hour = new Date().getHours();
     const period =
-      hour < 6 ? "night" :
-      hour < 8 ? "dawn" :
-      hour < 18 ? "day" :
-      hour < 20 ? "dusk" : "night";
+      hour < 6 ? "night" : hour < 8 ? "dawn" : hour < 18 ? "day" : hour < 20 ? "dusk" : "night";
     document.documentElement.setAttribute("data-time-of-day", period);
   }, []);
 

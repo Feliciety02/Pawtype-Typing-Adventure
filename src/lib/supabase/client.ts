@@ -19,19 +19,15 @@ export function getSupabaseBrowserClient() {
   }
 
   if (!browserClient) {
-    browserClient = createBrowserClient<Database>(
-      url,
-      anonKey,
-      {
-        auth: {
-          autoRefreshToken: true,
-          detectSessionInUrl: false,
-          flowType: "pkce",
-          persistSession: true,
-          storageKey: "pawtype-auth",
-        },
+    browserClient = createBrowserClient<Database>(url, anonKey, {
+      auth: {
+        autoRefreshToken: true,
+        detectSessionInUrl: false,
+        flowType: "pkce",
+        persistSession: true,
+        storageKey: "pawtype-auth",
       },
-    );
+    });
   }
 
   return browserClient;

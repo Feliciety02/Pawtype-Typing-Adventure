@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { useGame } from "../../lib/game/store";
-import { useAuth } from "../../lib/hooks/use-auth";
+import { useAuth } from "../../hooks/use-auth";
 import { AuthForm } from "../auth/AuthForm";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
 import { DocsViewer } from "../shared/DocsViewer";
@@ -46,21 +46,26 @@ export function SettingsPage() {
 
   const ownsCrt = inventory.items.includes("crt-shader");
   const ownsSparkle = inventory.items.includes("sparkle-trail");
-  const unlockedWorlds = WORLDS.filter((item) => BASE_WORLD_IDS.includes(item.id) || inventory.items.includes(`theme-${item.id}`));
+  const unlockedWorlds = WORLDS.filter(
+    (item) => BASE_WORLD_IDS.includes(item.id) || inventory.items.includes(`theme-${item.id}`),
+  );
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
-    if (typeof window !== "undefined") window.localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
+    if (typeof window !== "undefined")
+      window.localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   }, [dark]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("pawtype-focus-glow", focusGlow);
-    if (typeof window !== "undefined") window.localStorage.setItem(FOCUS_GLOW_KEY, focusGlow ? "1" : "0");
+    if (typeof window !== "undefined")
+      window.localStorage.setItem(FOCUS_GLOW_KEY, focusGlow ? "1" : "0");
   }, [focusGlow]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("pawtype-reduce-motion", reduceMotion);
-    if (typeof window !== "undefined") window.localStorage.setItem(REDUCE_MOTION_KEY, reduceMotion ? "1" : "0");
+    if (typeof window !== "undefined")
+      window.localStorage.setItem(REDUCE_MOTION_KEY, reduceMotion ? "1" : "0");
   }, [reduceMotion]);
 
   const toggleCrt = () => {
@@ -131,11 +136,17 @@ export function SettingsPage() {
                 <div className="settings-panel-head">
                   <div>
                     <label className="settings-kicker">World Wardrobe</label>
-                    <h3>{currentWorld.emoji} {currentWorld.name}</h3>
+                    <h3>
+                      {currentWorld.emoji} {currentWorld.name}
+                    </h3>
                   </div>
-                  <span className="settings-chip">{unlockedWorlds.length}/{WORLDS.length} unlocked</span>
+                  <span className="settings-chip">
+                    {unlockedWorlds.length}/{WORLDS.length} unlocked
+                  </span>
                 </div>
-                <p className="settings-help">Only unlocked worlds appear here. Buy more worlds in the shop to expand this list.</p>
+                <p className="settings-help">
+                  Only unlocked worlds appear here. Buy more worlds in the shop to expand this list.
+                </p>
                 <div className="settings-world-grid">
                   {unlockedWorlds.map((item) => {
                     const active = item.id === world;
@@ -146,7 +157,23 @@ export function SettingsPage() {
                         onClick={() => setWorld(item.id)}
                         type="button"
                       >
-                        <span className="settings-world-emoji">{item.emoji === "☕" ? <PixelIcon emoji="☕" /> : item.emoji === "🌲" ? <PixelIcon emoji="🌲" /> : item.emoji === "🌊" ? <PixelIcon emoji="🌊" /> : item.emoji === "🌸" ? <PixelIcon emoji="🌸" /> : item.emoji === "🌻" ? <PixelIcon emoji="🌻" /> : item.emoji === "🍂" ? <PixelIcon emoji="🍂" /> : item.emoji}</span>
+                        <span className="settings-world-emoji">
+                          {item.emoji === "☕" ? (
+                            <PixelIcon emoji="☕" />
+                          ) : item.emoji === "🌲" ? (
+                            <PixelIcon emoji="🌲" />
+                          ) : item.emoji === "🌊" ? (
+                            <PixelIcon emoji="🌊" />
+                          ) : item.emoji === "🌸" ? (
+                            <PixelIcon emoji="🌸" />
+                          ) : item.emoji === "🌻" ? (
+                            <PixelIcon emoji="🌻" />
+                          ) : item.emoji === "🍂" ? (
+                            <PixelIcon emoji="🍂" />
+                          ) : (
+                            item.emoji
+                          )}
+                        </span>
                         <span className="settings-world-name">{item.name}</span>
                         <span className="settings-world-blurb">{item.blurb}</span>
                         <span className="settings-swatches" aria-hidden="true">
@@ -169,10 +196,25 @@ export function SettingsPage() {
                   </div>
                   <span className="settings-chip">Manual</span>
                 </div>
-                <p className="settings-help">Pawtype now uses your saved choice only. It will not auto-switch from system dark mode.</p>
+                <p className="settings-help">
+                  Pawtype now uses your saved choice only. It will not auto-switch from system dark
+                  mode.
+                </p>
                 <div className="settings-segment" role="group" aria-label="Display mode">
-                  <button className={!dark ? "is-active" : ""} onClick={() => setThemeMode("light")} type="button">Day</button>
-                  <button className={dark ? "is-active" : ""} onClick={() => setThemeMode("dark")} type="button">Night</button>
+                  <button
+                    className={!dark ? "is-active" : ""}
+                    onClick={() => setThemeMode("light")}
+                    type="button"
+                  >
+                    Day
+                  </button>
+                  <button
+                    className={dark ? "is-active" : ""}
+                    onClick={() => setThemeMode("dark")}
+                    type="button"
+                  >
+                    Night
+                  </button>
                 </div>
               </div>
 
@@ -185,16 +227,36 @@ export function SettingsPage() {
                   <span className="settings-chip">HUD</span>
                 </div>
                 <div className="settings-toggle-grid">
-                  <SettingsToggle label="CRT Filter" active={crt} locked={!ownsCrt} onClick={toggleCrt} />
-                  <SettingsToggle label="Sparkle Trail" active={sparkle} locked={!ownsSparkle} onClick={toggleSparkle} />
-                  <SettingsToggle label="Focus Glow" active={focusGlow} onClick={() => setFocusGlow((value) => !value)} />
-                  <SettingsToggle label="Reduce Motion" active={reduceMotion} onClick={() => setReduceMotion((value) => !value)} />
+                  <SettingsToggle
+                    label="CRT Filter"
+                    active={crt}
+                    locked={!ownsCrt}
+                    onClick={toggleCrt}
+                  />
+                  <SettingsToggle
+                    label="Sparkle Trail"
+                    active={sparkle}
+                    locked={!ownsSparkle}
+                    onClick={toggleSparkle}
+                  />
+                  <SettingsToggle
+                    label="Focus Glow"
+                    active={focusGlow}
+                    onClick={() => setFocusGlow((value) => !value)}
+                  />
+                  <SettingsToggle
+                    label="Reduce Motion"
+                    active={reduceMotion}
+                    onClick={() => setReduceMotion((value) => !value)}
+                  />
                 </div>
               </div>
 
               {/* Account */}
               <div className="pixel-card-sm p-4 space-y-3">
-                <label className="font-pixel text-[0.6rem] text-muted-foreground uppercase tracking-wider">Account</label>
+                <label className="font-pixel text-[0.6rem] text-muted-foreground uppercase tracking-wider">
+                  Account
+                </label>
                 <div className="space-y-1">
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Level</span>
@@ -202,16 +264,27 @@ export function SettingsPage() {
                   </div>
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Coins</span>
-                    <strong suppressHydrationWarning><PixelIcon emoji="🪙" /> {player.coins.toLocaleString()}</strong>
+                    <strong suppressHydrationWarning>
+                      <PixelIcon emoji="🪙" /> {player.coins.toLocaleString()}
+                    </strong>
                   </div>
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Streak</span>
-                    <strong><PixelIcon emoji="🔥" /> {player.streak}</strong>
+                    <strong>
+                      <PixelIcon emoji="🔥" /> {player.streak}
+                    </strong>
                   </div>
                   {authLoading ? null : user || isDemo ? (
                     <div className="flex items-center gap-3 text-[0.65rem] font-pixel pt-1 border-t border-[var(--color-border)]">
-                      <span className="text-muted-foreground w-20">{isDemo ? "Mode" : "Signed in"}</span>
-                      <span className="text-foreground truncate max-w-[140px]" title={accountLabel ?? ""}>{accountLabel}</span>
+                      <span className="text-muted-foreground w-20">
+                        {isDemo ? "Mode" : "Signed in"}
+                      </span>
+                      <span
+                        className="text-foreground truncate max-w-[140px]"
+                        title={accountLabel ?? ""}
+                      >
+                        {accountLabel}
+                      </span>
                     </div>
                   ) : null}
                 </div>
@@ -219,7 +292,9 @@ export function SettingsPage() {
                   <button
                     className="pixel-btn pixel-btn-secondary text-[0.55rem]"
                     onClick={async () => {
-                      try { await logout(); } catch {}
+                      try {
+                        await logout();
+                      } catch {}
                     }}
                     disabled={isLoggingOut}
                     type="button"
@@ -281,9 +356,7 @@ function SettingsToggle({
       type="button"
     >
       <span className="settings-toggle-orb" aria-hidden="true">
-        {locked ? (
-          <PixelIcon emoji="🔒" className="inline-lock-icon" />
-        ) : active ? "ON" : "OFF"}
+        {locked ? <PixelIcon emoji="🔒" className="inline-lock-icon" /> : active ? "ON" : "OFF"}
       </span>
       <span>
         <strong>{label}</strong>

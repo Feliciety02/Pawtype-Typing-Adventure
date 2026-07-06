@@ -1,28 +1,17 @@
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 
-import { useAuth } from "@/lib/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { buildDemoGameState } from "@/lib/game/demo";
 import { PixelIcon } from "@/lib/icons/PixelIcon";
 import { useGame } from "@/lib/game/store";
-import {
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
-  passwordHint,
-} from "@/lib/auth/shared";
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, passwordHint } from "@/lib/auth/shared";
 
 export function PixelLoginScreen() {
   const { dispatch } = useGame();
-  const {
-    login,
-    signUp,
-    loginWithProvider,
-    enterDemo,
-    isLoggingIn,
-    isSigningUp,
-    isSocialLoading,
-  } = useAuth();
+  const { login, signUp, loginWithProvider, enterDemo, isLoggingIn, isSigningUp, isSocialLoading } =
+    useAuth();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -109,13 +98,11 @@ export function PixelLoginScreen() {
             <img src="/Logo.png" alt="" className="pixel-login-logo-mark" />
             <h1 className="pixel-login-wordmark">PawType</h1>
           </div>
-          <p className="pixel-login-subtitle">
-            Every Keystroke Begins an Adventure.
-          </p>
+          <p className="pixel-login-subtitle">Every Keystroke Begins an Adventure.</p>
           <p className="pixel-login-description">
-            Explore magical worlds, raise adorable companions, conquer typing challenges, and become a true keyboard adventurer.
+            Explore magical worlds, raise adorable companions, conquer typing challenges, and become
+            a true keyboard adventurer.
           </p>
-
         </div>
 
         {/* Right — Auth Panel */}
@@ -206,7 +193,11 @@ export function PixelLoginScreen() {
                   <LoaderCircle className="size-3 animate-spin" />
                   Opening Gate...
                 </span>
-              ) : mode === "login" ? "Enter Game" : "Create Account"}
+              ) : mode === "login" ? (
+                "Enter Game"
+              ) : (
+                "Create Account"
+              )}
             </button>
           </form>
 

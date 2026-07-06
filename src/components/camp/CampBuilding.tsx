@@ -83,7 +83,6 @@ export function CampBuilding({
         disabled={disabled}
         onMouseEnter={emitParticles}
       >
-        <div className="camp-building-shadow" />
         <img
           className="camp-building-img"
           src={asset}

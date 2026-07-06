@@ -90,11 +90,11 @@ Every world is a complete visual theme with its own color palette, ambient parti
 
 1. Each world sets CSS custom properties on \`<html>\` via the \`world-{id}\` class
 2. Light and dark modes each have separate palette overrides; the app uses the saved manual choice and does not auto-follow system theme
-3. The \`.game-hud\` block styles the top navigation bar as a three-part HUD with a clickable player profile card, centered menu strip, and compact utility panel; \`Stats\` and \`Settings\` now live in the profile menu, the nav uses pixel PNG tab icons from \`/Icons/nav\`, desktop tabs stay on one line with content-width buttons, and the right HUD stat capsule now includes level, coins, and streak sized to its contents
+3. The \`.game-hud\` block styles the top navigation bar as a three-part HUD with a clickable player profile card, centered menu strip, and compact utility panel; \`Stats\` and \`Settings\` now live in the profile menu, the nav uses pixel PNG tab icons from \`/icons/nav\`, desktop tabs stay on one line with content-width buttons, and the right HUD stat capsule now includes level, coins, and streak sized to its contents
 4. \`.ambient-glow\` or \`.ambient-particle\` creates atmospheric effects
-5. Background images are loaded from \`/theme/{slug}.png\`
+5. Background images are loaded from \`/themes/{slug}.png\`
 6. World selection persists in \`localStorage\`
-7. Adventure node cards load image sets from \`/node-level\` when available; locked nodes use \`/Icons/lock.png\` as a larger colored centered overlay without a separate lock panel
+7. Adventure node cards load image sets from \`/worlds\` when available; locked nodes use \`/icons/lock.png\` as a larger colored centered overlay without a separate lock panel
 8. Adventure stage cards automatically measure transparent PNG margins at runtime and offset the node art so the visible top edge aligns consistently across different world image sets
 9. Settings shows only unlocked worlds in the inline World Wardrobe grid
 `;

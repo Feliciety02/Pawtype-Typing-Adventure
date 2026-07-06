@@ -1,4 +1,4 @@
-import { type Stage, type Status, rewardsFor, LOCK_ICON } from "./adventureData";
+import { type Stage, type Status, rewardsFor, LOCK_ICON } from "@/lib/adventure/adventureData";
 import { AdventureNodeImage } from "./AdventureNodeImage";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 
@@ -42,16 +42,21 @@ export function StageNode({
       <div className="adventure-stage-ribbon">Stage {index + 1}</div>
       <div className="adventure-node-visual" data-has-image={Boolean(image)}>
         {image ? (
-          <AdventureNodeImage src={image} alt={`${stage.name} node`} className="adventure-node-img" />
+          <AdventureNodeImage
+            src={image}
+            alt={`${stage.name} node`}
+            className="adventure-node-img"
+          />
         ) : (
-          <span className="adventure-node-fallback"><PixelIcon emoji={stage.emoji} /></span>
+          <span className="adventure-node-fallback">
+            <PixelIcon emoji={stage.emoji} />
+          </span>
         )}
         {status === "locked" && (
           <span className="adventure-node-overlay">
             <img src={LOCK_ICON} alt="Locked" className="adventure-lock-img" draggable={false} />
           </span>
         )}
-
       </div>
       <div className="adventure-node-name-plaque">{stage.name}</div>
       <div className="adventure-node-meta">

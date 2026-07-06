@@ -19,20 +19,13 @@ import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { useWorld } from "../shared/WorldTheme";
 import { CampBuilding } from "./CampBuilding";
 
-type OpenBuilding =
-  | "blacksmith"
-  | "cabin"
-  | "library"
-  | "mailbox"
-  | "nursery"
-  | "tent"
-  | "wagon";
+type OpenBuilding = "blacksmith" | "cabin" | "library" | "mailbox" | "nursery" | "tent" | "wagon";
 
 const CAMP_BACKGROUND_BY_TIME = {
-  morning: "/camp-scene/campscene-background-morning.png",
-  afternoon: "/camp-scene/campscene-background-afternoon.png",
-  evening: "/camp-scene/campscene-background-evening.png",
-  night: "/camp-scene/campscene-background-evening.png",
+  morning: "/camp/scenes/campscene-background-morning.png",
+  afternoon: "/camp/scenes/campscene-background-afternoon.png",
+  evening: "/camp/scenes/campscene-background-evening.png",
+  night: "/camp/scenes/campscene-background-evening.png",
 } as const;
 
 export function CampScene() {

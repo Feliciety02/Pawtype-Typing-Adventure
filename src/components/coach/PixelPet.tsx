@@ -54,7 +54,18 @@ export function PixelPet({ pet, size = 96, showDetails = true }: Props) {
         <>
           <div className="flex items-center gap-1.5">
             <span className="font-pixel text-[0.55rem] text-muted-foreground">
-              {stage === "baby" ? "🥚" : stage === "adult" ? <PixelIcon emoji="⭐" /> : stage === "evolved" ? <PixelIcon emoji="🌟" /> : stage === "legendary" ? <PixelIcon emoji="⭐" /> : EVO_EMOJI[stage]} {EVO_LABEL[stage]}
+              {stage === "baby" ? (
+                "🥚"
+              ) : stage === "adult" ? (
+                <PixelIcon emoji="⭐" />
+              ) : stage === "evolved" ? (
+                <PixelIcon emoji="🌟" />
+              ) : stage === "legendary" ? (
+                <PixelIcon emoji="⭐" />
+              ) : (
+                EVO_EMOJI[stage]
+              )}{" "}
+              {EVO_LABEL[stage]}
             </span>
           </div>
 
@@ -89,8 +100,12 @@ const PET_COLORS: Record<string, string> = {
 
 function PetEmoji({ type, stage, size }: { type: string; stage: EvolutionStage; size: number }) {
   const emojiMap: Record<string, string> = {
-    dog: "🐶", fox: "🦊", rabbit: "🐰",
-    panda: "🐼", penguin: "🐧", dragon: "🐉",
+    dog: "🐶",
+    fox: "🦊",
+    rabbit: "🐰",
+    panda: "🐼",
+    penguin: "🐧",
+    dragon: "🐉",
   };
   const emoji = emojiMap[type] ?? "🐾";
   const borderColor = PET_COLORS[type] ?? "var(--color-border)";

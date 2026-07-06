@@ -35,10 +35,10 @@ export function getNotifications(): Notification[] {
 
 export function pushNotification(n: Omit<Notification, "id" | "timestamp" | "read">) {
   const id = `n-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-  const next: Notification[] = [
-    { ...n, id, timestamp: Date.now(), read: false },
-    ...load(),
-  ].slice(0, MAX);
+  const next: Notification[] = [{ ...n, id, timestamp: Date.now(), read: false }, ...load()].slice(
+    0,
+    MAX,
+  );
   save(next);
 }
 

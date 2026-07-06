@@ -23,4 +23,3 @@ export function pickFresh(words: string[], count: number): string[] {
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }
-

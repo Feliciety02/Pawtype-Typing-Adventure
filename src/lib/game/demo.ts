@@ -1,8 +1,4 @@
-import {
-  DEFAULT_GAME_STATE,
-  PET_NAMES,
-  type GameState,
-} from "./types";
+import { DEFAULT_GAME_STATE, PET_NAMES, type GameState } from "./types";
 
 export function buildDemoGameState(): GameState {
   return {

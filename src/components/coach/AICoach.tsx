@@ -28,7 +28,8 @@ export function AICoach(props: Props) {
   useEffect(() => {
     let cancelled = false;
 
-    const isPersonalBest = props.wpm > 0 && props.wpm > parseInt(localStorage.getItem("pawtype-best-wpm") ?? "0");
+    const isPersonalBest =
+      props.wpm > 0 && props.wpm > parseInt(localStorage.getItem("pawtype-best-wpm") ?? "0");
     const isPerfect = props.accuracy === 100;
 
     if (isPersonalBest && props.wpm > 0) {
@@ -54,13 +55,25 @@ export function AICoach(props: Props) {
     return () => {
       cancelled = true;
     };
-  }, [props.wpm, props.accuracy, props.duration, props.correctChars, props.mistakes, props.bestCombo, props.keystrokes]);
+  }, [
+    props.wpm,
+    props.accuracy,
+    props.duration,
+    props.correctChars,
+    props.mistakes,
+    props.bestCombo,
+    props.keystrokes,
+  ]);
 
   if (loading) {
     return (
       <div className="pixel-card-sm p-3 flex items-center gap-2">
-        <span className="font-pixel text-[0.55rem] animate-sparkle"><PixelIcon emoji="🧠" /></span>
-        <span className="font-pixel text-[0.6rem] text-muted-foreground">Coach is checking your run...</span>
+        <span className="font-pixel text-[0.55rem] animate-sparkle">
+          <PixelIcon emoji="🧠" />
+        </span>
+        <span className="font-pixel text-[0.6rem] text-muted-foreground">
+          Coach is checking your run...
+        </span>
       </div>
     );
   }
@@ -68,9 +81,13 @@ export function AICoach(props: Props) {
   if (error || !insight) {
     return (
       <div className="pixel-card-sm p-3 flex items-center gap-2" style={{ opacity: 0.6 }}>
-        <span className="font-pixel text-[0.55rem]"><PixelIcon emoji="🤖" /></span>
+        <span className="font-pixel text-[0.55rem]">
+          <PixelIcon emoji="🤖" />
+        </span>
         <span className="font-pixel text-[0.6rem] text-muted-foreground">
-          {error ? "Coach feedback is unavailable right now." : "Keep typing and I'll have feedback ready!"}
+          {error
+            ? "Coach feedback is unavailable right now."
+            : "Keep typing and I'll have feedback ready!"}
         </span>
       </div>
     );
@@ -83,12 +100,17 @@ export function AICoach(props: Props) {
       className="pixel-card-sm p-3 flex items-start gap-2"
       style={{ borderLeft: `3px solid ${style.accent}` }}
     >
-      <span className="font-pixel text-sm shrink-0 mt-0.5"><PixelIcon emoji={style.emoji} /></span>
+      <span className="font-pixel text-sm shrink-0 mt-0.5">
+        <PixelIcon emoji={style.emoji} />
+      </span>
       <div>
         <div className="font-pixel text-[0.55rem] uppercase mb-0.5" style={{ color: style.accent }}>
           Coach
         </div>
-        <p className="font-pixel text-[0.65rem] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
+        <p
+          className="font-pixel text-[0.65rem] leading-relaxed"
+          style={{ color: "var(--muted-foreground)" }}
+        >
           {insight.text}
         </p>
       </div>

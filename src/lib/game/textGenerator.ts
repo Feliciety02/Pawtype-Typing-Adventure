@@ -19,25 +19,80 @@ const WORLD_THEMES: Partial<Record<WorldId, string>> = {
   mushroom: "a fairy mushroom village with glowing spores, twisted roots, and enchanted air",
   "volcanic-forge": "a volcanic forge with lava flows, ash clouds, molten rock, and glowing embers",
   sunflower: "a sunflower meadow with golden fields, buzzing bees, and endless blue sky",
-  "desert-oasis": "an ancient desert oasis with golden sand dunes, palm trees, stone ruins, and a hidden blue spring",
-  "steam-punk-workshop": "a steampunk workshop with copper gears, steam engines, brass pipes, and clockwork machinery",
-  "frostveil-kingdom": "a frozen kingdom with ice crystals, frost-covered pines, frozen waterfalls, and a shimmering ice palace",
+  "desert-oasis":
+    "an ancient desert oasis with golden sand dunes, palm trees, stone ruins, and a hidden blue spring",
+  "steam-punk-workshop":
+    "a steampunk workshop with copper gears, steam engines, brass pipes, and clockwork machinery",
+  "frostveil-kingdom":
+    "a frozen kingdom with ice crystals, frost-covered pines, frozen waterfalls, and a shimmering ice palace",
 };
 
 const WORLD_LINES: Partial<Record<WorldId, string[]>> = {
-  cafe: ["Steam curls past the window", "soft jazz drifts near the counter", "warm mugs wait beside quiet booths"],
-  forest: ["Fern shadows sway in the light", "a brook chatters over smooth stone", "foxglow flickers beneath old trees"],
-  ocean: ["Cool spray hangs over the rocks", "small shells gleam beside the tide", "seafoam slips through the pools"],
-  sakura: ["Pink petals spiral over the pond", "paper lanterns glow at dusk", "koi ripple the quiet water"],
-  castle: ["Candlelight runs along the hall", "velvet banners rest above stone arches", "soft steps echo through the keep"],
-  space: ["Distant stars shimmer past the glass", "comets leave pale silver trails", "nebula light hums through the dark"],
-  autumn: ["Campfire smoke drifts through the pines", "lanterns sway beside the trail", "the lookout glows above the ridge"],
-  mushroom: ["Glowing spores float between the roots", "tiny lantern caps shine in the mist", "crystal dew gathers on curled leaves"],
-  "volcanic-forge": ["Embers glow along black stone", "ash drifts over the molten path", "iron heat rises from the forge"],
-  sunflower: ["Tall blooms lean with the breeze", "bees weave over golden rows", "warm light settles on the meadow"],
-  "desert-oasis": ["Sunlight shivers over the dunes", "palm shade cools the spring", "old ruins rest beyond the sand"],
-  "steam-punk-workshop": ["Copper gears click in steady rhythm", "steam hisses from brass pipes", "clockwork sparks dance above the bench"],
-  "frostveil-kingdom": ["Ice light glitters across the path", "snow gathers under crystal pines", "the palace shines beyond frozen falls"],
+  cafe: [
+    "Steam curls past the window",
+    "soft jazz drifts near the counter",
+    "warm mugs wait beside quiet booths",
+  ],
+  forest: [
+    "Fern shadows sway in the light",
+    "a brook chatters over smooth stone",
+    "foxglow flickers beneath old trees",
+  ],
+  ocean: [
+    "Cool spray hangs over the rocks",
+    "small shells gleam beside the tide",
+    "seafoam slips through the pools",
+  ],
+  sakura: [
+    "Pink petals spiral over the pond",
+    "paper lanterns glow at dusk",
+    "koi ripple the quiet water",
+  ],
+  castle: [
+    "Candlelight runs along the hall",
+    "velvet banners rest above stone arches",
+    "soft steps echo through the keep",
+  ],
+  space: [
+    "Distant stars shimmer past the glass",
+    "comets leave pale silver trails",
+    "nebula light hums through the dark",
+  ],
+  autumn: [
+    "Campfire smoke drifts through the pines",
+    "lanterns sway beside the trail",
+    "the lookout glows above the ridge",
+  ],
+  mushroom: [
+    "Glowing spores float between the roots",
+    "tiny lantern caps shine in the mist",
+    "crystal dew gathers on curled leaves",
+  ],
+  "volcanic-forge": [
+    "Embers glow along black stone",
+    "ash drifts over the molten path",
+    "iron heat rises from the forge",
+  ],
+  sunflower: [
+    "Tall blooms lean with the breeze",
+    "bees weave over golden rows",
+    "warm light settles on the meadow",
+  ],
+  "desert-oasis": [
+    "Sunlight shivers over the dunes",
+    "palm shade cools the spring",
+    "old ruins rest beyond the sand",
+  ],
+  "steam-punk-workshop": [
+    "Copper gears click in steady rhythm",
+    "steam hisses from brass pipes",
+    "clockwork sparks dance above the bench",
+  ],
+  "frostveil-kingdom": [
+    "Ice light glitters across the path",
+    "snow gathers under crystal pines",
+    "the palace shines beyond frozen falls",
+  ],
 };
 
 type QuestWorldProfile = {
@@ -117,7 +172,13 @@ const QUEST_WORLD_PROFILES: Partial<Record<WorldId, QuestWorldProfile>> = {
   mushroom: {
     setting: "fairy mushroom village",
     route: ["mushroom trail", "fairy path", "glow bridge", "crystal lane", "queen root"],
-    landmarks: ["mushroom trail", "fairy hollow", "glow grove", "crystal thicket", "fairy queens tree"],
+    landmarks: [
+      "mushroom trail",
+      "fairy hollow",
+      "glow grove",
+      "crystal thicket",
+      "fairy queens tree",
+    ],
     creatures: ["tiny fairy", "glow moth", "soft beetle", "purple snail"],
     treasures: ["spore lamp", "crystal charm", "fairy bell", "violet badge"],
     actions: ["sparkles", "hides", "guides", "twirls", "glows"],
@@ -126,7 +187,13 @@ const QUEST_WORLD_PROFILES: Partial<Record<WorldId, QuestWorldProfile>> = {
   sunflower: {
     setting: "sunflower meadow",
     route: ["daisy path", "sunny row", "windmill road", "harvest lane", "meadow gate"],
-    landmarks: ["daisy path", "sunflower field", "windmill hill", "golden harvest", "harvest haven"],
+    landmarks: [
+      "daisy path",
+      "sunflower field",
+      "windmill hill",
+      "golden harvest",
+      "harvest haven",
+    ],
     creatures: ["busy bee", "yellow bird", "field mouse", "painted butterfly"],
     treasures: ["honey badge", "sun charm", "seed pouch", "gold ribbon"],
     actions: ["buzzes", "waves", "gathers", "guides", "shines"],
@@ -173,19 +240,95 @@ const QUEST_WORLD_PROFILES: Partial<Record<WorldId, QuestWorldProfile>> = {
 const MASCOT_LINES: Record<string, string[]> = {
   idle: ["Ready when your paws are.", "Tap in and wake the room.", "A cozy run is waiting."],
   happy: ["Nice rhythm, keep gliding.", "Clean strokes, steady paws.", "That flow looks sharp."],
-  oops: ["Slow it down, stay smooth.", "Breathe, then land each key.", "Reset the rhythm, not the run."],
+  oops: [
+    "Slow it down, stay smooth.",
+    "Breathe, then land each key.",
+    "Reset the rhythm, not the run.",
+  ],
   sleep: ["The room is sleepy. Type.", "Wake the keys with one word.", "Your keyboard is waiting."],
 };
 
 const WORD_POOL = [
-  "amber", "anchor", "apple", "ash", "bamboo", "basil", "beam", "berry", "blossom", "breeze",
-  "brook", "cabin", "candle", "caper", "cedar", "chime", "clover", "cocoa", "comet", "coral",
-  "crystal", "daisy", "dawn", "drift", "ember", "feather", "fern", "glimmer", "glow", "golden",
-  "harbor", "honey", "ivory", "jasmine", "juniper", "lagoon", "lantern", "leaf", "linen", "lunar",
-  "maple", "marble", "meadow", "meteor", "mint", "mist", "mocha", "moss", "nectar", "oasis",
-  "opal", "orbit", "pearl", "petal", "pine", "prairie", "quartz", "quiet", "ripple", "river",
-  "sable", "sakura", "sand", "shell", "silver", "snow", "solace", "spark", "sprout", "star",
-  "stone", "sugar", "sunbeam", "thistle", "timber", "trail", "velvet", "violet", "water", "willow",
+  "amber",
+  "anchor",
+  "apple",
+  "ash",
+  "bamboo",
+  "basil",
+  "beam",
+  "berry",
+  "blossom",
+  "breeze",
+  "brook",
+  "cabin",
+  "candle",
+  "caper",
+  "cedar",
+  "chime",
+  "clover",
+  "cocoa",
+  "comet",
+  "coral",
+  "crystal",
+  "daisy",
+  "dawn",
+  "drift",
+  "ember",
+  "feather",
+  "fern",
+  "glimmer",
+  "glow",
+  "golden",
+  "harbor",
+  "honey",
+  "ivory",
+  "jasmine",
+  "juniper",
+  "lagoon",
+  "lantern",
+  "leaf",
+  "linen",
+  "lunar",
+  "maple",
+  "marble",
+  "meadow",
+  "meteor",
+  "mint",
+  "mist",
+  "mocha",
+  "moss",
+  "nectar",
+  "oasis",
+  "opal",
+  "orbit",
+  "pearl",
+  "petal",
+  "pine",
+  "prairie",
+  "quartz",
+  "quiet",
+  "ripple",
+  "river",
+  "sable",
+  "sakura",
+  "sand",
+  "shell",
+  "silver",
+  "snow",
+  "solace",
+  "spark",
+  "sprout",
+  "star",
+  "stone",
+  "sugar",
+  "sunbeam",
+  "thistle",
+  "timber",
+  "trail",
+  "velvet",
+  "violet",
+  "water",
+  "willow",
 ];
 
 function rotatePick<T>(items: T[], count: number, seed: string): T[] {
@@ -288,23 +431,28 @@ export async function generateWeakSpotWords(mistakeChars: string[]): Promise<str
   if (pool.length === 0) return null;
 
   const rotated = rotatePick(pool, 24, [...charSet].join(""));
-  const phrases = Array.from(
-    { length: 8 },
-    (_, index) => rotated.slice(index * 3, index * 3 + 3).join(" "),
+  const phrases = Array.from({ length: 8 }, (_, index) =>
+    rotated.slice(index * 3, index * 3 + 3).join(" "),
   ).filter(Boolean);
 
   return phrases.length > 0 ? phrases : null;
 }
 
-export async function generateMascotLine(mood: string, ctx?: MascotContext): Promise<string | null> {
+export async function generateMascotLine(
+  mood: string,
+  ctx?: MascotContext,
+): Promise<string | null> {
   const ai = aiMascotLine(mood, ctx);
   if (ai) return ai;
 
   const lines = MASCOT_LINES[mood];
-  return lines ? rotatePick(lines, 1, mood)[0] ?? null : null;
+  return lines ? (rotatePick(lines, 1, mood)[0] ?? null) : null;
 }
 
-export async function generateQuestText(stageName: string, worldId: WorldId): Promise<string | null> {
+export async function generateQuestText(
+  stageName: string,
+  worldId: WorldId,
+): Promise<string | null> {
   const profile = profileFor(worldId);
   const seed = `${worldId}:${stageName}:intro`;
   const route = pickLocal(profile.route, seed, 1);
@@ -363,7 +511,10 @@ export async function generateNextWords(worldId: WorldId, count = 30): Promise<s
   for (let attempt = 0; attempt < 3 && allWords.length < count; attempt++) {
     const text = await aiWorldText(worldId).catch(() => null);
     if (text) {
-      const words = text.replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
+      const words = text
+        .replace(/[^\w\s'-]/g, "")
+        .split(/\s+/)
+        .filter(Boolean);
       if (words.length >= 5) allWords.push(...words);
     }
   }
@@ -371,11 +522,21 @@ export async function generateNextWords(worldId: WorldId, count = 30): Promise<s
 
   const lines = WORLD_LINES[worldId];
   if (lines) {
-    const pool = lines.join(" ").replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
-    const batch = Array.from({ length: count }, () => pool[Math.floor(Math.random() * pool.length)]);
+    const pool = lines
+      .join(" ")
+      .replace(/[^\w\s'-]/g, "")
+      .split(/\s+/)
+      .filter(Boolean);
+    const batch = Array.from(
+      { length: count },
+      () => pool[Math.floor(Math.random() * pool.length)],
+    );
     return sprinklePunctuation(batch);
   }
-  const batch = Array.from({ length: count }, () => WORD_POOL[Math.floor(Math.random() * WORD_POOL.length)]);
+  const batch = Array.from(
+    { length: count },
+    () => WORD_POOL[Math.floor(Math.random() * WORD_POOL.length)],
+  );
   return sprinklePunctuation(batch);
 }
 
@@ -390,7 +551,8 @@ export async function generateAdventureWords(
   if (local.length >= count) return local;
 
   const ai = await aiAdventureWords(stageName, worldId, seedWords, count).catch(() => null);
-  if (ai && new Set(ai.map((word) => word.toLowerCase())).size >= Math.min(12, ai.length)) return ai;
+  if (ai && new Set(ai.map((word) => word.toLowerCase())).size >= Math.min(12, ai.length))
+    return ai;
 
   const tokens = normalizeWords([
     ...seedWords,

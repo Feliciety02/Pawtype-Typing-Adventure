@@ -1,10 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestUrl } from "@tanstack/react-start/server";
 
-import {
-  signInCredentialsSchema,
-  signUpCredentialsSchema,
-} from "@/lib/auth/shared";
+import { signInCredentialsSchema, signUpCredentialsSchema } from "@/lib/auth/shared";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export const signUp = createServerFn({ method: "POST" })
@@ -57,9 +54,7 @@ export const getSession = createServerFn({ method: "GET" }).handler(async () => 
   const supabase = getSupabaseServerClient();
   const { data, error } = await supabase.auth.getSession();
   if (error) throw new Error(error.message);
-  return data.session
-    ? { user: data.session.user, expiresAt: data.session.expires_at }
-    : null;
+  return data.session ? { user: data.session.user, expiresAt: data.session.expires_at } : null;
 });
 
 export const getUser = createServerFn({ method: "GET" }).handler(async () => {

@@ -10,10 +10,15 @@ import { saveSession, type KeystrokeEvent } from "../../lib/game/stats";
 import { Confetti } from "../shared/Confetti";
 import { getCoachFeedback, type CoachInsight } from "../../lib/game/coach";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
-import { generateWorldText, generateMascotLine, generateWeakSpotWords, generateNextWords } from "../../lib/game/textGenerator";
+import {
+  generateWorldText,
+  generateMascotLine,
+  generateWeakSpotWords,
+  generateNextWords,
+} from "../../lib/game/textGenerator";
 import { pushNotification } from "../../lib/game/notifications";
 import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
-import { DURATIONS, makeWords, makeWordsFrom, type Mood } from "./typingArenaData";
+import { DURATIONS, makeWords, makeWordsFrom, type Mood } from "@/lib/game/typing-arena-data";
 import { LessonResultsModal } from "./LessonResultsModal";
 
 type Props = {
@@ -31,16 +36,26 @@ type Props = {
 };
 
 export function TypingArena({
-  customWords, customTitle, noTimer, lessonMode,
-  onFinish, onClose, onNextLesson, hasNext,
-  lessonTargetAccuracy, lessonDifficulty, lessonWordCount,
+  customWords,
+  customTitle,
+  noTimer,
+  lessonMode,
+  onFinish,
+  onClose,
+  onNextLesson,
+  hasNext,
+  lessonTargetAccuracy,
+  lessonDifficulty,
+  lessonWordCount,
 }: Props = {}) {
   const { state, dispatch } = useGame();
   const { world } = useWorld();
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const worldArtUrl = THEME_BACKGROUND[world];
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
-  const [words, setWords] = useState<string[]>(() => (customWords && customWords.length ? customWords : []));
+  const [words, setWords] = useState<string[]>(() =>
+    customWords && customWords.length ? customWords : [],
+  );
   const [typed, setTyped] = useState("");
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -207,16 +222,31 @@ export function TypingArena({
     generateWorldText(world).then((text) => {
       setGeneratedText(text);
       if (text) {
-        const initial = text.replace(/[^\w\s'-]/g, "").split(/\s+/).filter(Boolean);
+        const initial = text
+          .replace(/[^\w\s'-]/g, "")
+          .split(/\s+/)
+          .filter(Boolean);
         if (initial.length >= 10) setWords(initial);
       }
     });
   }, [world, customWords]);
 
   // Generate mascot line on mood change with session context
-  const mascotCtxRef = useRef({ combo: 0, bestCombo: 0, mistakes: 0, correctChars: 0, weakChars: new Set<string>() });
+  const mascotCtxRef = useRef({
+    combo: 0,
+    bestCombo: 0,
+    mistakes: 0,
+    correctChars: 0,
+    weakChars: new Set<string>(),
+  });
   const updateMascotCtx = useCallback(() => {
-    mascotCtxRef.current = { combo, bestCombo, mistakes, correctChars, weakChars: new Set(keystrokes.filter((k) => !k.correct).map((k) => k.target)) };
+    mascotCtxRef.current = {
+      combo,
+      bestCombo,
+      mistakes,
+      correctChars,
+      weakChars: new Set(keystrokes.filter((k) => !k.correct).map((k) => k.target)),
+    };
   }, [combo, bestCombo, mistakes, correctChars, keystrokes]);
   useEffect(() => {
     updateMascotCtx();
@@ -232,7 +262,7 @@ export function TypingArena({
       correctChars: ctx.correctChars,
       weakChars: [...ctx.weakChars],
     }).then(setMascotLine);
-    }, [mood]);
+  }, [mood]);
 
   // Fetch coach feedback when race finishes
   useEffect(() => {
@@ -243,12 +273,25 @@ export function TypingArena({
       return;
     }
     setCoachLoading(true);
-    const isPersonalBest = wpm > 0 && wpm > parseInt(localStorage.getItem("pawtype-best-wpm") ?? "0");
+    const isPersonalBest =
+      wpm > 0 && wpm > parseInt(localStorage.getItem("pawtype-best-wpm") ?? "0");
     const isPerfect = accuracy === 100;
     if (isPersonalBest && wpm > 0) {
-      try { localStorage.setItem("pawtype-best-wpm", String(wpm)); } catch {}
+      try {
+        localStorage.setItem("pawtype-best-wpm", String(wpm));
+      } catch {}
     }
-    getCoachFeedback({ wpm, accuracy, duration: elapsed, correctChars, mistakes, bestCombo, keystrokes: keystrokes.map((k) => ({ correct: k.correct, target: k.target })), isPersonalBest, isPerfect })
+    getCoachFeedback({
+      wpm,
+      accuracy,
+      duration: elapsed,
+      correctChars,
+      mistakes,
+      bestCombo,
+      keystrokes: keystrokes.map((k) => ({ correct: k.correct, target: k.target })),
+      isPersonalBest,
+      isPerfect,
+    })
       .then(setCoachInsight)
       .catch(() => setCoachError(true))
       .finally(() => setCoachLoading(false));
@@ -266,27 +309,35 @@ export function TypingArena({
     });
   }, [mistakeChars]);
 
-  const reset = useCallback((newDuration?: (typeof DURATIONS)[number], drillWords?: string[]) => {
-    if (newDuration) setDuration(newDuration);
-    const base = drillWords
-      ?? (customWords && customWords.length ? customWords : (generatedText ? makeWordsFrom(generatedText) : makeWords()));
-    setWords(base);
-    setTyped("");
-    setStartedAt(null);
-    setElapsed(0);
-    setMistakes(0);
-    setCorrectChars(0);
-    setFinished(false);
-    setResultsOpen(false);
-    setCoachInsight(null);
-    setCoachLoading(false);
-    setCoachError(false);
-    setCombo(0);
-    setBestCombo(0);
-    setMood("idle");
-    setKeystrokes([]);
-    setTimeout(() => inputRef.current?.focus(), 0);
-  }, [generatedText, customWords]);
+  const reset = useCallback(
+    (newDuration?: (typeof DURATIONS)[number], drillWords?: string[]) => {
+      if (newDuration) setDuration(newDuration);
+      const base =
+        drillWords ??
+        (customWords && customWords.length
+          ? customWords
+          : generatedText
+            ? makeWordsFrom(generatedText)
+            : makeWords());
+      setWords(base);
+      setTyped("");
+      setStartedAt(null);
+      setElapsed(0);
+      setMistakes(0);
+      setCorrectChars(0);
+      setFinished(false);
+      setResultsOpen(false);
+      setCoachInsight(null);
+      setCoachLoading(false);
+      setCoachError(false);
+      setCombo(0);
+      setBestCombo(0);
+      setMood("idle");
+      setKeystrokes([]);
+      setTimeout(() => inputRef.current?.focus(), 0);
+    },
+    [generatedText, customWords],
+  );
 
   const loadMoreWords = useCallback(async () => {
     if (generatingRef.current) return;
@@ -367,22 +418,37 @@ export function TypingArena({
     return "📈 Room to grow!";
   }, [accuracy]);
 
-  type Particle = { id: number; x: number; delay: number; size: number; shape: "star" | "dot"; color: string };
+  type Particle = {
+    id: number;
+    x: number;
+    delay: number;
+    size: number;
+    shape: "star" | "dot";
+    color: string;
+  };
   const particles = useMemo<Particle[]>(() => {
     if (!finished) return [];
-    const COLORS = ["var(--coin)", "var(--sakura)", "var(--leaf)", "var(--sky)", "var(--color-primary)"];
+    const COLORS = [
+      "var(--coin)",
+      "var(--sakura)",
+      "var(--leaf)",
+      "var(--sky)",
+      "var(--color-primary)",
+    ];
     return Array.from({ length: 14 }, (_, i) => ({
       id: i,
       x: 5 + Math.random() * 90,
       delay: Math.random() * 1.8,
       size: 4 + Math.random() * 7,
-      shape: Math.random() < 0.4 ? "star" as const : "dot" as const,
+      shape: Math.random() < 0.4 ? ("star" as const) : ("dot" as const),
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }));
   }, [finished]);
 
   const progress = noTimer
-    ? (target.length > 0 ? (typed.length / target.length) * 100 : 0)
+    ? target.length > 0
+      ? (typed.length / target.length) * 100
+      : 0
     : (elapsed / duration) * 100;
 
   const requestFullscreen = () => {
@@ -419,11 +485,15 @@ export function TypingArena({
               </div>
               <div className="text-center">
                 <div className="font-pixel text-[0.45rem] text-muted-foreground">Acc</div>
-                <div className="font-pixel text-sm" style={{ color: "var(--leaf)" }}>{accuracy}%</div>
+                <div className="font-pixel text-sm" style={{ color: "var(--leaf)" }}>
+                  {accuracy}%
+                </div>
               </div>
               <div className="text-center">
                 <div className="font-pixel text-[0.45rem] text-muted-foreground">Combo</div>
-                <div className="font-pixel text-sm" style={{ color: "var(--coin)" }}>{bestCombo}</div>
+                <div className="font-pixel text-sm" style={{ color: "var(--coin)" }}>
+                  {bestCombo}
+                </div>
               </div>
             </div>
             <button
@@ -437,8 +507,24 @@ export function TypingArena({
           </div>
 
           {/* Progress bar */}
-          <div className="mx-4 mb-2 shrink-0" style={{ height: 4, background: "var(--color-muted)", borderRadius: 999, overflow: "hidden" }}>
-            <div style={{ width: `${progress}%`, height: "100%", background: `oklch(from var(--leaf) l c h / 0.8)`, borderRadius: 999, transition: "width 0.15s" }} />
+          <div
+            className="mx-4 mb-2 shrink-0"
+            style={{
+              height: 4,
+              background: "var(--color-muted)",
+              borderRadius: 999,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${progress}%`,
+                height: "100%",
+                background: `oklch(from var(--leaf) l c h / 0.8)`,
+                borderRadius: 999,
+                transition: "width 0.15s",
+              }}
+            />
           </div>
 
           {/* Word count */}
@@ -449,8 +535,14 @@ export function TypingArena({
           </div>
 
           {/* Typing text */}
-          <div className="flex-1 flex items-center justify-center px-4 min-h-0" onClick={() => inputRef.current?.focus()}>
-            <div className="typing-focus-shell w-full max-w-3xl" style={{ border: "none", background: "transparent", boxShadow: "none", padding: 0 }}>
+          <div
+            className="flex-1 flex items-center justify-center px-4 min-h-0"
+            onClick={() => inputRef.current?.focus()}
+          >
+            <div
+              className="typing-focus-shell w-full max-w-3xl"
+              style={{ border: "none", background: "transparent", boxShadow: "none", padding: 0 }}
+            >
               <div className="typing-text">
                 {visibleWords.map(({ word, index, start, end }) => {
                   const isCurrent = index === currentWordIndex;
@@ -478,11 +570,7 @@ export function TypingArena({
                         const targetIndex = start + charIndex;
                         const typedCh = typed[targetIndex];
                         const charState =
-                          typedCh == null
-                            ? "pending"
-                            : typedCh === ch
-                              ? "correct"
-                              : "wrong";
+                          typedCh == null ? "pending" : typedCh === ch ? "correct" : "wrong";
                         const isCursor = targetIndex === typed.length;
 
                         return (
@@ -500,7 +588,9 @@ export function TypingArena({
                 })}
               </div>
               {!startedAt && !typed && (
-                <div className="typing-start-hint font-pixel" style={{ marginTop: "1rem" }}>Start typing to begin the lesson</div>
+                <div className="typing-start-hint font-pixel" style={{ marginTop: "1rem" }}>
+                  Start typing to begin the lesson
+                </div>
               )}
             </div>
           </div>
@@ -525,175 +615,180 @@ export function TypingArena({
         </div>
       ) : (
         <>
-        <div className="practice-stage-grid">
-        {/* Typing area */}
-        <div
-          className="typing-area"
-          style={{
-            backgroundImage: `linear-gradient(color-mix(in oklab, var(--color-card) 86%, transparent), color-mix(in oklab, var(--color-card) 86%, transparent)), url("${worldArtUrl}")`,
-            backgroundPosition: "center",
-            backgroundSize: "cover",
-          }}
-          onClick={() => inputRef.current?.focus()}
-        >
-          {/* Subtle ambient glow */}
-          <div className="ambient-glow absolute inset-0" />
+          <div className="practice-stage-grid">
+            {/* Typing area */}
+            <div
+              className="typing-area"
+              style={{
+                backgroundImage: `linear-gradient(color-mix(in oklab, var(--color-card) 86%, transparent), color-mix(in oklab, var(--color-card) 86%, transparent)), url("${worldArtUrl}")`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+              }}
+              onClick={() => inputRef.current?.focus()}
+            >
+              {/* Subtle ambient glow */}
+              <div className="ambient-glow absolute inset-0" />
 
-            <div className="typing-toolbar relative z-1">
-            {!noTimer && (
-              <div className="typing-time-pills" aria-label="Typing test duration">
-                {DURATIONS.map((d) => (
-                  <button
-                    type="button"
-                    key={d}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      reset(d);
-                    }}
-                    className={`typing-toolbar-btn ${d === duration ? "active" : ""}`}
-                  >
-                    {d}s
-                  </button>
-                ))}
+              <div className="typing-toolbar relative z-1">
+                {!noTimer && (
+                  <div className="typing-time-pills" aria-label="Typing test duration">
+                    {DURATIONS.map((d) => (
+                      <button
+                        type="button"
+                        key={d}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          reset(d);
+                        }}
+                        className={`typing-toolbar-btn ${d === duration ? "active" : ""}`}
+                      >
+                        {d}s
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div className="typing-toolbar-spacer" />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    reset();
+                  }}
+                  className="typing-toolbar-btn typing-new-btn"
+                  aria-label="New test"
+                  title="New test"
+                >
+                  <RotateCcw size={13} strokeWidth={2.4} />
+                </button>
               </div>
-            )}
-            <div className="typing-toolbar-spacer" />
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); reset(); }}
-              className="typing-toolbar-btn typing-new-btn"
-              aria-label="New test"
-              title="New test"
-            >
-              <RotateCcw size={13} strokeWidth={2.4} />
-            </button>
-          </div>
 
-          <div className="typing-progress-line relative z-1" aria-hidden="true">
-            <div style={{ width: `${progress}%` }} />
-          </div>
+              <div className="typing-progress-line relative z-1" aria-hidden="true">
+                <div style={{ width: `${progress}%` }} />
+              </div>
 
-          <div className="typing-focus-shell relative z-1">
-            <div className="typing-text">
-              {visibleWords.map(({ word, index, start, end }) => {
-                const isCurrent = index === currentWordIndex;
-                const isComplete = typed.length > end;
-                const isUpcoming = index > currentWordIndex;
-                const isPast = index < currentWordIndex;
-                const typedWord = typed.slice(start, Math.min(typed.length, end));
-                const hasMistake = typedWord
-                  .split("")
-                  .some((char, charIndex) => char !== word[charIndex]);
-                const wordClass = [
-                  "typing-word",
-                  isCurrent && "word-current",
-                  isComplete && !hasMistake && "word-complete",
-                  isComplete && hasMistake && "word-complete-wrong",
-                  isPast && !isComplete && "word-past",
-                  isUpcoming && "word-upcoming",
-                ]
-                  .filter(Boolean)
-                  .join(" ");
+              <div className="typing-focus-shell relative z-1">
+                <div className="typing-text">
+                  {visibleWords.map(({ word, index, start, end }) => {
+                    const isCurrent = index === currentWordIndex;
+                    const isComplete = typed.length > end;
+                    const isUpcoming = index > currentWordIndex;
+                    const isPast = index < currentWordIndex;
+                    const typedWord = typed.slice(start, Math.min(typed.length, end));
+                    const hasMistake = typedWord
+                      .split("")
+                      .some((char, charIndex) => char !== word[charIndex]);
+                    const wordClass = [
+                      "typing-word",
+                      isCurrent && "word-current",
+                      isComplete && !hasMistake && "word-complete",
+                      isComplete && hasMistake && "word-complete-wrong",
+                      isPast && !isComplete && "word-past",
+                      isUpcoming && "word-upcoming",
+                    ]
+                      .filter(Boolean)
+                      .join(" ");
 
-                return (
-                  <span className={wordClass} key={`${index}-${word}`}>
-                    {word.split("").map((ch, charIndex) => {
-                      const targetIndex = start + charIndex;
-                      const typedCh = typed[targetIndex];
-                      const charState =
-                        typedCh == null
-                          ? "pending"
-                          : typedCh === ch
-                            ? "correct"
-                            : "wrong";
-                      const isCursor = targetIndex === typed.length;
+                    return (
+                      <span className={wordClass} key={`${index}-${word}`}>
+                        {word.split("").map((ch, charIndex) => {
+                          const targetIndex = start + charIndex;
+                          const typedCh = typed[targetIndex];
+                          const charState =
+                            typedCh == null ? "pending" : typedCh === ch ? "correct" : "wrong";
+                          const isCursor = targetIndex === typed.length;
 
-                      return (
-                        <span
-                          className={`typing-char char-${charState} ${isCursor ? "char-current" : ""}`}
-                          key={`${targetIndex}-${ch}`}
-                        >
-                          {ch}
-                        </span>
-                      );
-                    })}
-                    {isCurrent && typed.length === end && <span className="typing-caret-space" />}
+                          return (
+                            <span
+                              className={`typing-char char-${charState} ${isCursor ? "char-current" : ""}`}
+                              key={`${targetIndex}-${ch}`}
+                            >
+                              {ch}
+                            </span>
+                          );
+                        })}
+                        {isCurrent && typed.length === end && (
+                          <span className="typing-caret-space" />
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
+                {!startedAt && !typed && (
+                  <div className="typing-start-hint font-pixel">Start typing to wake the room</div>
+                )}
+              </div>
+
+              <div className="typing-session-meta relative z-1">
+                {noTimer ? (
+                  <span>
+                    {currentWordIndex + 1} / {words.length} words
                   </span>
-                );
-              })}
+                ) : (
+                  <span>{Math.max(0, Math.ceil(duration - elapsed))}s</span>
+                )}
+                {!noTimer && <span>{currentWordIndex + 1} words</span>}
+              </div>
+
+              <input
+                ref={inputRef}
+                value={typed}
+                onChange={handleChange}
+                autoFocus
+                aria-label="Type the text above"
+                spellCheck={false}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                className="absolute opacity-0 pointer-events-none"
+              />
             </div>
-            {!startedAt && !typed && (
-              <div className="typing-start-hint font-pixel">Start typing to wake the room</div>
-            )}
-          </div>
 
-          <div className="typing-session-meta relative z-1">
-            {noTimer ? (
-              <span>{currentWordIndex + 1} / {words.length} words</span>
-            ) : (
-              <span>{Math.max(0, Math.ceil(duration - elapsed))}s</span>
-            )}
-            {!noTimer && <span>{currentWordIndex + 1} words</span>}
-          </div>
-
-          <input
-            ref={inputRef}
-            value={typed}
-            onChange={handleChange}
-            autoFocus
-            aria-label="Type the text above"
-            spellCheck={false}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            className="absolute opacity-0 pointer-events-none"
-          />
-
-        </div>
-
-        {/* Artwork panel */}
-        <div
-          className="world-art"
-          style={{
-            backgroundImage: `linear-gradient(color-mix(in oklab, var(--color-card) 16%, transparent), color-mix(in oklab, var(--color-card) 16%, transparent)), url("${worldArtUrl}")`,
-            backgroundPosition: "center",
-            backgroundSize: "cover",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <PixelCloud count={3} />
-          <div className="world-art-inner">
-            <div className="pet-placeholder-square" aria-hidden="true" />
-            <span className="font-pixel text-[0.5rem] text-center world-art-label">
-              {mascotLine ?? (
-                mood === "happy" ? "Nice rhythm!" :
-                mood === "oops" ? "Slow down!" :
-                mood === "sleep" ? "Start typing!" :
-                currentWorld.name
-              )}
-            </span>
-            <button
-              className="typing-toolbar-btn text-[0.5rem]"
-              type="button"
-              title="Open pet room"
-              onClick={() => setPetRoomOpen(true)}
+            {/* Artwork panel */}
+            <div
+              className="world-art"
+              style={{
+                backgroundImage: `linear-gradient(color-mix(in oklab, var(--color-card) 16%, transparent), color-mix(in oklab, var(--color-card) 16%, transparent)), url("${worldArtUrl}")`,
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                position: "relative",
+                overflow: "hidden",
+              }}
             >
-              ?? Pet Room
-            </button>
+              <PixelCloud count={3} />
+              <div className="world-art-inner">
+                <div className="pet-placeholder-square" aria-hidden="true" />
+                <span className="font-pixel text-[0.5rem] text-center world-art-label">
+                  {mascotLine ??
+                    (mood === "happy"
+                      ? "Nice rhythm!"
+                      : mood === "oops"
+                        ? "Slow down!"
+                        : mood === "sleep"
+                          ? "Start typing!"
+                          : currentWorld.name)}
+                </span>
+                <button
+                  className="typing-toolbar-btn text-[0.5rem]"
+                  type="button"
+                  title="Open pet room"
+                  onClick={() => setPetRoomOpen(true)}
+                >
+                  ?? Pet Room
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Keyboard */}
-      <div className="keyboard-dock">
-        <PixelKeyboard active={activeKey} />
-      </div>
-      </>
+          {/* Keyboard */}
+          <div className="keyboard-dock">
+            <PixelKeyboard active={activeKey} />
+          </div>
+        </>
       )}
 
-      {finished && resultsOpen && (
-        lessonMode ? (
+      {finished &&
+        resultsOpen &&
+        (lessonMode ? (
           <LessonResultsModal
             accuracy={accuracy}
             wpm={wpm}
@@ -722,7 +817,7 @@ export function TypingArena({
                 ? "Analyzing your run..."
                 : coachError
                   ? "Keep typing and I'll have feedback ready!"
-                  : coachInsight?.text ?? "Great work out there!"
+                  : (coachInsight?.text ?? "Great work out there!")
             }
             practicedKeys={mistakeChars}
             onContinue={() => {
@@ -735,8 +830,7 @@ export function TypingArena({
             onRetry={() => reset()}
             onClose={() => setResultsOpen(false)}
           />
-        )
-      )}
+        ))}
 
       <Confetti active={showConfetti} world={world} onFinish={() => setShowConfetti(false)} />
       {petRoomOpen && <PetRoom onClose={() => setPetRoomOpen(false)} />}

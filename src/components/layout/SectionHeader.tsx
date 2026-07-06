@@ -1,6 +1,14 @@
 import { ComingSoonBadge } from "../shared/ComingSoonBadge";
 
-export function SectionHeader({ title, subtitle, comingSoon = false }: { title: string; subtitle: string; comingSoon?: boolean }) {
+export function SectionHeader({
+  title,
+  subtitle,
+  comingSoon = false,
+}: {
+  title: string;
+  subtitle: string;
+  comingSoon?: boolean;
+}) {
   return (
     <div className="mb-4 flex items-start justify-between gap-3">
       <div>

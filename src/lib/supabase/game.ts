@@ -58,10 +58,7 @@ export const deleteGameState = createServerFn({ method: "POST" }).handler(async 
   if (!session?.user) throw new Error("Not authenticated");
 
   const supabase = getSupabaseServerClient();
-  const { error } = await supabase
-    .from("game_states")
-    .delete()
-    .eq("user_id", session.user.id);
+  const { error } = await supabase.from("game_states").delete().eq("user_id", session.user.id);
   if (error) throw new Error(error.message);
   return { success: true };
 });

@@ -191,7 +191,12 @@ function makeFailureParticles(world: WorldId) {
 
   return Array.from({ length: 86 }, (_, index): ParticleInstance => {
     const origin = index % 3 === 0 ? "left" : index % 3 === 1 ? "center" : "right";
-    const left = origin === "left" ? randomBetween(0, 30) : origin === "center" ? randomBetween(34, 66) : randomBetween(70, 100);
+    const left =
+      origin === "left"
+        ? randomBetween(0, 30)
+        : origin === "center"
+          ? randomBetween(34, 66)
+          : randomBetween(70, 100);
     return {
       id: index,
       asset: assets[index % assets.length],
@@ -278,7 +283,10 @@ export function VictoryParticles({
 
   return (
     <div className="celebration-victory" aria-hidden="true">
-      <div className="celebration-glow" style={{ "--celebration-glow": config.glow } as CSSProperties} />
+      <div
+        className="celebration-glow"
+        style={{ "--celebration-glow": config.glow } as CSSProperties}
+      />
       <PixelConfetti active={active} world={world} stageEmoji={stageEmoji} />
       <div className="celebration-floaters">
         {floaters.map((floater) => (
@@ -295,13 +303,7 @@ export function VictoryParticles({
   );
 }
 
-export function FailureParticles({
-  world,
-  active,
-}: {
-  world: WorldId;
-  active: boolean;
-}) {
+export function FailureParticles({ world, active }: { world: WorldId; active: boolean }) {
   const particles = useMemo(() => makeFailureParticles(world), [world]);
 
   if (!active) return null;

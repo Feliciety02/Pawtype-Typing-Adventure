@@ -1,6 +1,16 @@
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 
-export function RewardBadge({ icon, label, value, collected = false }: { icon: string; label: string; value: number; collected?: boolean }) {
+export function RewardBadge({
+  icon,
+  label,
+  value,
+  collected = false,
+}: {
+  icon: string;
+  label: string;
+  value: number;
+  collected?: boolean;
+}) {
   return (
     <span className={`quest-reward-badge ${collected ? "is-collected" : ""}`}>
       <PixelIcon emoji={icon} className="quest-reward-icon" />

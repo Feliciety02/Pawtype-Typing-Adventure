@@ -53,12 +53,53 @@ const BASE: CampTier = {
 
 export function getCampTier(level: number): CampTier {
   const t = { ...BASE };
-  if (level >= 10) { t.tier = 2; t.label = "Growing Camp"; t.hasFence = true; t.hasGarden = true; t.hasMailbox = true; t.decorLevel = 1; }
-  if (level >= 20) { t.tier = 3; t.label = "Wooden Cabin"; t.hasCabin = true; t.hasBridge = true; t.hasLanterns = true; t.decorLevel = 2; }
-  if (level >= 35) { t.tier = 4; t.label = "Homestead"; t.hasWindmill = true; t.hasPond = true; t.hasFlowerBeds = true; t.decorLevel = 3; }
-  if (level >= 50) { t.tier = 5; t.label = "Village"; t.hasStonePaths = true; t.hasVisitors = true; t.hasDecorations = true; t.decorLevel = 4; }
-  if (level >= 75) { t.tier = 6; t.label = "Great Lodge"; t.hasLodge = true; t.hasWatchtower = true; t.hasStatues = true; t.hasCrystals = true; t.decorLevel = 5; }
-  if (level >= 100) { t.tier = 7; t.label = "Legendary Sanctuary"; t.hasSanctuary = true; t.decorLevel = 6; }
+  if (level >= 10) {
+    t.tier = 2;
+    t.label = "Growing Camp";
+    t.hasFence = true;
+    t.hasGarden = true;
+    t.hasMailbox = true;
+    t.decorLevel = 1;
+  }
+  if (level >= 20) {
+    t.tier = 3;
+    t.label = "Wooden Cabin";
+    t.hasCabin = true;
+    t.hasBridge = true;
+    t.hasLanterns = true;
+    t.decorLevel = 2;
+  }
+  if (level >= 35) {
+    t.tier = 4;
+    t.label = "Homestead";
+    t.hasWindmill = true;
+    t.hasPond = true;
+    t.hasFlowerBeds = true;
+    t.decorLevel = 3;
+  }
+  if (level >= 50) {
+    t.tier = 5;
+    t.label = "Village";
+    t.hasStonePaths = true;
+    t.hasVisitors = true;
+    t.hasDecorations = true;
+    t.decorLevel = 4;
+  }
+  if (level >= 75) {
+    t.tier = 6;
+    t.label = "Great Lodge";
+    t.hasLodge = true;
+    t.hasWatchtower = true;
+    t.hasStatues = true;
+    t.hasCrystals = true;
+    t.decorLevel = 5;
+  }
+  if (level >= 100) {
+    t.tier = 7;
+    t.label = "Legendary Sanctuary";
+    t.hasSanctuary = true;
+    t.decorLevel = 6;
+  }
   return t;
 }
 

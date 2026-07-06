@@ -37,12 +37,12 @@ import { generateLessonText } from "../../lib/game/textGenerator";
 import type { Zone } from "../../lib/game/engine/generator";
 
 const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string }> = {
-  beginner:     { label: "Beginner",     color: "var(--leaf)" },
-  easy:         { label: "Easy",         color: "var(--leaf)" },
+  beginner: { label: "Beginner", color: "var(--leaf)" },
+  easy: { label: "Easy", color: "var(--leaf)" },
   intermediate: { label: "Intermediate", color: "var(--coin)" },
-  advanced:     { label: "Advanced",     color: "var(--color-primary)" },
-  expert:       { label: "Expert",       color: "var(--color-primary)" },
-  master:       { label: "Master",       color: "var(--color-destructive)" },
+  advanced: { label: "Advanced", color: "var(--color-primary)" },
+  expert: { label: "Expert", color: "var(--color-primary)" },
+  master: { label: "Master", color: "var(--color-destructive)" },
 };
 
 function lessonEmojiImg(emoji: string, className = "pixel-icon") {
@@ -99,33 +99,42 @@ export function LessonsCard() {
     });
   };
 
-  const handleFinish = useCallback((wpm: number, accuracy: number) => {
-    if (!typing) return;
-    const wasCompleted = completed.has(typing.lesson.id);
-    markLessonCompleted(typing.lesson.id);
-    saveLessonStats(typing.lesson.id, wpm, accuracy);
-    const rewards = lessonRewards(typing.lesson.difficulty, typing.lesson.words.length);
-    dispatch({ type: "ADD_XP", amount: rewards.xp });
-    dispatch({ type: "EARN_COINS", amount: rewards.coins });
-    dispatch({ type: "ADD_PET_XP", amount: rewards.petExp });
+  const handleFinish = useCallback(
+    (wpm: number, accuracy: number) => {
+      if (!typing) return;
+      const wasCompleted = completed.has(typing.lesson.id);
+      markLessonCompleted(typing.lesson.id);
+      saveLessonStats(typing.lesson.id, wpm, accuracy);
+      const rewards = lessonRewards(typing.lesson.difficulty, typing.lesson.words.length);
+      dispatch({ type: "ADD_XP", amount: rewards.xp });
+      dispatch({ type: "EARN_COINS", amount: rewards.coins });
+      dispatch({ type: "ADD_PET_XP", amount: rewards.petExp });
 
-    if (!wasCompleted) {
-      const newCount = completed.size + 1;
-      if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
-        queuePendingEgg(newCount / LESSONS_PER_EGG);
+      if (!wasCompleted) {
+        const newCount = completed.size + 1;
+        if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
+          queuePendingEgg(newCount / LESSONS_PER_EGG);
+        }
       }
-    }
-    setCompleted(loadCompletedLessons());
-  }, [typing, dispatch, completed]);
+      setCompleted(loadCompletedLessons());
+    },
+    [typing, dispatch, completed],
+  );
 
   function unitZones(unitNumber: number): Zone[] {
     switch (unitNumber) {
-      case 1: return ["home"];
-      case 2: return ["top"];
-      case 3: return ["bottom"];
-      case 6: return ["numbers"];
-      case 7: return ["symbols"];
-      default: return [];
+      case 1:
+        return ["home"];
+      case 2:
+        return ["top"];
+      case 3:
+        return ["bottom"];
+      case 6:
+        return ["numbers"];
+      case 7:
+        return ["symbols"];
+      default:
+        return [];
     }
   }
 
@@ -191,7 +200,10 @@ export function LessonsCard() {
             Egg #{eggProgress.nextIndex} · {eggProgress.progress}/{eggProgress.total} lessons
           </div>
           <div className="quest-milestone-bar">
-            <div className="quest-milestone-fill" style={{ width: `${(eggProgress.progress / eggProgress.total) * 100}%` }} />
+            <div
+              className="quest-milestone-fill"
+              style={{ width: `${(eggProgress.progress / eggProgress.total) * 100}%` }}
+            />
           </div>
         </div>
         <div className="quest-milestone-hint">Every 10 lessons = 1 pet egg</div>
@@ -206,7 +218,10 @@ export function LessonsCard() {
           const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
 
           return (
-            <div key={unit.id} className={`quest-chapter ${isDone ? "is-done" : ""} ${!unlocked ? "is-locked" : ""}`}>
+            <div
+              key={unit.id}
+              className={`quest-chapter ${isDone ? "is-done" : ""} ${!unlocked ? "is-locked" : ""}`}
+            >
               {/* Chapter Header */}
               <button
                 type="button"
@@ -274,7 +289,9 @@ export function LessonsCard() {
                       const done = completed.has(lesson.id);
                       const unlockedL = isLessonUnlocked(unit, lIdx, completed);
                       const stats = loadLessonStats()[lesson.id];
-                      const stars = (stats ? lessonStars(stats.bestAccuracy, lesson.targetAccuracy) : 0) as 0 | 1 | 2 | 3;
+                      const stars = (
+                        stats ? lessonStars(stats.bestAccuracy, lesson.targetAccuracy) : 0
+                      ) as 0 | 1 | 2 | 3;
                       const isCurrent = lesson.id === currentLessonId;
                       const rewards = lessonRewards(lesson.difficulty, lesson.words.length);
                       const isBoss = lIdx === unit.lessons.length - 1;
@@ -294,7 +311,9 @@ export function LessonsCard() {
                               isCurrent ? "is-current" : "",
                               isBoss ? "is-boss" : "",
                               stars === 3 ? "is-perfect" : "",
-                            ].join(" ").trim()}
+                            ]
+                              .join(" ")
+                              .trim()}
                           >
                             {/* Decorative scenery */}
                             <div className="quest-card-scene" aria-hidden="true" />
@@ -319,10 +338,20 @@ export function LessonsCard() {
                                 )}
                               </div>
                               {isCurrent && !done && <div className="quest-card-sparkle" />}
-                              {isCurrent && !done && <div className="quest-card-sparkle quest-card-sparkle-2" />}
-                              {isCurrent && !done && <div className="quest-card-sparkle quest-card-sparkle-3" />}
+                              {isCurrent && !done && (
+                                <div className="quest-card-sparkle quest-card-sparkle-2" />
+                              )}
+                              {isCurrent && !done && (
+                                <div className="quest-card-sparkle quest-card-sparkle-3" />
+                              )}
                               <div className="quest-card-status-chip">
-                                {!unlockedL ? "Locked" : done ? "Cleared" : isCurrent ? "Current" : "Open"}
+                                {!unlockedL
+                                  ? "Locked"
+                                  : done
+                                    ? "Cleared"
+                                    : isCurrent
+                                      ? "Current"
+                                      : "Open"}
                               </div>
                             </div>
 
@@ -335,10 +364,14 @@ export function LessonsCard() {
                                 </div>
                               </div>
                               <div className="quest-card-desc">
-                                {lesson.note || `${lesson.words.length} words, ${lesson.words.slice(0, 3).join(", ")}${lesson.words.length > 3 ? "..." : ""}`}
+                                {lesson.note ||
+                                  `${lesson.words.length} words, ${lesson.words.slice(0, 3).join(", ")}${lesson.words.length > 3 ? "..." : ""}`}
                               </div>
                               <div className="quest-card-meta">
-                                <span className="quest-card-diff" style={{ color: DIFFICULTY_LABEL[lesson.difficulty].color }}>
+                                <span
+                                  className="quest-card-diff"
+                                  style={{ color: DIFFICULTY_LABEL[lesson.difficulty].color }}
+                                >
                                   {DIFFICULTY_LABEL[lesson.difficulty].label}
                                 </span>
                                 <span className="quest-card-meta-sep">·</span>
@@ -348,7 +381,9 @@ export function LessonsCard() {
                                 {stats && (
                                   <>
                                     <span className="quest-card-meta-sep">·</span>
-                                    <span className="quest-card-best">Best {stats.bestWpm} / {stats.bestAccuracy}%</span>
+                                    <span className="quest-card-best">
+                                      Best {stats.bestWpm} / {stats.bestAccuracy}%
+                                    </span>
                                   </>
                                 )}
                               </div>
@@ -356,9 +391,24 @@ export function LessonsCard() {
                                 <div className="quest-card-claimed">All Rewards Claimed</div>
                               ) : showRewards ? (
                                 <div className="quest-card-rewards">
-                                  <RewardBadge icon="✨" label="XP" value={rewards.xp} collected={done} />
-                                  <RewardBadge icon="🪙" label="Coins" value={rewards.coins} collected={done} />
-                                  <RewardBadge icon="🤍" label="Pet EXP" value={rewards.petExp} collected={done} />
+                                  <RewardBadge
+                                    icon="✨"
+                                    label="XP"
+                                    value={rewards.xp}
+                                    collected={done}
+                                  />
+                                  <RewardBadge
+                                    icon="🪙"
+                                    label="Coins"
+                                    value={rewards.coins}
+                                    collected={done}
+                                  />
+                                  <RewardBadge
+                                    icon="🤍"
+                                    label="Pet EXP"
+                                    value={rewards.petExp}
+                                    collected={done}
+                                  />
                                 </div>
                               ) : null}
                             </div>
@@ -371,7 +421,9 @@ export function LessonsCard() {
                                   <Crown size={14} /> Complete
                                 </div>
                               )}
-                              <div className={`quest-card-action ${done ? "is-done" : ""} ${!unlockedL ? "is-locked" : ""}`}>
+                              <div
+                                className={`quest-card-action ${done ? "is-done" : ""} ${!unlockedL ? "is-locked" : ""}`}
+                              >
                                 {done ? (
                                   <>
                                     <Crown size={16} />
@@ -411,15 +463,26 @@ export function LessonsCard() {
         >
           <div className="quest-detail-modal">
             <div className="quest-detail-header">
-              <div className="quest-detail-emoji">{lessonEmojiImg(lessonDetail.emoji, "quest-detail-emoji-img")}</div>
+              <div className="quest-detail-emoji">
+                {lessonEmojiImg(lessonDetail.emoji, "quest-detail-emoji-img")}
+              </div>
               <div className="quest-detail-title">{lessonDetail.title}</div>
-              <div className="quest-detail-difficulty" style={{ color: DIFFICULTY_LABEL[lessonDetail.difficulty].color }}>
+              <div
+                className="quest-detail-difficulty"
+                style={{ color: DIFFICULTY_LABEL[lessonDetail.difficulty].color }}
+              >
                 {DIFFICULTY_LABEL[lessonDetail.difficulty].label}
               </div>
               {(() => {
                 const s = loadLessonStats()[lessonDetail.id];
-                const starCount = (s ? lessonStars(s.bestAccuracy, lessonDetail.targetAccuracy) : 0) as 0 | 1 | 2 | 3;
-                return <div className="quest-detail-stars"><BigStars count={starCount} size={26} /></div>;
+                const starCount = (
+                  s ? lessonStars(s.bestAccuracy, lessonDetail.targetAccuracy) : 0
+                ) as 0 | 1 | 2 | 3;
+                return (
+                  <div className="quest-detail-stars">
+                    <BigStars count={starCount} size={26} />
+                  </div>
+                );
               })()}
               {lessonDetail.note ? <p className="quest-detail-note">{lessonDetail.note}</p> : null}
             </div>
@@ -442,7 +505,9 @@ export function LessonsCard() {
                 <div className="quest-detail-best">
                   <div className="quest-detail-best-label">Best Performance</div>
                   <div className="quest-detail-best-row">
-                    <span>{s.bestWpm} WPM — {s.bestAccuracy}%</span>
+                    <span>
+                      {s.bestWpm} WPM — {s.bestAccuracy}%
+                    </span>
                   </div>
                 </div>
               );
@@ -494,27 +559,30 @@ export function LessonsCard() {
         />
       )}
 
-      {typing && createPortal(
-        <div className="fixed inset-0 z-50" style={{ background: "var(--color-background)" }}>
-          <TypingArena
-            key={typing.lesson.id}
-            customWords={generatedWords ?? typing.lesson.words}
-            customTitle={`${typing.unit.title} — ${typing.lesson.title}`}
-            noTimer
-            lessonMode
-            onFinish={handleFinish}
-            onClose={closeTyping}
-            onNextLesson={nextLesson}
-            hasNext={
-              typing.unit.lessons.length > typing.unit.lessons.findIndex((l) => l.id === typing.lesson.id) + 1 ||
-              UNITS.length > UNITS.findIndex((u) => u.id === typing.unit.id) + 1
-            }
-            lessonTargetAccuracy={typing.lesson.targetAccuracy}
-            lessonDifficulty={typing.lesson.difficulty}
-            lessonWordCount={(generatedWords ?? typing.lesson.words).length}
-          />
-        </div>
-      , document.body)}
+      {typing &&
+        createPortal(
+          <div className="fixed inset-0 z-50" style={{ background: "var(--color-background)" }}>
+            <TypingArena
+              key={typing.lesson.id}
+              customWords={generatedWords ?? typing.lesson.words}
+              customTitle={`${typing.unit.title} — ${typing.lesson.title}`}
+              noTimer
+              lessonMode
+              onFinish={handleFinish}
+              onClose={closeTyping}
+              onNextLesson={nextLesson}
+              hasNext={
+                typing.unit.lessons.length >
+                  typing.unit.lessons.findIndex((l) => l.id === typing.lesson.id) + 1 ||
+                UNITS.length > UNITS.findIndex((u) => u.id === typing.unit.id) + 1
+              }
+              lessonTargetAccuracy={typing.lesson.targetAccuracy}
+              lessonDifficulty={typing.lesson.difficulty}
+              lessonWordCount={(generatedWords ?? typing.lesson.words).length}
+            />
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

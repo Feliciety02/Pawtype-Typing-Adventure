@@ -39,22 +39,23 @@ export function LessonResultsModal({
     return 1;
   })();
 
-  const rewards = lessonDifficulty && lessonWordCount
-    ? (() => {
-        const base: Record<string, number> = {
-          beginner: 25,
-          easy: 50,
-          intermediate: 75,
-          advanced: 100,
-          expert: 150,
-          master: 200,
-        };
-        const rewardXp = (base[lessonDifficulty] ?? 50) + Math.floor(lessonWordCount / 5);
-        const rewardCoins = Math.round(rewardXp / 2);
-        const rewardPetExp = Math.max(1, Math.floor(lessonWordCount / 10));
-        return { rewardXp, rewardCoins, rewardPetExp };
-      })()
-    : null;
+  const rewards =
+    lessonDifficulty && lessonWordCount
+      ? (() => {
+          const base: Record<string, number> = {
+            beginner: 25,
+            easy: 50,
+            intermediate: 75,
+            advanced: 100,
+            expert: 150,
+            master: 200,
+          };
+          const rewardXp = (base[lessonDifficulty] ?? 50) + Math.floor(lessonWordCount / 5);
+          const rewardCoins = Math.round(rewardXp / 2);
+          const rewardPetExp = Math.max(1, Math.floor(lessonWordCount / 10));
+          return { rewardXp, rewardCoins, rewardPetExp };
+        })()
+      : null;
 
   return (
     <ModalShell
@@ -75,9 +76,23 @@ export function LessonResultsModal({
         <div className="lesson-results-title">Lesson Complete!</div>
 
         <div className="lesson-results-stats">
-          <StatCard icon={<PixelIcon emoji="⌨" className="pixel-stat-art" />} label="WPM" value={String(wpm)} />
-          <StatCard icon={<PixelIcon emoji="🎯" className="pixel-stat-art" />} label="Accuracy" value={`${accuracy}%`} valueClassName="is-sky" />
-          <StatCard icon={<PixelIcon emoji="🔥" className="pixel-stat-art" />} label="Combo" value={String(bestCombo)} valueClassName="is-gold" />
+          <StatCard
+            icon={<PixelIcon emoji="⌨" className="pixel-stat-art" />}
+            label="WPM"
+            value={String(wpm)}
+          />
+          <StatCard
+            icon={<PixelIcon emoji="🎯" className="pixel-stat-art" />}
+            label="Accuracy"
+            value={`${accuracy}%`}
+            valueClassName="is-sky"
+          />
+          <StatCard
+            icon={<PixelIcon emoji="🔥" className="pixel-stat-art" />}
+            label="Combo"
+            value={String(bestCombo)}
+            valueClassName="is-gold"
+          />
         </div>
 
         {rewards && (
@@ -95,7 +110,7 @@ export function LessonResultsModal({
             ? "Analyzing your run..."
             : coachError
               ? "Keep typing and Ixll have feedback ready!"
-              : coachInsight?.text ?? "Great work out there!"}
+              : (coachInsight?.text ?? "Great work out there!")}
         </div>
 
         <div className="lesson-results-actions">
