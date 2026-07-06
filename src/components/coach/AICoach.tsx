@@ -35,7 +35,9 @@ export function AICoach(props: Props) {
     if (isPersonalBest && props.wpm > 0) {
       try {
         localStorage.setItem("pawtype-best-wpm", String(props.wpm));
-      } catch {}
+      } catch {
+        /* ignore */
+      }
     }
 
     getCoachFeedback({ ...props, isPersonalBest, isPerfect })

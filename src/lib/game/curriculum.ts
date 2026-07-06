@@ -2430,7 +2430,9 @@ export function markLessonCompleted(id: string) {
   try {
     window.localStorage.setItem(COMPLETED_KEY, JSON.stringify([...set]));
     window.dispatchEvent(new CustomEvent("pawtype-lesson-completed", { detail: { id } }));
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 }
 
 export function unitProgress(unit: Unit, completed: Set<string>): { done: number; total: number } {
@@ -2466,7 +2468,9 @@ export function saveLessonStats(id: string, wpm: number, accuracy: number) {
     };
     try {
       window.localStorage.setItem(LESSON_STATS_KEY, JSON.stringify(all));
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   }
 }
 

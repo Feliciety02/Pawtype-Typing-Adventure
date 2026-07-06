@@ -364,6 +364,7 @@ Separate from the rarity ladder. These classify _what the badge represents_, not
 ## Badge Display Rules
 
 - Badges show their **tier icon** (⭐ to ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐) and **rarity color**
+- Badge image assets are served from `public/badges/<category>/<assetName>`
 - Unearned badges appear dimmed with "???" as the name
 - Special category badges show their **category emoji** instead of tier icon
 - Badge tooltip shows: name, description, unlock progress (if partial)

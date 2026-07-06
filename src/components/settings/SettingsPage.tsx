@@ -294,7 +294,9 @@ export function SettingsPage() {
                     onClick={async () => {
                       try {
                         await logout();
-                      } catch {}
+                      } catch {
+                        /* ignore */
+                      }
                     }}
                     disabled={isLoggingOut}
                     type="button"

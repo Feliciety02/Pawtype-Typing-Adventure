@@ -98,7 +98,7 @@ export function PetsPage() {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)_300px]">
+    <div className="shop-pets-layout grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)_300px]">
       {/* Sidebar */}
       <aside className="lg:sticky lg:top-4 self-start pixel-card-sm p-4 space-y-5">
         <div>
@@ -166,7 +166,7 @@ export function PetsPage() {
 
       {/* Main grid */}
       <div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="shop-pets-grid grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {filtered.map((p) => {
             const ownedP = isOwned(p);
             const equipped = isEquipped(p);
@@ -248,10 +248,10 @@ export function PetsPage() {
         </div>
 
         {/* Bottom section: Eggs + progress */}
-        <div className="grid gap-4 md:grid-cols-2 mt-8">
+        <div className="shop-progress-grid grid gap-4 md:grid-cols-2 mt-8">
           <div className="pixel-card-sm p-4">
             <SectionHeader title="Mystery Eggs" subtitle="Random pet — coming soon" />
-            <div className="grid grid-cols-5 gap-2">
+            <div className="shop-egg-grid grid grid-cols-5 gap-2">
               {[
                 { r: "common", emoji: "🥚", color: RARITY_COLOR.common },
                 { r: "rare", emoji: "🥚", color: RARITY_COLOR.rare },
@@ -313,7 +313,7 @@ export function PetsPage() {
       </div>
 
       {/* Preview panel */}
-      <aside className="lg:sticky lg:top-4 self-start pixel-card p-5 space-y-3">
+      <aside className="shop-preview lg:sticky lg:top-4 self-start pixel-card p-5 space-y-3">
         {(() => {
           const p = selected;
           const ownedP = isOwned(p);

@@ -63,57 +63,57 @@ function Index() {
   }
 
   return (
-    <main className="min-h-dvh px-4 sm:px-6 lg:px-10 py-6 max-w-[1400px] mx-auto">
+    <main className="app-shell">
       <Header view={view} onViewChange={setView} />
 
-      <div key={view} className="view-enter">
+      <div key={view} className="app-view-shell view-enter">
         <Suspense
           fallback={
-            <div className="mt-8 text-center font-pixel text-[0.65rem] text-muted-foreground">
+            <div className="text-center font-pixel text-[0.65rem] text-muted-foreground">
               Loading...
             </div>
           }
         >
           {view === "hub" && <Hub onViewChange={setView} />}
           {view === "practice" && (
-            <section className="mt-8">
+            <section>
               <TypingArena />
             </section>
           )}
           {view === "adventure" && (
-            <section className="mt-8">
+            <section>
               <AdventureMap />
             </section>
           )}
           {view === "lessons" && (
-            <section className="mt-8">
+            <section>
               <LessonsCard />
             </section>
           )}
           {view === "shop" && (
-            <section className="mt-8">
+            <section>
               <Shop />
             </section>
           )}
           {view === "achievements" && (
-            <section className="mt-8">
+            <section>
               <AchievementsCard />
             </section>
           )}
           {view === "stats" && (
-            <section className="mt-8">
+            <section>
               <StatsView />
             </section>
           )}
           {view === "settings" && (
-            <section className="mt-8">
+            <section>
               <SettingsPage />
             </section>
           )}
         </Suspense>
       </div>
 
-      <footer className="mt-16 mb-6 text-center font-pixel text-[0.65rem] text-muted-foreground">
+      <footer className="app-footer text-center font-pixel text-[0.65rem] text-muted-foreground">
         Made with <img src="/icons/cherry-blossom.png" alt="" className="pixel-icon" /> in a cozy
         pixel cabin · Pawtype v0.1
       </footer>

@@ -3,7 +3,7 @@ import { type Rarity, RARITY_COLOR } from "./shopData";
 export function RarityBadge({ rarity }: { rarity: Rarity }) {
   return (
     <span
-      className="font-pixel text-[0.55rem] px-2 py-0.5 rounded"
+      className="shop-chip font-pixel text-[0.55rem] px-2 py-0.5 rounded"
       style={{
         background: "color-mix(in oklab, " + RARITY_COLOR[rarity] + " 18%, transparent)",
         color: RARITY_COLOR[rarity],
@@ -24,7 +24,7 @@ export function OwnedBadge({
 }) {
   return (
     <span
-      className="font-pixel text-[0.55rem] px-2 py-0.5 rounded"
+      className="shop-chip font-pixel text-[0.55rem] px-2 py-0.5 rounded"
       style={{
         background: "color-mix(in oklab, " + color + " 22%, transparent)",
         color,
@@ -54,7 +54,7 @@ export function SectionHeader({
   right?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-end justify-between gap-3 mb-4 flex-wrap">
+    <div className="shop-section-header flex items-end justify-between gap-3 mb-4 flex-wrap">
       <div>
         <h3 className="font-display text-2xl leading-none">{title}</h3>
         {subtitle && (

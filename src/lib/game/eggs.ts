@@ -48,7 +48,9 @@ function writeSet(key: string, set: Set<number>) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(key, JSON.stringify([...set]));
-  } catch {}
+  } catch {
+    /* ignore */
+  }
 }
 
 export function loadClaimedEggs(): Set<number> {

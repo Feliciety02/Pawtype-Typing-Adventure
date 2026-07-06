@@ -17,7 +17,7 @@ const CATEGORIES: BadgeCategory[] = [
   "challenge",
 ];
 
-const BADGE_BASE = "/Badge Collection";
+const BADGE_BASE = "/badges";
 
 const TIER_COLORS: Record<number, string> = {
   1: "#b0b0b0",
@@ -46,9 +46,8 @@ function BadgeIcon({
 }) {
   return (
     <div
+      className="badge-icon"
       style={{
-        width: 180,
-        height: 180,
         position: "relative",
         overflow: "hidden",
       }}
@@ -88,7 +87,7 @@ export function AchievementsCard() {
   const unlocked = achievements.filter((a) => a.unlocked).length;
 
   return (
-    <div className="pixel-card p-5 sm:p-6">
+    <div className="awards-page pixel-card p-5 sm:p-6">
       <div className="mb-5">
         <h2 className="text-3xl leading-none">
           <PixelIcon emoji="🏆" /> Badges
@@ -116,7 +115,7 @@ export function AchievementsCard() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+              <div className="awards-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
                 {catBadges.map((a) => {
                   const pct =
                     a.progress && a.progress.goal > 0

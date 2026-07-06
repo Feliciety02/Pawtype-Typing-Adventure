@@ -1,4 +1,31 @@
 /* ===== Game HUD navigation ===== */
+.app-shell {
+  min-height: 100dvh;
+  width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
+  margin-inline: auto;
+  padding-block: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.app-view-shell {
+  margin-block-start: clamp(1.5rem, 2.25vw, 2.25rem);
+}
+
+.app-view-shell > section {
+  min-width: 0;
+}
+
+.app-footer {
+  margin-block-start: clamp(2.5rem, 5vw, 4rem);
+  margin-block-end: 0;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100% - 1rem, 1400px);
+    padding-block-start: 0.75rem;
+  }
+}
+
 .game-hud {
   --hud-trim: var(--color-primary);
   --hud-glow: color-mix(in oklab, var(--color-primary) 26%, transparent);

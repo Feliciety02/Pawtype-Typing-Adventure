@@ -8,7 +8,7 @@ export function Shop() {
   const [tab, setTab] = useLocal<ShopTab>("shop.tab", "pets");
 
   return (
-    <div className="pixel-card p-5 sm:p-6">
+    <div className="shop-page pixel-card p-5 sm:p-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap mb-5">
         <div className="min-w-0">

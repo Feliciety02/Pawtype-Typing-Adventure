@@ -279,7 +279,9 @@ export function TypingArena({
     if (isPersonalBest && wpm > 0) {
       try {
         localStorage.setItem("pawtype-best-wpm", String(wpm));
-      } catch {}
+      } catch {
+        /* ignore */
+      }
     }
     getCoachFeedback({
       wpm,
@@ -458,7 +460,7 @@ export function TypingArena({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="typing-page-shell flex flex-col gap-4">
       {!isFullscreen && !lessonMode && (
         <button
           className="typing-toolbar-btn self-end"

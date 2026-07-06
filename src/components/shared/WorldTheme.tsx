@@ -139,7 +139,9 @@ export function WorldProvider({ children }: { children: ReactNode }) {
     applyWorld(w);
     try {
       localStorage.setItem("world", w);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   };
 
   return <WorldCtx.Provider value={{ world, setWorld }}>{children}</WorldCtx.Provider>;

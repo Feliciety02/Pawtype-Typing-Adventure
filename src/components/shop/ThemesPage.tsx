@@ -58,7 +58,7 @@ export function ThemesPage() {
   };
 
   return (
-    <div className="space-y-10">
+    <div className="shop-themes-page space-y-10">
       {/* Themes */}
       <section>
         <SectionHeader
@@ -66,7 +66,7 @@ export function ThemesPage() {
           subtitle="Room themes — swap the sky above your keyboard."
           right={<CategoryTabs items={THEME_CATEGORIES} value={themeCat} onChange={setThemeCat} />}
         />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="shop-theme-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredThemes.map((t) => {
             const ownedT = themeOwned(t);
             const equipped = themeEquipped(t);
@@ -76,11 +76,11 @@ export function ThemesPage() {
             return (
               <div
                 key={t.id}
-                className="pixel-card-sm p-3 flex flex-col gap-2"
+                className="shop-theme-card pixel-card-sm p-3 flex flex-col gap-2"
                 style={{ opacity: locked ? 0.85 : 1 }}
               >
                 <div
-                  className="rounded overflow-hidden relative"
+                  className="shop-theme-preview rounded overflow-hidden relative"
                   style={{
                     aspectRatio: "16 / 10",
                     background: "var(--color-muted)",
@@ -115,7 +115,7 @@ export function ThemesPage() {
                     ) : null}
                   </div>
                 </div>
-                <div className="flex items-center justify-between gap-2">
+                <div className="shop-theme-card-meta flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <div className="font-pixel text-[0.7rem] truncate">
                       {t.emoji} {locked ? "???" : t.name}
@@ -156,17 +156,17 @@ export function ThemesPage() {
             <CategoryTabs items={DOODAD_CATEGORIES} value={doodadCat} onChange={setDoodadCat} />
           }
         />
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+        <div className="shop-doodad-grid grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {filteredDoodads.map((d) => {
             const ownedD = doodadOwned(d);
             const canAfford = state.player.coins >= d.price;
             return (
               <div
                 key={d.id}
-                className="pixel-card-sm p-3 flex flex-col items-center text-center gap-2"
+                className="shop-doodad-card pixel-card-sm p-3 flex flex-col items-center text-center gap-2"
               >
                 <div
-                  className="grid place-items-center rounded"
+                  className="shop-doodad-preview grid place-items-center rounded"
                   style={{
                     width: "100%",
                     aspectRatio: "1 / 1",

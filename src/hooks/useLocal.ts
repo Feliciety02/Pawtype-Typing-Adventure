@@ -14,7 +14,9 @@ export function useLocal<T>(key: string, initial: T): [T, (v: T) => void] {
     setV(n);
     try {
       localStorage.setItem(key, JSON.stringify(n));
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   };
   return [v, set];
 }

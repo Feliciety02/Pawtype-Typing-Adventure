@@ -16,7 +16,7 @@ export function WanderingPet({ pet }: { pet: PetState | null }) {
 
   // wander loop — pick a new target every 3.5s
   useEffect(() => {
-    let id: number | null = null;
+    const id: number | null = null;
     const wander = () => {
       const container = ref.current?.parentElement;
       if (!container) return;

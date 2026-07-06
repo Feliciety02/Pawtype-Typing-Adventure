@@ -32,7 +32,9 @@ export class LocalStoragePersistence implements GamePersistence {
     if (typeof window === "undefined") return;
     try {
       localStorage.removeItem(STORAGE_KEY);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
   }
 }
 

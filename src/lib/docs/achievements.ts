@@ -194,7 +194,7 @@ Reward difficult accomplishments and special objectives. Crest theme: shields, s
 
 ## Asset Naming Convention
 
-All badge assets use lowercase snake_case.
+All badge assets use lowercase snake_case and are served from \`public/badges/<category>/<assetName>\`.
 
 \`\`\`
 badge_speed_tiny_feather.png

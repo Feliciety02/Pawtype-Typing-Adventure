@@ -13,7 +13,7 @@ export function SegmentedSwitcher({
   ];
   return (
     <div
-      className="inline-flex p-1 rounded-lg gap-1"
+      className="shop-segmented-switcher inline-flex p-1 rounded-lg gap-1"
       style={{
         background: "var(--color-muted)",
         border: "2px solid var(--color-border)",
@@ -26,7 +26,7 @@ export function SegmentedSwitcher({
           <button
             key={t.id}
             onClick={() => onChange(t.id)}
-            className="font-pixel text-[0.7rem] px-4 py-2 rounded-md transition-all"
+            className="shop-segmented-button font-pixel text-[0.7rem] px-4 py-2 rounded-md transition-all"
             style={{
               background: active ? "var(--color-primary)" : "transparent",
               color: active ? "var(--color-primary-foreground)" : "var(--color-foreground)",
