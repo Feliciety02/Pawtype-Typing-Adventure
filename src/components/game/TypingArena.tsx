@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Maximize2, RotateCcw, X } from "lucide-react";
+import { RotateCcw, X } from "lucide-react";
 import { PixelKeyboard } from "./PixelKeyboard";
 import { PixelCloud } from "./PixelCloud";
 import { PetRoom } from "../shop/PetRoom";
@@ -69,7 +69,6 @@ export function TypingArena({
   const [keystrokes, setKeystrokes] = useState<KeystrokeEvent[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [generatedText, setGeneratedText] = useState<string | null>(null);
   const [mascotLine, setMascotLine] = useState<string | null>(null);
   const [petRoomOpen, setPetRoomOpen] = useState(false);
@@ -190,13 +189,6 @@ export function TypingArena({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [resultsOpen]);
-
-  useEffect(() => {
-    const onFullscreenChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener("fullscreenchange", onFullscreenChange);
-    onFullscreenChange();
-    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
-  }, []);
 
   // Idle ? sleep after a while
   useEffect(() => {
@@ -453,27 +445,8 @@ export function TypingArena({
       : 0
     : (elapsed / duration) * 100;
 
-  const requestFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen?.().catch(console.warn);
-    }
-  };
-
   return (
     <div className="typing-page-shell flex flex-col gap-4">
-      {!isFullscreen && !lessonMode && (
-        <button
-          className="typing-toolbar-btn self-end"
-          type="button"
-          onClick={requestFullscreen}
-          title="Fullscreen"
-          aria-label="Enter fullscreen"
-        >
-          <Maximize2 size={12} />
-          Fullscreen
-        </button>
-      )}
-
       {/* Main content: typing area + artwork */}
       {lessonMode ? (
         /* --- Lesson full-screen typing --- */

@@ -108,11 +108,22 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 1;
+  filter:
+    drop-shadow(0 0 10px color-mix(in oklab, var(--coin) 34%, transparent))
+    drop-shadow(0 0 22px color-mix(in oklab, var(--color-card) 28%, transparent));
 }
 
 .camp-building[data-glow="true"] {
-  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--coin) 60%, transparent));
+  filter:
+    drop-shadow(0 0 14px color-mix(in oklab, var(--coin) 70%, transparent))
+    drop-shadow(0 0 30px color-mix(in oklab, var(--coin) 48%, transparent));
   animation: camp-building-glow-pulse 2.4s ease-in-out infinite;
+}
+
+.camp-building[data-locked="true"] {
+  filter:
+    drop-shadow(0 0 8px color-mix(in oklab, var(--color-card) 18%, transparent))
+    grayscale(0.22);
 }
 
 .camp-building-btn {

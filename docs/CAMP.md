@@ -21,7 +21,7 @@ Camp is PawType's home screen: a living pixel campsite scene that grows with the
 
 ## Interaction Model
 
-- Buildings are `<button>` sprites positioned absolutely on top of the painted camp background. Clicking a building opens its modal via the shared `ModalShell`.
+- Buildings are `<button>` sprites positioned absolutely on top of the painted camp background with a shared soft glow for readability. Clicking a building opens its modal via the shared `ModalShell`.
 - Building anchors are mapped to the illustrated campsite composition so the library, cabin, tent, wagon, nursery, mailbox, blacksmith, and campfire sit in the same visual zones as the reference scene.
 - Painter's Tent wraps `ThemeSetsSection`; selecting a theme triggers a 700 ms crossfade of the scene.
 - Supply Wagon opens a chest with shake, burst, and reward flow; it dispatches `pawtype-pet-celebrate` so the pet jumps.

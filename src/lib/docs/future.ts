@@ -12,6 +12,12 @@ Planned features and high-potential additions to expand the game.
 
 ✅ **Shipped** - Shared page margins now use explicit app shell/view wrapper classes, and Shop, Awards, and Train have responsive layout safeguards so cards, filters, badge grids, and typing panels keep consistent gaps across desktop and smaller windows.
 
+✅ **Shipped** - Camp buildings now share a soft sprite glow for readability across morning, afternoon, evening, and night scenes, with ready buildings keeping a stronger pulsing reward glow.
+
+✅ **Shipped** - The Train page no longer shows the fullscreen control, and its timer/reset toolbar now renders at full opacity above the typing scene overlay.
+
+✅ **Shipped** - Awards badge artwork now renders larger with roomier responsive grid cells so the collection page feels more readable and closer to the pixel badge art scale.
+
 ### Adventure Scene Intro Timing Fix
 ✅ **Shipped** - The adventure quest gameplay card no longer reuses the immediate \`animate-pixel-pop\` utility during the full-scene intro. Its dedicated delayed \`card-pop-in\` sequence now stays hidden while the biome artwork fades in, holds for the showcase, and dims before the typing card appears.
 

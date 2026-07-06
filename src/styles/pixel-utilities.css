@@ -320,7 +320,7 @@
 .awards-grid {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
   align-items: start;
 }
 
@@ -334,8 +334,8 @@
 }
 
 .badge-icon {
-  width: clamp(96px, 12vw, 150px);
-  height: clamp(96px, 12vw, 150px);
+  width: clamp(128px, 15vw, 190px);
+  height: clamp(128px, 15vw, 190px);
 }
 
 .typing-page-shell {
