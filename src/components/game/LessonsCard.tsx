@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, ChevronRight, Lock, Play, Crown, Swords } from "lucide-react";
+import { ChevronDown, ChevronRight, Lock, Play, Crown, Swords, Gift } from "lucide-react";
 import { SectionHeader } from "../layout/SectionHeader";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { BigStars } from "./BigStars";
@@ -32,6 +32,12 @@ import {
   LESSONS_PER_EGG,
   type EggMilestone,
 } from "../../lib/game/eggs";
+import {
+  loadChestLessons,
+  toggleChestLesson,
+  loadClaimedChests,
+  markChestClaimed,
+} from "../../lib/game/chests";
 import { EggHatchModal } from "../shop/EggHatchModal";
 import { generateLessonText } from "../../lib/game/textGenerator";
 import type { Zone } from "../../lib/game/engine/generator";
@@ -57,16 +63,26 @@ export function LessonsCard() {
   const [typing, setTyping] = useState<{ unit: Unit; lesson: Lesson } | null>(null);
   const [generatedWords, setGeneratedWords] = useState<string[] | null>(null);
   const [activeEgg, setActiveEgg] = useState<EggMilestone | null>(null);
+  const [chestLessons, setChestLessons] = useState<Set<string>>(() => loadChestLessons());
+  const [claimedChests, setClaimedChests] = useState<Set<string>>(() => loadClaimedChests());
+  const [showChestConfig, setShowChestConfig] = useState(false);
+  const deferredAfterEgg = useRef<null | (() => void)>(null);
   const prevTypingRef = useRef(typing);
 
   useEffect(() => {
     const refresh = () => setCompleted(loadCompletedLessons());
+    const refreshChests = () => {
+      setChestLessons(loadChestLessons());
+      setClaimedChests(loadClaimedChests());
+    };
     window.addEventListener("pawtype-lesson-completed", refresh);
     window.addEventListener("pawtype-egg-claimed", refresh);
+    window.addEventListener("pawtype-chests-changed", refreshChests);
     window.addEventListener("storage", refresh);
     return () => {
       window.removeEventListener("pawtype-lesson-completed", refresh);
       window.removeEventListener("pawtype-egg-claimed", refresh);
+      window.removeEventListener("pawtype-chests-changed", refreshChests);
       window.removeEventListener("storage", refresh);
     };
   }, []);
@@ -110,6 +126,13 @@ export function LessonsCard() {
       dispatch({ type: "EARN_COINS", amount: rewards.coins });
       dispatch({ type: "ADD_PET_XP", amount: rewards.petExp });
 
+      // Claim chest bonus if this lesson is a configured chest
+      if (chestLessons.has(typing.lesson.id) && !claimedChests.has(typing.lesson.id)) {
+        dispatch({ type: "EARN_COINS", amount: 100 });
+        markChestClaimed(typing.lesson.id);
+        setClaimedChests(loadClaimedChests());
+      }
+
       if (!wasCompleted) {
         const newCount = completed.size + 1;
         if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
@@ -118,8 +141,18 @@ export function LessonsCard() {
       }
       setCompleted(loadCompletedLessons());
     },
-    [typing, dispatch, completed],
+    [typing, dispatch, completed, chestLessons, claimedChests],
   );
+
+  // Try to open a pending egg modal, deferring `next` until the modal closes.
+  // Returns true when an egg is being displayed.
+  const openPendingEgg = useCallback((next: () => void) => {
+    const pending = [...loadPendingEggs()].sort((a, b) => a - b);
+    if (pending.length === 0) return false;
+    deferredAfterEgg.current = next;
+    setActiveEgg(milestoneForIndex(pending[0]));
+    return true;
+  }, []);
 
   function unitZones(unitNumber: number): Zone[] {
     switch (unitNumber) {
@@ -151,22 +184,30 @@ export function LessonsCard() {
       .catch(() => {});
   }, [typing]);
 
-  const closeTyping = () => setTyping(null);
+  const closeTyping = () => {
+    if (openPendingEgg(() => setTyping(null))) return;
+    setTyping(null);
+  };
 
   const nextLesson = () => {
     if (!typing) return;
-    const unitLessons = typing.unit.lessons;
-    const idx = unitLessons.findIndex((l) => l.id === typing.lesson.id);
-    if (idx < unitLessons.length - 1) {
-      setTyping({ unit: typing.unit, lesson: unitLessons[idx + 1] });
-    } else {
-      const uIdx = UNITS.findIndex((u) => u.id === typing.unit.id);
-      if (uIdx < UNITS.length - 1) {
-        setTyping({ unit: UNITS[uIdx + 1], lesson: UNITS[uIdx + 1].lessons[0] });
+    const goToNext = () => {
+      if (!typing) return;
+      const unitLessons = typing.unit.lessons;
+      const idx = unitLessons.findIndex((l) => l.id === typing.lesson.id);
+      if (idx < unitLessons.length - 1) {
+        setTyping({ unit: typing.unit, lesson: unitLessons[idx + 1] });
       } else {
-        setTyping(null);
+        const uIdx = UNITS.findIndex((u) => u.id === typing.unit.id);
+        if (uIdx < UNITS.length - 1) {
+          setTyping({ unit: UNITS[uIdx + 1], lesson: UNITS[uIdx + 1].lessons[0] });
+        } else {
+          setTyping(null);
+        }
       }
-    }
+    };
+    if (openPendingEgg(goToNext)) return;
+    goToNext();
   };
 
   const lessonDetail = detail?.lesson;
@@ -189,6 +230,14 @@ export function LessonsCard() {
         title="Quest Log"
         subtitle={`A guided path from home row to graduation — ${totals.done}/${totals.total} quests complete`}
       />
+
+      <div className="quest-chest-toolbar">
+        <button type="button" onClick={() => setShowChestConfig(true)}>
+          <Gift size={12} style={{ display: "inline", verticalAlign: -2, marginRight: 4 }} />
+          Configure Chests ({chestLessons.size})
+        </button>
+      </div>
+
 
       {/* Egg milestone progress banner */}
       <div className="quest-milestone-banner">
@@ -317,6 +366,23 @@ export function LessonsCard() {
                           >
                             {/* Decorative scenery */}
                             <div className="quest-card-scene" aria-hidden="true" />
+                            {chestLessons.has(lesson.id) && (
+                              <span
+                                className={`quest-card-chest-badge ${claimedChests.has(lesson.id) ? "is-claimed" : ""}`}
+                                aria-label={
+                                  claimedChests.has(lesson.id)
+                                    ? "Chest opened"
+                                    : "Treasure chest reward"
+                                }
+                                title={
+                                  claimedChests.has(lesson.id)
+                                    ? "Chest opened"
+                                    : "Treasure chest: +100 coins on completion"
+                                }
+                              >
+                                {claimedChests.has(lesson.id) ? "📭" : "🎁"} +100
+                              </span>
+                            )}
 
                             {/* Left - Status */}
                             <div className="quest-card-art">
@@ -554,10 +620,89 @@ export function LessonsCard() {
           onClose={() => {
             const pending = [...loadPendingEggs()].sort((a, b) => a - b);
             const next = pending.find((i) => i !== activeEgg.index);
-            setActiveEgg(next ? milestoneForIndex(next) : null);
+            if (next) {
+              setActiveEgg(milestoneForIndex(next));
+            } else {
+              setActiveEgg(null);
+              const cb = deferredAfterEgg.current;
+              deferredAfterEgg.current = null;
+              if (cb) cb();
+            }
           }}
         />
       )}
+
+      {showChestConfig && (
+        <ModalShell
+          ariaLabel="Configure treasure chests"
+          onClose={() => setShowChestConfig(false)}
+        >
+          <div className="p-4">
+            <h3 className="text-xl mb-2">🎁 Configure Treasure Chests</h3>
+            <p className="font-pixel text-[0.6rem] text-muted-foreground mb-3">
+              Pick the exact lessons that reward a chest (+100 coins on completion).
+            </p>
+            <div className="flex gap-2 mb-3">
+              <button
+                type="button"
+                className="chest-config-item"
+                onClick={() => {
+                  // Reset every-5th default preset
+                  const ids: string[] = [];
+                  UNITS.forEach((u) => {
+                    u.lessons.forEach((l, i) => {
+                      if ((i + 1) % 5 === 0) ids.push(l.id);
+                    });
+                  });
+                  toggleChestLesson("__reset__"); // no-op trigger event
+                  // apply set
+                  import("../../lib/game/chests").then((m) => m.setChestLessons(ids));
+                }}
+              >
+                Preset: Every 5th
+              </button>
+              <button
+                type="button"
+                className="chest-config-item"
+                onClick={() =>
+                  import("../../lib/game/chests").then((m) => m.setChestLessons([]))
+                }
+              >
+                Clear All
+              </button>
+            </div>
+            {UNITS.map((u) => (
+              <div key={u.id}>
+                <div className="chest-config-unit">
+                  {u.emoji} Chapter {u.number}: {u.title}
+                </div>
+                <div className="chest-config-list">
+                  {u.lessons.map((l) => {
+                    const on = chestLessons.has(l.id);
+                    return (
+                      <button
+                        key={l.id}
+                        type="button"
+                        className={`chest-config-item ${on ? "is-on" : ""}`}
+                        onClick={() => toggleChestLesson(l.id)}
+                      >
+                        <span>{on ? "🎁" : "▫"}</span>
+                        <span>{l.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+            <div className="mt-4 flex justify-end">
+              <PixelButton variant="primary" onClick={() => setShowChestConfig(false)}>
+                Done
+              </PixelButton>
+            </div>
+          </div>
+        </ModalShell>
+      )}
+
 
       {typing &&
         createPortal(
