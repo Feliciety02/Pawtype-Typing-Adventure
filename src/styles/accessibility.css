@@ -1,0 +1,215 @@
+/* ===== Accessibility modes =====
+ * Toggled by <html class="pawtype-reduce-motion"> and
+ * <html class="pawtype-high-contrast"> from SettingsPage.
+ */
+
+/* ---------- Reduced Motion ---------- */
+.pawtype-reduce-motion *,
+.pawtype-reduce-motion *::before,
+.pawtype-reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Hide/quiet the loud gamey particle systems entirely. */
+.pawtype-reduce-motion .quest-card-sparkle,
+.pawtype-reduce-motion .hud-particle,
+.pawtype-reduce-motion .sparkle-trail,
+.pawtype-reduce-motion .camp-firefly,
+.pawtype-reduce-motion .camp-butterfly,
+.pawtype-reduce-motion .camp-petal,
+.pawtype-reduce-motion .camp-leaf,
+.pawtype-reduce-motion .camp-cloud,
+.pawtype-reduce-motion .egg-hatch-sparkle,
+.pawtype-reduce-motion .camp-chest-burst,
+.pawtype-reduce-motion .confetti,
+.pawtype-reduce-motion .confetti-piece,
+.pawtype-reduce-motion .celebration-particle,
+.pawtype-reduce-motion .lesson-sparkle {
+  display: none !important;
+}
+
+/* Tone down the "current lesson" pulse so it just glows softly. */
+.pawtype-reduce-motion .quest-card.is-current,
+.pawtype-reduce-motion .quest-path-node.is-current,
+.pawtype-reduce-motion .lesson-node-card.is-current {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* ---------- High Contrast ---------- */
+.pawtype-high-contrast {
+  --color-border: #000;
+  --color-foreground: #000;
+}
+.pawtype-high-contrast.dark {
+  --color-border: #fff;
+  --color-foreground: #fff;
+}
+
+.pawtype-high-contrast .pixel-card,
+.pawtype-high-contrast .pixel-card-sm,
+.pawtype-high-contrast .quest-chapter,
+.pawtype-high-contrast .quest-card,
+.pawtype-high-contrast .settings-panel,
+.pawtype-high-contrast .settings-toggle-card,
+.pawtype-high-contrast .pixel-modal-frame,
+.pawtype-high-contrast .pixel-frame,
+.pawtype-high-contrast .inventory-card {
+  border-width: 3px !important;
+  border-color: var(--color-border) !important;
+  box-shadow: 4px 4px 0 0 var(--color-border) !important;
+}
+
+.pawtype-high-contrast .quest-card-desc,
+.pawtype-high-contrast .quest-card-meta,
+.pawtype-high-contrast .settings-help,
+.pawtype-high-contrast .text-muted-foreground {
+  color: var(--color-foreground) !important;
+  opacity: 0.95;
+}
+
+.pawtype-high-contrast .quest-card.is-locked,
+.pawtype-high-contrast .lesson-node-card.is-locked {
+  opacity: 0.85;
+}
+
+/* Quiet the animated scenery layer inside lesson cards. */
+.pawtype-high-contrast .quest-card-scene {
+  opacity: 0.35;
+}
+
+/* ---------- Chest badge on lesson cards ---------- */
+.quest-card-chest-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  font-family: var(--font-pixel, monospace);
+  font-size: 0.55rem;
+  color: #4f2c22;
+  background: linear-gradient(180deg, #f6c86a, #d9922e);
+  border: 2px solid #4f2c22;
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 0 #2d160f;
+  z-index: 3;
+  pointer-events: none;
+}
+.quest-card-chest-badge.is-claimed {
+  filter: grayscale(0.6);
+  opacity: 0.75;
+}
+.pawtype-reduce-motion .quest-card-chest-badge {
+  animation: none !important;
+}
+
+/* Chest configuration modal */
+.chest-config-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+  padding: 4px;
+}
+.chest-config-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-card, transparent);
+  font-family: var(--font-pixel, monospace);
+  font-size: 0.6rem;
+  cursor: pointer;
+  text-align: left;
+}
+.chest-config-item.is-on {
+  background: linear-gradient(180deg, #fbe6a4, #f4c86a);
+  color: #4f2c22;
+  border-color: #4f2c22;
+}
+.chest-config-unit {
+  margin-top: 12px;
+  font-family: var(--font-pixel, monospace);
+  font-size: 0.65rem;
+  opacity: 0.75;
+}
+
+/* Chests toolbar button on lessons page */
+.quest-chest-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 6px 0 -4px;
+}
+.quest-chest-toolbar button {
+  font-family: var(--font-pixel, monospace);
+  font-size: 0.55rem;
+  padding: 6px 10px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-card, transparent);
+  cursor: pointer;
+}
+
+/* ---------- Inventory page ---------- */
+.inventory-root {
+  display: grid;
+  gap: 16px;
+  margin-top: 12px;
+}
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.inventory-card {
+  border: 3px solid var(--color-border);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--color-card, #fffef8);
+  box-shadow: 3px 3px 0 0 var(--color-border);
+  text-align: center;
+  font-family: var(--font-pixel, monospace);
+  font-size: 0.6rem;
+}
+.inventory-card .inventory-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 4px;
+}
+.inventory-card .inventory-title {
+  font-size: 0.7rem;
+  margin-bottom: 2px;
+}
+.inventory-card .inventory-sub {
+  opacity: 0.7;
+}
+.inventory-section-title {
+  font-family: var(--font-pixel, monospace);
+  font-size: 0.9rem;
+  margin: 8px 0 4px;
+}
+.inventory-progress {
+  margin: 4px 0 8px;
+  height: 10px;
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--color-border) 20%, transparent);
+  overflow: hidden;
+}
+.inventory-progress > div {
+  height: 100%;
+  background: linear-gradient(90deg, #f6c86a, #f4a541);
+}
+.inventory-empty {
+  font-family: var(--font-pixel, monospace);
+  font-size: 0.6rem;
+  opacity: 0.6;
+  padding: 12px;
+}

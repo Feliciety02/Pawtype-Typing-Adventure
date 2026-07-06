@@ -11,7 +11,7 @@ import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { getNotifications, subscribeNotifications } from "../../lib/game/notifications";
 
 export type View =
-  "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings";
+  "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings" | "inventory";
 
 export function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) => void }) {
   const { state } = useGame();
@@ -82,6 +82,7 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
     { emoji: "🗺", label: "Quest", view: "adventure" },
     { emoji: "📖", label: "Learn", view: "lessons" },
     { emoji: "🛒", label: "Shop", view: "shop" },
+    { emoji: "🎒", label: "Bag", view: "inventory" },
     { emoji: "🎖️", label: "Awards", view: "achievements" },
   ];
 

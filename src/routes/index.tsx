@@ -23,6 +23,9 @@ const StatsView = lazy(() =>
 const SettingsPage = lazy(() =>
   import("@/components/settings/SettingsPage").then((m) => ({ default: m.SettingsPage })),
 );
+const InventoryPage = lazy(() =>
+  import("@/components/inventory/InventoryPage").then((m) => ({ default: m.InventoryPage })),
+);
 import { PixelLoginScreen } from "@/components/auth/PixelLoginScreen";
 
 export const Route = createFileRoute("/")({
@@ -108,6 +111,11 @@ function Index() {
           {view === "settings" && (
             <section>
               <SettingsPage />
+            </section>
+          )}
+          {view === "inventory" && (
+            <section>
+              <InventoryPage />
             </section>
           )}
         </Suspense>

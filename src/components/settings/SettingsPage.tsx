@@ -11,6 +11,7 @@ const SPARKLE_KEY = "pawtype-sparkle-on";
 const THEME_KEY = "theme";
 const FOCUS_GLOW_KEY = "pawtype-focus-glow";
 const REDUCE_MOTION_KEY = "pawtype-reduce-motion";
+const HIGH_CONTRAST_KEY = "pawtype-high-contrast";
 
 type SettingsTab = "general" | "library";
 
@@ -43,6 +44,7 @@ export function SettingsPage() {
   const [sparkle, setSparkle] = useState(() => readStoredFlag(SPARKLE_KEY));
   const [focusGlow, setFocusGlow] = useState(() => readStoredFlag(FOCUS_GLOW_KEY));
   const [reduceMotion, setReduceMotion] = useState(() => readStoredFlag(REDUCE_MOTION_KEY));
+  const [highContrast, setHighContrast] = useState(() => readStoredFlag(HIGH_CONTRAST_KEY));
 
   const ownsCrt = inventory.items.includes("crt-shader");
   const ownsSparkle = inventory.items.includes("sparkle-trail");
@@ -67,6 +69,12 @@ export function SettingsPage() {
     if (typeof window !== "undefined")
       window.localStorage.setItem(REDUCE_MOTION_KEY, reduceMotion ? "1" : "0");
   }, [reduceMotion]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("pawtype-high-contrast", highContrast);
+    if (typeof window !== "undefined")
+      window.localStorage.setItem(HIGH_CONTRAST_KEY, highContrast ? "1" : "0");
+  }, [highContrast]);
 
   const toggleCrt = () => {
     const next = !crt;
@@ -248,6 +256,11 @@ export function SettingsPage() {
                     label="Reduce Motion"
                     active={reduceMotion}
                     onClick={() => setReduceMotion((value) => !value)}
+                  />
+                  <SettingsToggle
+                    label="High Contrast"
+                    active={highContrast}
+                    onClick={() => setHighContrast((value) => !value)}
                   />
                 </div>
               </div>
