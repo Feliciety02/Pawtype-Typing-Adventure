@@ -295,7 +295,6 @@ export function StageRunner({
           active={done !== null}
           result={done}
           world={world}
-          stageEmoji={stage.emoji}
           xp={xpReward}
           coins={coinReward}
         />

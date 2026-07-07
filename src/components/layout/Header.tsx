@@ -82,7 +82,6 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
     { emoji: "🗺", label: "Quest", view: "adventure" },
     { emoji: "📖", label: "Learn", view: "lessons" },
     { emoji: "🛒", label: "Shop", view: "shop" },
-    { emoji: "🎒", label: "Bag", view: "inventory" },
     { emoji: "🎖️", label: "Awards", view: "achievements" },
   ];
 

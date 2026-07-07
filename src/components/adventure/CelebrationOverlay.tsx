@@ -8,7 +8,6 @@ type CelebrationOverlayProps = {
   active: boolean;
   result: ResultState | null;
   world: WorldId;
-  stageEmoji?: string;
   xp: number;
   coins: number;
 };
@@ -35,93 +34,91 @@ type ParticleInstance = {
 };
 
 type ParticleConfig = {
-  victory: string[];
+  victory: string;
   glow: string;
   failure: string[];
 };
-
-const UNIVERSAL_VICTORY = ["🎉", "🎊", "✨", "🌟", "⭐", "🏆", "🪙", "💰", "❤️", "🐾"];
 
 const FAILURE_PARTICLES = ["🍂", "💨", "🌧️", "💧", "🪨", "🩶", "🤍"];
 
 const PARTICLE_MAP: Record<WorldId, ParticleConfig> = {
   cafe: {
-    victory: ["☕", "✨", "⭐", "🪙", "💖", "🍃", "🌼", "🐾"],
+    victory: "☕",
     glow: "rgba(241, 190, 115, 0.32)",
     failure: FAILURE_PARTICLES,
   },
   forest: {
-    victory: ["🍃", "🌿", "🍀", "🍄", "🌼", "🦋", "🪵", "✨"],
+    victory: "🍃",
     glow: "rgba(120, 182, 114, 0.34)",
     failure: FAILURE_PARTICLES,
   },
   ocean: {
-    victory: ["🫧", "💧", "🐚", "⭐", "🪸", "🌊", "✨", "🐠"],
+    victory: "🫧",
     glow: "rgba(110, 189, 235, 0.34)",
     failure: FAILURE_PARTICLES,
   },
   sakura: {
-    victory: ["🌸", "🌺", "🌼", "🍃", "🍀", "✨", "⭐", "💖", "🦋"],
+    victory: "🌸",
     glow: "rgba(243, 174, 198, 0.36)",
     failure: FAILURE_PARTICLES,
   },
   castle: {
-    victory: ["👑", "✨", "⭐", "🏆", "🪙", "💖", "⚔️", "💎"],
+    victory: "👑",
     glow: "rgba(209, 180, 255, 0.32)",
     failure: FAILURE_PARTICLES,
   },
   space: {
-    victory: ["⭐", "🌟", "✨", "💫", "☄️", "🪐", "🌙", "🌠"],
+    victory: "🌟",
     glow: "rgba(129, 196, 255, 0.36)",
     failure: FAILURE_PARTICLES,
   },
   autumn: {
-    victory: ["🍃", "🍂", "🔥", "✨", "⭐", "🪵", "🌲", "🪙"],
+    victory: "🍂",
     glow: "rgba(225, 165, 75, 0.34)",
     failure: FAILURE_PARTICLES,
   },
   mushroom: {
-    victory: ["🍄", "✨", "⭐", "🍀", "🌸", "🦋", "💜"],
+    victory: "🍄",
     glow: "rgba(207, 164, 255, 0.35)",
     failure: FAILURE_PARTICLES,
   },
   moonlit: {
-    victory: ["🌙", "✨", "⭐", "🌟", "💫", "🤍", "🍃"],
+    victory: "🌙",
     glow: "rgba(167, 184, 255, 0.34)",
     failure: FAILURE_PARTICLES,
   },
   rainy: {
-    victory: ["🌧️", "💧", "🫧", "✨", "⭐", "🍃", "🤍"],
+    victory: "🌧️",
     glow: "rgba(142, 168, 196, 0.34)",
     failure: FAILURE_PARTICLES,
   },
   snowy: {
-    victory: ["❄️", "🧊", "✨", "⭐", "💎", "🤍"],
+    victory: "❄️",
     glow: "rgba(230, 242, 255, 0.36)",
     failure: FAILURE_PARTICLES,
   },
   sunflower: {
-    victory: ["🌻", "🌼", "🌸", "🍃", "🐝", "🦋", "✨", "💛"],
+    victory: "🌻",
     glow: "rgba(238, 201, 89, 0.36)",
     failure: FAILURE_PARTICLES,
   },
   "volcanic-forge": {
-    victory: ["🔥", "✨", "⚡", "💥", "🪨", "❤️", "🧡", "💛"],
+    victory: "🔥",
     glow: "rgba(255, 132, 83, 0.38)",
     failure: FAILURE_PARTICLES,
   },
   "desert-oasis": {
-    victory: ["✨", "⭐", "🌼", "🍃", "🪙", "💛", "💎", "🌵"],
+    victory: "🌵",
     glow: "rgba(227, 193, 108, 0.34)",
     failure: FAILURE_PARTICLES,
   },
   "steam-punk-workshop": {
-    victory: ["⚙️", "🔥", "✨", "⚡", "⭐", "🪙", "💥", "🧡"],
+    victory: "⚙️",
     glow: "rgba(212, 152, 91, 0.34)",
     failure: FAILURE_PARTICLES,
   },
   "frostveil-kingdom": {
-    victory: ["❄️", "🧊", "✨", "⭐", "💎", "🤍"],
+    victory: "❄️",
     glow: "rgba(176, 221, 255, 0.36)",
     failure: FAILURE_PARTICLES,
   },
@@ -142,46 +139,33 @@ function makeParticleAssets(emojis: string[]) {
   return emojis.map(assetFor);
 }
 
-function normalizeStageEmoji(stageEmoji?: string) {
-  if (!stageEmoji || stageEmoji.includes("?")) return [];
-  return [stageEmoji];
+function victoryEmojiFor(world: WorldId) {
+  return (PARTICLE_MAP[world] ?? PARTICLE_MAP.cafe).victory;
 }
 
-function makeVictoryParticles(world: WorldId, stageEmoji?: string) {
-  const config = PARTICLE_MAP[world] ?? PARTICLE_MAP.cafe;
-  const stageAssets = normalizeStageEmoji(stageEmoji);
-  const assets = makeParticleAssets([
-    ...stageAssets,
-    ...config.victory,
-    ...config.victory,
-    ...config.victory,
-    ...UNIVERSAL_VICTORY,
-  ]);
-  const originBands = [
-    { origin: "left" as const, min: -4, max: 24 },
-    { origin: "center" as const, min: 36, max: 64 },
-    { origin: "right" as const, min: 76, max: 104 },
+function makeVictoryParticles(world: WorldId) {
+  const emoji = victoryEmojiFor(world);
+  const sides = [
+    { origin: "left" as const, leftMin: -4, leftMax: 16, dir: 1 },
+    { origin: "right" as const, leftMin: 84, leftMax: 104, dir: -1 },
   ];
 
-  return Array.from({ length: 360 }, (_, index): ParticleInstance => {
-    const band = originBands[index % originBands.length];
-    const angle = randomBetween(-178, -2) * (Math.PI / 180);
-    const force = randomBetween(220, 760);
-    const waveDelay = Math.floor(index / 90) * randomBetween(0.18, 0.34);
+  return Array.from({ length: 200 }, (_, index): ParticleInstance => {
+    const side = sides[index % sides.length];
     return {
       id: index,
-      asset: assets[index % assets.length],
-      left: randomBetween(40, 60),
-      top: randomBetween(38, 58),
-      origin: band.origin,
-      delay: waveDelay + randomBetween(0, 1.85),
-      duration: randomBetween(5.8, 8.2),
-      drift: randomBetween(band.origin === "left" ? 70 : -140, band.origin === "right" ? -70 : 140),
-      burstX: Math.cos(angle) * force,
-      burstY: Math.sin(angle) * force,
-      rotate: randomBetween(-780, 780),
-      scale: randomBetween(0.82, 1.42),
-      bottomBounce: randomBetween(-42, -16),
+      asset: { id: emoji, emoji },
+      left: randomBetween(side.leftMin, side.leftMax),
+      top: randomBetween(90, 106),
+      origin: side.origin,
+      delay: randomBetween(0, 1.2),
+      duration: randomBetween(4.2, 6.8),
+      drift: randomBetween(60, 200) * side.dir,
+      burstX: randomBetween(180, 520) * side.dir,
+      burstY: randomBetween(-820, -360),
+      rotate: randomBetween(-640, 640),
+      scale: randomBetween(0.7, 1.35),
+      bottomBounce: randomBetween(-30, -10),
     };
   });
 }
@@ -219,13 +203,11 @@ function ParticleAssetView({ asset }: { asset: ParticleAsset }) {
 export function PixelConfetti({
   world,
   active,
-  stageEmoji,
 }: {
   world: WorldId;
   active: boolean;
-  stageEmoji?: string;
 }) {
-  const particles = useMemo(() => makeVictoryParticles(world, stageEmoji), [stageEmoji, world]);
+  const particles = useMemo(() => makeVictoryParticles(world), [world]);
 
   if (!active) return null;
 
@@ -262,13 +244,11 @@ export function VictoryParticles({
   active,
   xp,
   coins,
-  stageEmoji,
 }: {
   world: WorldId;
   active: boolean;
   xp: number;
   coins: number;
-  stageEmoji?: string;
 }) {
   const config = PARTICLE_MAP[world] ?? PARTICLE_MAP.cafe;
   const floaters = useMemo(
@@ -287,7 +267,7 @@ export function VictoryParticles({
         className="celebration-glow"
         style={{ "--celebration-glow": config.glow } as CSSProperties}
       />
-      <PixelConfetti active={active} world={world} stageEmoji={stageEmoji} />
+      <PixelConfetti active={active} world={world} />
       <div className="celebration-floaters">
         {floaters.map((floater) => (
           <span
@@ -344,14 +324,13 @@ export function CelebrationOverlay({
   active,
   result,
   world,
-  stageEmoji,
   xp,
   coins,
 }: CelebrationOverlayProps) {
   if (!active || !result) return null;
 
   return result === "win" ? (
-    <VictoryParticles active={active} world={world} stageEmoji={stageEmoji} xp={xp} coins={coins} />
+    <VictoryParticles active={active} world={world} xp={xp} coins={coins} />
   ) : (
     <FailureParticles active={active} world={world} />
   );

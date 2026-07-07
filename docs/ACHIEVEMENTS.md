@@ -365,6 +365,9 @@ Separate from the rarity ladder. These classify _what the badge represents_, not
 
 - Badges show their **tier icon** (⭐ to ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐) and **rarity color**
 - Badge image assets are served from `public/badges/<category>/<assetName>`
+- The Awards tab uses `public/awards/awards-background.png` as a full-page fantasy museum scene. It shows one award wing at a time with the matching banner asset from `public/awards/banner/`, then places exactly 10 awards on `public/awards/shelf.png` using fixed exhibit positions: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf.
+- Awards shelf placement is driven by a normalized two-row anchor grid. Every badge, platform, spotlight, tooltip, and hover lift shares the same bottom-center shelf coordinate so platforms stay aligned in straight rows.
+- The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for better readability.
 - Unearned badges appear dimmed with "???" as the name
 - Special category badges show their **category emoji** instead of tier icon
 - Badge tooltip shows: name, description, unlock progress (if partial)

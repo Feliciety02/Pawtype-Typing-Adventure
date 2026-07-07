@@ -97,4 +97,5 @@ Every world is a complete visual theme with its own color palette, ambient parti
 7. Adventure node cards load image sets from \`/worlds\` when available; locked nodes use \`/icons/lock.png\` as a larger colored centered overlay without a separate lock panel
 8. Adventure stage cards automatically measure transparent PNG margins at runtime and offset the node art so the visible top edge aligns consistently across different world image sets
 9. Settings shows only unlocked worlds in the inline World Wardrobe grid
+10. Perfect-practice confetti now uses a single signature emoji per world theme so celebration bursts stay visually consistent with the active world
 `;

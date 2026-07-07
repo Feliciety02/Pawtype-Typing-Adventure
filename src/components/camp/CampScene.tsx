@@ -1,50 +1,32 @@
-import { useEffect, useState } from "react";
-import { AmbientLayer } from "./ambient/AmbientLayer";
+import { useState } from "react";
 import {
-  CabinModal,
   ComingSoonModal,
   PaintersTentModal,
   PetNurseryModal,
   SupplyWagonModal,
   TrainingBoardModal,
 } from "./modals/CampModals";
-import { WanderingPet } from "./WanderingPet";
-import { getCampTier, nextTierLevel } from "../../lib/camp/progression";
+import { InventoryPage } from "../inventory/InventoryPage";
+import { getCampTier } from "../../lib/camp/progression";
 import { CampBuildings } from "../../lib/camp/assets/buildings";
-import { getTimeOfDay, TIME_LABEL, TIME_OVERLAY } from "../../lib/camp/timeOfDay";
-import { useQuests } from "../../lib/game/quests";
 import { useGame } from "../../lib/game/store";
-import { getDailyReward, xpForLevel } from "../../lib/game/types";
-import { PixelIcon } from "../../lib/icons/PixelIcon";
-import { useWorld } from "../shared/WorldTheme";
+import { getDailyReward } from "../../lib/game/types";
+import { WorldRenderer } from "../world/WorldRenderer";
 import { CampBuilding } from "./CampBuilding";
 
-type OpenBuilding = "blacksmith" | "cabin" | "library" | "mailbox" | "nursery" | "tent" | "wagon";
+type CampPage = "cabin";
+type OpenBuilding = "blacksmith" | "library" | "mailbox" | "nursery" | "tent" | "wagon";
 
-const CAMP_BACKGROUND_BY_TIME = {
-  morning: "/camp/scenes/campscene-background-morning.png",
-  afternoon: "/camp/scenes/campscene-background-afternoon.png",
-  evening: "/camp/scenes/campscene-background-evening.png",
-  night: "/camp/scenes/campscene-background-evening.png",
-} as const;
+const CAMP_STATIC_ENVIRONMENT = "/camp/scenes/campscene-background-morning.png";
 
 export function CampScene() {
   const { state, dispatch } = useGame();
-  const { world } = useWorld();
   const { player, inventory } = state;
   const tier = getCampTier(player.level);
-  const activePet =
-    inventory.pets.find((pet) => pet.type === inventory.activePet) ?? inventory.pets[0] ?? null;
-  const quests = useQuests();
 
-  const [time, setTime] = useState(() => getTimeOfDay());
   const [fading, setFading] = useState(false);
+  const [activePage, setActivePage] = useState<CampPage | null>(null);
   const [openBuilding, setOpenBuilding] = useState<OpenBuilding | null>(null);
-
-  useEffect(() => {
-    const intervalId = window.setInterval(() => setTime(getTimeOfDay()), 60_000);
-    return () => window.clearInterval(intervalId);
-  }, []);
 
   const triggerFade = () => {
     setFading(true);
@@ -60,20 +42,16 @@ export function CampScene() {
     }
   };
 
-  const needed = xpForLevel(player.level);
-  const xpPct = needed > 0 ? Math.min(Math.round((player.xp / needed) * 100), 100) : 0;
-  const nextTier = nextTierLevel(player.level);
   const open = (building: OpenBuilding) => setOpenBuilding(building);
-  const sceneBackground = CAMP_BACKGROUND_BY_TIME[time];
+  const openCabin = () => {
+    setOpenBuilding(null);
+    setActivePage("cabin");
+  };
 
   return (
-    <div
-      className="camp-scene"
-      data-theme-fading={fading}
-      style={{ ["--camp-scene-bg" as string]: `url("${sceneBackground}")` }}
-    >
-      <div className="camp-scene-background camp-layer" aria-hidden="true" />
-      <AmbientLayer world={world} time={time} />
+    <div className="camp-scene" data-theme-fading={fading}>
+      <div className="camp-scene-world">
+        <WorldRenderer environmentSrc={CAMP_STATIC_ENVIRONMENT} />
 
       <div className="camp-layer">
         <CampBuilding
@@ -81,45 +59,44 @@ export function CampScene() {
           asset={CampBuildings.library}
           label="Library"
           x={50}
-          y={24}
-          width={172}
+          y={32}
+          width={158}
           onClick={() => open("library")}
         />
         <CampBuilding
           id="cabin"
           asset={CampBuildings.cabin}
           label="The Cabin"
-          x={22}
-          y={39}
-          width={164}
-          locked={!tier.hasCabin}
-          onClick={() => open("cabin")}
+          x={27}
+          y={40}
+          width={160}
+          onClick={openCabin}
         />
         <CampBuilding
           id="tent"
           asset={CampBuildings.paintersTent}
           label="Painter's Tent"
-          x={72}
-          y={34}
-          width={170}
+          x={70}
+          y={38}
+          width={160}
           onClick={() => open("tent")}
         />
         <CampBuilding
           id="nursery"
           asset={CampBuildings.petNursery}
           label="Pet Nursery"
-          x={22}
-          y={64}
-          width={158}
+          x={34}
+          y={60}
+          width={145}
           onClick={() => open("nursery")}
         />
         <CampBuilding
           id="wagon"
           asset={CampBuildings.supplyWagon}
           label={canClaim ? "Supply Wagon · Ready!" : "Supply Wagon"}
-          x={87}
+          x={82}
           y={47}
-          width={170}
+          width={158}
           glow={canClaim}
           onClick={() => open("wagon")}
         />
@@ -127,19 +104,18 @@ export function CampScene() {
           id="mailbox"
           asset={CampBuildings.mailbox}
           label="Mailbox"
-          x={35}
-          y={63}
-          width={126}
-          locked={!tier.hasMailbox}
+          x={37}
+          y={47}
+          width={84}
           onClick={() => open("mailbox")}
         />
         <CampBuilding
           id="blacksmith"
           asset={CampBuildings.blacksmith}
           label="Blacksmith"
-          x={66}
-          y={61}
-          width={162}
+          x={65}
+          y={64}
+          width={148}
           onClick={() => open("blacksmith")}
         />
       </div>
@@ -150,40 +126,31 @@ export function CampScene() {
           asset={CampBuildings.campfire}
           label="Campfire"
           x={50}
-          y={50}
-          width={164}
+          y={53}
+          width={135}
         />
       </div>
 
-      <div className="camp-layer">
-        <WanderingPet pet={activePet} />
       </div>
 
-      <div className="camp-hud-card">
-        <div className="camp-hud-row">
-          <span>Level {player.level}</span>
-          <span style={{ color: "var(--coin)" }}>
-            <PixelIcon emoji="🪙" /> {player.coins.toLocaleString()}
-          </span>
-        </div>
-        <div className="camp-hud-xpbar">
-          <div style={{ width: `${xpPct}%` }} />
-        </div>
-        <div className="camp-hud-row" style={{ marginTop: 6, opacity: 0.8 }}>
-          <span>
-            {quests[0].title}: {quests[0].value}
-          </span>
-          {nextTier && <span>Next: Lv {nextTier}</span>}
-        </div>
-      </div>
-
-      <div className="camp-tier-chip" title={`Time: ${TIME_LABEL[time]}`}>
-        {tier.label} · {TIME_LABEL[time]}
-      </div>
-
-      <div className="camp-time-overlay" style={{ background: TIME_OVERLAY[time] }} />
-
-      {openBuilding === "cabin" && <CabinModal onClose={() => setOpenBuilding(null)} />}
+      {activePage === "cabin" && (
+        <section className="camp-interior-page" aria-label="Cabin bag inventory">
+          <div className="camp-interior-toolbar">
+            <button
+              type="button"
+              className="camp-interior-back"
+              onClick={() => setActivePage(null)}
+            >
+              ← Back to Camp
+            </button>
+            <div>
+              <h1>Cabin Bag</h1>
+              <p>Your eggs, pets, rewards, and camp collection live inside the cabin.</p>
+            </div>
+          </div>
+          <InventoryPage />
+        </section>
+      )}
       {openBuilding === "tent" && (
         <PaintersTentModal onClose={() => setOpenBuilding(null)} onThemeChange={triggerFade} />
       )}

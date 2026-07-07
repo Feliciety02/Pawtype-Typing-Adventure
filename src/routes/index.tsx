@@ -23,9 +23,6 @@ const StatsView = lazy(() =>
 const SettingsPage = lazy(() =>
   import("@/components/settings/SettingsPage").then((m) => ({ default: m.SettingsPage })),
 );
-const InventoryPage = lazy(() =>
-  import("@/components/inventory/InventoryPage").then((m) => ({ default: m.InventoryPage })),
-);
 import { PixelLoginScreen } from "@/components/auth/PixelLoginScreen";
 
 export const Route = createFileRoute("/")({
@@ -50,6 +47,8 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [view, setView] = useState<View>("hub");
   const { user, isDemo, isLoading } = useAuth();
+  const isCampView = view === "hub";
+  const isAwardsView = view === "achievements";
 
   if (isLoading) {
     return (
@@ -66,10 +65,15 @@ function Index() {
   }
 
   return (
-    <main className="app-shell">
+    <main
+      className={`app-shell ${isCampView ? "app-shell--camp" : ""} ${isAwardsView ? "app-shell--awards" : ""}`}
+    >
       <Header view={view} onViewChange={setView} />
 
-      <div key={view} className="app-view-shell view-enter">
+      <div
+        key={view}
+        className={`app-view-shell ${isCampView ? "app-view-shell--camp" : ""} ${isAwardsView ? "app-view-shell--awards" : ""} view-enter`}
+      >
         <Suspense
           fallback={
             <div className="text-center font-pixel text-[0.65rem] text-muted-foreground">
@@ -99,7 +103,7 @@ function Index() {
             </section>
           )}
           {view === "achievements" && (
-            <section>
+            <section className="awards-section">
               <AchievementsCard />
             </section>
           )}
@@ -113,18 +117,9 @@ function Index() {
               <SettingsPage />
             </section>
           )}
-          {view === "inventory" && (
-            <section>
-              <InventoryPage />
-            </section>
-          )}
         </Suspense>
       </div>
 
-      <footer className="app-footer text-center font-pixel text-[0.65rem] text-muted-foreground">
-        Made with <img src="/icons/cherry-blossom.png" alt="" className="pixel-icon" /> in a cozy
-        pixel cabin · Pawtype v0.1
-      </footer>
     </main>
   );
 }

@@ -8,6 +8,7 @@ import { useWorld } from "../../shared/WorldTheme";
 import type { WorldId } from "../../shared/WorldTheme";
 import { xpForLevel, petEvolutionStage } from "../../../lib/game/types";
 import { PixelIcon } from "../../../lib/icons/PixelIcon";
+import { InventoryPage } from "../../inventory/InventoryPage";
 
 /* Small shared wrapper */
 function CampModalHeader({
@@ -234,6 +235,16 @@ export function ComingSoonModal({
       <div className="pixel-card-sm p-4 font-pixel text-[0.65rem] text-muted-foreground">
         {children ?? "This building is being built. Level up to unlock new camp features!"}
       </div>
+    </ModalShell>
+  );
+}
+
+/* --- Bag / Inventory ---------------------------------------- */
+export function InventoryModal({ onClose }: { onClose: () => void }) {
+  return (
+    <ModalShell ariaLabel="Bag — Inventory" onClose={onClose} className="max-w-4xl">
+      <CampModalHeader icon="🎒" title="Bag" subtitle="Your eggs, pets, rewards, and collection" />
+      <InventoryPage />
     </ModalShell>
   );
 }

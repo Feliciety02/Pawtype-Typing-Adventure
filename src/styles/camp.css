@@ -4,26 +4,20 @@
    ============================================================ */
 
 .camp-root {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
+  display: contents;
 }
 
 /* --- Scene ------------------------------------------------- */
 .camp-scene {
   position: relative;
+  flex: 1 1 auto;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  min-height: 380px;
-  max-height: 640px;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
-  border: 3px solid var(--color-border);
-  border-radius: 10px;
-  box-shadow:
-    0 0 0 3px color-mix(in oklab, var(--color-primary) 25%, transparent) inset,
-    0 8px 0 -4px color-mix(in oklab, var(--color-border) 60%, transparent),
-    0 16px 32px -12px rgba(0, 0, 0, 0.35);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   image-rendering: pixelated;
   background: linear-gradient(
     180deg,
@@ -33,16 +27,190 @@
   );
 }
 
+.camp-scene-world {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: 0;
+  height: max(100%, 56.25vw);
+  aspect-ratio: 16 / 9;
+  transform: translateX(-50%);
+  overflow: hidden;
+}
+
 .camp-scene-background {
   z-index: 0;
   background-image: var(--camp-scene-bg);
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   transition:
     opacity 700ms ease,
     filter 700ms ease,
     background-image 700ms ease;
+}
+
+/* --- Adaptive world atmosphere ----------------------------- */
+.world-renderer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #082040;
+  image-rendering: pixelated;
+}
+
+.world-renderer > * {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.world-sky-layer {
+  z-index: 0;
+}
+
+.world-sky-image {
+  position: absolute;
+  inset: 0;
+  transition: opacity 60s linear;
+}
+
+.world-sky-image-next {
+  opacity: 0;
+}
+
+.world-stars {
+  z-index: 1;
+  background-image:
+    radial-gradient(circle at 8% 18%, rgba(255, 255, 255, 0.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 18% 32%, rgba(255, 255, 255, 0.58) 0 1px, transparent 2px),
+    radial-gradient(circle at 33% 14%, rgba(255, 255, 255, 0.72) 0 1px, transparent 2px),
+    radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.62) 0 1px, transparent 2px),
+    radial-gradient(circle at 64% 12%, rgba(255, 255, 255, 0.82) 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 27%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 91% 16%, rgba(255, 255, 255, 0.75) 0 1px, transparent 2px);
+  background-size: 320px 180px;
+  transition: opacity 60s linear;
+}
+
+.world-constellations {
+  z-index: 2;
+  opacity: 0;
+  background:
+    linear-gradient(28deg, transparent 48%, rgba(210, 228, 255, 0.35) 49% 51%, transparent 52%)
+      18% 20% / 150px 80px no-repeat,
+    linear-gradient(-18deg, transparent 48%, rgba(210, 228, 255, 0.32) 49% 51%, transparent 52%)
+      62% 24% / 180px 96px no-repeat,
+    radial-gradient(circle at 21% 23%, rgba(230, 240, 255, 0.85) 0 1px, transparent 2px),
+    radial-gradient(circle at 27% 27%, rgba(230, 240, 255, 0.85) 0 1px, transparent 2px),
+    radial-gradient(circle at 66% 26%, rgba(230, 240, 255, 0.85) 0 1px, transparent 2px),
+    radial-gradient(circle at 74% 21%, rgba(230, 240, 255, 0.85) 0 1px, transparent 2px);
+  transition: opacity 60s linear;
+}
+
+.world-moon,
+.world-sun {
+  z-index: 3;
+  width: 72px;
+  height: 72px;
+  transform: translate(-50%, -50%);
+  transition:
+    left 60s linear,
+    top 60s linear,
+    opacity 60s linear;
+}
+
+.world-sun {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff8b8 0 24%, #ffe16f 25% 56%, rgba(255, 174, 74, 0.58) 57% 70%, transparent 71%);
+  filter:
+    drop-shadow(0 0 calc(18px + var(--world-sun-glow, 0) * 30px) rgba(255, 221, 120, 0.9))
+    drop-shadow(0 0 calc(32px + var(--world-sun-glow, 0) * 52px) rgba(255, 164, 70, 0.52));
+}
+
+.world-moon {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 38%, #f7fbff 0 10%, transparent 11%),
+    radial-gradient(circle at 58% 62%, rgba(160, 180, 210, 0.45) 0 8%, transparent 9%),
+    radial-gradient(circle, #dfe9f8 0 55%, #aab8d5 56% 69%, transparent 70%);
+  filter:
+    drop-shadow(0 0 calc(12px + var(--world-moon-glow, 0) * 34px) rgba(210, 228, 255, 0.75))
+    drop-shadow(0 0 calc(24px + var(--world-moon-glow, 0) * 42px) rgba(115, 148, 220, 0.38));
+}
+
+.world-static-environment {
+  z-index: 6;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  backface-visibility: hidden;
+  contain: paint;
+  transform: translateZ(0);
+  will-change: auto;
+}
+
+.world-cloud-tint {
+  z-index: 7;
+  opacity: 0.3;
+  mix-blend-mode: soft-light;
+  mask-image: linear-gradient(180deg, #000 0 38%, transparent 60%);
+}
+
+.world-water-reflection {
+  z-index: 8;
+  background:
+    radial-gradient(ellipse at 22% 78%, rgba(255, 235, 165, 0.5), transparent 18%),
+    radial-gradient(ellipse at 70% 82%, rgba(210, 228, 255, 0.44), transparent 16%);
+  mix-blend-mode: screen;
+  transition: opacity 60s linear;
+}
+
+.world-lighting-overlay {
+  z-index: 24;
+  mix-blend-mode: multiply;
+  transition: background 60s linear;
+}
+
+.world-particles {
+  z-index: 28;
+}
+
+.world-particle {
+  position: absolute;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.76;
+  will-change: transform, opacity;
+}
+
+.world-particle-pollen {
+  color: rgba(255, 238, 146, 0.9);
+  animation: world-particle-float ease-in-out infinite;
+}
+
+.world-particle-butterflies {
+  color: rgba(255, 115, 164, 0.85);
+  animation: world-butterfly-drift ease-in-out infinite;
+}
+
+.world-particle-dust {
+  color: rgba(255, 184, 93, 0.9);
+  animation: world-particle-float ease-in-out infinite;
+}
+
+.world-particle-fireflies {
+  color: rgba(177, 255, 177, 0.95);
+  text-shadow: 0 0 8px rgba(150, 255, 160, 0.95);
+  animation: world-firefly-drift ease-in-out infinite;
+}
+
+.world-particle-shooting-star {
+  color: rgba(230, 245, 255, 0.95);
+  text-shadow: 0 0 10px rgba(180, 220, 255, 0.9);
+  animation: world-shooting-star linear infinite;
 }
 
 .camp-scene[data-theme-fading="true"] .camp-layer {
@@ -53,6 +221,10 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+.camp-scene-world > .camp-layer {
+  z-index: 20;
 }
 
 .camp-layer .camp-building {
@@ -66,9 +238,68 @@
 .camp-time-overlay {
   position: absolute;
   inset: 0;
+  z-index: 5;
   pointer-events: none;
   transition: background 800ms ease;
   mix-blend-mode: soft-light;
+}
+
+/* --- Camp interior pages ----------------------------------- */
+.camp-interior-page {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  overflow-y: auto;
+  padding: clamp(7.25rem, 10vw, 9rem) clamp(1rem, 4vw, 4rem) clamp(2rem, 4vw, 4rem);
+  background: transparent;
+}
+
+.camp-interior-toolbar {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.85rem, 2vw, 1.25rem);
+  width: min(100%, 1180px);
+  margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+}
+
+.camp-interior-toolbar h1 {
+  margin: 0;
+  font-family: var(--font-display), var(--font-pixel), monospace;
+  font-size: clamp(1.7rem, 4vw, 3rem);
+  line-height: 0.9;
+}
+
+.camp-interior-toolbar p {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-pixel), monospace;
+  font-size: clamp(0.58rem, 1vw, 0.72rem);
+  color: var(--color-muted-foreground);
+}
+
+.camp-interior-back {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--color-card) 78%, transparent);
+  box-shadow: 0 4px 0 0 var(--color-border);
+  color: var(--color-foreground);
+  cursor: pointer;
+  font-family: var(--font-pixel), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.camp-interior-back:hover {
+  transform: translateY(-1px);
+  background: color-mix(in oklab, var(--coin) 20%, var(--color-card));
+}
+
+.camp-interior-page .inventory-root {
+  width: min(100%, 1180px);
+  margin: 0 auto;
 }
 
 /* --- Ground / sky bands ------------------------------------ */
@@ -163,6 +394,7 @@
 
 .camp-building-img {
   display: block;
+  width: var(--camp-building-size, 140px);
   height: auto;
   image-rendering: pixelated;
   transition: opacity 200ms ease;
@@ -257,55 +489,6 @@
   background: radial-gradient(circle, rgba(255, 180, 60, 0.25) 0%, transparent 60%);
   pointer-events: none;
   animation: camp-glow-pulse 2.4s ease-in-out infinite;
-}
-
-.camp-hud-card {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  max-width: min(360px, 60%);
-  padding: 10px 12px;
-  background: color-mix(in oklab, var(--color-card) 88%, transparent);
-  border: 2px solid var(--color-border);
-  border-radius: 8px;
-  box-shadow: 0 4px 0 0 var(--color-border);
-  backdrop-filter: blur(4px);
-}
-
-.camp-hud-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-family: var(--font-pixel), monospace;
-  font-size: 0.62rem;
-}
-
-.camp-hud-xpbar {
-  height: 8px;
-  background: color-mix(in oklab, var(--color-muted) 60%, transparent);
-  border: 1px solid var(--color-border);
-  border-radius: 3px;
-  margin-top: 6px;
-  overflow: hidden;
-}
-.camp-hud-xpbar > div {
-  height: 100%;
-  background: var(--leaf);
-  transition: width 400ms ease;
-}
-
-.camp-tier-chip {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 6px 10px;
-  background: color-mix(in oklab, var(--color-card) 88%, transparent);
-  border: 2px solid var(--color-border);
-  border-radius: 8px;
-  font-family: var(--font-pixel), monospace;
-  font-size: 0.6rem;
-  box-shadow: 0 4px 0 0 var(--color-border);
 }
 
 /* --- Wandering pet ----------------------------------------- */
@@ -412,8 +595,11 @@
     grid-template-columns: repeat(3, 1fr);
   }
   .camp-scene {
-    aspect-ratio: 4 / 3;
-    min-height: 320px;
+    min-height: 0;
+  }
+
+  .camp-building-img {
+    width: var(--camp-building-size, 120px);
   }
 }
 
@@ -698,6 +884,66 @@
   }
 }
 
+@keyframes world-particle-float {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  20%,
+  80% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate3d(16px, -18px, 0);
+  }
+}
+
+@keyframes world-butterfly-drift {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(-10px, 4px, 0) rotate(-6deg);
+  }
+  20%,
+  80% {
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(26px, -20px, 0) rotate(8deg);
+  }
+}
+
+@keyframes world-firefly-drift {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: translate3d(0, 0, 0) scale(0.85);
+  }
+  35% {
+    opacity: 0.95;
+  }
+  65% {
+    transform: translate3d(22px, -24px, 0) scale(1.15);
+  }
+}
+
+@keyframes world-shooting-star {
+  0%,
+  82% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(-18deg);
+  }
+  86% {
+    opacity: 1;
+  }
+  94%,
+  100% {
+    opacity: 0;
+    transform: translate3d(-220px, 92px, 0) rotate(-18deg);
+  }
+}
+
 /* --- Reduced motion ---------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .camp-campfire-flame,
@@ -713,7 +959,8 @@
   .camp-cloud,
   .camp-star,
   .camp-decor,
-  .camp-chest.is-ready {
+  .camp-chest.is-ready,
+  .world-particle {
     animation: none !important;
   }
 }

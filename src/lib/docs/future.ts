@@ -1,5 +1,39 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - Awards outgoing banner pull-up endpoint was raised farther above the viewport for a cleaner complete retraction.
+
+✅ **Shipped** - Awards incoming banner drop now starts farther above the viewport for a stronger lowered-from-the-rafters effect.
+
+✅ **Shipped** - Awards incoming banner now starts from the same off-screen rafter point where the outgoing banner finishes, making the pull-up and pull-down feel connected.
+
+✅ **Shipped** - Awards incoming banner drop now starts exactly at -150px for a cleaner controlled descent.
+
+✅ **Shipped** - Awards banner retraction now travels far above the viewport so the old banner fully clears the scene before the next one drops.
+
+✅ **Shipped** - Awards wing banners now animate like physical hanging cloth: fast chain-pulled retraction, a short anticipation pause, springy drop-in, squash/stretch landing, pendulum settle, and restrained landing sparkles without fading the banner PNG.
+
+✅ **Shipped** - Awards banner pull-up timing was tightened into a faster game-style snap with a brief anticipation dip before the next banner drops.
+
+✅ **Shipped** - Awards wing banner switching is now sequential: the old banner pulls up first, then the new banner pulls down without opacity fade effects.
+
+✅ **Shipped** - Awards wing switching now uses an overlapping transition: the outgoing banner pulls upward, the incoming banner drops down, and badge relics vanish/reappear with staggered magical pop effects while the platform grid remains fixed.
+
+✅ **Shipped** - Awards shelf layout now uses a reusable normalized upper/lower positioning grid with bottom-center platform anchors, so badges, platforms, spotlights, hover motion, and tooltips all originate from the same shelf coordinates.
+
+✅ **Shipped** - Awards badge frames now anchor to the pedestal baseline instead of using independent idle float animation, keeping relics and platform bases perfectly aligned on the shelf.
+
+✅ **Shipped** - Awards artifact bases were retuned again with tighter badge-to-platform spacing, smaller shelf-footprint ellipses, and stronger rim/contact shading so relics look seated instead of floating.
+
+✅ **Shipped** - Awards artifact pedestal circles were flattened, lowered into the shelf planks, and layered under the badges so each relic reads as properly seated on the museum shelf.
+
+✅ **Shipped** - Awards badge artifacts were enlarged again, and hover motion now affects only the badge frame so each pedestal platform circle stays fixed on the shelf.
+
+✅ **Shipped** - Awards museum shelf and badge artifacts were enlarged while the wing banner and its progress overlay were reduced so the shelf reads as the primary exhibit.
+
+✅ **Shipped** - Awards museum banner and shelf were moved higher together so the exhibit fits better in the viewport at normal browser zoom.
+
+✅ **Shipped** - Awards banner collection count and progress pips were enlarged and shifted right so the active wing progress reads clearly inside the banner artwork.
+
 Planned features and high-potential additions to expand the game.
 
 ---
@@ -14,9 +48,63 @@ Planned features and high-potential additions to expand the game.
 
 ✅ **Shipped** - Camp buildings now share a soft sprite glow for readability across morning, afternoon, evening, and night scenes, with ready buildings keeping a stronger pulsing reward glow.
 
+✅ **Shipped** - The Camp tab now lets CampScene own the full page box directly. Its background and buildings live inside a responsive 16:9 coordinate plane, so building sprites scale with the viewport while keeping their anchor positions tied to the painted scene.
+
+✅ **Shipped** - CampScene's full-page layout now uses a concrete viewport-height flex shell so the scene cannot collapse to an empty Camp tab.
+
+✅ **Shipped** - The Camp scene now starts at the very top of the body and runs behind the shared HUD, with the HUD overlaid instead of reserving blank space above the scene.
+
+✅ **Shipped** - Camp now uses a reusable local-clock day/night renderer. The terrain and building layout stay static while sky, sun, moon, stars, constellations, lighting tint, water highlights, and particles interpolate continuously across the full 24-hour cycle.
+
+✅ **Shipped** - The day/night renderer now updates on minute boundaries with long linear atmosphere transitions and a locked static environment layer, preventing subtle image shimmer while preserving the local-clock cycle.
+
+✅ **Shipped** - The campfire sprite anchor was tuned to sit slightly lower and render 10% smaller, so the center of the campsite reads cleaner against the painted firepit art.
+
+✅ **Shipped** - Camp building anchors and sprite scales were retuned against the full campsite reference image so the cabin, library, tent, wagon, nursery, mailbox, blacksmith, and campfire align with the visible path intersections and clearings on the current full-page scene.
+
+✅ **Shipped** - The outdoor Bag sprite was removed from the camp map. Inventory now lives inside the always-available Cabin entry as a dedicated in-camp Bag page with a Back to Camp control, leaving that outdoor map location available for future home customization.
+
+✅ **Shipped** - Camp building sprites now use reduced fixed pixel widths instead of viewport-fluid sizing, keeping the map objects from growing oversized when the browser window changes.
+
+✅ **Shipped** - The Camp world plane is now top-aligned to the viewport, so the scene image begins at the top of the screen and all building anchors stay locked to that same shifted artwork.
+
 ✅ **Shipped** - The Train page no longer shows the fullscreen control, and its timer/reset toolbar now renders at full opacity above the typing scene overlay.
 
 ✅ **Shipped** - Awards badge artwork now renders larger with roomier responsive grid cells so the collection page feels more readable and closer to the pixel badge art scale.
+
+✅ **Shipped** - The Awards tab now uses \`public/awards/awards-background.png\` as a full-page hall background behind the badge panel, matching Camp's scene-style page treatment.
+
+✅ **Shipped** - The Awards collection now renders as gamified trophy shelves, with each badge category displayed on a wooden shelf and each badge shown in its own collectible slot.
+
+✅ **Shipped** - The Awards trophy cabinet now aligns to the shared HUD width and uses tighter shelf rows so the collection feels integrated with the hall scene instead of floating as oversized cards.
+
+✅ **Shipped** - The Awards page has been refactored into a single-wing fantasy museum experience using the provided museum background, shelf art, and wing banner assets. Awards now sit as positioned collectible artifacts with hover plaques, locked exhibit states, legendary treatment, progress runes, and wing navigation.
+
+✅ **Shipped** - The Awards museum now relies on the main app-shell background only, removing the duplicate in-component background layer that made the hall image appear constrained beneath the HUD.
+
+✅ **Shipped** - Awards museum progress now lives inside the active wing banner, the separate bottom progress panel was removed, and the Awards view shell now spans the full body so the shelf can sit lower against the museum floor artwork.
+
+✅ **Shipped** - Awards museum banner, shelf, artifacts, and wing controls were scaled down for normal 100% browser zoom so the page reads as a full scene instead of oversized foreground UI.
+
+✅ **Shipped** - The Awards wing banner was reduced again and pulled upward so it reads as a background hanging banner rather than a large foreground panel.
+
+✅ **Shipped** - Awards wing controls were moved from the bottom toolbar into a vertical museum sidebar on desktop, keeping the shelf and banner area clear.
+
+✅ **Shipped** - The Awards museum now fills the viewport behind the HUD with overflow hidden, and the banner/shelf stage was lifted so the page does not need to scroll at normal desktop zoom.
+
+✅ **Shipped** - Awards wing banner overlay was simplified to only show collection count and progress pips, and the banner/shelf group was lifted slightly higher.
+
+✅ **Shipped** - Awards banner collection count and progress pips were moved lower inside the banner artwork for better alignment with the empty center space.
+
+✅ **Shipped** - Awards museum dark overlay was removed so the hall background artwork keeps its original brightness.
+
+✅ **Shipped** - Awards shelf now casts a subtle clipped mirror reflection onto the museum floor using the existing shelf artwork.
+
+✅ **Shipped** - The Stats page now has explicit layout classes for summary cards, speed history, mistake heatmap, and recent sessions so the analytics view keeps normal spacing and full-width cards.
+
+✅ **Shipped** - The main app footer was removed, and the large page surfaces for Shop, Awards, Stats, and Adventure world lists are now layout-only wrappers with no added background color, border, or shadow so the themed page backdrop shows through.
+
+✅ **Shipped** - The Train page capture input is now hidden with a dedicated CSS class, removing the raw text field below the KPI row while preserving keyboard focus and typing behavior.
 
 ### Adventure Scene Intro Timing Fix
 ✅ **Shipped** - The adventure quest gameplay card no longer reuses the immediate \`animate-pixel-pop\` utility during the full-scene intro. Its dedicated delayed \`card-pop-in\` sequence now stays hidden while the biome artwork fades in, holds for the showcase, and dims before the typing card appears.
@@ -28,10 +116,10 @@ Planned features and high-potential additions to expand the game.
 ✅ **Shipped** - Practice timer pills now switch between 15s, 30s, and 60s correctly, and the new-test control uses a proper pixel reset icon instead of placeholder text.
 
 ### Adventure Quest Scene Flow
-✅ **Shipped** - Adventure quest typing now stays as a dedicated gameplay scene. Quest clear and fail states fade the live stage into the background, trigger biome-specific celebration or failure particles, and open a separate foreground results card instead of mixing victory UI directly into the typing surface. The live quest HUD now prioritizes the typing panel, keeps the stage image in a compact header card, and moves WPM/accuracy/time/goal into a short stats row below the words. Victory celebrations now use a world-aware emoji/sprite particle engine with denser top-spawned particles, stage-biome weighted emoji sets, optional stage-emoji particles, reusable sprite mapping, and softer failure effects. Quest typing content now loads coherent world-and-node-aware route passages at stage start/retry instead of repeating tiny seed word pools.
+✅ **Shipped** - Adventure quest typing now stays as a dedicated gameplay scene. Quest clear and fail states fade the live stage into the background, trigger biome-specific celebration or failure particles, and open a separate foreground results card instead of mixing victory UI directly into the typing surface. The live quest HUD now prioritizes the typing panel, keeps the stage image in a compact header card, and moves WPM/accuracy/time/goal into a short stats row below the words. Victory celebrations now use a world-aware particle engine with denser top-spawned particles, one signature confetti design per theme for a cleaner silhouette, reusable sprite mapping, and softer failure effects. Quest typing content now loads coherent world-and-node-aware route passages at stage start/retry instead of repeating tiny seed word pools.
 
 ### Theme-Aware Practice Confetti
-✅ **Shipped** - Perfect practice runs now use the same world-aware celebration language as adventure stages: dense emoji particles burst outward from behind the results modal in staggered waves, choose assets from the current theme, mix in universal reward particles, drift with a slower natural fall, and remain behind results modals for readability.
+✅ **Shipped** - Perfect practice runs now use the same world-aware celebration language as adventure stages: dense emoji particles burst outward from behind the results modal in staggered waves, use one signature emoji from the current theme for a cleaner burst silhouette, drift with a slower natural fall, and remain behind results modals for readability.
 
 ### 📚 PawType Curriculum (13 Units)
 ✅ **Shipped** - The Lessons view is now a full 13-unit curriculum with 90+ lessons: Getting Started, Top Row, Bottom Row, Capital Letters, Punctuation, Numbers, Symbols, Common English Words, Sentences, Paragraphs, Speed Building, Real World Typing, and Advanced Challenges. Each unit tracks progress, unlocks the next after completion, and expands into an accordion of lessons with curated word banks, difficulty (beginner -> master), target WPM, and target accuracy. Completion persists to localStorage and lessons can be replayed. Lesson cards now use a roomier three-column quest-card layout with larger status art, vertical lesson details, collectible reward badges, grouped progress actions, and no separate mascot callout column.

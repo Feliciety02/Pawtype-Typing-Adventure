@@ -121,33 +121,21 @@
 .adventure-world-list {
   display: grid;
   gap: 1.35rem;
+  background: none;
 }
 
 .adventure-world-section {
   position: relative;
   padding: 1rem;
-  border: 2px solid color-mix(in oklab, var(--color-border) 68%, transparent);
-  border-radius: 10px;
-  background:
-    radial-gradient(
-      circle at 10% 0%,
-      color-mix(in oklab, var(--color-primary) 10%, transparent),
-      transparent 28%
-    ),
-    color-mix(in oklab, var(--color-card) 70%, transparent);
-  box-shadow: var(--shadow-pixel-sm);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
   overflow: visible;
 }
 
 .adventure-world-section::before {
-  content: "";
-  position: absolute;
-  inset: 0.45rem;
-  z-index: 0;
-  border: 1px dashed color-mix(in oklab, var(--stage-accent, var(--color-border)) 44%, transparent);
-  border-radius: 7px;
-  opacity: 0.55;
-  pointer-events: none;
+  content: none;
 }
 
 .adventure-world-header {
@@ -1092,22 +1080,19 @@
 
 .celebration-particle {
   position: absolute;
-  top: -10vh;
   display: grid;
   place-items: center;
   width: clamp(20px, 2.4vw, 36px);
   height: clamp(20px, 2.4vw, 36px);
   opacity: 0;
   will-change: transform, opacity;
-  transform: translate3d(0, -10vh, 0) rotate(0deg) scale(var(--particle-scale));
   animation: celebration-particle-fall var(--particle-duration) var(--particle-delay)
     cubic-bezier(0.19, 0.78, 0.32, 1) forwards;
 }
 
 .celebration-victory .celebration-particle {
-  top: var(--particle-top, 50%);
-  animation-name: celebration-particle-blowout;
-  animation-timing-function: cubic-bezier(0.16, 0.92, 0.28, 1);
+  animation: celebration-particle-blowup var(--particle-duration) var(--particle-delay)
+    cubic-bezier(0.16, 0.88, 0.28, 1) forwards;
 }
 
 .celebration-particle-img {
@@ -1230,55 +1215,55 @@
   }
 }
 
-@keyframes celebration-particle-blowout {
+@keyframes celebration-particle-blowup {
   0% {
     opacity: 0;
-    transform: translate3d(-50%, -50%, 0) rotate(0deg) scale(calc(var(--particle-scale) * 0.35));
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(calc(var(--particle-scale) * 0.25));
   }
-  7% {
+  8% {
     opacity: 1;
     transform: translate3d(
-        calc(-50% + (var(--particle-burst-x) * 0.72)),
-        calc(-50% + (var(--particle-burst-y) * 0.72)),
+        calc(var(--particle-burst-x) * 0.65),
+        calc(var(--particle-burst-y) * 0.65),
         0
       )
-      rotate(calc(var(--particle-rotate) * 0.34)) scale(calc(var(--particle-scale) * 1.24));
+      rotate(calc(var(--particle-rotate) * 0.3)) scale(calc(var(--particle-scale) * 1.18));
   }
-  22% {
+  24% {
     opacity: 1;
     transform: translate3d(
-        calc(-50% + var(--particle-burst-x)),
-        calc(-50% + var(--particle-burst-y) + 4vh),
+        calc(var(--particle-burst-x) + var(--particle-drift) * 0.15),
+        calc(var(--particle-burst-y) + 6vh),
         0
       )
-      rotate(calc(var(--particle-rotate) * 0.62)) scale(var(--particle-scale));
+      rotate(calc(var(--particle-rotate) * 0.5)) scale(var(--particle-scale));
   }
-  54% {
-    opacity: 0.96;
+  52% {
+    opacity: 0.92;
     transform: translate3d(
-        calc(-50% + var(--particle-burst-x) + (var(--particle-drift) * 0.54)),
-        calc(-50% + var(--particle-burst-y) + 42vh),
+        calc(var(--particle-burst-x) + var(--particle-drift) * 0.5),
+        calc(var(--particle-burst-y) + 44vh),
         0
       )
-      rotate(calc(var(--particle-rotate) * 0.84)) scale(calc(var(--particle-scale) * 0.98));
+      rotate(calc(var(--particle-rotate) * 0.78)) scale(calc(var(--particle-scale) * 0.94));
   }
-  82% {
-    opacity: 0.7;
+  80% {
+    opacity: 0.6;
     transform: translate3d(
-        calc(-50% + var(--particle-burst-x) + (var(--particle-drift) * 0.86)),
-        calc(-50% + var(--particle-burst-y) + 74vh),
+        calc(var(--particle-burst-x) + var(--particle-drift) * 0.85),
+        calc(var(--particle-burst-y) + 80vh),
         0
       )
-      rotate(var(--particle-rotate)) scale(calc(var(--particle-scale) * 0.82));
+      rotate(calc(var(--particle-rotate) * 1.05)) scale(calc(var(--particle-scale) * 0.76));
   }
   100% {
     opacity: 0;
     transform: translate3d(
-        calc(-50% + var(--particle-burst-x) + (var(--particle-drift) * 1.14)),
-        calc(-50% + var(--particle-burst-y) + 108vh),
+        calc(var(--particle-burst-x) + var(--particle-drift) * 1.15),
+        calc(var(--particle-burst-y) + 118vh),
         0
       )
-      rotate(calc(var(--particle-rotate) + 130deg)) scale(calc(var(--particle-scale) * 0.52));
+      rotate(calc(var(--particle-rotate) + 160deg)) scale(calc(var(--particle-scale) * 0.42));
   }
 }
 

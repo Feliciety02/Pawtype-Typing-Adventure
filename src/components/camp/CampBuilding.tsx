@@ -74,7 +74,11 @@ export function CampBuilding({
       data-locked={locked ? "true" : undefined}
       data-clicking={clicking ? "true" : undefined}
       data-glow={glow ? "true" : undefined}
-      style={{ left: `${x}%`, top: `${y}%` }}
+      style={{
+        left: `${x}%`,
+        top: `${y}%`,
+        ["--camp-building-size" as string]: `${width}px`,
+      }}
     >
       <button
         className="camp-building-btn"
@@ -88,7 +92,6 @@ export function CampBuilding({
           src={asset}
           alt={label}
           width={width}
-          style={{ width, height: "auto" }}
         />
         {locked && (
           <div className="camp-building-lock">

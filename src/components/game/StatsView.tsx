@@ -31,7 +31,7 @@ export function StatsView() {
 
   if (loading) {
     return (
-      <div className="pixel-card p-8 text-center">
+      <div className="stats-empty-card pixel-card p-8 text-center">
         <p className="font-pixel text-[0.65rem] text-muted-foreground">Loading stats...</p>
       </div>
     );
@@ -39,7 +39,7 @@ export function StatsView() {
 
   if (sessions.length === 0) {
     return (
-      <div className="pixel-card p-8 text-center">
+      <div className="stats-empty-card pixel-card p-8 text-center">
         <PixelIcon emoji="📊" />
         <h2 className="text-3xl mt-4 mb-2">No Data Yet</h2>
         <p className="font-pixel text-[0.65rem] text-muted-foreground max-w-md mx-auto">
@@ -81,9 +81,9 @@ export function StatsView() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="stats-page">
       {/* Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="stats-summary-grid grid grid-cols-2 sm:grid-cols-4 gap-3">
         <SummaryCard label="Tests" value={String(totalTests)} emoji={<PixelIcon emoji="⌨" />} />
         <SummaryCard
           label="Best WPM"
@@ -106,9 +106,9 @@ export function StatsView() {
       </div>
 
       {/* WPM Chart */}
-      <div className="pixel-card p-5">
+      <div className="stats-panel pixel-card p-5">
         <h3 className="text-2xl mb-4">Speed History</h3>
-        <div style={{ width: "100%", height: 220 }}>
+        <div className="stats-chart">
           <ResponsiveContainer>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" opacity={0.3} />
@@ -135,12 +135,12 @@ export function StatsView() {
       </div>
 
       {/* Mistake heatmap */}
-      <div className="pixel-card p-5">
+      <div className="stats-panel pixel-card p-5">
         <h3 className="text-2xl mb-3">Mistake Heatmap</h3>
         <p className="font-pixel text-[0.55rem] text-muted-foreground mb-3">
           Darker = more mistakes per attempt. Hover to see details.
         </p>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="stats-heatmap">
           {heatmapChars.map((ch) => {
             const total = totalCount.get(ch) ?? 1;
             const mistakes = mistakeCount.get(ch) ?? 0;
@@ -169,10 +169,10 @@ export function StatsView() {
       </div>
 
       {/* Recent sessions */}
-      <div className="pixel-card p-5">
+      <div className="stats-panel pixel-card p-5">
         <h3 className="text-2xl mb-3">Recent Sessions</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full font-pixel text-[0.6rem]">
+        <div className="stats-table-wrap overflow-x-auto">
+          <table className="stats-table w-full font-pixel text-[0.6rem]">
             <thead>
               <tr className="text-muted-foreground uppercase">
                 <th className="text-left pb-2 pr-3">Date</th>
@@ -226,7 +226,7 @@ function SummaryCard({
 }) {
   return (
     <div
-      className="pixel-card-sm p-3 text-center"
+      className="stats-summary-card pixel-card-sm p-3 text-center"
       style={accent ? { borderLeft: `4px solid ${accent}` } : undefined}
     >
       <div className="text-2xl mb-1">{emoji}</div>

@@ -1,5 +1,13 @@
 /* ===== Game HUD navigation ===== */
 .app-shell {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  opacity: 1;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none;
+  box-shadow: none;
   min-height: 100dvh;
   width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
   margin-inline: auto;
@@ -14,15 +22,134 @@
   min-width: 0;
 }
 
-.app-footer {
-  margin-block-start: clamp(2.5rem, 5vw, 4rem);
-  margin-block-end: 0;
+.app-shell--camp {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  opacity: 1;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+.app-shell--camp .game-hud {
+  position: relative;
+  top: auto;
+  z-index: 60;
+  width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
+  margin: clamp(0.75rem, 2vw, 2rem) auto 0;
+}
+
+.app-view-shell--camp {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+}
+
+.app-view-shell--camp > .camp-scene {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.app-shell--awards {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #2d1a13 !important;
+}
+
+.app-shell--awards::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/awards/awards-background.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  image-rendering: pixelated;
+}
+
+.app-shell--awards .game-hud {
+  position: sticky;
+  top: clamp(0.75rem, 2vw, 2rem);
+  z-index: 60;
+  width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
+  margin: clamp(0.75rem, 2vw, 2rem) auto 0;
+}
+
+.app-view-shell--awards {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  margin: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.app-view-shell--awards > .awards-section {
+  min-width: 0;
+}
+
+.app-view-shell--awards .awards-page {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 @media (max-width: 640px) {
   .app-shell {
     width: min(100% - 1rem, 1400px);
     padding-block-start: 0.75rem;
+  }
+
+  .app-shell--camp {
+    width: 100%;
+    padding: 0;
+  }
+
+  .app-shell--camp .game-hud {
+    width: min(100% - 1rem, 1400px);
+    margin-top: 0.5rem;
+  }
+
+  .app-shell--awards .game-hud {
+    width: min(100% - 1rem, 1400px);
+  }
+
+  .app-shell--awards .game-hud {
+    margin-top: 0.5rem;
+  }
+
+  .app-view-shell--awards {
+    width: 100%;
+    margin-top: 0;
   }
 }
 

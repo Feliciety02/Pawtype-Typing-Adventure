@@ -1,187 +1,340 @@
+import { memo, useEffect, useMemo, useState } from "react";
+import { computeAchievements, type Achievement, type BadgeCategory } from "../../lib/game/achievements";
 import { useGame } from "../../lib/game/store";
-import { PixelIcon } from "../../lib/icons/PixelIcon";
-import {
-  computeAchievements,
-  CATEGORY_META,
-  type BadgeCategory,
-} from "../../lib/game/achievements";
-
-const CATEGORIES: BadgeCategory[] = [
-  "speed",
-  "accuracy",
-  "combo",
-  "pet",
-  "adventure",
-  "learning",
-  "streak",
-  "challenge",
-];
 
 const BADGE_BASE = "/badges";
+const AWARDS_BASE = "/awards";
+const WING_TRANSITION_MS = 1120;
 
-const TIER_COLORS: Record<number, string> = {
-  1: "#b0b0b0",
-  2: "#4ade80",
-  3: "#60a5fa",
-  4: "#a78bfa",
-  5: "#fbbf24",
-  6: "#fb923c",
-  7: "#22d3ee",
-  8: "#facc15",
-  9: "#f472b6",
-  10: "#ef4444",
-  11: "#a855f7",
+type MuseumWingId = "speed" | "accuracy" | "challenge" | "pet" | "learning" | "combo";
+
+type MuseumWing = {
+  id: MuseumWingId;
+  category: BadgeCategory;
+  label: string;
+  shortLabel: string;
+  description: string;
+  banner: string;
 };
 
-function BadgeIcon({
-  assetName,
-  category,
+type MuseumStage = {
+  wing: MuseumWing;
+  awards: Achievement[];
+  unlocked: number;
+};
+
+const WINGS: MuseumWing[] = [
+  {
+    id: "speed",
+    category: "speed",
+    label: "Speed Wing",
+    shortLabel: "Speed",
+    description: "Relics earned by pushing your typing pace beyond ordinary limits.",
+    banner: "speed-wing-banner.png",
+  },
+  {
+    id: "accuracy",
+    category: "accuracy",
+    label: "Accuracy Wing",
+    shortLabel: "Accuracy",
+    description: "Treasures reserved for precise, careful, mistake-resistant typing.",
+    banner: "accuracy-wing-banner.png",
+  },
+  {
+    id: "challenge",
+    category: "challenge",
+    label: "Challenge Wing",
+    shortLabel: "Challenge",
+    description: "Heroic honors collected from major milestones and difficult trials.",
+    banner: "challenge-wing-banner.png",
+  },
+  {
+    id: "pet",
+    category: "pet",
+    label: "Companion Wing",
+    shortLabel: "Companion",
+    description: "Keepsakes celebrating the fuzzy friends who travel beside you.",
+    banner: "companion-wing-banner.png",
+  },
+  {
+    id: "learning",
+    category: "learning",
+    label: "Learning Wing",
+    shortLabel: "Learning",
+    description: "Ancient knowledge pieces gained through lessons and steady study.",
+    banner: "learning-wing-banner.png",
+  },
+  {
+    id: "combo",
+    category: "combo",
+    label: "Combo Wing",
+    shortLabel: "Combo",
+    description: "Flame-forged artifacts awarded for long, unbroken typing streaks.",
+    banner: "combo-wing-banner.png",
+  },
+];
+
+const SHELF_COLUMNS = [17, 33.5, 50, 66.5, 83] as const;
+
+const shelfPositions = {
+  lower: SHELF_COLUMNS.map((x) => ({ x, y: 69 })),
+  upper: SHELF_COLUMNS.map((x) => ({ x, y: 34 })),
+} as const;
+
+function getShelfPosition(index: number) {
+  const row = index < 5 ? "lower" : "upper";
+  return {
+    row,
+    ...shelfPositions[row][index % 5],
+  };
+}
+
+const TIER_COLORS: Record<number, string> = {
+  1: "#c9bba6",
+  2: "#66e79a",
+  3: "#76a8ff",
+  4: "#b995ff",
+  5: "#ffc952",
+  6: "#ff9b55",
+  7: "#6df2ff",
+  8: "#fff077",
+  9: "#ff8fd0",
+  10: "#ffd86b",
+};
+
+function MuseumAtmosphere() {
+  return <div className="awards-museum-atmosphere" aria-hidden="true" />;
+}
+
+function WingBanner({
+  wing,
   unlocked,
-  tier,
+  total,
 }: {
-  assetName: string;
-  category: string;
-  unlocked: boolean;
-  tier: number;
+  wing: MuseumWing;
+  unlocked: number;
+  total: number;
 }) {
   return (
-    <div
-      className="badge-icon"
+    <section className="awards-wing-banner" aria-label={`${wing.label} overview`}>
+      <img
+        src={`${AWARDS_BASE}/banner/${wing.banner}`}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
+      <div className="awards-wing-banner-copy">
+        <strong>
+          {unlocked} / {total} collected
+        </strong>
+        <span className="awards-banner-progress" aria-label={`Collection progress ${unlocked} of ${total}`}>
+          {Array.from({ length: total }, (_, index) => (
+            <i key={index} data-filled={index < unlocked ? "true" : "false"} />
+          ))}
+        </span>
+      </div>
+    </section>
+  );
+}
+
+const AwardSlot = memo(function AwardSlot({
+  achievement,
+  index,
+}: {
+  achievement: Achievement;
+  index: number;
+}) {
+  const position = getShelfPosition(index);
+  const isLegendary = index === 9;
+  const percent =
+    achievement.progress && achievement.progress.goal > 0
+      ? Math.min(100, Math.round((achievement.progress.current / achievement.progress.goal) * 100))
+      : achievement.unlocked
+        ? 100
+        : 0;
+
+  return (
+    <button
+      type="button"
+      className={`awards-artifact ${isLegendary ? "awards-artifact--legendary" : ""}`}
+      data-unlocked={achievement.unlocked ? "true" : "false"}
+      data-shelf-row={position.row}
       style={{
-        position: "relative",
-        overflow: "hidden",
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+        ["--artifact-color" as string]: TIER_COLORS[achievement.tier] ?? "#ffd86b",
       }}
+      aria-label={`${achievement.title}, ${achievement.rarity}, ${
+        achievement.unlocked ? "unlocked" : "locked"
+      }`}
     >
-      {unlocked ? (
+      <span className="awards-artifact-spotlight" aria-hidden="true" />
+      <span className="awards-artifact-frame">
+        <span className="awards-artifact-sparkles" aria-hidden="true" />
         <img
-          src={`${BADGE_BASE}/${category}/${assetName}`}
-          alt={`${category} badge tier ${tier}`}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            imageRendering: "pixelated",
-          }}
+          src={`${BADGE_BASE}/${achievement.category}/${achievement.assetName}`}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          draggable={false}
         />
-      ) : (
-        <img
-          src={`${BADGE_BASE}/${category}/${assetName}`}
-          alt={`${category} badge tier ${tier} (locked)`}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            imageRendering: "pixelated",
-            filter: "brightness(0.15) saturate(0.2)",
-            opacity: 0.6,
-          }}
-        />
+        {!achievement.unlocked && <span className="awards-artifact-lock">LOCK</span>}
+      </span>
+      <span className="awards-artifact-pedestal" aria-hidden="true" />
+      <AwardTooltip achievement={achievement} percent={percent} />
+    </button>
+  );
+});
+
+function LegendaryAward({ achievement }: { achievement: Achievement }) {
+  return <AwardSlot achievement={achievement} index={9} />;
+}
+
+function MuseumShelf({ awards }: { awards: Achievement[] }) {
+  return (
+    <section className="awards-museum-shelf" aria-label="Museum shelf">
+      <img
+        className="awards-shelf-art"
+        src={`${AWARDS_BASE}/shelf.png`}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
+      {awards.map((achievement, index) =>
+        index === 9 ? (
+          <LegendaryAward key={achievement.id} achievement={achievement} />
+        ) : (
+          <AwardSlot key={achievement.id} achievement={achievement} index={index} />
+        ),
       )}
+    </section>
+  );
+}
+
+function MuseumStageView({
+  stage,
+  state,
+}: {
+  stage: MuseumStage;
+  state: "enter" | "exit";
+}) {
+  return (
+    <div className="awards-museum-stage" data-transition={state}>
+      <WingBanner wing={stage.wing} unlocked={stage.unlocked} total={stage.awards.length} />
+      <MuseumShelf awards={stage.awards} />
     </div>
+  );
+}
+
+function AwardTooltip({
+  achievement,
+  percent,
+}: {
+  achievement: Achievement;
+  percent: number;
+}) {
+  return (
+    <span className="awards-tooltip">
+      <strong>{achievement.title}</strong>
+      <span>{achievement.rarity}</span>
+      <span>{achievement.description}</span>
+      {achievement.progress && !achievement.unlocked && (
+        <span>
+          Requirement: {achievement.progress.current} / {achievement.progress.goal} ({percent}%)
+        </span>
+      )}
+      <em>{achievement.unlocked ? "Unlocked exhibit" : "Reserved exhibit"}</em>
+    </span>
+  );
+}
+
+function WingNavigation({
+  activeWing,
+  onChange,
+}: {
+  activeWing: MuseumWingId;
+  onChange: (wing: MuseumWingId) => void;
+}) {
+  return (
+    <nav className="awards-wing-nav" aria-label="Award wings">
+      <div className="awards-wing-emblems">
+        {WINGS.map((wing) => (
+          <button
+            key={wing.id}
+            type="button"
+            className="awards-wing-emblem"
+            data-active={wing.id === activeWing ? "true" : "false"}
+            onClick={() => onChange(wing.id)}
+          >
+            {wing.shortLabel}
+          </button>
+        ))}
+      </div>
+    </nav>
   );
 }
 
 export function AchievementsCard() {
   const { state } = useGame();
+  const [activeWing, setActiveWing] = useState<MuseumWingId>("speed");
+  const [previousStage, setPreviousStage] = useState<MuseumStage | null>(null);
+  const [transitionKey, setTransitionKey] = useState(0);
   const achievements = computeAchievements(state);
-  const unlocked = achievements.filter((a) => a.unlocked).length;
+  const wing = WINGS.find((item) => item.id === activeWing) ?? WINGS[0];
+
+  const awards = useMemo(
+    () =>
+      achievements
+        .filter((achievement) => achievement.category === wing.category)
+        .sort((a, b) => a.tier - b.tier)
+        .slice(0, 10),
+    [achievements, wing.category],
+  );
+
+  const unlocked = awards.filter((achievement) => achievement.unlocked).length;
+  const currentStage = useMemo(
+    () => ({ wing, awards, unlocked }),
+    [awards, unlocked, wing],
+  );
+
+  useEffect(() => {
+    if (!previousStage) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setPreviousStage(null);
+    }, WING_TRANSITION_MS);
+
+    return () => window.clearTimeout(timeout);
+  }, [previousStage, transitionKey]);
+
+  function handleWingChange(nextWing: MuseumWingId) {
+    if (nextWing === activeWing) {
+      return;
+    }
+
+    setPreviousStage(currentStage);
+    setActiveWing(nextWing);
+    setTransitionKey((key) => key + 1);
+  }
 
   return (
-    <div className="awards-page pixel-card p-5 sm:p-6">
-      <div className="mb-5">
-        <h2 className="text-3xl leading-none">
-          <PixelIcon emoji="🏆" /> Badges
-        </h2>
-        <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">
-          Collect them all — {unlocked} / {achievements.length} unlocked.
-        </p>
+    <div className="awards-museum">
+      <MuseumAtmosphere />
+      <div className="awards-museum-stage-deck" aria-live="polite">
+        {previousStage && (
+          <MuseumStageView
+            key={`exit-${previousStage.wing.id}-${transitionKey}`}
+            stage={previousStage}
+            state="exit"
+          />
+        )}
+        <MuseumStageView key={`enter-${wing.id}-${transitionKey}`} stage={currentStage} state="enter" />
       </div>
-
-      <div className="space-y-8">
-        {CATEGORIES.map((cat) => {
-          const catBadges = achievements
-            .filter((a) => a.category === cat)
-            .sort((a, b) => a.tier - b.tier);
-          const catUnlocked = catBadges.filter((a) => a.unlocked).length;
-          const meta = CATEGORY_META[cat];
-
-          return (
-            <section key={cat}>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">{meta.emoji}</span>
-                <h3 className="font-pixel text-[0.75rem] leading-tight">{meta.label}</h3>
-                <span className="font-pixel text-[0.5rem] text-muted-foreground ml-auto">
-                  {catUnlocked}/{catBadges.length}
-                </span>
-              </div>
-
-              <div className="awards-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-                {catBadges.map((a) => {
-                  const pct =
-                    a.progress && a.progress.goal > 0
-                      ? Math.min(100, Math.round((a.progress.current / a.progress.goal) * 100))
-                      : a.unlocked
-                        ? 100
-                        : 0;
-
-                  return (
-                    <div
-                      key={a.id}
-                      className="flex flex-col items-center gap-1.5"
-                      title={a.description}
-                      style={a.unlocked ? undefined : { opacity: 0.85 }}
-                    >
-                      <BadgeIcon
-                        assetName={a.assetName}
-                        category={a.category}
-                        unlocked={a.unlocked}
-                        tier={a.tier}
-                      />
-                      <div className="font-pixel text-[0.75rem] leading-tight text-center font-bold">
-                        {a.title}
-                      </div>
-                      <span
-                        className="font-pixel text-[0.5rem]"
-                        style={{
-                          color: a.unlocked
-                            ? (TIER_COLORS[a.tier] ?? "#888")
-                            : "var(--muted-foreground)",
-                        }}
-                      >
-                        {a.rarity}
-                      </span>
-                      {a.progress && !a.unlocked && (
-                        <>
-                          <div className="pixel-bar" style={{ height: 4, width: "80%" }}>
-                            <div
-                              className="h-full transition-all"
-                              style={{
-                                width: `${pct}%`,
-                                background: TIER_COLORS[a.tier] ?? "var(--coin)",
-                              }}
-                            />
-                          </div>
-                          <span className="font-pixel text-[0.4rem] text-muted-foreground">
-                            {a.progress.current} / {a.progress.goal}
-                          </span>
-                        </>
-                      )}
-                      {a.unlocked && (
-                        <span
-                          className="font-pixel text-[0.5rem]"
-                          style={{ color: TIER_COLORS[a.tier] ?? "var(--leaf)" }}
-                        >
-                          ✓ Unlocked
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </div>
+      <WingNavigation activeWing={activeWing} onChange={handleWingChange} />
     </div>
   );
 }

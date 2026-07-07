@@ -16,28 +16,25 @@ type Particle = {
   emoji: string;
 };
 
-const UNIVERSAL = ["🎉", "🎊", "✨", "🌟", "⭐", "🏆", "🪙", "💰", "❤️", "🐾"];
-
-const WORLD_EMOJIS: Record<WorldId, string[]> = {
-  cafe: ["☕", "🍪", "✨", "⭐", "🪙", "💖", "🍃", "🌼"],
-  forest: ["🍃", "🌿", "🍀", "🍄", "🌼", "🦋", "🪵", "✨"],
-  ocean: ["🫧", "💧", "🐚", "⭐", "🪸", "🌊", "✨", "🐠"],
-  sakura: ["🌸", "🌺", "🌼", "🍃", "🍀", "✨", "⭐", "💖", "🦋"],
-  castle: ["👑", "✨", "⭐", "🏆", "🪙", "💎", "⚔️", "❤️"],
-  space: ["⭐", "🌟", "✨", "💫", "☄️", "🪐", "🌙", "🌠"],
-  autumn: ["🍃", "🍂", "🔥", "✨", "⭐", "🪵", "🌲", "🪙"],
-  mushroom: ["🍄", "✨", "⭐", "🍀", "🌸", "🦋", "💜"],
-  sunflower: ["🌻", "🌼", "🌸", "🍃", "🐝", "🦋", "✨", "💛"],
-  "volcanic-forge": ["🔥", "✨", "⚡", "💥", "🪨", "❤️", "🧡", "💛"],
-  "desert-oasis": ["✨", "⭐", "🌼", "🍃", "🪙", "💛", "💎", "🌵"],
-  "steam-punk-workshop": ["⚙️", "🔥", "✨", "⚡", "⭐", "🪙", "💥", "🧡"],
-  "frostveil-kingdom": ["❄️", "🧊", "✨", "⭐", "💎", "🤍"],
+const WORLD_EMOJI: Record<WorldId, string> = {
+  cafe: "☕",
+  forest: "🍃",
+  ocean: "🫧",
+  sakura: "🌸",
+  castle: "👑",
+  space: "🌟",
+  autumn: "🍂",
+  mushroom: "🍄",
+  sunflower: "🌻",
+  "volcanic-forge": "🔥",
+  "desert-oasis": "🌵",
+  "steam-punk-workshop": "⚙️",
+  "frostveil-kingdom": "❄️",
 };
 
-function themedEmojis(world: WorldId, stageEmoji?: string) {
-  const stage = stageEmoji && !stageEmoji.includes("?") ? [stageEmoji] : [];
-  const biome = WORLD_EMOJIS[world] ?? WORLD_EMOJIS.cafe;
-  return [...stage, ...biome, ...biome, ...UNIVERSAL];
+function themedEmoji(world: WorldId, stageEmoji?: string) {
+  if (stageEmoji && !stageEmoji.includes("?")) return stageEmoji;
+  return WORLD_EMOJI[world] ?? WORLD_EMOJI.cafe;
 }
 
 export function Confetti({
@@ -59,7 +56,7 @@ export function Confetti({
       return;
     }
 
-    const assets = themedEmojis(world, stageEmoji);
+    const emoji = themedEmoji(world, stageEmoji);
     const items: Particle[] = Array.from({ length: 300 }, (_, i) => {
       const angle = (-178 + Math.random() * 176) * (Math.PI / 180);
       const force = 220 + Math.random() * 740;
@@ -75,7 +72,7 @@ export function Confetti({
         burstX: Math.cos(angle) * force,
         burstY: Math.sin(angle) * force,
         rotation: -780 + Math.random() * 1560,
-        emoji: assets[i % assets.length],
+        emoji,
       };
     });
     setParticles(items);

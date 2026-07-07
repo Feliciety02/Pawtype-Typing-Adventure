@@ -585,7 +585,7 @@ export function TypingArena({
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
-            className="absolute opacity-0 pointer-events-none"
+            className="typing-capture-input"
           />
         </div>
       ) : (
@@ -714,7 +714,7 @@ export function TypingArena({
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
-                className="absolute opacity-0 pointer-events-none"
+                className="typing-capture-input"
               />
             </div>
 

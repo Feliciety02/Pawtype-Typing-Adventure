@@ -6,9 +6,5 @@ import type { View } from "../layout/Header";
  * Renders the interactive pixel campsite scene without the old bottom dock.
  */
 export function Hub({ onViewChange: _onViewChange }: { onViewChange: (v: View) => void }) {
-  return (
-    <div className="camp-root">
-      <CampScene />
-    </div>
-  );
+  return <CampScene />;
 }
