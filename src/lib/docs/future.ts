@@ -1,5 +1,15 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - Legendary Awards artifacts no longer render the translucent square frame behind the badge; only the relic, glow, sparkles, and fixed pedestal remain.
+
+✅ **Shipped** - Challenge Wing banner progress text and pips now have a dedicated 2px lower alignment without affecting the other Awards wing banners.
+
+✅ **Shipped** - Awards museum shelf, badge artifacts, legendary relics, and fixed pedestal platforms were scaled up together while preserving the normalized shelf-square alignment.
+
+✅ **Shipped** - Awards shelf pedestal platforms were removed from the badge conjure and vanish animations; only the badge frame now lifts, pops, and disappears while the platform stays fixed in its shelf square.
+
+✅ **Shipped** - Awards shelf platforms were rebuilt around fixed normalized cubby anchors so each pedestal sits exactly centered in its shelf square and stays the same size for locked, unlocked, normal, and legendary badges.
+
 ✅ **Shipped** - Awards outgoing banner pull-up endpoint was raised farther above the viewport for a cleaner complete retraction.
 
 ✅ **Shipped** - Awards incoming banner drop now starts farther above the viewport for a stronger lowered-from-the-rafters effect.

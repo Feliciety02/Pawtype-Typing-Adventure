@@ -873,62 +873,62 @@
   animation: awards-shelf-phase-out 520ms ease both;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact {
+.awards-museum-stage[data-transition="enter"] .awards-artifact-frame {
   opacity: 0;
-  animation: awards-artifact-conjure 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: awards-artifact-frame-conjure 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.awards-museum-stage[data-transition="exit"] .awards-artifact {
-  animation: awards-artifact-vanish 420ms ease both;
+.awards-museum-stage[data-transition="exit"] .awards-artifact-frame {
+  animation: awards-artifact-frame-vanish 420ms ease both;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(2),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(2) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(2) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(2) .awards-artifact-frame {
   animation-delay: 40ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(3),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(3) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(3) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(3) .awards-artifact-frame {
   animation-delay: 80ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(4),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(4) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(4) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(4) .awards-artifact-frame {
   animation-delay: 120ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(5),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(5) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(5) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(5) .awards-artifact-frame {
   animation-delay: 160ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(6),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(6) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(6) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(6) .awards-artifact-frame {
   animation-delay: 200ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(7),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(7) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(7) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(7) .awards-artifact-frame {
   animation-delay: 240ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(8),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(8) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(8) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(8) .awards-artifact-frame {
   animation-delay: 280ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(9),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(9) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(9) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(9) .awards-artifact-frame {
   animation-delay: 320ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(10),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(10) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(10) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(10) .awards-artifact-frame {
   animation-delay: 360ms;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(11),
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(11) {
+.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(11) .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(11) .awards-artifact-frame {
   animation-delay: 400ms;
 }
 
@@ -936,13 +936,12 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: min(41%, 580px);
-  min-width: min(100%, 360px);
+  width: min(40%, 480px);
+  min-width: min(100%, 300px);
   margin-bottom: 0;
-  transform: translateY(clamp(-4.35rem, -4.4vw, -2.55rem));
-  transform-origin: 50% 0%;
+  transform: translateY(clamp(-3rem, -3.5vw, -1.5rem));
+  filter: drop-shadow(0 12px 16px rgba(14, 7, 2, 0.4));
   will-change: transform;
-  filter: drop-shadow(0 18px 22px rgba(14, 7, 2, 0.45));
   animation: awards-banner-float 4.8s ease-in-out infinite;
 }
 
@@ -998,6 +997,10 @@
     0 0 12px rgba(255, 225, 144, 0.7);
 }
 
+.awards-wing-banner[data-wing="challenge"] .awards-wing-banner-copy {
+  transform: translateY(2px);
+}
+
 .awards-wing-banner-copy strong {
   font-family: var(--font-pixel), monospace;
   font-size: clamp(0.42rem, 0.58vw, 0.62rem);
@@ -1029,8 +1032,10 @@
 
 .awards-museum-shelf {
   position: relative;
-  width: min(70%, 1020px);
+  width: min(78%, 1160px);
   aspect-ratio: 1435 / 684;
+  --awards-platform-width: clamp(86px, 7.1vw, 130px);
+  --awards-platform-height: clamp(12px, 0.9vw, 17px);
   filter: drop-shadow(0 24px 28px rgba(12, 6, 2, 0.58));
   margin-top: clamp(-0.65rem, -0.8vw, -0.25rem);
 }
@@ -1083,11 +1088,15 @@
 
 .awards-shelf-art {
   position: absolute;
-  inset: 0;
+  top: -10%;
+  left: 0;
+  right: 0;
+  bottom: auto;
   z-index: 1;
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 100%;
   object-fit: contain;
   image-rendering: pixelated;
   user-select: none;
@@ -1096,8 +1105,8 @@
 .awards-artifact {
   position: absolute;
   z-index: 3;
-  width: clamp(88px, 8.7vw, 146px);
-  height: clamp(106px, 10.4vw, 174px);
+  width: clamp(130px, 12.5vw, 210px);
+  height: clamp(155px, 15vw, 250px);
   padding: 0;
   border: 0;
   background: transparent;
@@ -1122,7 +1131,7 @@
 .awards-artifact-spotlight {
   position: absolute;
   left: 50%;
-  bottom: calc(5% - 8px);
+  bottom: calc(var(--awards-platform-height) * -0.35);
   z-index: 2;
   width: 150%;
   height: 126%;
@@ -1145,7 +1154,7 @@
 .awards-artifact-frame {
   position: absolute;
   left: 50%;
-  bottom: calc(5% - 7px);
+  bottom: clamp(2px, 0.28vw, 5px);
   z-index: 3;
   display: grid;
   place-items: center;
@@ -1196,12 +1205,10 @@
 
 .awards-artifact-pedestal {
   position: absolute;
-  left: 50%;
-  top: 95%;
   z-index: 1;
-  width: 66%;
-  height: 10%;
-  transform: translateX(-50%);
+  width: var(--awards-platform-width);
+  height: var(--awards-platform-height);
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   background:
     radial-gradient(ellipse at 50% 24%, rgba(255, 232, 175, 0.46), transparent 54%),
@@ -1219,45 +1226,54 @@
   right: 5%;
   bottom: 12%;
   z-index: 5;
-  padding: 0.18rem 0.28rem;
+  display: grid;
+  place-items: center;
+  width: clamp(16px, 2.2vw, 28px);
+  height: clamp(16px, 2.2vw, 28px);
+  padding: 2px;
   border: 1px solid rgba(255, 235, 180, 0.45);
   border-radius: 4px;
   background: rgba(48, 36, 28, 0.78);
-  color: #f1d7a3;
-  font-family: var(--font-pixel), monospace;
-  font-size: clamp(0.34rem, 0.45vw, 0.46rem);
-  letter-spacing: 0.08em;
+}
+
+.awards-artifact-lock-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .awards-artifact-sparkles {
   position: absolute;
   inset: -8%;
   z-index: 4;
-  opacity: 0;
-  background:
-    radial-gradient(circle at 18% 24%, #fff8bc 0 2px, transparent 3px),
-    radial-gradient(circle at 82% 36%, #fff8bc 0 2px, transparent 3px),
-    radial-gradient(circle at 62% 8%, #fff8bc 0 1px, transparent 2px);
-  animation: awards-sparkle-twinkle 1.8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .awards-artifact[data-unlocked="true"] .awards-artifact-sparkles {
-  opacity: 0.82;
+  opacity: 1;
+}
+
+.awards-sparkle-dot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff8bc;
+  box-shadow: 0 0 3px #ffeca6;
+  animation: awards-sparkle-float var(--dot-duration, 2s) ease-in-out var(--dot-delay, 0s) infinite;
 }
 
 .awards-artifact--legendary {
-  width: clamp(104px, 10.3vw, 174px);
-  height: clamp(125px, 12.2vw, 206px);
+  width: clamp(150px, 14vw, 240px);
+  height: clamp(180px, 17vw, 280px);
 }
 
 .awards-artifact--legendary .awards-artifact-frame {
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 42%, rgba(255, 248, 184, 0.52), transparent 46%),
-    linear-gradient(135deg, rgba(255, 232, 120, 0.64), rgba(108, 48, 10, 0.32));
-  box-shadow:
-    inset 0 0 0 3px rgba(255, 225, 107, 0.5),
-    inset 0 0 0 8px rgba(91, 40, 10, 0.26);
+  border-radius: 50% 50% 42% 42%;
+  background: transparent;
+  box-shadow: none;
   animation: awards-legendary-pulse 2.8s ease-in-out infinite;
 }
 
@@ -1380,39 +1396,24 @@
 }
 
 @keyframes awards-banner-pull-down {
-  0%,
   from {
-    transform: translateY(-64vh) rotate(-1.8deg) scaleY(1.04);
-  }
-  50% {
-    transform: translateY(16px) rotate(0.8deg) scaleY(0.96);
-  }
-  66% {
-    transform: translateY(-9px) rotate(-2deg) scaleY(1.02);
-  }
-  80% {
-    transform: translateY(5px) rotate(1.5deg) scaleY(0.985);
-  }
-  91% {
-    transform: translateY(-2px) rotate(-0.8deg) scaleY(1.006);
+    opacity: 0;
+    transform: translateY(-20vh);
   }
   to {
-    transform: translateY(0) rotate(0deg) scaleY(1);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @keyframes awards-banner-pull-up {
-  0% {
-    transform: translateY(0) rotate(0deg) scaleY(1);
+  from {
+    opacity: 1;
+    transform: translateY(0);
   }
-  18% {
-    transform: translateY(10px) rotate(0.4deg) scaleY(0.985);
-  }
-  62% {
-    transform: translateY(-22vh) rotate(-0.8deg) scaleY(1.045);
-  }
-  100% {
-    transform: translateY(-64vh) rotate(-1.2deg) scaleY(1.06);
+  to {
+    opacity: 0;
+    transform: translateY(-16vh);
   }
 }
 
@@ -1503,6 +1504,24 @@
   }
 }
 
+@keyframes awards-artifact-frame-conjure {
+  from {
+    opacity: 0;
+    filter: blur(1px) brightness(1.9) drop-shadow(0 0 20px rgba(255, 230, 137, 0.9));
+    transform: translateX(-50%) translateY(16px) scale(0.76) rotate(-6deg);
+  }
+  58% {
+    opacity: 1;
+    filter: blur(0) brightness(1.35) drop-shadow(0 0 22px rgba(255, 230, 137, 0.72));
+    transform: translateX(-50%) translateY(-8px) scale(1.08) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    filter: drop-shadow(0 10px 8px rgba(10, 4, 1, 0.45));
+    transform: translateX(-50%) translateY(0) scale(1) rotate(0deg);
+  }
+}
+
 @keyframes awards-artifact-vanish {
   from {
     opacity: 1;
@@ -1513,6 +1532,19 @@
     opacity: 0;
     filter: blur(1px) brightness(1.55) drop-shadow(0 0 18px rgba(255, 230, 137, 0.7));
     transform: translate(-50%, -100%) translateY(-18px) scale(0.72) rotate(5deg);
+  }
+}
+
+@keyframes awards-artifact-frame-vanish {
+  from {
+    opacity: 1;
+    filter: drop-shadow(0 10px 8px rgba(10, 4, 1, 0.45));
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    filter: blur(1px) brightness(1.55) drop-shadow(0 0 18px rgba(255, 230, 137, 0.7));
+    transform: translateX(-50%) translateY(-18px) scale(0.72) rotate(5deg);
   }
 }
 
@@ -1535,6 +1567,24 @@
   50% {
     transform: scale(1.04);
     opacity: 1;
+  }
+}
+
+@keyframes awards-sparkle-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(var(--dot-x, -4px), var(--dot-y, -6px)) scale(1);
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.5;
   }
 }
 
@@ -1572,18 +1622,23 @@
     min-width: 0;
   }
 
+  .awards-museum-shelf {
+    --awards-platform-width: clamp(62px, 10.8vw, 96px);
+    --awards-platform-height: clamp(9px, 1.35vw, 14px);
+  }
+
   .awards-wing-banner-copy p {
     display: none;
   }
 
   .awards-artifact {
-    width: clamp(62px, 11.5vw, 108px);
-    height: clamp(76px, 13.5vw, 132px);
+    width: clamp(68px, 12.6vw, 118px);
+    height: clamp(82px, 14.8vw, 144px);
   }
 
   .awards-artifact--legendary {
-    width: clamp(74px, 13vw, 126px);
-    height: clamp(90px, 15vw, 152px);
+    width: clamp(80px, 14.2vw, 138px);
+    height: clamp(96px, 16.4vw, 166px);
   }
 
   .awards-wing-nav {
@@ -1614,7 +1669,8 @@
   .awards-museum-shelf,
   .awards-artifact-frame,
   .awards-artifact-sparkles,
-  .awards-artifact--legendary .awards-artifact-frame {
+  .awards-artifact--legendary .awards-artifact-frame,
+  .awards-sparkle-dot {
     animation: none !important;
   }
 }

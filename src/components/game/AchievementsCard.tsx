@@ -74,19 +74,29 @@ const WINGS: MuseumWing[] = [
   },
 ];
 
-const SHELF_COLUMNS = [17, 33.5, 50, 66.5, 83] as const;
+const SHELF_COLUMNS = [20, 34, 49.5, 65, 79] as const;
 
 const shelfPositions = {
-  lower: SHELF_COLUMNS.map((x) => ({ x, y: 69 })),
-  upper: SHELF_COLUMNS.map((x) => ({ x, y: 34 })),
+  lower: SHELF_COLUMNS.map((x) => ({ x, y: 67 })),
+  upper: SHELF_COLUMNS.map((x) => ({ x, y: 29 })),
+} as const;
+
+const badgePositions = {
+  lower: SHELF_COLUMNS.map((x) => ({ x, y: 70 })),
+  upper: SHELF_COLUMNS.map((x) => ({ x, y: 32 })),
 } as const;
 
 function getShelfPosition(index: number) {
   const row = index < 5 ? "lower" : "upper";
   return {
     row,
-    ...shelfPositions[row][index % 5],
+    ...badgePositions[row][index % 5],
   };
+}
+
+function getPlatformPosition(index: number) {
+  const row = index < 5 ? "lower" : "upper";
+  return shelfPositions[row][index % 5];
 }
 
 const TIER_COLORS: Record<number, string> = {
@@ -138,6 +148,44 @@ function WingBanner({
   );
 }
 
+const DOT_COUNT = 5;
+
+const DOT_DIRECTIONS = [
+  { x: -5, y: -7 },
+  { x: 5, y: -4 },
+  { x: -3, y: -8 },
+  { x: 6, y: -3 },
+  { x: -6, y: -6 },
+  { x: 4, y: -7 },
+  { x: -4, y: -5 },
+  { x: 3, y: -9 },
+];
+
+function SparkleDots() {
+  const dots = useMemo(() => {
+    const result: React.ReactNode[] = [];
+    for (let i = 0; i < DOT_COUNT; i++) {
+      const dir = DOT_DIRECTIONS[Math.floor(Math.random() * DOT_DIRECTIONS.length)];
+      result.push(
+        <span
+          key={i}
+          className="awards-sparkle-dot"
+          style={{
+            top: `${Math.random() * 90 + 5}%`,
+            left: `${Math.random() * 90 + 5}%`,
+            "--dot-x": `${dir.x}px`,
+            "--dot-y": `${dir.y}px`,
+            "--dot-duration": `${(Math.random() * 1.8 + 1.5).toFixed(2)}s`,
+            "--dot-delay": `${(Math.random() * 3).toFixed(2)}s`,
+          } as React.CSSProperties}
+        />,
+      );
+    }
+    return result;
+  }, []);
+  return <>{dots}</>;
+}
+
 const AwardSlot = memo(function AwardSlot({
   achievement,
   index,
@@ -171,7 +219,9 @@ const AwardSlot = memo(function AwardSlot({
     >
       <span className="awards-artifact-spotlight" aria-hidden="true" />
       <span className="awards-artifact-frame">
-        <span className="awards-artifact-sparkles" aria-hidden="true" />
+        <span className="awards-artifact-sparkles" aria-hidden="true">
+          <SparkleDots />
+        </span>
         <img
           src={`${BADGE_BASE}/${achievement.category}/${achievement.assetName}`}
           alt=""
@@ -179,9 +229,12 @@ const AwardSlot = memo(function AwardSlot({
           decoding="async"
           draggable={false}
         />
-        {!achievement.unlocked && <span className="awards-artifact-lock">LOCK</span>}
+        {!achievement.unlocked && (
+          <span className="awards-artifact-lock">
+            <img src="/icons/lock.png" alt="Locked" className="awards-artifact-lock-img" />
+          </span>
+        )}
       </span>
-      <span className="awards-artifact-pedestal" aria-hidden="true" />
       <AwardTooltip achievement={achievement} percent={percent} />
     </button>
   );
@@ -202,6 +255,17 @@ function MuseumShelf({ awards }: { awards: Achievement[] }) {
         decoding="async"
         draggable={false}
       />
+      {awards.map((_, index) => (
+        <span
+          key={index}
+          className="awards-artifact-pedestal"
+          aria-hidden="true"
+          style={{
+            left: `${getPlatformPosition(index).x}%`,
+            top: `${getPlatformPosition(index).y}%`,
+          }}
+        />
+      ))}
       {awards.map((achievement, index) =>
         index === 9 ? (
           <LegendaryAward key={achievement.id} achievement={achievement} />

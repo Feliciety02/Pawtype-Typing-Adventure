@@ -394,7 +394,7 @@
 
 .camp-building-img {
   display: block;
-  width: var(--camp-building-size, 140px);
+  width: var(--camp-building-size, 147px);
   height: auto;
   image-rendering: pixelated;
   transition: opacity 200ms ease;
@@ -599,7 +599,7 @@
   }
 
   .camp-building-img {
-    width: var(--camp-building-size, 120px);
+    width: var(--camp-building-size, 126px);
   }
 }
 

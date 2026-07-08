@@ -2,6 +2,8 @@
 
 Hundreds of collectible badges across 12 prestige tiers and 10 thematic categories. Every badge represents a milestone, a skill mastered, or a secret discovered.
 
+The Awards page presents each active category as a fantasy museum wing. Badge slots use a fixed normalized shelf grid, so each relic and pedestal stays centered in its display square across locked, unlocked, normal, and legendary states.
+
 ---
 
 ## Rarity Ladder

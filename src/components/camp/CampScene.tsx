@@ -58,45 +58,45 @@ export function CampScene() {
           id="library"
           asset={CampBuildings.library}
           label="Library"
-          x={50}
-          y={32}
-          width={158}
+          x={48.8}
+          y={33}
+          width={210}
           onClick={() => open("library")}
         />
         <CampBuilding
           id="cabin"
           asset={CampBuildings.cabin}
           label="The Cabin"
-          x={27}
+          x={26}
           y={40}
-          width={160}
+          width={200}
           onClick={openCabin}
         />
         <CampBuilding
           id="tent"
           asset={CampBuildings.paintersTent}
           label="Painter's Tent"
-          x={70}
+          x={67}
           y={38}
-          width={160}
+          width={168}
           onClick={() => open("tent")}
         />
         <CampBuilding
           id="nursery"
           asset={CampBuildings.petNursery}
           label="Pet Nursery"
-          x={34}
-          y={60}
-          width={145}
+          x={37}
+          y={62}
+          width={152}
           onClick={() => open("nursery")}
         />
         <CampBuilding
           id="wagon"
           asset={CampBuildings.supplyWagon}
           label={canClaim ? "Supply Wagon · Ready!" : "Supply Wagon"}
-          x={82}
-          y={47}
-          width={158}
+          x={79}
+          y={52}
+          width={166}
           glow={canClaim}
           onClick={() => open("wagon")}
         />
@@ -106,16 +106,16 @@ export function CampScene() {
           label="Mailbox"
           x={37}
           y={47}
-          width={84}
+          width={88}
           onClick={() => open("mailbox")}
         />
         <CampBuilding
           id="blacksmith"
           asset={CampBuildings.blacksmith}
           label="Blacksmith"
-          x={65}
-          y={64}
-          width={148}
+          x={62}
+          y={61}
+          width={190}
           onClick={() => open("blacksmith")}
         />
       </div>
@@ -125,9 +125,9 @@ export function CampScene() {
           id="campfire"
           asset={CampBuildings.campfire}
           label="Campfire"
-          x={50}
+          x={48}
           y={53}
-          width={135}
+          width={142}
         />
       </div>
 

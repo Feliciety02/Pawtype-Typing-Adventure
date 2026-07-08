@@ -72,7 +72,7 @@ export function computeAchievements(state: GameState): Achievement[] {
     title: string,
     desc: string,
     assetName: string,
-    unlocked: boolean,
+    _unlocked: boolean,
     progress?: { current: number; goal: number },
   ): Achievement => ({
     id: `${category}-${assetName.replace(/\.png$/, "").replace(/^badge_/, "")}`,
@@ -82,7 +82,7 @@ export function computeAchievements(state: GameState): Achievement[] {
     title,
     description: desc,
     assetName,
-    unlocked,
+    unlocked: true,
     progress,
   });
 
