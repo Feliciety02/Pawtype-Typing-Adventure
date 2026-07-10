@@ -140,7 +140,7 @@ export const THEMES: ThemeItem[] = [
   {
     id: "theme-cafe-preview",
     worldId: "cafe",
-    name: "Cozy Café",
+    name: "Cozy Cafe",
     emoji: "☕",
     price: 0,
     category: "cafe",
@@ -200,12 +200,12 @@ export const THEMES: ThemeItem[] = [
   {
     id: "theme-autumn",
     worldId: "autumn",
-    name: "Autumn Cottage",
+    name: "Cozy Campsite",
     emoji: "🍂",
     price: 150,
     category: "forest",
     unlockLevel: 3,
-    description: "Crisp air & golden leaves.",
+    description: "Lantern glow, pine air, and ember trails.",
   },
   {
     id: "theme-mushroom",

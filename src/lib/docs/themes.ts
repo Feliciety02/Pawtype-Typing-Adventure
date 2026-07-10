@@ -1,4 +1,4 @@
-export const THEMES_DOC = `# Dreaming Worlds — Theme Documentation
+export const THEMES_DOC = `# Dreaming Worlds - Theme Documentation
 
 Every world is a complete visual theme with its own color palette, ambient particle effects, HUD styling, and background artwork.
 
@@ -6,7 +6,7 @@ Every world is a complete visual theme with its own color palette, ambient parti
 
 ## Worlds
 
-### ☕ Cozy Café
+### ☕ Cozy Cafe
 *Warm terracotta & cream.*
 - **Ambient:** Warm glow shimmer
 - **HUD decoration:** ☕
@@ -21,7 +21,7 @@ Every world is a complete visual theme with its own color palette, ambient parti
 ### 🌊 Tide Pool
 *Salt breeze and seafoam.*
 - **Ambient:** Rising bubbles
-- **HUD decoration:** ○
+- **HUD decoration:** ◌
 - **Swatches:** #9bd5e8 · #2f6f9c · #e6f3f8 · #142838
 
 ### 🌸 Sakura Park
@@ -42,47 +42,47 @@ Every world is a complete visual theme with its own color palette, ambient parti
 - **HUD decoration:** ✦
 - **Swatches:** #7ee0d6 · #a06bff · #1b1538 · #0a0820
 
-### 🍂 Autumn Cottage
-*Crisp air & golden leaves.*
+### 🍂 Cozy Campsite
+*Lantern glow, pine air, and ember trails.*
 - **Ambient:** Falling leaves
 - **HUD decoration:** 🍂
 - **Swatches:** #e8b060 · #c25a2a · #fbe8c8 · #3a2218
-- **Shop:** 150🪙
+- **Shop:** 150 coins
 
 ### 🍄 Fairy Mushroom Village
 *Glowing spores & twisted roots.*
 - **Ambient:** Glowing spores
 - **HUD decoration:** 🍄
 - **Swatches:** #d4a0e8 · #7a3a9a · #f2e0f8 · #2a1838
-- **Shop:** 150🪙
+- **Shop:** 150 coins
 
 ### 🌙 Moonlit Garden
 *Silver beams & jasmine scent.*
 - **Ambient:** Floating fireflies
 - **HUD decoration:** 🌙
 - **Swatches:** #a0b8e8 · #3a5a8a · #e0eaf8 · #182038
-- **Shop:** 150🪙
+- **Shop:** 150 coins
 
 ### 🌧️ Rainy Library
 *Steamy windows & old paper.*
 - **Ambient:** Drifting steam
 - **HUD decoration:** 🌧️
 - **Swatches:** #b0a8a0 · #5a524a · #e8e4e0 · #2a2622
-- **Shop:** 150🪙
+- **Shop:** 150 coins
 
 ### ❄️ Snowy Cabin
 *Frosted glass & crackling fire.*
 - **Ambient:** Falling snow
 - **HUD decoration:** ❄️
 - **Swatches:** #c8dce8 · #6090a8 · #e8f0f4 · #1a2830
-- **Shop:** 150🪙
+- **Shop:** 150 coins
 
 ### 🌻 Sunflower Meadow
 *Golden fields & buzzing bees.*
 - **Ambient:** Floating pollen
 - **HUD decoration:** 🌻
 - **Swatches:** #f0d060 · #c08a20 · #fcf0c0 · #382818
-- **Shop:** 150🪙
+- **Shop:** 150 coins
 
 ---
 

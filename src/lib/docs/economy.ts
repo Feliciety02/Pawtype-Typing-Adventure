@@ -1,4 +1,4 @@
-export const ECONOMY_DOC = `# Curiosity Cart — Shop & Economy
+export const ECONOMY_DOC = `# Curiosity Cart - Shop & Economy
 
 Coins are earned by typing, completing stages, and logging in daily. Spend them on pets, themes, and future doodads.
 
@@ -8,9 +8,9 @@ Coins are earned by typing, completing stages, and logging in daily. Spend them 
 
 | Activity | Coins |
 |----------|-------|
-| Typing test | WPM ÷ 2 |
+| Typing test | WPM / 2 |
 | Adventure stage (normal) | goal |
-| Adventure stage (boss) | goal × 2 |
+| Adventure stage (boss) | goal x 2 |
 | Daily reward (day 1) | 100 |
 | Daily reward (day 7) | 1,000 |
 
@@ -18,32 +18,32 @@ Coins are earned by typing, completing stages, and logging in daily. Spend them 
 
 ## Shop Categories
 
-### 🐾 Fuzzy Friends — Pets
+### 🐾 Fuzzy Friends - Pets
 | Item | Price |
 |------|-------|
-| Cat | 300🪙 |
-| Dog | 400🪙 |
-| Fox | 500🪙 |
-| Rabbit | 350🪙 |
-| Panda | 600🪙 |
-| Penguin | 450🪙 |
-| Baby Dragon | 800🪙 |
+| Cat | 300 coins |
+| Dog | 400 coins |
+| Fox | 500 coins |
+| Rabbit | 350 coins |
+| Panda | 600 coins |
+| Penguin | 450 coins |
+| Baby Dragon | 800 coins |
 
-### 🌍 Dreaming Worlds — Theme Unlocks
+### 🌍 Dreaming Worlds - Theme Unlocks
 | Item | Price |
 |------|-------|
-| Autumn Cottage | 150🪙 |
-| Fairy Mushroom Village | 150🪙 |
-| Moonlit Garden | 150🪙 |
-| Rainy Library | 150🪙 |
-| Snowy Cabin | 150🪙 |
-| Sunflower Meadow | 150🪙 |
+| Cozy Campsite | 150 coins |
+| Fairy Mushroom Village | 150 coins |
+| Moonlit Garden | 150 coins |
+| Rainy Library | 150 coins |
+| Snowy Cabin | 150 coins |
+| Sunflower Meadow | 150 coins |
 
-### 🔮 Enchanted Doodads — Utility Items
+### 🔮 Enchanted Doodads - Utility Items
 | Item | Price | Status |
 |------|-------|--------|
-| CRT Filter | 150🪙 | Coming soon |
-| Sparkle Trail | 200🪙 | Coming soon |
+| CRT Filter | 150 coins | Coming soon |
+| Sparkle Trail | 200 coins | Coming soon |
 
 ---
 
@@ -53,10 +53,10 @@ Log in every day to claim bonuses. The 7-day cycle repeats:
 
 | Day | Coins | Bonus |
 |-----|-------|-------|
-| 1 | 100 | — |
+| 1 | 100 | - |
 | 2 | 0 | Secret Theme |
 | 3 | 200 | Cozy Chair |
-| 4 | 0 | 2× XP Boost |
+| 4 | 0 | 2x XP Boost |
 | 5 | 150 | Pet Treat |
 | 6 | 500 | Rare Wallpaper |
 | 7 | 1,000 | Legendary Crown |
@@ -66,8 +66,8 @@ Log in every day to claim bonuses. The 7-day cycle repeats:
 ## XP & Leveling
 
 \`\`\`
-XP earned per test = WPM × 1.5
-XP needed for next level = level × 100
+XP earned per test = WPM x 1.5
+XP needed for next level = level x 100
 \`\`\`
 
 Leveling up grants no direct coin reward but unlocks higher-tier achievements.

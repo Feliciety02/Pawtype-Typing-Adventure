@@ -432,7 +432,7 @@ export function StageRunner({
             id="stage-input"
             name="stage-input"
             aria-label="Type the stage text"
-            className="absolute opacity-0 pointer-events-none"
+            className="typing-capture-input"
           />
         </div>
 

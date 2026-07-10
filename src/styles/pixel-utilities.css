@@ -865,13 +865,7 @@
   animation: awards-banner-pull-up 330ms cubic-bezier(0.68, -0.6, 0.32, 1.6) both;
 }
 
-.awards-museum-stage[data-transition="enter"] .awards-museum-shelf {
-  animation: awards-shelf-phase-in 620ms ease both;
-}
 
-.awards-museum-stage[data-transition="exit"] .awards-museum-shelf {
-  animation: awards-shelf-phase-out 520ms ease both;
-}
 
 .awards-museum-stage[data-transition="enter"] .awards-artifact-frame {
   opacity: 0;
@@ -936,8 +930,8 @@
   position: relative;
   display: grid;
   place-items: center;
-  width: min(40%, 480px);
-  min-width: min(100%, 300px);
+  width: min(48%, 581px);
+  min-width: min(100%, 363px);
   margin-bottom: 0;
   transform: translateY(clamp(-3rem, -3.5vw, -1.5rem));
   filter: drop-shadow(0 12px 16px rgba(14, 7, 2, 0.4));
@@ -986,11 +980,11 @@
 
 .awards-wing-banner-copy {
   position: absolute;
-  inset: 52% 24% 17% 48%;
+  inset: 52% 24% 17% 47%;
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: clamp(0.1rem, 0.3vw, 0.24rem);
+  gap: clamp(0.11rem, 0.33vw, 0.26rem);
   text-align: center;
   text-shadow:
     0 2px 0 rgba(56, 22, 6, 0.85),
@@ -1003,20 +997,20 @@
 
 .awards-wing-banner-copy strong {
   font-family: var(--font-pixel), monospace;
-  font-size: clamp(0.42rem, 0.58vw, 0.62rem);
+  font-size: clamp(0.46rem, 0.64vw, 0.68rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .awards-banner-progress {
   display: flex;
-  gap: clamp(0.14rem, 0.3vw, 0.24rem);
-  margin-top: clamp(0.08rem, 0.24vw, 0.18rem);
+  gap: clamp(0.15rem, 0.33vw, 0.26rem);
+  margin-top: clamp(0.09rem, 0.26vw, 0.2rem);
 }
 
 .awards-banner-progress i {
-  width: clamp(7px, 0.68vw, 11px);
-  height: clamp(7px, 0.68vw, 11px);
+  width: clamp(8px, 0.75vw, 12px);
+  height: clamp(8px, 0.75vw, 12px);
   border: 1px solid rgba(255, 229, 153, 0.64);
   border-radius: 3px;
   background: rgba(23, 10, 20, 0.72);
@@ -1032,12 +1026,13 @@
 
 .awards-museum-shelf {
   position: relative;
-  width: min(78%, 1160px);
+  width: min(70%, 1044px);
   aspect-ratio: 1435 / 684;
-  --awards-platform-width: clamp(86px, 7.1vw, 130px);
-  --awards-platform-height: clamp(12px, 0.9vw, 17px);
+  --awards-platform-width: clamp(77px, 6.4vw, 117px);
+  --awards-platform-height: clamp(11px, 0.8vw, 15px);
   filter: drop-shadow(0 24px 28px rgba(12, 6, 2, 0.58));
-  margin-top: clamp(-0.65rem, -0.8vw, -0.25rem);
+  margin-top: calc(clamp(-0.34rem, calc(-0.8vw + 5px), 0.05rem) + 5px);
+  transform: translateY(11%);
 }
 
 .awards-museum-shelf::before {
@@ -1105,8 +1100,8 @@
 .awards-artifact {
   position: absolute;
   z-index: 3;
-  width: clamp(130px, 12.5vw, 210px);
-  height: clamp(155px, 15vw, 250px);
+  width: clamp(117px, 11.3vw, 189px);
+  height: clamp(140px, 13.5vw, 225px);
   padding: 0;
   border: 0;
   background: transparent;
@@ -1133,22 +1128,28 @@
   left: 50%;
   bottom: calc(var(--awards-platform-height) * -0.35);
   z-index: 2;
-  width: 150%;
-  height: 126%;
+  width: 165%;
+  height: 138%;
   transform: translateX(-50%);
-  background: radial-gradient(ellipse at 50% 82%, color-mix(in oklab, var(--artifact-color) 30%, transparent), transparent 62%);
+  background:
+    radial-gradient(
+      ellipse at 50% 82%,
+      color-mix(in oklab, var(--artifact-color) 16%, transparent) 0%,
+      color-mix(in oklab, var(--artifact-color) 9%, transparent) 34%,
+      transparent 76%
+    );
   opacity: 0;
   mix-blend-mode: screen;
   transition: opacity 220ms ease;
 }
 
 .awards-artifact[data-unlocked="true"] .awards-artifact-spotlight {
-  opacity: 0.75;
+  opacity: 0.42;
 }
 
 .awards-artifact:hover .awards-artifact-spotlight,
 .awards-artifact:focus-visible .awards-artifact-spotlight {
-  opacity: 1;
+  opacity: 0.62;
 }
 
 .awards-artifact-frame {
@@ -1266,8 +1267,8 @@
 }
 
 .awards-artifact--legendary {
-  width: clamp(150px, 14vw, 240px);
-  height: clamp(180px, 17vw, 280px);
+  width: clamp(135px, 12.6vw, 216px);
+  height: clamp(162px, 15.3vw, 252px);
 }
 
 .awards-artifact--legendary .awards-artifact-frame {
@@ -1471,7 +1472,7 @@
     filter: drop-shadow(0 24px 28px rgba(12, 6, 2, 0.58));
   }
   to {
-    opacity: 0.86;
+    opacity: 0;
     filter: drop-shadow(0 24px 28px rgba(12, 6, 2, 0.58)) saturate(0.78) brightness(0.9);
   }
 }
@@ -1616,15 +1617,16 @@
     overflow: visible;
   }
 
-  .awards-wing-banner,
-  .awards-museum-shelf {
-    width: min(96%, 760px);
+  .awards-wing-banner {
+    width: min(96%, 836px);
     min-width: 0;
   }
 
   .awards-museum-shelf {
-    --awards-platform-width: clamp(62px, 10.8vw, 96px);
-    --awards-platform-height: clamp(9px, 1.35vw, 14px);
+    width: min(96%, 684px);
+    min-width: 0;
+    --awards-platform-width: clamp(56px, 9.7vw, 86px);
+    --awards-platform-height: clamp(8px, 1.2vw, 13px);
   }
 
   .awards-wing-banner-copy p {
@@ -1632,13 +1634,13 @@
   }
 
   .awards-artifact {
-    width: clamp(68px, 12.6vw, 118px);
-    height: clamp(82px, 14.8vw, 144px);
+    width: clamp(61px, 11.3vw, 106px);
+    height: clamp(74px, 13.3vw, 130px);
   }
 
   .awards-artifact--legendary {
-    width: clamp(80px, 14.2vw, 138px);
-    height: clamp(96px, 16.4vw, 166px);
+    width: clamp(72px, 12.8vw, 124px);
+    height: clamp(86px, 14.8vw, 149px);
   }
 
   .awards-wing-nav {

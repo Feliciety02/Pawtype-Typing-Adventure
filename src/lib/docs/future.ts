@@ -1,5 +1,13 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - Awards museum shelf art, badges, and pedestal platforms now move downward together by 30% as one aligned exhibit group.
+
+✅ **Shipped** - Awards museum shelf group was moved 5px lower while keeping badge and pedestal alignment locked inside the shelf.
+
+✅ **Shipped** - Adventure quest stage typing now uses the clipped hidden capture input, removing the visible raw textbox from quest level nodes while preserving keyboard focus.
+
+✅ **Shipped** - Awards artifact spotlight circles were softened into wider fading ambient glows so the shelf alcove highlights are less obvious.
+
 ✅ **Shipped** - Legendary Awards artifacts no longer render the translucent square frame behind the badge; only the relic, glow, sparkles, and fixed pedestal remain.
 
 ✅ **Shipped** - Challenge Wing banner progress text and pips now have a dedicated 2px lower alignment without affecting the other Awards wing banners.
