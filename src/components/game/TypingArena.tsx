@@ -6,7 +6,7 @@ import { PixelCloud } from "./PixelCloud";
 import { PetRoom } from "../shop/PetRoom";
 import { PracticeResultsModal } from "../modals/PracticeResultsModal";
 import { useGame } from "../../lib/game/store";
-import { saveSession, type KeystrokeEvent } from "../../lib/game/stats";
+import type { KeystrokeEvent } from "../../lib/game/types";
 import { Confetti } from "../shared/Confetti";
 import { getCoachFeedback, type CoachInsight } from "../../lib/game/coach";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
@@ -154,16 +154,19 @@ export function TypingArena({
       body: `${wpm} WPM x ${accuracy}% acc x +${xp} XP x +${coins} 🪙`,
     });
 
-    saveSession({
-      timestamp: Date.now(),
-      duration: elapsed,
-      wpm,
-      accuracy,
-      correctChars,
-      mistakes,
-      bestCombo,
-      keystrokes,
-    }).catch(console.warn);
+    dispatch({
+      type: "LOG_TYPING_SESSION",
+      session: {
+        timestamp: Date.now(),
+        duration: elapsed,
+        wpm,
+        accuracy,
+        correctChars,
+        mistakes,
+        bestCombo,
+        keystrokes,
+      },
+    });
   }, [finished]);
 
   // Notify on level up
@@ -275,21 +278,24 @@ export function TypingArena({
         /* ignore */
       }
     }
-    getCoachFeedback({
-      wpm,
-      accuracy,
-      duration: elapsed,
-      correctChars,
-      mistakes,
-      bestCombo,
-      keystrokes: keystrokes.map((k) => ({ correct: k.correct, target: k.target })),
-      isPersonalBest,
-      isPerfect,
-    })
+    getCoachFeedback(
+      {
+        wpm,
+        accuracy,
+        duration: elapsed,
+        correctChars,
+        mistakes,
+        bestCombo,
+        keystrokes: keystrokes.map((k) => ({ correct: k.correct, target: k.target })),
+        isPersonalBest,
+        isPerfect,
+      },
+      state.sessions,
+    )
       .then(setCoachInsight)
       .catch(() => setCoachError(true))
       .finally(() => setCoachLoading(false));
-  }, [finished]);
+  }, [finished, state.sessions]);
 
   const mistakeChars = useMemo(() => {
     return [...new Set(keystrokes.filter((k) => !k.correct).map((k) => k.target))];

@@ -6,7 +6,6 @@ export * from "./eggs";
 export * from "./notifications";
 export * from "./persistence";
 export * from "./quests";
-export * from "./stats";
 export * from "./store";
 export * from "./textGenerator";
 export * from "./themeAssets";

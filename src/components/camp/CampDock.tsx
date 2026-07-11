@@ -1,25 +1,24 @@
-import type { View } from "../layout/Header";
+import { useNavigate } from "@tanstack/react-router";
 
-type DockItem = { icon: string; label: string; view: View };
-
-const DOCK_ITEMS: DockItem[] = [
-  { icon: "⌨", label: "Train", view: "practice" },
-  { icon: "🗺", label: "Quest", view: "adventure" },
-  { icon: "📖", label: "Learn", view: "lessons" },
-  { icon: "🛒", label: "Shop", view: "shop" },
-  { icon: "🎖️", label: "Awards", view: "achievements" },
-  { icon: "⚙", label: "Settings", view: "settings" },
+const DOCK_ITEMS: { icon: string; label: string; path: string }[] = [
+  { icon: "⌨", label: "Train", path: "/practice" },
+  { icon: "🗺", label: "Quest", path: "/adventure" },
+  { icon: "📖", label: "Learn", path: "/lessons" },
+  { icon: "🛒", label: "Shop", path: "/shop" },
+  { icon: "🎖️", label: "Awards", path: "/achievements" },
+  { icon: "⚙", label: "Settings", path: "/settings" },
 ];
 
-export function CampDock({ onViewChange }: { onViewChange: (v: View) => void }) {
+export function CampDock() {
+  const navigate = useNavigate();
   return (
     <div className="camp-dock" role="navigation" aria-label="Camp dock">
       {DOCK_ITEMS.map((item) => (
         <button
-          key={item.view}
+          key={item.path}
           type="button"
           className="camp-dock-btn"
-          onClick={() => onViewChange(item.view)}
+          onClick={() => navigate({ to: item.path })}
         >
           <span className="camp-dock-icon">{item.icon}</span>
           <span>{item.label}</span>

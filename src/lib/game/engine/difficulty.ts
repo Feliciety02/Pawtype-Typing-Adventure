@@ -1,13 +1,12 @@
-import { getSessions, type TypingSession } from "../stats";
+import type { TypingSession } from "../types";
 import { analyzePatterns, drillRecommendation } from "./patterns";
 
 export type DifficultyLevel = "Easy" | "Normal" | "Hard" | "Boss";
 
 let cachedGoals: Record<DifficultyLevel, number> | null = null;
 
-export async function precomputeGoals(): Promise<Record<DifficultyLevel, number>> {
+export async function precomputeGoals(sessions: TypingSession[]): Promise<Record<DifficultyLevel, number>> {
   if (cachedGoals) return cachedGoals;
-  const sessions = await getSessions(15).catch<TypingSession[]>(() => []);
   cachedGoals = {
     Easy: recommendGoal(sessions, "Easy"),
     Normal: recommendGoal(sessions, "Normal"),
@@ -73,9 +72,8 @@ export type DailySuggestion = {
   type: "speed" | "accuracy" | "weakness" | "explore" | "warmup";
 };
 
-export async function dailySuggestion(): Promise<DailySuggestion> {
-  const sessions = await getSessions(20).catch<TypingSession[]>(() => []);
-  const report = await analyzePatterns(20).catch(() => null);
+export async function dailySuggestion(sessions: TypingSession[]): Promise<DailySuggestion> {
+  const report = await analyzePatterns(sessions).catch(() => null);
 
   if (sessions.length === 0) {
     return {
@@ -140,8 +138,7 @@ export type ProgressSummary = {
   consistency: "high" | "medium" | "low";
 };
 
-export async function progressSummary(): Promise<ProgressSummary> {
-  const sessions = await getSessions(30).catch<TypingSession[]>(() => []);
+export async function progressSummary(sessions: TypingSession[]): Promise<ProgressSummary> {
 
   const total = sessions.length;
   const current = sessions[0] ?? null;

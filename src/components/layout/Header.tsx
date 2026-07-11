@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { LogIn, LogOut, Settings, BarChart3, ChevronDown } from "lucide-react";
+import { useNavigate, useLocation } from "@tanstack/react-router";
 import { useGame } from "../../lib/game/store";
 import { useAuth } from "../../hooks/use-auth";
 import { AuthForm } from "../auth/AuthForm";
@@ -13,7 +14,10 @@ import { getNotifications, subscribeNotifications } from "../../lib/game/notific
 export type View =
   "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings" | "inventory";
 
-export function Header({ view, onViewChange }: { view: View; onViewChange: (v: View) => void }) {
+export function Header() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const { state } = useGame();
   const { player, inventory } = state;
   const activePet =
@@ -76,13 +80,13 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
     };
   }, [profileOpen, showAuth]);
 
-  const NAV_ITEMS: { emoji: string; label: string; view: Exclude<View, "stats" | "settings"> }[] = [
-    { emoji: "🏡", label: "Camp", view: "hub" },
-    { emoji: "⌨", label: "Train", view: "practice" },
-    { emoji: "🗺", label: "Quest", view: "adventure" },
-    { emoji: "📖", label: "Learn", view: "lessons" },
-    { emoji: "🛒", label: "Shop", view: "shop" },
-    { emoji: "🎖️", label: "Awards", view: "achievements" },
+  const NAV_ITEMS: { emoji: string; label: string; path: string }[] = [
+    { emoji: "🏡", label: "Camp", path: "/" },
+    { emoji: "⌨", label: "Train", path: "/practice" },
+    { emoji: "🗺", label: "Quest", path: "/adventure" },
+    { emoji: "📖", label: "Learn", path: "/lessons" },
+    { emoji: "🛒", label: "Shop", path: "/shop" },
+    { emoji: "🎖️", label: "Awards", path: "/achievements" },
   ];
 
   const burstSparkles = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -157,7 +161,7 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
               <button
                 className="pixel-btn"
                 onClick={() => {
-                  onViewChange("stats");
+                  navigate({ to: "/stats" });
                   setProfileOpen(false);
                 }}
               >
@@ -167,7 +171,7 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
               <button
                 className="pixel-btn"
                 onClick={() => {
-                  onViewChange("settings");
+                  navigate({ to: "/settings" });
                   setProfileOpen(false);
                 }}
               >
@@ -205,9 +209,9 @@ export function Header({ view, onViewChange }: { view: View; onViewChange: (v: V
       <nav className="hud-nav">
         {NAV_ITEMS.map((item) => (
           <button
-            key={item.view}
-            className={`hud-nav-btn ${view === item.view ? "is-active" : ""}`}
-            onClick={() => onViewChange(item.view)}
+            key={item.path}
+            className={`hud-nav-btn ${currentPath === item.path ? "is-active" : ""}`}
+            onClick={() => navigate({ to: item.path })}
             onMouseEnter={burstSparkles}
           >
             <PixelIcon emoji={item.emoji} className="hud-nav-icon" />

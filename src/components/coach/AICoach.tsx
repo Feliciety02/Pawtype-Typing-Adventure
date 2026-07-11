@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { getCoachFeedback, type CoachInsight } from "../../lib/game/coach";
+import { useGame } from "../../lib/game/store";
 
 const INSIGHT_STYLES: Record<CoachInsight["type"], { emoji: string; accent: string }> = {
   praise: { emoji: "🌟", accent: "var(--color-primary)" },
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export function AICoach(props: Props) {
+  const { state } = useGame();
   const [insight, setInsight] = useState<CoachInsight | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -40,7 +42,7 @@ export function AICoach(props: Props) {
       }
     }
 
-    getCoachFeedback({ ...props, isPersonalBest, isPerfect })
+    getCoachFeedback({ ...props, isPersonalBest, isPerfect }, state.sessions)
       .then((result) => {
         if (!cancelled) {
           setInsight(result);
@@ -65,6 +67,7 @@ export function AICoach(props: Props) {
     props.mistakes,
     props.bestCombo,
     props.keystrokes,
+    state.sessions,
   ]);
 
   if (loading) {

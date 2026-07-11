@@ -8,6 +8,7 @@ const gameStateSchema = z.object({
   player: z.record(z.unknown()),
   inventory: z.record(z.unknown()),
   adventures: z.record(z.unknown()),
+  sessions: z.array(z.record(z.unknown())).optional(),
 });
 
 export const saveGameState = createServerFn({ method: "POST" })
@@ -23,6 +24,7 @@ export const saveGameState = createServerFn({ method: "POST" })
         player: data.player as never,
         inventory: data.inventory as never,
         adventures: data.adventures as never,
+        sessions: data.sessions as never,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "user_id" },
@@ -50,6 +52,7 @@ export const loadGameState = createServerFn({ method: "GET" }).handler(async () 
     player: JSON.parse(JSON.stringify(data.player ?? {})) as JsonValue,
     inventory: JSON.parse(JSON.stringify(data.inventory ?? {})) as JsonValue,
     adventures: JSON.parse(JSON.stringify(data.adventures ?? {})) as JsonValue,
+    sessions: JSON.parse(JSON.stringify(data.sessions ?? [])) as JsonValue,
   };
 });
 

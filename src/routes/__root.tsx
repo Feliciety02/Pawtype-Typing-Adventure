@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "@/lib/utils/lovable-error-reporting";
 import { WorldProvider } from "../components/shared/WorldTheme";
 import { GameProvider } from "../lib/game/store";
+import { AuthProvider } from "../lib/auth/provider";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -151,13 +152,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <GameProvider>
-        <WorldProvider>
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-          <Toaster position="top-right" />
-        </WorldProvider>
-      </GameProvider>
+      <AuthProvider>
+        <GameProvider>
+          <WorldProvider>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+            <Toaster position="top-right" />
+          </WorldProvider>
+        </GameProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

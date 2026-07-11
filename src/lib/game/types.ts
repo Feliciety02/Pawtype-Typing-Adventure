@@ -20,6 +20,26 @@ export type PlayerState = {
   totalMistakes: number;
 };
 
+export type KeystrokeEvent = {
+  charIndex: number;
+  char: string;
+  target: string;
+  correct: boolean;
+  timestamp: number;
+};
+
+export type TypingSession = {
+  id?: number;
+  timestamp: number;
+  duration: number;
+  wpm: number;
+  accuracy: number;
+  correctChars: number;
+  mistakes: number;
+  bestCombo: number;
+  keystrokes: KeystrokeEvent[];
+};
+
 export type AdventureProgress = Record<string, number[]>;
 
 export type Inventory = {
@@ -32,7 +52,10 @@ export type GameState = {
   player: PlayerState;
   inventory: Inventory;
   adventures: AdventureProgress;
+  sessions: TypingSession[];
 };
+
+const MAX_SESSIONS = 100;
 
 export const DEFAULT_PLAYER: PlayerState = {
   coins: 0,
@@ -64,7 +87,10 @@ export const DEFAULT_GAME_STATE: GameState = {
   player: DEFAULT_PLAYER,
   inventory: DEFAULT_INVENTORY,
   adventures: {},
+  sessions: [],
 };
+
+export { MAX_SESSIONS };
 
 export type DailyReward = {
   day: number;

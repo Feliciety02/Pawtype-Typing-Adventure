@@ -1,8 +1,7 @@
-import { getSessions, type TypingSession } from "../stats";
+import type { TypingSession } from "../types";
 import type { PlayerTrends, TrendDirection } from "./types";
 
-export async function loadRecentSessions(count = 15): Promise<TypingSession[]> {
-  const sessions = await getSessions(30);
+export function loadRecentSessions(sessions: TypingSession[], count = 15): TypingSession[] {
   return sessions.slice(0, count);
 }
 

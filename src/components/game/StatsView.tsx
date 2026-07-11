@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import {
   LineChart,
   Line,
@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { getSessions, type TypingSession } from "../../lib/game/stats";
+import { useGame } from "../../lib/game/store";
 
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 
@@ -17,25 +17,8 @@ const CHAR_GRID = "abcdefghijklmnopqrstuvwxyz.,;:'\"!?-()[]{}1234567890@#$%^&*_+
 );
 
 export function StatsView() {
-  const [sessions, setSessions] = useState<TypingSession[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getSessions(100)
-      .then((s) => {
-        setSessions(s);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="stats-empty-card pixel-card p-8 text-center">
-        <p className="font-pixel text-[0.65rem] text-muted-foreground">Loading stats...</p>
-      </div>
-    );
-  }
+  const { state } = useGame();
+  const sessions = state.sessions;
 
   if (sessions.length === 0) {
     return (

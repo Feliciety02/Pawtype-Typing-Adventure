@@ -1,3 +1,4 @@
+import type { TypingSession } from "../types";
 import type { CoachInsight, SessionData } from "./types";
 import { loadRecentSessions, computeTrends, personalBestWpm } from "./history";
 import { analyzePatterns, drillRecommendation } from "./patterns";
@@ -140,8 +141,8 @@ function buildFallbackInsight(session: SessionData): CoachInsight {
   };
 }
 
-async function buildPatternInsight(session: SessionData): Promise<CoachInsight | null> {
-  const report = await analyzePatterns(30);
+async function buildPatternInsight(session: SessionData, sessions: TypingSession[]): Promise<CoachInsight | null> {
+  const report = await analyzePatterns(sessions);
   if (!report || report.topWeakChars.length === 0) return null;
 
   const sessionMistake = topMistakeChar(session.keystrokes);
@@ -172,16 +173,16 @@ async function buildPatternInsight(session: SessionData): Promise<CoachInsight |
   return null;
 }
 
-export async function getCoachFeedback(session: SessionData): Promise<CoachInsight | null> {
+export async function getCoachFeedback(session: SessionData, sessions: TypingSession[]): Promise<CoachInsight | null> {
   try {
-    const recent = await loadRecentSessions(15);
+    const recent = loadRecentSessions(sessions, 15);
     const trends = computeTrends(recent);
     const allTimeBest = recent.length > 0 ? personalBestWpm(recent) : 0;
 
     const trendInsight = trends ? buildTrendInsight(session, trends) : null;
     if (trendInsight) return trendInsight;
 
-    const patternInsight = await buildPatternInsight(session);
+    const patternInsight = await buildPatternInsight(session, sessions);
     if (patternInsight) return patternInsight;
 
     const momentumInsight = buildMomentumInsight(session, allTimeBest);

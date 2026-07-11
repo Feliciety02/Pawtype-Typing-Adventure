@@ -20,10 +20,10 @@ export function AdventureMap() {
   const [adaptiveGoals, setAdaptiveGoals] = useState<Record<Difficulty, number> | null>(null);
 
   useEffect(() => {
-    precomputeGoals()
+    precomputeGoals(state.sessions)
       .then(setAdaptiveGoals)
       .catch(() => console.warn("Failed to precompute adaptive goals"));
-  }, []);
+  }, [state.sessions]);
 
   const goals = adaptiveGoals ?? getCachedGoals();
   const stagesForWorld = useCallback(

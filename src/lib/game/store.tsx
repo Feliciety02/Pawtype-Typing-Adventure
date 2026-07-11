@@ -9,10 +9,12 @@ import {
 } from "react";
 import {
   type GameState,
+  type TypingSession,
   type PetState,
   type PetType,
   DEFAULT_GAME_STATE,
   DEFAULT_STARTER_PET,
+  MAX_SESSIONS,
   xpForLevel,
   petXpForLevel,
   getDailyReward,
@@ -33,6 +35,7 @@ export type GameAction =
   | { type: "REMOVE_ITEM"; itemId: string }
   | { type: "ADD_PET_XP"; amount: number }
   | { type: "LOG_TYPING_TEST"; correctChars: number; mistakes: number }
+  | { type: "LOG_TYPING_SESSION"; session: TypingSession }
   | { type: "LOAD_FROM_CLOUD"; state: GameState }
   | { type: "RESET" };
 
@@ -185,6 +188,14 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         },
       };
 
+    case "LOG_TYPING_SESSION": {
+      const next = [action.session, ...state.sessions];
+      return {
+        ...state,
+        sessions: next.slice(0, MAX_SESSIONS),
+      };
+    }
+
     case "LOAD_FROM_CLOUD":
       return action.state;
 
@@ -269,10 +280,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
     loadGameState().then((cloud) => {
       if (!cloud) return;
       if (!cloud.player || !cloud.inventory) return;
+      const cloudSessions = (cloud.sessions as TypingSession[] | undefined) ?? [];
       const merged: GameState = {
         player: { ...state.player, ...(cloud.player as Partial<typeof state.player>) },
         inventory: { ...state.inventory, ...(cloud.inventory as Partial<typeof state.inventory>) },
         adventures: { ...state.adventures, ...(cloud.adventures as Record<string, number[]>) },
+        sessions: cloudSessions.length > 0 ? cloudSessions : state.sessions,
       };
       dispatch({ type: "LOAD_FROM_CLOUD", state: merged });
     });
@@ -289,6 +302,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           player: { ...state.player } as Record<string, unknown>,
           inventory: { ...state.inventory } as Record<string, unknown>,
           adventures: state.adventures as Record<string, unknown>,
+          sessions: state.sessions as Record<string, unknown>[],
         };
         await saveGameState({ data });
       } catch {

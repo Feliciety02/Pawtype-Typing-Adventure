@@ -1,4 +1,4 @@
-import { getSessions, type TypingSession, type KeystrokeEvent } from "../stats";
+import type { TypingSession, KeystrokeEvent } from "../types";
 
 export type CharStats = {
   char: string;
@@ -153,9 +153,8 @@ function computeZoneStats(events: KeystrokeEvent[]): ZoneStats[] {
     .sort((a, b) => a.accuracy - b.accuracy);
 }
 
-export async function analyzePatterns(sessionCount = 30): Promise<PatternReport | null> {
+export async function analyzePatterns(sessions: TypingSession[]): Promise<PatternReport | null> {
   try {
-    const sessions = await getSessions(sessionCount);
     if (sessions.length === 0) return null;
 
     const events = extractEvents(sessions);
