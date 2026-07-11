@@ -22,16 +22,6 @@ import {
 import { persistence } from "./persistence";
 import { useAuth } from "@/hooks/use-auth";
 import { saveGameState, loadGameState } from "@/lib/supabase/game";
-import {
-  type LessonProgress,
-  type QuestState,
-  freshLessonProgress,
-  starsForAccuracy,
-  lessonReward,
-  isQuestComplete,
-  initialQuestStates,
-  QUEST_DEFS,
-} from "./domain";
 
 export type GameAction =
   | { type: "EARN_COINS"; amount: number }
@@ -47,19 +37,15 @@ export type GameAction =
   | { type: "LOG_TYPING_TEST"; correctChars: number; mistakes: number }
   | { type: "LOG_TYPING_SESSION"; session: TypingSession }
   | { type: "LOAD_FROM_CLOUD"; state: GameState }
-  | { type: "LOG_LESSON_RESULT"; lessonId: string; wpm: number; accuracy: number; reward: { xp: number; coins: number; petExp: number } }
-  | { type: "CLAIM_QUEST"; questId: string }
-  | { type: "RECOMPUTE_QUESTS" }
   | { type: "RESET" };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case "EARN_COINS":
-      return recomputeQuests({
+      return {
         ...state,
         player: { ...state.player, coins: state.player.coins + action.amount },
-        totalCoinsEarned: state.totalCoinsEarned + action.amount,
-      });
+      };
 
     case "SPEND_COINS": {
       const cost = Math.min(action.amount, state.player.coins);
@@ -78,10 +64,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         level++;
         needed = xpForLevel(level);
       }
-      return recomputeQuests({
+      return {
         ...state,
         player: { ...state.player, xp, level },
-      });
+      };
     }
 
     case "CLAIM_DAILY_REWARD": {
@@ -100,7 +86,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 
       const reward = getDailyReward(newStreak);
 
-      let next: GameState = {
+      const next: GameState = {
         ...state,
         player: {
           ...state.player,
@@ -109,7 +95,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
           lastLoginDate: today,
           dailyRewardClaimed: true,
         },
-        totalCoinsEarned: state.totalCoinsEarned + reward.coins,
       };
 
       if (reward.item) {
@@ -119,7 +104,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         };
       }
 
-      return recomputeQuests(next);
+      return next;
     }
 
     case "COMPLETE_STAGE": {
@@ -211,66 +196,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case "LOG_LESSON_RESULT": {
-      const { lessonId, wpm, accuracy, reward: actionReward } = action;
-      const prev = state.lessonProgress[lessonId] ?? freshLessonProgress();
-      const stars = starsForAccuracy(accuracy, 90);
-      const newProgress: LessonProgress = {
-        completed: true,
-        bestWpm: Math.max(prev.bestWpm, wpm),
-        bestAccuracy: Math.max(prev.bestAccuracy, accuracy),
-        bestStars: Math.max(prev.bestStars, stars),
-        attemptCount: prev.attemptCount + 1,
-        lastAttemptedAt: Date.now(),
-      };
-      return recomputeQuests({
-        ...state,
-        lessonProgress: { ...state.lessonProgress, [lessonId]: newProgress },
-        player: {
-          ...state.player,
-          coins: state.player.coins + actionReward.coins,
-          totalTestsCompleted: state.player.totalTestsCompleted + 1,
-          totalCorrectChars: state.player.totalCorrectChars,
-          totalMistakes: state.player.totalMistakes,
-        },
-        totalCoinsEarned: state.totalCoinsEarned + actionReward.coins,
-      });
-    }
-
-    case "CLAIM_QUEST": {
-      const claimed = state.quests.map((q) =>
-        q.questId === action.questId && q.status === "completed"
-          ? { ...q, status: "claimed" as const, claimedAt: Date.now() }
-          : q,
-      );
-      const def = QUEST_DEFS.find((d) => d.id === action.questId);
-      const r = def?.reward;
-      return {
-        ...state,
-        quests: claimed,
-        player: {
-          ...state.player,
-          coins: state.player.coins + (r?.coins ?? 0),
-        },
-        totalCoinsEarned: state.totalCoinsEarned + (r?.coins ?? 0),
-        inventory: r?.items
-          ? {
-              ...state.inventory,
-              items: [...state.inventory.items, ...r.items.filter((i) => !state.inventory.items.includes(i))],
-            }
-          : state.inventory,
-      };
-    }
-
-    case "RECOMPUTE_QUESTS":
-      return recomputeQuests(state);
-
     case "LOAD_FROM_CLOUD":
-      return {
-        ...action.state,
-        quests:
-          action.state.quests.length > 0 ? action.state.quests : state.quests,
-      };
+      return action.state;
 
     case "RESET":
       return DEFAULT_GAME_STATE;
@@ -278,40 +205,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     default:
       return state;
   }
-}
-
-function recomputeQuests(state: GameState): GameState {
-  const completedLessonCount = Object.values(state.lessonProgress).filter((lp) => lp.completed).length;
-  const bestWpm = Object.values(state.lessonProgress).reduce((max, lp) => Math.max(max, lp.bestWpm), 0);
-  const bestAccuracy = Object.values(state.lessonProgress).reduce((max, lp) => Math.max(max, lp.bestAccuracy), 0);
-
-  const updatedQuests: QuestState[] = state.quests.map((qs) => {
-    if (qs.status === "claimed") return qs;
-    const def = QUEST_DEFS.find((d) => d.id === qs.questId);
-    if (!def) return qs;
-
-    const updatedConditions = def.conditions.map((c) => {
-      let current = c.current;
-      switch (c.type) {
-        case "complete_lessons": current = completedLessonCount; break;
-        case "reach_level": current = state.player.level; break;
-        case "earn_coins": current = state.totalCoinsEarned; break;
-        case "maintain_streak": current = state.player.streak; break;
-        case "reach_wpm": current = bestWpm; break;
-        case "reach_accuracy": current = bestAccuracy; break;
-      }
-      return { ...c, current };
-    });
-
-    const allMet = updatedConditions.every((c) => c.current >= c.target);
-    const newStatus: "active" | "completed" | "claimed" =
-      allMet && qs.status === "active" ? "completed" : qs.status;
-    const completedAt = allMet && qs.status === "active" ? Date.now() : qs.completedAt;
-
-    return { ...qs, conditions: updatedConditions, status: newStatus, completedAt };
-  });
-
-  return { ...state, quests: updatedQuests };
 }
 
 function yesterday(isoToday: string): string {
@@ -337,16 +230,13 @@ function initializeGame(): GameState {
         activePet: DEFAULT_STARTER_PET.type,
       };
 
-  const merged: GameState = {
+  return {
     ...DEFAULT_GAME_STATE,
     ...saved,
     player: { ...DEFAULT_GAME_STATE.player, ...(saved.player ?? {}) },
     inventory,
     adventures: { ...DEFAULT_GAME_STATE.adventures, ...(saved.adventures ?? {}) },
-    quests: Array.isArray(saved?.quests) && saved.quests.length > 0 ? saved.quests : initialQuestStates(),
   };
-
-  return recomputeQuests(merged);
 }
 
 type GameCtx = {
@@ -387,21 +277,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
     if (loadedCloudUserId.current === user.id) return;
     loadedCloudUserId.current = user.id;
-    loadGameState().then((raw) => {
-      const cloud = raw as Record<string, unknown> | undefined;
+    loadGameState().then((cloud) => {
       if (!cloud) return;
       if (!cloud.player || !cloud.inventory) return;
       const cloudSessions = (cloud.sessions as TypingSession[] | undefined) ?? [];
-      const cloudLessonProgress = cloud.lessonProgress as Record<string, LessonProgress> | undefined;
-      const cloudQuests = cloud.quests as QuestState[] | undefined;
       const merged: GameState = {
         player: { ...state.player, ...(cloud.player as Partial<typeof state.player>) },
         inventory: { ...state.inventory, ...(cloud.inventory as Partial<typeof state.inventory>) },
         adventures: { ...state.adventures, ...(cloud.adventures as Record<string, number[]>) },
         sessions: cloudSessions.length > 0 ? cloudSessions : state.sessions,
-        lessonProgress: cloudLessonProgress ? { ...state.lessonProgress, ...cloudLessonProgress } : state.lessonProgress,
-        quests: cloudQuests && cloudQuests.length > 0 ? cloudQuests : state.quests,
-        totalCoinsEarned: (cloud.totalCoinsEarned as number | undefined) ?? state.totalCoinsEarned,
       };
       dispatch({ type: "LOAD_FROM_CLOUD", state: merged });
     });
@@ -419,9 +303,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
           inventory: { ...state.inventory } as Record<string, unknown>,
           adventures: state.adventures as Record<string, unknown>,
           sessions: state.sessions as Record<string, unknown>[],
-          lessonProgress: state.lessonProgress as Record<string, unknown>,
-          quests: state.quests as unknown as Record<string, unknown>[],
-          totalCoinsEarned: state.totalCoinsEarned,
         };
         await saveGameState({ data });
       } catch {

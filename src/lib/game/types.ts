@@ -1,5 +1,3 @@
-import type { LessonProgress, QuestState } from "./domain";
-
 export type PetType = "cat" | "dog" | "fox" | "rabbit" | "panda" | "penguin" | "dragon";
 
 export type PetState = {
@@ -55,9 +53,6 @@ export type GameState = {
   inventory: Inventory;
   adventures: AdventureProgress;
   sessions: TypingSession[];
-  lessonProgress: Record<string, LessonProgress>;
-  quests: QuestState[];
-  totalCoinsEarned: number;
 };
 
 const MAX_SESSIONS = 100;
@@ -93,9 +88,6 @@ export const DEFAULT_GAME_STATE: GameState = {
   inventory: DEFAULT_INVENTORY,
   adventures: {},
   sessions: [],
-  lessonProgress: {},
-  quests: [],
-  totalCoinsEarned: 0,
 };
 
 export { MAX_SESSIONS };

@@ -2,9 +2,6 @@
 // 13 units, each with a series of lessons. Every lesson carries a curated
 // word/sentence bank that TypingArena can consume via customWords.
 
-import type { LessonProgress } from "./domain";
-import { starsForAccuracy, lessonReward } from "./domain";
-
 export type LessonDifficulty =
   "beginner" | "easy" | "intermediate" | "advanced" | "expert" | "master";
 
@@ -2411,45 +2408,7 @@ export function findLesson(id: string): { unit: Unit; lesson: Lesson } | null {
   return null;
 }
 
-// ---------- Domain-backed helpers (preferred) ----------
-// These use the domain model types and should be used instead of the
-// ad-hoc localStorage functions below.
-
-export function unitProgressFromStore(unit: Unit, progress: Record<string, LessonProgress>) {
-  const done = unit.lessons.filter((l) => progress[l.id]?.completed).length;
-  return { done, total: unit.lessons.length };
-}
-
-export function completedLessonCount(progress: Record<string, LessonProgress>): number {
-  return Object.values(progress).filter((lp) => lp.completed).length;
-}
-
-export function lessonStars(accuracy: number, targetAccuracy: number): number {
-  return starsForAccuracy(accuracy, targetAccuracy);
-}
-
-export function lessonRewards(difficulty: string, wordCount: number) {
-  const r = lessonReward(difficulty as any, wordCount);
-  return { xp: r.xp, coins: r.coins, petExp: r.petExp };
-}
-
-// ---------- Unlock logic ----------
-export function isUnitUnlocked(unitNumber: number, completed: Set<string>): boolean {
-  if (unitNumber === 1) return true;
-  const prevUnit = UNITS.find((u) => u.number === unitNumber - 1);
-  if (!prevUnit) return true;
-  return prevUnit.lessons.every((l) => completed.has(l.id));
-}
-
-export function isLessonUnlocked(unit: Unit, lessonIndex: number, completed: Set<string>): boolean {
-  if (!isUnitUnlocked(unit.number, completed)) return false;
-  if (lessonIndex === 0) return true;
-  return completed.has(unit.lessons[lessonIndex - 1].id);
-}
-
-// ---------- Deprecated localStorage helpers ----------
-// These still work but new code should use the store's lessonProgress instead.
-
+// ---------- Completion tracking (localStorage) ----------
 const COMPLETED_KEY = "pawtype-lessons-completed";
 
 export function loadCompletedLessons(): Set<string> {
@@ -2483,6 +2442,7 @@ export function unitProgress(unit: Unit, completed: Set<string>): { done: number
   };
 }
 
+// ---------- Per-lesson best stats (localStorage) ----------
 const LESSON_STATS_KEY = "pawtype-lesson-stats";
 
 export type LessonStats = { bestWpm: number; bestAccuracy: number };
@@ -2512,4 +2472,42 @@ export function saveLessonStats(id: string, wpm: number, accuracy: number) {
       /* ignore */
     }
   }
+}
+
+// ---------- Unlock logic ----------
+export function isUnitUnlocked(unitNumber: number, completed: Set<string>): boolean {
+  if (unitNumber === 1) return true;
+  const prevUnit = UNITS.find((u) => u.number === unitNumber - 1);
+  if (!prevUnit) return true;
+  return prevUnit.lessons.every((l) => completed.has(l.id));
+}
+
+export function isLessonUnlocked(unit: Unit, lessonIndex: number, completed: Set<string>): boolean {
+  if (!isUnitUnlocked(unit.number, completed)) return false;
+  if (lessonIndex === 0) return true;
+  return completed.has(unit.lessons[lessonIndex - 1].id);
+}
+
+// ---------- Star rating ----------
+export function lessonStars(accuracy: number, targetAccuracy: number): number {
+  if (accuracy >= Math.min(targetAccuracy + 5, 100)) return 3;
+  if (accuracy >= targetAccuracy) return 2;
+  return 1;
+}
+
+// ---------- Difficulty-based rewards ----------
+const DIFFICULTY_XP: Record<string, number> = {
+  beginner: 25,
+  easy: 50,
+  intermediate: 75,
+  advanced: 100,
+  expert: 150,
+  master: 200,
+};
+export function lessonRewards(difficulty: string, wordCount: number) {
+  const base = DIFFICULTY_XP[difficulty] ?? 50;
+  const xp = base + Math.floor(wordCount / 5);
+  const coins = Math.round(xp / 2);
+  const petExp = Math.max(1, Math.floor(wordCount / 10));
+  return { xp, coins, petExp };
 }

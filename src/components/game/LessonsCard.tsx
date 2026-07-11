@@ -7,9 +7,11 @@ import { BigStars } from "./BigStars";
 import { RewardBadge } from "./RewardBadge";
 import {
   UNITS,
+  loadCompletedLessons,
+  markLessonCompleted,
   unitProgress,
-  unitProgressFromStore,
-  completedLessonCount,
+  loadLessonStats,
+  saveLessonStats,
   isUnitUnlocked,
   isLessonUnlocked,
   lessonStars,
@@ -54,15 +56,8 @@ function lessonEmojiImg(emoji: string, className = "pixel-icon") {
 }
 
 export function LessonsCard() {
-  const { state, dispatch } = useGame();
-  const { lessonProgress, quests, inventory } = state;
-  const completed = useMemo(() => {
-    const s = new Set<string>();
-    for (const [id, lp] of Object.entries(lessonProgress)) {
-      if (lp.completed) s.add(id);
-    }
-    return s;
-  }, [lessonProgress]);
+  const { dispatch } = useGame();
+  const [completed, setCompleted] = useState<Set<string>>(() => loadCompletedLessons());
   const [openUnits, setOpenUnits] = useState<Set<string>>(() => new Set([UNITS[0].id]));
   const [detail, setDetail] = useState<{ unit: Unit; lesson: Lesson } | null>(null);
   const [typing, setTyping] = useState<{ unit: Unit; lesson: Lesson } | null>(null);
@@ -75,12 +70,21 @@ export function LessonsCard() {
   const prevTypingRef = useRef(typing);
 
   useEffect(() => {
+    const refresh = () => setCompleted(loadCompletedLessons());
     const refreshChests = () => {
       setChestLessons(loadChestLessons());
       setClaimedChests(loadClaimedChests());
     };
+    window.addEventListener("pawtype-lesson-completed", refresh);
+    window.addEventListener("pawtype-egg-claimed", refresh);
     window.addEventListener("pawtype-chests-changed", refreshChests);
-    return () => window.removeEventListener("pawtype-chests-changed", refreshChests);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener("pawtype-lesson-completed", refresh);
+      window.removeEventListener("pawtype-egg-claimed", refresh);
+      window.removeEventListener("pawtype-chests-changed", refreshChests);
+      window.removeEventListener("storage", refresh);
+    };
   }, []);
 
   useEffect(() => {
@@ -100,10 +104,7 @@ export function LessonsCard() {
     return { done, total };
   }, [completed]);
 
-  const eggProgress = useMemo(
-    () => progressTowardNextEgg(completedLessonCount(lessonProgress)),
-    [lessonProgress],
-  );
+  const eggProgress = useMemo(() => progressTowardNextEgg(totals.done), [totals.done]);
 
   const toggleUnit = (id: string) => {
     setOpenUnits((prev) => {
@@ -118,8 +119,12 @@ export function LessonsCard() {
     (wpm: number, accuracy: number) => {
       if (!typing) return;
       const wasCompleted = completed.has(typing.lesson.id);
+      markLessonCompleted(typing.lesson.id);
+      saveLessonStats(typing.lesson.id, wpm, accuracy);
       const rewards = lessonRewards(typing.lesson.difficulty, typing.lesson.words.length);
-      dispatch({ type: "LOG_LESSON_RESULT", lessonId: typing.lesson.id, wpm, accuracy, reward: rewards });
+      dispatch({ type: "ADD_XP", amount: rewards.xp });
+      dispatch({ type: "EARN_COINS", amount: rewards.coins });
+      dispatch({ type: "ADD_PET_XP", amount: rewards.petExp });
 
       // Claim chest bonus if this lesson is a configured chest
       if (chestLessons.has(typing.lesson.id) && !claimedChests.has(typing.lesson.id)) {
@@ -129,13 +134,14 @@ export function LessonsCard() {
       }
 
       if (!wasCompleted) {
-        const newCount = completedLessonCount(lessonProgress) + 1;
+        const newCount = completed.size + 1;
         if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
           queuePendingEgg(newCount / LESSONS_PER_EGG);
         }
       }
+      setCompleted(loadCompletedLessons());
     },
-    [typing, dispatch, completed, lessonProgress, chestLessons, claimedChests],
+    [typing, dispatch, completed, chestLessons, claimedChests],
   );
 
   // Try to open a pending egg modal, deferring `next` until the modal closes.
@@ -331,9 +337,9 @@ export function LessonsCard() {
                     {unit.lessons.map((lesson, lIdx) => {
                       const done = completed.has(lesson.id);
                       const unlockedL = isLessonUnlocked(unit, lIdx, completed);
-                      const lp = lessonProgress[lesson.id];
+                      const stats = loadLessonStats()[lesson.id];
                       const stars = (
-                        lp ? lessonStars(lp.bestAccuracy, lesson.targetAccuracy) : 0
+                        stats ? lessonStars(stats.bestAccuracy, lesson.targetAccuracy) : 0
                       ) as 0 | 1 | 2 | 3;
                       const isCurrent = lesson.id === currentLessonId;
                       const rewards = lessonRewards(lesson.difficulty, lesson.words.length);
@@ -438,11 +444,11 @@ export function LessonsCard() {
                                 <span>{lesson.targetWpm} WPM</span>
                                 <span className="quest-card-meta-sep">·</span>
                                 <span>{lesson.targetAccuracy}% ACC</span>
-                                {lp && (
+                                {stats && (
                                   <>
                                     <span className="quest-card-meta-sep">·</span>
                                     <span className="quest-card-best">
-                                      Best {lp.bestWpm} / {lp.bestAccuracy}%
+                                      Best {stats.bestWpm} / {stats.bestAccuracy}%
                                     </span>
                                   </>
                                 )}
@@ -534,7 +540,7 @@ export function LessonsCard() {
                 {DIFFICULTY_LABEL[lessonDetail.difficulty].label}
               </div>
               {(() => {
-                const s = lessonProgress[lessonDetail.id];
+                const s = loadLessonStats()[lessonDetail.id];
                 const starCount = (
                   s ? lessonStars(s.bestAccuracy, lessonDetail.targetAccuracy) : 0
                 ) as 0 | 1 | 2 | 3;
@@ -559,14 +565,14 @@ export function LessonsCard() {
             </div>
 
             {(() => {
-              const lp2 = lessonProgress[lessonDetail.id];
-              if (!lp2) return null;
+              const s = loadLessonStats()[lessonDetail.id];
+              if (!s) return null;
               return (
                 <div className="quest-detail-best">
                   <div className="quest-detail-best-label">Best Performance</div>
                   <div className="quest-detail-best-row">
                     <span>
-                      {lp2.bestWpm} WPM — {lp2.bestAccuracy}%
+                      {s.bestWpm} WPM — {s.bestAccuracy}%
                     </span>
                   </div>
                 </div>
