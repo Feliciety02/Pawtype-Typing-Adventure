@@ -16,6 +16,16 @@ import { CampBuilding } from "./CampBuilding";
 
 type CampPage = "cabin";
 type OpenBuilding = "blacksmith" | "library" | "mailbox" | "nursery" | "tent" | "wagon";
+type CampBuildingConfig = {
+  id: string;
+  asset: string;
+  label: string;
+  x: number;
+  y: number;
+  width: number;
+  glow?: boolean;
+  onClick?: () => void;
+};
 
 const CAMP_STATIC_ENVIRONMENT = "/camp/scenes/campscene-background-morning.png";
 
@@ -48,87 +58,99 @@ export function CampScene() {
     setActivePage("cabin");
   };
 
+  const interactiveBuildings: CampBuildingConfig[] = [
+    {
+      id: "library",
+      asset: CampBuildings.library,
+      label: "Library",
+      x: 48.8,
+      y: 33,
+      width: 210,
+      onClick: () => open("library"),
+    },
+    {
+      id: "cabin",
+      asset: CampBuildings.cabin,
+      label: "The Cabin",
+      x: 26,
+      y: 40,
+      width: 200,
+      onClick: openCabin,
+    },
+    {
+      id: "tent",
+      asset: CampBuildings.paintersTent,
+      label: "Painter's Tent",
+      x: 67,
+      y: 38,
+      width: 168,
+      onClick: () => open("tent"),
+    },
+    {
+      id: "nursery",
+      asset: CampBuildings.petNursery,
+      label: "Pet Nursery",
+      x: 37,
+      y: 62,
+      width: 152,
+      onClick: () => open("nursery"),
+    },
+    {
+      id: "wagon",
+      asset: CampBuildings.supplyWagon,
+      label: canClaim ? "Supply Wagon · Ready!" : "Supply Wagon",
+      x: 79,
+      y: 52,
+      width: 166,
+      glow: canClaim,
+      onClick: () => open("wagon"),
+    },
+    {
+      id: "mailbox",
+      asset: CampBuildings.mailbox,
+      label: "Mailbox",
+      x: 37,
+      y: 47,
+      width: 88,
+      onClick: () => open("mailbox"),
+    },
+    {
+      id: "blacksmith",
+      asset: CampBuildings.blacksmith,
+      label: "Blacksmith",
+      x: 62,
+      y: 61,
+      width: 190,
+      onClick: () => open("blacksmith"),
+    },
+  ];
+
+  const sceneryBuildings: CampBuildingConfig[] = [
+    {
+      id: "campfire",
+      asset: CampBuildings.campfire,
+      label: "Campfire",
+      x: 48,
+      y: 53,
+      width: 142,
+    },
+  ];
+
   return (
     <div className="camp-scene" data-theme-fading={fading}>
       <div className="camp-scene-world">
         <WorldRenderer environmentSrc={CAMP_STATIC_ENVIRONMENT} />
 
       <div className="camp-layer">
-        <CampBuilding
-          id="library"
-          asset={CampBuildings.library}
-          label="Library"
-          x={48.8}
-          y={33}
-          width={210}
-          onClick={() => open("library")}
-        />
-        <CampBuilding
-          id="cabin"
-          asset={CampBuildings.cabin}
-          label="The Cabin"
-          x={26}
-          y={40}
-          width={200}
-          onClick={openCabin}
-        />
-        <CampBuilding
-          id="tent"
-          asset={CampBuildings.paintersTent}
-          label="Painter's Tent"
-          x={67}
-          y={38}
-          width={168}
-          onClick={() => open("tent")}
-        />
-        <CampBuilding
-          id="nursery"
-          asset={CampBuildings.petNursery}
-          label="Pet Nursery"
-          x={37}
-          y={62}
-          width={152}
-          onClick={() => open("nursery")}
-        />
-        <CampBuilding
-          id="wagon"
-          asset={CampBuildings.supplyWagon}
-          label={canClaim ? "Supply Wagon · Ready!" : "Supply Wagon"}
-          x={79}
-          y={52}
-          width={166}
-          glow={canClaim}
-          onClick={() => open("wagon")}
-        />
-        <CampBuilding
-          id="mailbox"
-          asset={CampBuildings.mailbox}
-          label="Mailbox"
-          x={37}
-          y={47}
-          width={88}
-          onClick={() => open("mailbox")}
-        />
-        <CampBuilding
-          id="blacksmith"
-          asset={CampBuildings.blacksmith}
-          label="Blacksmith"
-          x={62}
-          y={61}
-          width={190}
-          onClick={() => open("blacksmith")}
-        />
+        {interactiveBuildings.map((building) => (
+          <CampBuilding key={building.id} {...building} />
+        ))}
       </div>
 
       <div className="camp-layer">
-        <CampBuilding
-          id="campfire"
-          asset={CampBuildings.campfire}
-          label="Campfire"
-          x={48}
-          y={53}
-          width={142}
-        />
+        {sceneryBuildings.map((building) => (
+          <CampBuilding key={building.id} {...building} />
+        ))}
       </div>
 
       </div>
