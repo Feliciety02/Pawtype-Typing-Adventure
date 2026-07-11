@@ -7,4 +7,12 @@ export {
   loadCompletedLessons,
   markLessonCompleted,
   unitProgress,
+  unitProgressFromStore,
+  completedLessonCount,
+  lessonStars,
+  lessonRewards,
+  isUnitUnlocked,
+  isLessonUnlocked,
+  loadLessonStats,
+  saveLessonStats,
 } from "./curriculum";

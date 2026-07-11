@@ -12,15 +12,15 @@ import {
   petLabel,
   progressTowardNextEgg,
 } from "../../lib/game/eggs";
-import { loadCompletedLessons } from "../../lib/game/curriculum";
+import { completedLessonCount } from "../../lib/game/curriculum";
 import { loadChestLessons, loadClaimedChests } from "../../lib/game/chests";
 import { THEMES, DOODADS, PETS } from "../../lib/shop/shopData";
 
 export function InventoryPage() {
   const { state } = useGame();
-  const { inventory } = state;
+  const { inventory, lessonProgress } = state;
 
-  const completedLessonsCount = useMemo(() => loadCompletedLessons().size, []);
+  const completedLessonsCount = useMemo(() => completedLessonCount(lessonProgress), [lessonProgress]);
   const claimed = useMemo(() => loadClaimedEggs(), []);
   const pending = useMemo(() => loadPendingEggs(), []);
   const chestLessons = useMemo(() => loadChestLessons(), []);
