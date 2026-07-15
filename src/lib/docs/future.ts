@@ -1,5 +1,7 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - Shop section tabs, pet/theme/doodad category filters, and Library document tabs now share one responsive pixel choice bar. Tabs connect to their active panels, filters expose pressed states, and all variants use consistent selected, hover, focus, high-contrast, and arrow-key behavior without inline styling.
+
 ✅ **Shipped** - The shared HUD now adapts from the full desktop profile/navigation layout to compact icon-first tablet controls and a two-row phone layout. All six destinations remain visible without horizontal page overflow, while profile and notification controls expose accessible labels, focus states, current-page state, and expanded-menu state.
 
 ✅ **Shipped** - Settings now has its own responsive stylesheet and stable two-column desktop layout that stacks cleanly on smaller screens. General and Library use accessible keyboard-navigable tabs, world/display/effect controls expose their selected states, and account actions resize consistently without depending on login-screen styles.

@@ -1,44 +1,30 @@
+import { Palette, PawPrint } from "lucide-react";
+
+import { PixelChoiceBar, type PixelChoice } from "@/components/ui/shared/PixelChoiceBar";
 import { type ShopTab } from "@/lib/shop/shopData";
+
+const SHOP_TABS: PixelChoice<ShopTab>[] = [
+  { id: "pets", label: "Pets", icon: <PawPrint size={16} /> },
+  { id: "themes", label: "Themes & Doodads", icon: <Palette size={16} /> },
+];
 
 export function SegmentedSwitcher({
   value,
   onChange,
 }: {
   value: ShopTab;
-  onChange: (t: ShopTab) => void;
+  onChange: (tab: ShopTab) => void;
 }) {
-  const tabs: { id: ShopTab; label: string; icon: string }[] = [
-    { id: "pets", label: "Pets", icon: "🐾" },
-    { id: "themes", label: "Themes & Doodads", icon: "🏡" },
-  ];
   return (
-    <div
-      className="shop-segmented-switcher inline-flex p-1 rounded-lg gap-1"
-      style={{
-        background: "var(--color-muted)",
-        border: "2px solid var(--color-border)",
-        boxShadow: "3px 3px 0 0 var(--color-border)",
-      }}
-    >
-      {tabs.map((t) => {
-        const active = t.id === value;
-        return (
-          <button
-            key={t.id}
-            onClick={() => onChange(t.id)}
-            className="shop-segmented-button font-pixel text-[0.7rem] px-4 py-2 rounded-md transition-all"
-            style={{
-              background: active ? "var(--color-primary)" : "transparent",
-              color: active ? "var(--color-primary-foreground)" : "var(--color-foreground)",
-              transform: active ? "translateY(-1px)" : "none",
-              boxShadow: active ? "2px 2px 0 0 var(--color-border)" : "none",
-            }}
-          >
-            <span className="mr-1">{t.icon}</span>
-            {t.label}
-          </button>
-        );
-      })}
-    </div>
+    <PixelChoiceBar
+      items={SHOP_TABS}
+      value={value}
+      onChange={onChange}
+      ariaLabel="Shop sections"
+      idPrefix="shop-tab"
+      kind="tabs"
+      variant="segmented"
+      panelId="shop-active-panel"
+    />
   );
 }

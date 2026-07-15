@@ -11,6 +11,7 @@ import {
 } from "@/lib/shop/shopData";
 import { RarityBadge, OwnedBadge, PriceBadge, SectionHeader } from "@/lib/shop/shopHelpers";
 import { Button } from "@/components/ui/button";
+import { PixelChoiceBar } from "@/components/ui/shared/PixelChoiceBar";
 
 export function PetsPage() {
   const { state, dispatch } = useGame();
@@ -104,25 +105,21 @@ export function PetsPage() {
       <aside className="lg:sticky lg:top-4 self-start pixel-card-sm p-4 space-y-5">
         <div>
           <div className="font-pixel text-[0.6rem] text-muted-foreground mb-2">Categories</div>
-          <div className="flex flex-col gap-1">
-            {(["all", "cat", "dog", "rabbit", "dragon"] as PetCategory[]).map((c) => {
-              const label = c === "all" ? "All Pets" : c.charAt(0).toUpperCase() + c.slice(1) + "s";
-              const active = c === category;
-              return (
-                <button
-                  key={c}
-                  onClick={() => setCategory(c)}
-                  className="font-pixel text-[0.65rem] text-left px-2 py-1.5 rounded transition-colors"
-                  style={{
-                    background: active ? "var(--color-primary)" : "transparent",
-                    color: active ? "var(--color-primary-foreground)" : "var(--color-foreground)",
-                  }}
-                >
-                  {label} <span className="opacity-60">({totals[c][1]})</span>
-                </button>
-              );
-            })}
-          </div>
+          <PixelChoiceBar
+            items={(["all", "cat", "dog", "rabbit", "dragon"] as PetCategory[]).map((id) => ({
+              id,
+              label: `${
+                id === "all" ? "All Pets" : `${id.charAt(0).toUpperCase()}${id.slice(1)}s`
+              } (${totals[id][1]})`,
+            }))}
+            value={category}
+            onChange={setCategory}
+            ariaLabel="Pet categories"
+            idPrefix="pet-category"
+            kind="filters"
+            variant="compact"
+            className="shop-pet-category-tabs"
+          />
         </div>
 
         <div>

@@ -181,21 +181,12 @@
   margin-bottom: 1.25rem;
 }
 
-.shop-segmented-switcher,
-.shop-category-tabs,
 .shop-section-header {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.shop-segmented-switcher {
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-}
-
-.shop-segmented-button,
-.shop-category-tab,
 .shop-chip {
   display: inline-flex;
   align-items: center;
@@ -204,16 +195,134 @@
   white-space: nowrap;
 }
 
-.shop-segmented-button {
-  padding: 0.5rem 1rem;
-}
-
-.shop-category-tab {
-  padding: 0.375rem 0.75rem;
-}
-
 .shop-chip {
   padding: 0.125rem 0.5rem;
+}
+
+/* ===== Shared tabs and filter choices ===== */
+.pixel-choice-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: 100%;
+}
+
+.pixel-choice-bar--segmented {
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--color-muted) 72%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.pixel-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 36px;
+  min-width: 0;
+  padding: 0.45rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  background: color-mix(in oklab, var(--color-muted) 70%, var(--color-card));
+  color: var(--muted-foreground);
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 55%, transparent);
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    transform 100ms ease,
+    border-color 100ms ease,
+    background 100ms ease,
+    color 100ms ease,
+    box-shadow 100ms ease;
+}
+
+.pixel-choice-bar--segmented .pixel-choice {
+  padding-inline: 1rem;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-foreground);
+  font-size: 0.66rem;
+}
+
+.pixel-choice:hover:not(.is-active) {
+  transform: translateY(-1px);
+  border-color: var(--color-primary);
+  color: var(--color-foreground);
+}
+
+.pixel-choice.is-active {
+  border-color: var(--color-border);
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.pixel-choice:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+.pixel-choice-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  line-height: 1;
+}
+
+.pixel-choice-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pixel-choice-label {
+  min-width: 0;
+}
+
+.docs-choice-bar {
+  margin-bottom: 1.5rem;
+}
+
+.docs-active-panel {
+  min-width: 0;
+}
+
+.shop-pet-category-tabs {
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.shop-pet-category-tabs .pixel-choice {
+  justify-content: flex-start;
+  width: 100%;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
+}
+
+.shop-pet-category-tabs .pixel-choice.is-active {
+  background: var(--color-primary);
+}
+
+@media (max-width: 560px) {
+  .pixel-choice-bar--segmented {
+    width: 100%;
+  }
+
+  .pixel-choice-bar--segmented .pixel-choice {
+    flex: 1 1 0;
+    padding-inline: 0.5rem;
+  }
+
+  .docs-choice-bar .pixel-choice {
+    flex: 1 1 min(100%, 130px);
+  }
 }
 
 .shop-section-header {

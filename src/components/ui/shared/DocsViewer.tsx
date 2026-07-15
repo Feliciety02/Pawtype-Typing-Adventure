@@ -2,6 +2,7 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { DOCS, type DocEntry } from "../../../lib/docs";
+import { PixelChoiceBar } from "./PixelChoiceBar";
 
 function TableOfContents({ doc }: { doc: DocEntry }) {
   const headings = doc.content
@@ -37,9 +38,10 @@ function TableOfContents({ doc }: { doc: DocEntry }) {
 export function DocsViewer() {
   const [activeId, setActiveId] = useState(DOCS[0].id);
   const active = DOCS.find((d) => d.id === activeId) ?? DOCS[0];
+  const choices = DOCS.map((doc) => ({ id: doc.id, label: doc.title, icon: doc.emoji }));
 
   return (
-    <div className="pixel-card p-5 sm:p-6">
+    <div className="docs-viewer pixel-card p-5 sm:p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div>
@@ -51,26 +53,28 @@ export function DocsViewer() {
       </div>
 
       {/* Nav tabs */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {DOCS.map((doc) => (
-          <button
-            key={doc.id}
-            onClick={() => setActiveId(doc.id)}
-            className={`font-pixel text-[0.6rem] px-3 py-1.5 rounded-md border transition-all ${
-              activeId === doc.id
-                ? "border-[var(--color-primary)] text-foreground bg-[var(--color-primary)]/10"
-                : "border-[var(--color-border)] text-muted-foreground hover:text-foreground hover:border-[var(--color-primary)]"
-            }`}
-          >
-            {doc.emoji} {doc.title}
-          </button>
-        ))}
-      </div>
+      <PixelChoiceBar
+        items={choices}
+        value={activeId}
+        onChange={setActiveId}
+        ariaLabel="Library documents"
+        idPrefix="library-doc-tab"
+        kind="tabs"
+        variant="compact"
+        panelId="library-doc-panel"
+        className="docs-choice-bar"
+      />
 
       {/* Content */}
-      <TableOfContents doc={active} />
-      <div className="prose prose-sm max-w-none">
-        <ReactMarkdown
+      <div
+        id="library-doc-panel"
+        className="docs-active-panel"
+        role="tabpanel"
+        aria-labelledby={`library-doc-tab-${activeId}`}
+      >
+        <TableOfContents doc={active} />
+        <div className="prose prose-sm max-w-none">
+          <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
             h1: ({ children, ...props }) => (
@@ -176,9 +180,10 @@ export function DocsViewer() {
               </blockquote>
             ),
           }}
-        >
-          {active.content}
-        </ReactMarkdown>
+          >
+            {active.content}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );

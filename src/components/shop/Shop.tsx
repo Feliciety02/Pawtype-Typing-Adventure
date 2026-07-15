@@ -23,7 +23,13 @@ export function Shop() {
       </div>
 
       {/* Animated tab body */}
-      <div key={tab} className="shop-tab-enter">
+      <div
+        key={tab}
+        id="shop-active-panel"
+        className="shop-tab-enter"
+        role="tabpanel"
+        aria-labelledby={`shop-tab-${tab}`}
+      >
         {tab === "pets" ? <PetsPage /> : <ThemesPage />}
       </div>
 

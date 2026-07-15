@@ -65,7 +65,15 @@ export function ThemesPage() {
         <SectionHeader
           title="Dreaming Worlds"
           subtitle="Room themes — swap the sky above your keyboard."
-          right={<CategoryTabs items={THEME_CATEGORIES} value={themeCat} onChange={setThemeCat} />}
+          right={
+            <CategoryTabs
+              items={THEME_CATEGORIES}
+              value={themeCat}
+              onChange={setThemeCat}
+              ariaLabel="Theme categories"
+              idPrefix="theme-category"
+            />
+          }
         />
         <div className="shop-theme-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredThemes.map((t) => {
@@ -154,7 +162,13 @@ export function ThemesPage() {
           title="Enchanted Doodads"
           subtitle="Little decorations for your pet's room."
           right={
-            <CategoryTabs items={DOODAD_CATEGORIES} value={doodadCat} onChange={setDoodadCat} />
+            <CategoryTabs
+              items={DOODAD_CATEGORIES}
+              value={doodadCat}
+              onChange={setDoodadCat}
+              ariaLabel="Doodad categories"
+              idPrefix="doodad-category"
+            />
           }
         />
         <div className="shop-doodad-grid grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
