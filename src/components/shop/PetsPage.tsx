@@ -11,6 +11,7 @@ import {
 } from "@/lib/shop/shopData";
 import { RarityBadge, OwnedBadge, PriceBadge, SectionHeader } from "@/lib/shop/shopHelpers";
 import { Button } from "@/components/ui/button";
+import { CheckboxField, NativeSelect } from "@/components/ui/form-controls";
 import { PixelChoiceBar } from "@/components/ui/shared/PixelChoiceBar";
 
 export function PetsPage() {
@@ -124,33 +125,34 @@ export function PetsPage() {
 
         <div>
           <div className="font-pixel text-[0.6rem] text-muted-foreground mb-2">Filters</div>
-          <label className="flex items-center gap-2 font-pixel text-[0.65rem] py-1 cursor-pointer">
-            <input type="checkbox" checked={owned} onChange={(e) => setOwned(e.target.checked)} />{" "}
-            Owned
-          </label>
-          <label className="flex items-center gap-2 font-pixel text-[0.65rem] py-1 cursor-pointer">
-            <input
-              type="checkbox"
+          <div className="pixel-checkbox-list">
+            <CheckboxField
+              id="pet-filter-owned"
+              label="Owned"
+              checked={owned}
+              onChange={(event) => setOwned(event.target.checked)}
+            />
+            <CheckboxField
+              id="pet-filter-not-owned"
+              label="Not Owned"
               checked={notOwned}
-              onChange={(e) => setNotOwned(e.target.checked)}
-            />{" "}
-            Not Owned
-          </label>
-          <label className="flex items-center gap-2 font-pixel text-[0.65rem] py-1 cursor-pointer">
-            <input
-              type="checkbox"
+              onChange={(event) => setNotOwned(event.target.checked)}
+            />
+            <CheckboxField
+              id="pet-filter-favorites"
+              label="Favorites"
               checked={favOnly}
-              onChange={(e) => setFavOnly(e.target.checked)}
-            />{" "}
-            Favorites
-          </label>
+              onChange={(event) => setFavOnly(event.target.checked)}
+            />
+          </div>
         </div>
 
         <div>
-          <div className="font-pixel text-[0.6rem] text-muted-foreground mb-2">Sort</div>
-          <select
-            className="w-full font-pixel text-[0.65rem] px-2 py-1.5 rounded"
-            style={{ background: "var(--color-muted)", border: "2px solid var(--color-border)" }}
+          <label className="pixel-field-label" htmlFor="pet-sort">
+            Sort
+          </label>
+          <NativeSelect
+            id="pet-sort"
             value={sort}
             onChange={(e) => setSort(e.target.value as PetSort)}
           >
@@ -158,7 +160,7 @@ export function PetsPage() {
             <option value="price">Price</option>
             <option value="rarity">Rarity</option>
             <option value="alpha">Alphabetical</option>
-          </select>
+          </NativeSelect>
         </div>
       </aside>
 
@@ -354,11 +356,7 @@ export function PetsPage() {
               </p>
               <div className="flex items-center justify-between">
                 <PriceBadge price={p.price} />
-                <Button
-                  onClick={() => toggleFav(p.id)}
-                  variant="secondary"
-                  size="sm"
-                >
+                <Button onClick={() => toggleFav(p.id)} variant="secondary" size="sm">
                   {isFav(p.id) ? "❤️ Favorited" : "🤍 Favorite"}
                 </Button>
               </div>

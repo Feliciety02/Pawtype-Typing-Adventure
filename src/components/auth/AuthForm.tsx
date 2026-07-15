@@ -58,8 +58,8 @@ export function AuthForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
+          <div className="pixel-field">
+            <label htmlFor="email" className="pixel-field-label">
               Email
             </label>
             <Input
@@ -77,8 +77,8 @@ export function AuthForm() {
               required
             />
           </div>
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
+          <div className="pixel-field">
+            <label htmlFor="password" className="pixel-field-label">
               Password
             </label>
             <Input
@@ -95,13 +95,11 @@ export function AuthForm() {
               minLength={mode === "login" ? 1 : PASSWORD_MIN_LENGTH}
               maxLength={PASSWORD_MAX_LENGTH}
             />
-            {mode === "signup" ? (
-              <p className="text-xs text-muted-foreground">{passwordHint}</p>
-            ) : null}
+            {mode === "signup" ? <p className="pixel-field-help">{passwordHint}</p> : null}
           </div>
           {mode === "signup" ? (
-            <div className="space-y-2">
-              <label htmlFor="confirm-password" className="text-sm font-medium">
+            <div className="pixel-field">
+              <label htmlFor="confirm-password" className="pixel-field-label">
                 Confirm Password
               </label>
               <Input
@@ -120,7 +118,11 @@ export function AuthForm() {
               />
             </div>
           ) : null}
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && (
+            <p id="auth-form-error" className="pixel-field-error" role="alert">
+              {error}
+            </p>
+          )}
           <Button type="submit" className="w-full" disabled={isBusy}>
             {isBusy ? "Please wait..." : mode === "login" ? "Sign In" : "Create Account"}
           </Button>

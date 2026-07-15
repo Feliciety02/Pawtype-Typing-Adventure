@@ -185,7 +185,11 @@ export function PixelLoginScreen() {
               </label>
             ) : null}
 
-            {error ? <p className="pixel-auth-error">{error}</p> : null}
+            {error ? (
+              <p className="pixel-auth-error" role="alert">
+                {error}
+              </p>
+            ) : null}
 
             <button className="pixel-login-enter-btn" disabled={isBusy} type="submit">
               {isBusy ? (

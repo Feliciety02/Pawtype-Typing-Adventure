@@ -18,7 +18,7 @@ Pixel companions that grow with you. Every player starts with Whiskers the Cat. 
 
 Whiskers the Cat is included by default. Additional pets are purchased from the **Curiosity Cart** (shop).
 
-The Curiosity Cart uses a shared keyboard-accessible choice bar for its Pets/Themes sections and pet category filters. Selected categories remain visibly highlighted and expose their pressed state to assistive technology.
+The Curiosity Cart uses a shared keyboard-accessible choice bar for its Pets/Themes sections and pet category filters. Selected categories remain visibly highlighted and expose their pressed state to assistive technology. Owned, not-owned, and favorites filters use fully clickable checkbox labels, and the sort menu follows the same theme-aware form styling and keyboard-focus treatment used elsewhere in the app.
 
 ---
 

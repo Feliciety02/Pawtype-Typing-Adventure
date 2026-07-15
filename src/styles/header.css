@@ -76,7 +76,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: #2d1a13 !important;
+  background: #f3d6aa !important;
 }
 
 .app-shell--awards::before {
@@ -90,6 +90,10 @@
   background-repeat: no-repeat;
   background-size: cover;
   image-rendering: pixelated;
+}
+
+.dark .app-shell--awards {
+  background: #0f1731 !important;
 }
 
 .dark .app-shell--awards::before {

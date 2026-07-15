@@ -1,5 +1,7 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - Ordinary text inputs, native selects, and checkbox fields now share one pixel form-control system with consistent sizing, theme-aware surfaces, labels, hover, disabled, invalid, keyboard-focus, and high-contrast states. Pet filters use fully clickable native labels, while hidden typing capture inputs remain visually untouched.
+
 ✅ **Shipped** - Shop section tabs, pet/theme/doodad category filters, and Library document tabs now share one responsive pixel choice bar. Tabs connect to their active panels, filters expose pressed states, and all variants use consistent selected, hover, focus, high-contrast, and arrow-key behavior without inline styling.
 
 ✅ **Shipped** - The shared HUD now adapts from the full desktop profile/navigation layout to compact icon-first tablet controls and a two-row phone layout. All six destinations remain visible without horizontal page overflow, while profile and notification controls expose accessible labels, focus states, current-page state, and expanded-menu state.
@@ -100,7 +102,7 @@ Planned features and high-potential additions to expand the game.
 
 ✅ **Shipped** - Awards badge artwork now renders larger with roomier responsive grid cells so the collection page feels more readable and closer to the pixel badge art scale.
 
-✅ **Shipped** - The Awards tab now swaps between \`public/awards/awards-background-morning.png\` and \`public/awards/awards-background-night.png\` so the full-page hall background follows the global day/night toggle.
+✅ **Shipped** - The Awards tab now swaps between \`public/awards/awards-background-morning.png\` and \`public/awards/awards-background-night.png\`, and its full museum ambience follows the global day/night toggle with warmer morning light versus cooler night glow.
 
 ✅ **Shipped** - The Awards collection now renders as gamified trophy shelves, with each badge category displayed on a wooden shelf and each badge shown in its own collectible slot.
 
