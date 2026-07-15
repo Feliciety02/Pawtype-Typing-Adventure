@@ -136,10 +136,14 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url("/awards/awards-background.png");
+  background-image: url("/awards/awards-background-morning.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.dark .awards-bg {
+  background-image: url("/awards/awards-background-night.png");
 }
 
 .awards-root > .awards-page {

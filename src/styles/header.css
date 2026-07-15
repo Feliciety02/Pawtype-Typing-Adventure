@@ -85,11 +85,15 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/awards/awards-background.png");
+  background-image: url("/awards/awards-background-morning.png");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
   image-rendering: pixelated;
+}
+
+.dark .app-shell--awards::before {
+  background-image: url("/awards/awards-background-night.png");
 }
 
 .app-shell--awards .game-hud {

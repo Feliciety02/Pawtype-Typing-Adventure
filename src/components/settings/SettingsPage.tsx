@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { useGame } from "../../lib/game/store";
 import { useAuth } from "../../hooks/use-auth";
@@ -86,22 +86,44 @@ export function SettingsPage() {
     }
   };
 
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    let nextIndex: number | null = null;
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      nextIndex = (index + 1) % TABS.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      nextIndex = (index - 1 + TABS.length) % TABS.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = TABS.length - 1;
+    }
+
+    if (nextIndex === null) return;
+
+    event.preventDefault();
+    const nextTab = TABS[nextIndex];
+    setActiveTab(nextTab.id);
+    requestAnimationFrame(() => document.getElementById(`settings-tab-${nextTab.id}`)?.focus());
+  };
+
   return (
-    <div className="mt-8">
-      <div className="flex flex-col sm:flex-row gap-6">
-        {/* Sidebar */}
-        <aside className="sm:w-44 flex-shrink-0 sm:sticky sm:top-24 sm:self-start">
-          <div className="pixel-card p-3 flex sm:flex-col gap-2">
-            {TABS.map((tab) => (
+    <div className="settings-page">
+      <div className="settings-layout">
+        <aside className="settings-sidebar" aria-label="Settings sections">
+          <div className="settings-tabs pixel-card" role="tablist" aria-label="Settings sections">
+            {TABS.map((tab, index) => (
               <button
                 key={tab.id}
+                id={`settings-tab-${tab.id}`}
                 type="button"
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                aria-controls={`settings-panel-${tab.id}`}
+                tabIndex={activeTab === tab.id ? 0 : -1}
                 onClick={() => setActiveTab(tab.id)}
-                className={`settings-tab-button font-pixel text-[0.6rem] px-3 py-2 rounded-md border transition-all text-left ${
-                  activeTab === tab.id
-                    ? "border-[var(--color-primary)] text-foreground bg-[var(--color-primary)]/10"
-                    : "border-[var(--color-border)] text-muted-foreground hover:text-foreground hover:border-[var(--color-primary)]"
-                }`}
+                onKeyDown={(event) => handleTabKeyDown(event, index)}
+                className={`settings-tab-button ${activeTab === tab.id ? "is-active" : ""}`}
               >
                 <span className="settings-tab-emoji">{tab.emoji}</span>
                 <span className="settings-tab-label">{tab.label}</span>
@@ -110,11 +132,15 @@ export function SettingsPage() {
           </div>
         </aside>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="settings-content">
           {activeTab === "general" && (
-            <div className="pixel-card p-5 sm:p-6 space-y-5">
-              <div>
+            <div
+              id="settings-panel-general"
+              className="settings-general-panel pixel-card"
+              role="tabpanel"
+              aria-labelledby="settings-tab-general"
+            >
+              <div className="settings-page-head">
                 <h2 className="text-3xl leading-none">⚙ Settings</h2>
                 <p className="font-pixel text-[0.65rem] text-muted-foreground mt-1">
                   Tweak your cozy typing den.
@@ -125,7 +151,7 @@ export function SettingsPage() {
               <div className="settings-panel pixel-card-sm">
                 <div className="settings-panel-head">
                   <div>
-                    <label className="settings-kicker">World Wardrobe</label>
+                    <span className="settings-kicker">World Wardrobe</span>
                     <h3>
                       {currentWorld.emoji} {currentWorld.name}
                     </h3>
@@ -146,6 +172,7 @@ export function SettingsPage() {
                         className={`settings-world-card ${active ? "is-active" : ""}`}
                         onClick={() => setWorld(item.id)}
                         type="button"
+                        aria-pressed={active}
                       >
                         <span className="settings-world-emoji">
                           {item.emoji === "☕" ? (
@@ -181,7 +208,7 @@ export function SettingsPage() {
               <div className="settings-panel pixel-card-sm">
                 <div className="settings-panel-head">
                   <div>
-                    <label className="settings-kicker">Display Mode</label>
+                    <span className="settings-kicker">Display Mode</span>
                     <h3>{dark ? "Night Cabin" : "Day Cabin"}</h3>
                   </div>
                   <span className="settings-chip">Manual</span>
@@ -195,6 +222,7 @@ export function SettingsPage() {
                     className={!dark ? "is-active" : ""}
                     onClick={() => setThemeMode("light")}
                     type="button"
+                    aria-pressed={!dark}
                   >
                     Day
                   </button>
@@ -202,6 +230,7 @@ export function SettingsPage() {
                     className={dark ? "is-active" : ""}
                     onClick={() => setThemeMode("dark")}
                     type="button"
+                    aria-pressed={dark}
                   >
                     Night
                   </button>
@@ -211,7 +240,7 @@ export function SettingsPage() {
               <div className="settings-panel pixel-card-sm">
                 <div className="settings-panel-head">
                   <div>
-                    <label className="settings-kicker">Game Feel</label>
+                    <span className="settings-kicker">Game Feel</span>
                     <h3>Comfort & Effects</h3>
                   </div>
                   <span className="settings-chip">HUD</span>
@@ -248,11 +277,9 @@ export function SettingsPage() {
               </div>
 
               {/* Account */}
-              <div className="pixel-card-sm p-4 space-y-3">
-                <label className="font-pixel text-[0.6rem] text-muted-foreground uppercase tracking-wider">
-                  Account
-                </label>
-                <div className="space-y-1">
+              <div className="settings-account-panel pixel-card-sm">
+                <span className="settings-kicker">Account</span>
+                <div className="settings-account-details">
                   <div className="flex items-center gap-3 text-[0.65rem] font-pixel">
                     <span className="text-muted-foreground w-20">Level</span>
                     <strong>{player.level}</strong>
@@ -283,45 +310,43 @@ export function SettingsPage() {
                     </div>
                   ) : null}
                 </div>
-                {user || isDemo ? (
+                <div className="settings-account-actions">
+                  {user || isDemo ? (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={async () => {
+                        try {
+                          await logout();
+                        } catch {
+                          /* ignore */
+                        }
+                      }}
+                      disabled={isLoggingOut}
+                      type="button"
+                    >
+                      {isLoggingOut ? "Signing out..." : "🚪 Sign Out"}
+                    </Button>
+                  ) : (
+                    <Button size="sm" onClick={() => setShowAuth(true)} type="button">
+                      🔑 Sign In
+                    </Button>
+                  )}
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={async () => {
-                      try {
-                        await logout();
-                      } catch {
-                        /* ignore */
+                    onClick={() => {
+                      if (confirm("Reset ALL progress? This cannot be undone!")) {
+                        dispatch({ type: "RESET" });
                       }
                     }}
-                    disabled={isLoggingOut}
                     type="button"
                   >
-                    {isLoggingOut ? "Signing out..." : "🚪 Sign Out"}
+                    🗑 Reset Data
                   </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    onClick={() => setShowAuth(true)}
-                    type="button"
-                  >
-                    🔑 Sign In
-                  </Button>
-                )}
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => {
-                    if (confirm("Reset ALL progress? This cannot be undone!")) {
-                      dispatch({ type: "RESET" });
-                    }
-                  }}
-                  type="button"
-                >
-                  🗑 Reset Data
-                </Button>
+                </div>
                 {showAuth && (
-                  <div className="pt-2">
+                  <div className="settings-auth-panel">
                     <AuthForm />
                   </div>
                 )}
@@ -329,7 +354,16 @@ export function SettingsPage() {
             </div>
           )}
 
-          {activeTab === "library" && <DocsViewer />}
+          {activeTab === "library" && (
+            <div
+              id="settings-panel-library"
+              className="settings-library-panel"
+              role="tabpanel"
+              aria-labelledby="settings-tab-library"
+            >
+              <DocsViewer />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -353,6 +387,7 @@ function SettingsToggle({
       disabled={locked}
       onClick={onClick}
       type="button"
+      aria-pressed={active}
     >
       <span className="settings-toggle-orb" aria-hidden="true">
         {locked ? <PixelIcon emoji="🔒" className="inline-lock-icon" /> : active ? "ON" : "OFF"}

@@ -15,7 +15,7 @@ Badges are:
 - **Unique personalized crest** matching the badge category
 - **Collectible RPG inventory items**, not flat UI icons
 
-The Awards tab presents the badge collection as a full-page fantasy museum over \`public/awards/awards-background.png\`. It shows one wing at a time, uses the provided wing banner art from \`public/awards/banner/\`, and places exactly 10 awards on \`public/awards/shelf.png\` as handcrafted museum exhibits: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf. Shelf placement is driven by a normalized upper/lower anchor grid, so each badge, platform, spotlight, tooltip, and hover lift originates from the same bottom-center shelf coordinate. The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for readability.
+The Awards tab presents the badge collection as a full-page fantasy museum that swaps between \`public/awards/awards-background-morning.png\` and \`public/awards/awards-background-night.png\` with the global day/night toggle. It shows one wing at a time, uses the provided wing banner art from \`public/awards/banner/\`, and places exactly 10 awards on \`public/awards/shelf.png\` as handcrafted museum exhibits: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf. Shelf placement is driven by a normalized upper/lower anchor grid, so each badge, platform, spotlight, tooltip, and hover lift originates from the same bottom-center shelf coordinate. The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for readability.
 
 ---
 

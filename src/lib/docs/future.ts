@@ -1,5 +1,7 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - Settings now has its own responsive stylesheet and stable two-column desktop layout that stacks cleanly on smaller screens. General and Library use accessible keyboard-navigable tabs, world/display/effect controls expose their selected states, and account actions resize consistently without depending on login-screen styles.
+
 ✅ **Shipped** - Standard buttons now share one pixel-game component and consistent primary, secondary, destructive, ghost, link, size, disabled, and keyboard-focus states. HUD menus, Settings account actions, notifications, world switching, Shop purchases, typing controls, and modal actions now use that shared foundation.
 
 ✅ **Shipped** - The global HUD day/night toggle is back. The header and Settings now use one synchronized saved theme choice, so display mode stays consistent across the app.
@@ -94,7 +96,7 @@ Planned features and high-potential additions to expand the game.
 
 ✅ **Shipped** - Awards badge artwork now renders larger with roomier responsive grid cells so the collection page feels more readable and closer to the pixel badge art scale.
 
-✅ **Shipped** - The Awards tab now uses \`public/awards/awards-background.png\` as a full-page hall background behind the badge panel, matching Camp's scene-style page treatment.
+✅ **Shipped** - The Awards tab now swaps between \`public/awards/awards-background-morning.png\` and \`public/awards/awards-background-night.png\` so the full-page hall background follows the global day/night toggle.
 
 ✅ **Shipped** - The Awards collection now renders as gamified trophy shelves, with each badge category displayed on a wooden shelf and each badge shown in its own collectible slot.
 

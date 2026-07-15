@@ -1,7 +1,13 @@
 /* ===== Accessibility modes =====
- * Toggled by <html class="pawtype-reduce-motion"> and
- * <html class="pawtype-high-contrast"> from SettingsPage.
+ * Toggled by SettingsPage on the root html element.
  */
+
+/* ---------- Focus Glow ---------- */
+.pawtype-focus-glow :focus-visible {
+  outline: 3px solid var(--coin);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--coin) 18%, transparent);
+}
 
 /* ---------- Reduced Motion ---------- */
 .pawtype-reduce-motion *,

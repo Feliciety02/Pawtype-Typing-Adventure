@@ -3,6 +3,7 @@
 @import "./styles/header.css";
 @import "./styles/pixel-utilities.css";
 @import "./styles/login-screen.css";
+@import "./styles/settings.css";
 @import "./styles/world-ambient.css";
 @import "./styles/adventure-map.css";
 @import "./styles/typing-arena.css";

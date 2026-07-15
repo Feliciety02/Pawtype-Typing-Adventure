@@ -1,0 +1,453 @@
+/* ===== Settings page ===== */
+.settings-page {
+  width: 100%;
+  min-width: 0;
+  margin-block-start: clamp(1rem, 2vw, 2rem);
+  padding-block-end: clamp(1.5rem, 3vw, 3rem);
+}
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: start;
+}
+
+.settings-sidebar {
+  position: sticky;
+  top: 6.5rem;
+  min-width: 0;
+}
+
+.settings-tabs {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.settings-tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  overflow: hidden;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--color-card) 88%, transparent);
+  color: var(--muted-foreground);
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  line-height: 1;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.settings-tab-button:hover,
+.settings-tab-button.is-active {
+  border-color: var(--color-primary);
+  color: var(--color-foreground);
+}
+
+.settings-tab-button:hover {
+  transform: translateY(-1px);
+}
+
+.settings-tab-button.is-active {
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.settings-tab-button:focus-visible,
+.settings-world-card:focus-visible,
+.settings-segment button:focus-visible,
+.settings-toggle-card:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+.settings-tab-emoji {
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+.settings-tab-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-content,
+.settings-library-panel,
+.settings-library-panel > * {
+  min-width: 0;
+}
+
+.settings-general-panel {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.settings-page-head {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.settings-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  background:
+    radial-gradient(
+      circle at 6% 0%,
+      color-mix(in oklab, var(--color-primary) 10%, transparent),
+      transparent 26%
+    ),
+    color-mix(in oklab, var(--color-card) 82%, transparent);
+}
+
+.settings-panel-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.settings-kicker,
+.settings-help,
+.settings-chip,
+.settings-world-name,
+.settings-world-blurb,
+.settings-toggle-card {
+  font-family: var(--font-pixel);
+}
+
+.settings-kicker {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.54rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.settings-panel h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  line-height: 0.9;
+}
+
+.settings-help {
+  max-width: 72ch;
+  color: var(--muted-foreground);
+  font-size: 0.58rem;
+  line-height: 1.7;
+}
+
+.settings-chip {
+  display: inline-flex;
+  min-height: 1.75rem;
+  align-items: center;
+  padding: 0.25rem 0.48rem;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--coin) 18%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+  font-size: 0.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.settings-world-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 0.75rem;
+}
+
+.settings-world-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.25rem 0.55rem;
+  align-items: center;
+  min-width: 0;
+  min-height: 118px;
+  padding: 0.78rem;
+  border: 2px solid color-mix(in oklab, var(--color-border) 72%, transparent);
+  border-radius: 7px;
+  background:
+    linear-gradient(135deg, color-mix(in oklab, white 14%, transparent), transparent 62%),
+    color-mix(in oklab, var(--color-muted) 50%, var(--color-card));
+  box-shadow: var(--shadow-pixel-sm);
+  color: var(--color-foreground);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+
+.settings-world-card:hover {
+  transform: translate(-1px, -2px);
+  border-color: var(--color-primary);
+  box-shadow:
+    4px 4px 0 0 var(--color-border),
+    0 0 14px color-mix(in oklab, var(--color-primary) 18%, transparent);
+}
+
+.settings-world-card.is-active {
+  border-color: var(--color-primary);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-primary) 16%, transparent),
+      transparent 62%
+    ),
+    color-mix(in oklab, var(--color-card) 92%, transparent);
+}
+
+.settings-world-emoji {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--color-card) 75%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+  font-size: 1.25rem;
+}
+
+.settings-world-name {
+  overflow: hidden;
+  color: var(--color-foreground);
+  font-size: 0.66rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-world-blurb {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.5rem;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.settings-swatches {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.3rem;
+}
+
+.settings-swatches span {
+  width: 18px;
+  height: 18px;
+  border: 2px solid color-mix(in oklab, var(--color-border) 68%, transparent);
+  border-radius: 3px;
+}
+
+.settings-segment {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--color-muted) 56%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, white 20%, transparent);
+}
+
+.settings-segment button,
+.settings-toggle-card {
+  border: 2px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+  border-radius: 6px;
+  background: var(--color-card);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+.settings-segment button {
+  min-height: 42px;
+  font-family: var(--font-pixel);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.settings-segment button.is-active {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  box-shadow:
+    3px 3px 0 0 var(--color-border),
+    0 0 12px color-mix(in oklab, var(--color-primary) 28%, transparent);
+}
+
+.settings-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 0.7rem;
+}
+
+.settings-toggle-card {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+  min-height: 72px;
+  padding: 0.65rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.settings-toggle-card.is-active {
+  border-color: var(--color-primary);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-card));
+}
+
+.settings-toggle-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+  filter: grayscale(0.35);
+}
+
+.settings-toggle-orb {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-muted) 68%, transparent);
+  box-shadow: var(--shadow-pixel-sm);
+  font-size: 0.48rem;
+}
+
+.settings-toggle-card.is-active .settings-toggle-orb {
+  background: var(--leaf);
+  color: var(--color-primary-foreground);
+}
+
+.settings-toggle-card strong,
+.settings-toggle-card small {
+  display: block;
+}
+
+.settings-toggle-card strong {
+  font-size: 0.6rem;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.settings-toggle-card small {
+  margin-top: 0.2rem;
+  color: var(--muted-foreground);
+  font-size: 0.5rem;
+}
+
+.settings-account-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+}
+
+.settings-account-details {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.settings-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.settings-account-actions .pixel-btn {
+  min-width: 140px;
+}
+
+.settings-auth-panel {
+  width: min(100%, 28rem);
+  padding-top: 0.25rem;
+}
+
+.inline-lock-icon {
+  width: 1.05em;
+  height: 1.05em;
+  object-fit: contain;
+  image-rendering: pixelated;
+  vertical-align: -0.15em;
+}
+
+@media (max-width: 840px) {
+  .settings-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-sidebar {
+    position: static;
+  }
+
+  .settings-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .settings-tab-button {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .settings-page {
+    margin-block-start: 0.75rem;
+  }
+
+  .settings-general-panel,
+  .settings-panel,
+  .settings-account-panel {
+    padding: 0.8rem;
+  }
+
+  .settings-panel-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .settings-chip {
+    white-space: normal;
+  }
+
+  .settings-world-grid,
+  .settings-toggle-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-account-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-account-actions .pixel-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
