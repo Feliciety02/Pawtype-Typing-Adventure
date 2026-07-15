@@ -5,10 +5,11 @@ import { useAuth } from "../../hooks/use-auth";
 import { AuthForm } from "../auth/AuthForm";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
 import { DocsViewer } from "../shared/DocsViewer";
+import { useThemeMode } from "../../hooks/use-theme-mode";
+import { Button } from "../ui/button";
 
 const CRT_KEY = "pawtype-crt-on";
 const SPARKLE_KEY = "pawtype-sparkle-on";
-const THEME_KEY = "theme";
 const FOCUS_GLOW_KEY = "pawtype-focus-glow";
 const REDUCE_MOTION_KEY = "pawtype-reduce-motion";
 const HIGH_CONTRAST_KEY = "pawtype-high-contrast";
@@ -26,10 +27,6 @@ function readStoredFlag(key: string) {
   return typeof window !== "undefined" && window.localStorage.getItem(key) === "1";
 }
 
-function readThemeMode() {
-  return typeof window !== "undefined" && window.localStorage.getItem(THEME_KEY) === "dark";
-}
-
 export function SettingsPage() {
   const { state, dispatch } = useGame();
   const { user, isDemo, accountLabel, isLoading: authLoading, logout, isLoggingOut } = useAuth();
@@ -37,9 +34,9 @@ export function SettingsPage() {
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const { player, inventory } = state;
   const [showAuth, setShowAuth] = useState(false);
+  const { dark, setThemeMode } = useThemeMode();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
-  const [dark, setDark] = useState(readThemeMode);
   const [crt, setCrt] = useState(() => readStoredFlag(CRT_KEY));
   const [sparkle, setSparkle] = useState(() => readStoredFlag(SPARKLE_KEY));
   const [focusGlow, setFocusGlow] = useState(() => readStoredFlag(FOCUS_GLOW_KEY));
@@ -51,12 +48,6 @@ export function SettingsPage() {
   const unlockedWorlds = WORLDS.filter(
     (item) => BASE_WORLD_IDS.includes(item.id) || inventory.items.includes(`theme-${item.id}`),
   );
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-    if (typeof window !== "undefined")
-      window.localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
-  }, [dark]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("pawtype-focus-glow", focusGlow);
@@ -95,16 +86,6 @@ export function SettingsPage() {
     }
   };
 
-  const setThemeMode = (next: "light" | "dark") => {
-    const isDark = next === "dark";
-    setDark(isDark);
-    document.documentElement.classList.toggle("dark", isDark);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
-      window.dispatchEvent(new Event("storage"));
-    }
-  };
-
   return (
     <div className="mt-8">
       <div className="flex flex-col sm:flex-row gap-6">
@@ -114,15 +95,16 @@ export function SettingsPage() {
             {TABS.map((tab) => (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`font-pixel text-[0.6rem] px-3 py-2 rounded-md border transition-all text-left ${
+                className={`settings-tab-button font-pixel text-[0.6rem] px-3 py-2 rounded-md border transition-all text-left ${
                   activeTab === tab.id
                     ? "border-[var(--color-primary)] text-foreground bg-[var(--color-primary)]/10"
                     : "border-[var(--color-border)] text-muted-foreground hover:text-foreground hover:border-[var(--color-primary)]"
                 }`}
               >
-                <span className="mr-1.5">{tab.emoji}</span>
-                {tab.label}
+                <span className="settings-tab-emoji">{tab.emoji}</span>
+                <span className="settings-tab-label">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -302,8 +284,9 @@ export function SettingsPage() {
                   ) : null}
                 </div>
                 {user || isDemo ? (
-                  <button
-                    className="pixel-btn pixel-btn-secondary text-[0.55rem]"
+                  <Button
+                    variant="destructive"
+                    size="sm"
                     onClick={async () => {
                       try {
                         await logout();
@@ -315,18 +298,19 @@ export function SettingsPage() {
                     type="button"
                   >
                     {isLoggingOut ? "Signing out..." : "🚪 Sign Out"}
-                  </button>
+                  </Button>
                 ) : (
-                  <button
-                    className="pixel-btn pixel-btn-secondary text-[0.55rem]"
+                  <Button
+                    size="sm"
                     onClick={() => setShowAuth(true)}
                     type="button"
                   >
                     🔑 Sign In
-                  </button>
+                  </Button>
                 )}
-                <button
-                  className="pixel-btn pixel-btn-secondary text-[0.55rem]"
+                <Button
+                  variant="destructive"
+                  size="sm"
                   onClick={() => {
                     if (confirm("Reset ALL progress? This cannot be undone!")) {
                       dispatch({ type: "RESET" });
@@ -335,7 +319,7 @@ export function SettingsPage() {
                   type="button"
                 >
                   🗑 Reset Data
-                </button>
+                </Button>
                 {showAuth && (
                   <div className="pt-2">
                     <AuthForm />

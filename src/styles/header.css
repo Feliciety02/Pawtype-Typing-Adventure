@@ -688,6 +688,35 @@
   padding: 0;
 }
 
+.hud-theme-btn.pixel-btn {
+  min-width: 96px;
+  height: 48px;
+  padding: 0 0.75rem;
+  border: 2px solid color-mix(in oklab, var(--hud-trim) 40%, var(--color-border));
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--hud-trim) 8%, transparent), transparent 60%),
+    color-mix(in oklab, var(--color-card) 84%, transparent);
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 30%, transparent);
+  font-size: 0.6rem;
+}
+
+.hud-theme-btn.pixel-btn:hover {
+  background: color-mix(in oklab, var(--hud-trim) 20%, var(--color-card));
+}
+
+@media (max-width: 1200px) {
+  .hud-theme-btn.pixel-btn {
+    width: 48px;
+    min-width: 48px;
+    padding-inline: 0;
+  }
+
+  .hud-theme-btn span {
+    display: none;
+  }
+}
+
 .hud-coins {
   display: flex;
   align-items: center;

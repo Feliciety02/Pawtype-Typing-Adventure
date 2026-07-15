@@ -1,7 +1,6 @@
 import {
   useEffect,
   useRef,
-  type ButtonHTMLAttributes,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
@@ -9,6 +8,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { cn } from "@/lib/utils/utils";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
 export function PixelCornerOrnaments() {
   return (
@@ -192,7 +192,7 @@ export function CoachTipCard({ children }: CoachTipCardProps) {
   );
 }
 
-type PixelButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type PixelButtonProps = Omit<ButtonProps, "variant"> & {
   variant?: "primary" | "secondary";
   icon?: ReactNode;
 };
@@ -206,13 +206,14 @@ export function PixelButton({
   ...props
 }: PixelButtonProps) {
   return (
-    <button
+    <Button
       type={type}
+      variant={variant === "primary" ? "default" : "secondary"}
       className={cn("pixel-modal-btn", variant === "primary" && "is-primary", className)}
       {...props}
     >
       {icon ? <span className="pixel-modal-btn-icon">{icon}</span> : null}
       <span>{children}</span>
-    </button>
+    </Button>
   );
 }

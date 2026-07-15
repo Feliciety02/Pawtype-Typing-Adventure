@@ -1,5 +1,9 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - Standard buttons now share one pixel-game component and consistent primary, secondary, destructive, ghost, link, size, disabled, and keyboard-focus states. HUD menus, Settings account actions, notifications, world switching, Shop purchases, typing controls, and modal actions now use that shared foundation.
+
+✅ **Shipped** - The global HUD day/night toggle is back. The header and Settings now use one synchronized saved theme choice, so display mode stays consistent across the app.
+
 ✅ **Shipped** - Awards museum shelf art, badges, and pedestal platforms now move downward together by 30% as one aligned exhibit group.
 
 ✅ **Shipped** - Awards museum shelf group was moved 5px lower while keeping badge and pedestal alignment locked inside the shelf.
@@ -246,6 +250,7 @@ Seasonal pass with exclusive cosmetics, badges, and pets. Free track always avai
 - **Type-safety bypasses** ✅ Done — Replaced \`as unknown as Record\` casts with cleaner patterns
 - **Dead code removal** ✅ Done — Removed \`ollama.ts\`, \`BiomeParticleEmitter\`
 - **ai/ → engine/ rename** ✅ Done — Directory renamed, all imports updated
+- **Cloud sync → React Query** ✅ Done — \`loadGameState\` / \`saveGameState\` migrated from manual \`useEffect\` + debounce to \`useQuery\` / \`useMutation\` with cache dedup and status tracking. Router QueryClient has default \`staleTime\` and \`refetchOnWindowFocus\` config.
 - **Offline support** - full PWA with service worker caching
 - **Accessibility pass** - screen reader support, high contrast mode, keyboard navigation audit
 - **Mobile responsive** - typing on mobile with virtual keyboard

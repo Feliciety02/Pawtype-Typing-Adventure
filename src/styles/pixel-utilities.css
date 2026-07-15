@@ -43,15 +43,63 @@
   color: var(--color-foreground);
 }
 
+@utility pixel-btn-destructive {
+  border-color: color-mix(in oklab, var(--color-destructive) 72%, var(--color-border));
+  background: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+}
+
 @utility pixel-btn-ghost {
   background: transparent;
   color: var(--color-foreground);
   box-shadow: none;
 }
 
+@utility pixel-btn-link {
+  padding-inline: 0.25rem;
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-primary);
+  box-shadow: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@utility pixel-btn-sm {
+  min-height: 32px;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.58rem;
+}
+
+@utility pixel-btn-lg {
+  min-height: 48px;
+  padding: 0.85rem 1.35rem;
+  font-size: 0.86rem;
+}
+
+@utility pixel-btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
 .pixel-btn:hover {
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px 0 0 var(--color-border);
+}
+.pixel-btn:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+.pixel-btn-link:hover,
+.pixel-btn-ghost:hover {
+  transform: none;
+  box-shadow: none;
+}
+.pixel-btn-link:active,
+.pixel-btn-ghost:active {
+  transform: none;
+  box-shadow: none;
 }
 .pixel-btn:active {
   transform: translate(2px, 2px);

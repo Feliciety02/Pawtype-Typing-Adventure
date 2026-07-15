@@ -15,6 +15,7 @@ import {
 } from "@/lib/shop/shopData";
 import { OwnedBadge, PriceBadge, SectionHeader } from "@/lib/shop/shopHelpers";
 import { CategoryTabs } from "./CategoryTabs";
+import { Button } from "@/components/ui/button";
 
 export function ThemesPage() {
   const { state, dispatch } = useGame();
@@ -126,8 +127,8 @@ export function ThemesPage() {
                   </div>
                   <PriceBadge price={t.price} />
                 </div>
-                <button
-                  className={`pixel-btn ${equipped || ownedT ? "pixel-btn-secondary" : ""}`}
+                <Button
+                  variant={equipped || ownedT ? "secondary" : "default"}
                   disabled={locked || (ownedT ? equipped : !canAfford)}
                   onClick={() => (ownedT ? equipTheme(t) : buyTheme(t))}
                 >
@@ -140,7 +141,7 @@ export function ThemesPage() {
                         : !canAfford
                           ? "Need 🪙"
                           : "Buy"}
-                </button>
+                </Button>
               </div>
             );
           })}
@@ -182,14 +183,15 @@ export function ThemesPage() {
                   {d.description}
                 </div>
                 <PriceBadge price={d.price} />
-                <button
-                  className={`pixel-btn w-full ${ownedD ? "pixel-btn-secondary" : ""}`}
-                  style={{ padding: "4px 8px", fontSize: "0.55rem" }}
+                <Button
+                  variant={ownedD ? "secondary" : "default"}
+                  size="sm"
+                  className="w-full"
                   disabled={ownedD || !canAfford}
                   onClick={() => buyDoodad(d)}
                 >
                   {ownedD ? "Owned" : !canAfford ? "Need 🪙" : "Buy"}
-                </button>
+                </Button>
               </div>
             );
           })}

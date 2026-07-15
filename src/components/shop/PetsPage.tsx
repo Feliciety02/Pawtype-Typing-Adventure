@@ -10,6 +10,7 @@ import {
   type PetSort,
 } from "@/lib/shop/shopData";
 import { RarityBadge, OwnedBadge, PriceBadge, SectionHeader } from "@/lib/shop/shopHelpers";
+import { Button } from "@/components/ui/button";
 
 export function PetsPage() {
   const { state, dispatch } = useGame();
@@ -225,9 +226,9 @@ export function PetsPage() {
 
                 <div className="flex items-center justify-between mt-1">
                   <PriceBadge price={p.price} />
-                  <button
-                    className={`pixel-btn ${ownedP ? "pixel-btn-secondary" : ""}`}
-                    style={{ padding: "6px 10px", fontSize: "0.6rem" }}
+                  <Button
+                    variant={ownedP ? "secondary" : "default"}
+                    size="sm"
                     disabled={ownedP || locked || !canAfford}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -235,7 +236,7 @@ export function PetsPage() {
                     }}
                   >
                     {ownedP ? "Owned" : locked ? "Locked" : !canAfford ? "Need 🪙" : "Buy"}
-                  </button>
+                  </Button>
                 </div>
               </div>
             );
@@ -356,32 +357,30 @@ export function PetsPage() {
               </p>
               <div className="flex items-center justify-between">
                 <PriceBadge price={p.price} />
-                <button
+                <Button
                   onClick={() => toggleFav(p.id)}
-                  className="font-pixel text-[0.6rem] px-2 py-1 rounded"
-                  style={{
-                    background: "var(--color-muted)",
-                    border: "2px solid var(--color-border)",
-                  }}
+                  variant="secondary"
+                  size="sm"
                 >
                   {isFav(p.id) ? "❤️ Favorited" : "🤍 Favorite"}
-                </button>
+                </Button>
               </div>
               <div className="flex gap-2">
-                <button
-                  className="pixel-btn flex-1"
+                <Button
+                  className="flex-1"
                   disabled={ownedP || locked || player.coins < p.price}
                   onClick={() => buy(p)}
                 >
                   {ownedP ? "Owned" : locked ? "Locked" : "Buy"}
-                </button>
-                <button
-                  className="pixel-btn pixel-btn-secondary flex-1"
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="flex-1"
                   disabled={!ownedP || equipped}
                   onClick={() => equip(p)}
                 >
                   {equipped ? "Equipped" : "Equip"}
-                </button>
+                </Button>
               </div>
             </>
           );

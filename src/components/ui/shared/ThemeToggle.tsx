@@ -1,44 +1,32 @@
-import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
-const THEME_KEY = "theme";
+import { Button, type ButtonProps } from "@/components/ui/button";
+import { useThemeMode } from "@/hooks/use-theme-mode";
 
-function readThemeMode() {
-  if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(THEME_KEY) === "dark";
-}
+type ThemeToggleProps = Omit<ButtonProps, "children" | "variant"> & {
+  compact?: boolean;
+};
 
-function applyThemeMode(isDark: boolean) {
-  document.documentElement.classList.toggle("dark", isDark);
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
-  }
-}
-
-export function ThemeToggle() {
-  const [dark, setDark] = useState(readThemeMode);
-
-  useEffect(() => {
-    const sync = () => {
-      const isDark = readThemeMode();
-      setDark(isDark);
-      document.documentElement.classList.toggle("dark", isDark);
-    };
-
-    sync();
-    window.addEventListener("storage", sync);
-    return () => window.removeEventListener("storage", sync);
-  }, []);
-
-  const toggle = () => {
-    const next = !dark;
-    setDark(next);
-    applyThemeMode(next);
-    window.dispatchEvent(new Event("storage"));
-  };
+export function ThemeToggle({
+  className,
+  compact = false,
+  type = "button",
+  ...props
+}: ThemeToggleProps) {
+  const { dark, toggleThemeMode } = useThemeMode();
 
   return (
-    <button onClick={toggle} className="pixel-btn pixel-btn-secondary" aria-label="Toggle theme">
-      {dark ? "🌙 Night" : "☀ Day"}
-    </button>
+    <Button
+      type={type}
+      variant="secondary"
+      onClick={toggleThemeMode}
+      className={className}
+      aria-label={dark ? "Switch to day mode" : "Switch to night mode"}
+      title={dark ? "Switch to day mode" : "Switch to night mode"}
+      {...props}
+    >
+      {dark ? <Moon size={15} aria-hidden="true" /> : <Sun size={15} aria-hidden="true" />}
+      <span>{compact ? (dark ? "Night" : "Day") : dark ? "Night Mode" : "Day Mode"}</span>
+    </Button>
   );
 }

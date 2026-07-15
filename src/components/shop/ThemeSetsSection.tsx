@@ -1,5 +1,6 @@
 import { WORLDS, type WorldId } from "../shared/WorldTheme";
 import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
+import { buttonVariants } from "@/components/ui/button";
 
 export function ThemeSetsSection({
   activeWorld,
@@ -155,8 +156,10 @@ export function ThemeSetsSection({
                   {isActive ? "Active world" : "Click to switch"}
                 </span>
                 <span
-                  className="pixel-btn pixel-btn-secondary"
-                  style={{ padding: "0.45rem 0.8rem", fontSize: "0.62rem" }}
+                  className={`${buttonVariants({
+                    variant: "secondary",
+                    size: "sm",
+                  })} pointer-events-none`}
                 >
                   {isActive ? "Using Theme" : "Use Theme"}
                 </span>

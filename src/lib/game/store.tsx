@@ -22,6 +22,7 @@ import {
 import { persistence } from "./persistence";
 import { useAuth } from "@/hooks/use-auth";
 import { saveGameState, loadGameState } from "@/lib/supabase/game";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 export type GameAction =
   | { type: "EARN_COINS"; amount: number }
@@ -252,7 +253,6 @@ const GameCtx = createContext<GameCtx>({
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, rawDispatch] = useReducer(gameReducer, null, initializeGame);
   const { user, isLoading } = useAuth();
-  const loadedCloudUserId = useRef<string | null>(null);
   const resetFlagRef = useRef(false);
 
   const dispatch = useCallback((action: GameAction) => {
@@ -269,46 +269,49 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   }, [state]);
 
-  useEffect(() => {
-    if (isLoading) return;
-    if (!user) {
-      loadedCloudUserId.current = null;
-      return;
-    }
-    if (loadedCloudUserId.current === user.id) return;
-    loadedCloudUserId.current = user.id;
-    loadGameState().then((cloud) => {
-      if (!cloud) return;
-      if (!cloud.player || !cloud.inventory) return;
-      const cloudSessions = (cloud.sessions as TypingSession[] | undefined) ?? [];
-      const merged: GameState = {
-        player: { ...state.player, ...(cloud.player as Partial<typeof state.player>) },
-        inventory: { ...state.inventory, ...(cloud.inventory as Partial<typeof state.inventory>) },
-        adventures: { ...state.adventures, ...(cloud.adventures as Record<string, number[]>) },
-        sessions: cloudSessions.length > 0 ? cloudSessions : state.sessions,
-      };
-      dispatch({ type: "LOAD_FROM_CLOUD", state: merged });
-    });
-  }, [user, isLoading]);
+  const cloudLoad = useQuery({
+    queryKey: ["gameState", user?.id],
+    queryFn: loadGameState,
+    enabled: !!user && !isLoading,
+  });
 
-  const syncTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const prevUserId = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (!cloudLoad.data) return;
+    if (!cloudLoad.data.player || !cloudLoad.data.inventory) return;
+    if (user?.id === prevUserId.current) return;
+    prevUserId.current = user?.id;
+    const cloud = cloudLoad.data;
+    const cloudSessions = (cloud.sessions as TypingSession[] | undefined) ?? [];
+    const merged: GameState = {
+      player: { ...state.player, ...(cloud.player as Partial<typeof state.player>) },
+      inventory: { ...state.inventory, ...(cloud.inventory as Partial<typeof state.inventory>) },
+      adventures: { ...state.adventures, ...(cloud.adventures as Record<string, number[]>) },
+      sessions: cloudSessions.length > 0 ? cloudSessions : state.sessions,
+    };
+    dispatch({ type: "LOAD_FROM_CLOUD", state: merged });
+  }, [cloudLoad.data, user?.id]);
+
+  const cloudSave = useMutation({
+    mutationFn: (data: GameState) => {
+      const payload = {
+        player: { ...data.player } as Record<string, unknown>,
+        inventory: { ...data.inventory } as Record<string, unknown>,
+        adventures: data.adventures as Record<string, unknown>,
+        sessions: data.sessions as Record<string, unknown>[],
+      };
+      return saveGameState({ data: payload });
+    },
+    onError: () => console.warn("Cloud save failed"),
+  });
+
+  const syncTimer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     if (!user) return;
     if (syncTimer.current) clearTimeout(syncTimer.current);
-    syncTimer.current = setTimeout(async () => {
-      try {
-        const data = {
-          player: { ...state.player } as Record<string, unknown>,
-          inventory: { ...state.inventory } as Record<string, unknown>,
-          adventures: state.adventures as Record<string, unknown>,
-          sessions: state.sessions as Record<string, unknown>[],
-        };
-        await saveGameState({ data });
-      } catch {
-        console.warn("Cloud save failed");
-      }
-    }, 2000);
+    syncTimer.current = setTimeout(() => cloudSave.mutate(state), 2000);
     return () => {
       if (syncTimer.current) clearTimeout(syncTimer.current);
     };

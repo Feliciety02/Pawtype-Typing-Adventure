@@ -7,6 +7,7 @@ import { Confetti } from "../shared/Confetti";
 import { DURATIONS } from "@/lib/game/typing-arena-data";
 import { LessonResultsModal } from "./LessonResultsModal";
 import { useTypingEngine, type TypingEngineProps } from "@/hooks/useTypingEngine";
+import { Button } from "@/components/ui/button";
 
 export function TypingArena(props: TypingEngineProps = {}) {
   const {
@@ -92,14 +93,15 @@ export function TypingArena(props: TypingEngineProps = {}) {
                 </div>
               </div>
             </div>
-            <button
-              className="pixel-btn pixel-btn-secondary p-1.5"
+            <Button
+              variant="secondary"
+              size="icon"
               onClick={() => onClose?.()}
               aria-label="Close lesson"
               title="Exit lesson"
             >
               <X size={14} />
-            </button>
+            </Button>
           </div>
 
           {/* Progress bar */}

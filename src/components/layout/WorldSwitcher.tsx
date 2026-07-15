@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { WORLDS, useWorld } from "../shared/WorldTheme";
+import { Button } from "../ui/button";
 
 export function WorldSwitcher() {
   const { world, setWorld } = useWorld();
@@ -18,14 +19,14 @@ export function WorldSwitcher() {
 
   return (
     <div className="relative" ref={ref}>
-      <button
+      <Button
         onClick={() => setOpen((o) => !o)}
-        className="pixel-btn pixel-btn-secondary"
+        variant="secondary"
         aria-label="Switch world theme"
         aria-expanded={open}
       >
         {current.emoji} {current.name}
-      </button>
+      </Button>
 
       {open && (
         <div

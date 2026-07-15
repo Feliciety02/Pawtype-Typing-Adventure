@@ -10,6 +10,8 @@ import { PixelPet } from "../coach/PixelPet";
 import { xpForLevel } from "../../lib/game/types";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { getNotifications, subscribeNotifications } from "../../lib/game/notifications";
+import { ThemeToggle } from "../ui/shared/ThemeToggle";
+import { Button } from "../ui/button";
 
 export type View =
   "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings" | "inventory";
@@ -158,8 +160,8 @@ export function Header() {
               <strong>{player.streak}</strong>
             </div>
             <div className="hud-dropdown-actions">
-              <button
-                className="pixel-btn"
+              <Button
+                variant="secondary"
                 onClick={() => {
                   navigate({ to: "/stats" });
                   setProfileOpen(false);
@@ -167,9 +169,9 @@ export function Header() {
               >
                 <BarChart3 size={14} />
                 <span>Stats</span>
-              </button>
-              <button
-                className="pixel-btn"
+              </Button>
+              <Button
+                variant="secondary"
                 onClick={() => {
                   navigate({ to: "/settings" });
                   setProfileOpen(false);
@@ -177,10 +179,10 @@ export function Header() {
               >
                 <Settings size={14} />
                 <span>Settings</span>
-              </button>
+              </Button>
               {authLoading ? null : user || isDemo ? (
-                <button
-                  className="pixel-btn"
+                <Button
+                  variant="destructive"
                   disabled={isLoggingOut}
                   onClick={async () => {
                     await logout();
@@ -189,12 +191,12 @@ export function Header() {
                 >
                   <LogOut size={14} />
                   <span>{isLoggingOut ? "Leaving..." : "Sign Out"}</span>
-                </button>
+                </Button>
               ) : (
-                <button className="pixel-btn" onClick={() => setShowAuth((o) => !o)}>
+                <Button onClick={() => setShowAuth((o) => !o)}>
                   <LogIn size={14} />
                   <span>Sign In</span>
-                </button>
+                </Button>
               )}
             </div>
             {showAuth && (
@@ -221,6 +223,7 @@ export function Header() {
       </nav>
 
       <div className="hud-right">
+        <ThemeToggle className="hud-theme-btn" compact />
         <div className="hud-coins">
           <PixelIcon emoji="🪙" className="hud-coins-icon" />
           <strong className="hud-coins-value" suppressHydrationWarning>

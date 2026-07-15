@@ -6,6 +6,7 @@ import {
   subscribeNotifications,
   type Notification,
 } from "../../lib/game/notifications";
+import { Button } from "../ui/button";
 
 function formatAgo(ts: number) {
   const diff = Date.now() - ts;
@@ -77,9 +78,9 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
           ))}
         </ul>
       )}
-      <button type="button" onClick={onClose} className="pixel-btn pixel-btn-secondary w-full mt-2">
+      <Button variant="secondary" onClick={onClose} className="w-full mt-2">
         Close
-      </button>
+      </Button>
     </div>
   );
 }
