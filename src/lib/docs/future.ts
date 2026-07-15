@@ -1,5 +1,7 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+✅ **Shipped** - The shared HUD now adapts from the full desktop profile/navigation layout to compact icon-first tablet controls and a two-row phone layout. All six destinations remain visible without horizontal page overflow, while profile and notification controls expose accessible labels, focus states, current-page state, and expanded-menu state.
+
 ✅ **Shipped** - Settings now has its own responsive stylesheet and stable two-column desktop layout that stacks cleanly on smaller screens. General and Library use accessible keyboard-navigable tabs, world/display/effect controls expose their selected states, and account actions resize consistently without depending on login-screen styles.
 
 ✅ **Shipped** - Standard buttons now share one pixel-game component and consistent primary, secondary, destructive, ghost, link, size, disabled, and keyboard-focus states. HUD menus, Settings account actions, notifications, world switching, Shop purchases, typing controls, and modal actions now use that shared foundation.

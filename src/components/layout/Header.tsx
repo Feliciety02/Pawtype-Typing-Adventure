@@ -111,7 +111,11 @@ export function Header() {
 
       <div className="hud-left" ref={profileRef}>
         <button
+          type="button"
           className={`hud-profile-btn ${profileOpen ? "is-active" : ""}`}
+          aria-label={`Open profile menu for ${accountLabel ?? "Demo Adventurer"}`}
+          aria-expanded={profileOpen}
+          aria-controls="hud-profile-menu"
           onClick={() => {
             setProfileOpen((o) => !o);
             setShowAuth(false);
@@ -141,7 +145,7 @@ export function Header() {
         </button>
 
         {profileOpen && (
-          <div className="hud-dropdown">
+          <div className="hud-dropdown" id="hud-profile-menu">
             <div className="hud-dropdown-title">Profile</div>
             <div className="hud-dropdown-row">
               <span>Player</span>
@@ -212,7 +216,11 @@ export function Header() {
         {NAV_ITEMS.map((item) => (
           <button
             key={item.path}
+            type="button"
             className={`hud-nav-btn ${currentPath === item.path ? "is-active" : ""}`}
+            aria-label={item.label}
+            title={item.label}
+            aria-current={currentPath === item.path ? "page" : undefined}
             onClick={() => navigate({ to: item.path })}
             onMouseEnter={burstSparkles}
           >
@@ -232,7 +240,11 @@ export function Header() {
         </div>
         <div className="hud-notif-wrap" ref={notifRef}>
           <button
+            type="button"
             className={`hud-notif-btn ${notifOpen ? "is-active" : ""}`}
+            aria-label="Notifications"
+            aria-expanded={notifOpen}
+            aria-controls="hud-notifications-panel"
             onClick={() => setNotifOpen((o) => !o)}
           >
             <PixelIcon emoji="🔔" className="hud-notif-icon" />

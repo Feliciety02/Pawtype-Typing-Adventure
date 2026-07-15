@@ -36,6 +36,7 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
 
   return (
     <div
+      id="hud-notifications-panel"
       className="hud-dropdown hud-dropdown-right animate-pixel-pop"
       style={{ minWidth: 280, maxWidth: 320 }}
     >

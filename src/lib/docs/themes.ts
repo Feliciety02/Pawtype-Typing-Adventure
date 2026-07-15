@@ -90,7 +90,7 @@ Every world is a complete visual theme with its own color palette, ambient parti
 
 1. Each world sets CSS custom properties on \`<html>\` via the \`world-{id}\` class
 2. Light and dark modes each have separate palette overrides; the app uses the saved manual choice and does not auto-follow system theme
-3. The \`.game-hud\` block styles the top navigation bar as a three-part HUD with a clickable player profile card, centered menu strip, and compact utility panel; \`Stats\` and \`Settings\` now live in the profile menu, the nav uses pixel PNG tab icons from \`/icons/nav\`, desktop tabs stay on one line with content-width buttons, and the right HUD stat capsule now includes level, coins, and streak sized to its contents
+3. The \`.game-hud\` block styles the top navigation bar as a three-part HUD with a clickable player profile card, centered menu strip, and compact day/night, coins, and notifications panel. \`Stats\` and \`Settings\` live in the profile menu, desktop tabs stay on one line, tablet layouts switch to icon-first controls, and phone layouts use a two-row six-slot navigation grid without horizontal page overflow
 4. \`.ambient-glow\` or \`.ambient-particle\` creates atmospheric effects
 5. Background images are loaded from \`/themes/{slug}.png\`
 6. World selection persists in \`localStorage\`
