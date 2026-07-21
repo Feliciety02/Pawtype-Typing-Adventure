@@ -1,32 +1,51 @@
-import { Moon, Sun } from "lucide-react";
+import { useState } from "react";
 
-import { Button, type ButtonProps } from "@/components/ui/button";
 import { useThemeMode } from "@/hooks/use-theme-mode";
 
-type ThemeToggleProps = Omit<ButtonProps, "children" | "variant"> & {
-  compact?: boolean;
+type ThemeToggleProps = {
+  className?: string;
 };
 
-export function ThemeToggle({
-  className,
-  compact = false,
-  type = "button",
-  ...props
-}: ThemeToggleProps) {
+export function ThemeToggle({ className }: ThemeToggleProps) {
   const { dark, toggleThemeMode } = useThemeMode();
+  const [failed, setFailed] = useState(false);
 
   return (
-    <Button
-      type={type}
-      variant="secondary"
-      onClick={toggleThemeMode}
+    <button
+      type="button"
       className={className}
       aria-label={dark ? "Switch to day mode" : "Switch to night mode"}
       title={dark ? "Switch to day mode" : "Switch to night mode"}
-      {...props}
+      onClick={toggleThemeMode}
     >
-      {dark ? <Moon size={15} aria-hidden="true" /> : <Sun size={15} aria-hidden="true" />}
-      <span>{compact ? (dark ? "Night" : "Day") : dark ? "Night Mode" : "Day Mode"}</span>
-    </Button>
+      <div className="hud-theme-icon-wrap">
+        {failed ? (
+          <span
+            className={`hud-theme-icon ${dark ? "is-active" : ""}`}
+            role="img"
+            aria-hidden="true"
+          >
+            🌙
+          </span>
+        ) : (
+          <>
+            <img
+              src="/icons/nav/sun.webp"
+              className={`hud-theme-icon ${!dark ? "is-active" : ""}`}
+              alt=""
+              aria-hidden="true"
+              onError={() => setFailed(true)}
+            />
+            <img
+              src="/icons/nav/moon.webp"
+              className={`hud-theme-icon ${dark ? "is-active" : ""}`}
+              alt=""
+              aria-hidden="true"
+              onError={() => setFailed(true)}
+            />
+          </>
+        )}
+      </div>
+    </button>
   );
 }

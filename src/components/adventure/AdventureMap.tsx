@@ -13,6 +13,7 @@ import {
 } from "@/lib/adventure/adventureData";
 import { StageNode } from "./StageNode";
 import { StageRunner } from "./StageRunner";
+import { Progress } from "@/components/ui/progress";
 
 export function AdventureMap() {
   const { world } = useWorld();
@@ -61,7 +62,6 @@ export function AdventureMap() {
     return completed.includes(stages[index - 1].id) ? "available" : "locked";
   };
 
-  const clearedPercent = Math.round((totalCleared / allStages.length) * 100);
   const nextWorld = orderedWorlds.find((item) =>
     stagesForWorld(item.id).some((stage, index) => statusOf(item.id, stage, index) === "available"),
   );
@@ -91,9 +91,13 @@ export function AdventureMap() {
               {totalCleared}/{allStages.length}
             </strong>
           </div>
-          <div className="pixel-bar adventure-progress-bar">
-            <div style={{ width: `${clearedPercent}%` }} />
-          </div>
+          <Progress
+            value={totalCleared}
+            max={allStages.length}
+            size="md"
+            tone="success"
+            aria-label={`All worlds cleared: ${totalCleared} of ${allStages.length} stages`}
+          />
           <div className="adventure-next-line">
             <span>{nextStage ? "Next stage" : "All clear"}</span>
             <strong>
@@ -107,8 +111,6 @@ export function AdventureMap() {
         {orderedWorlds.map((theme) => {
           const stages = stagesForWorld(theme.id);
           const completed = state.adventures[theme.id] ?? [];
-          const worldClearedPercent = Math.round((completed.length / stages.length) * 100);
-
           return (
             <section
               className="adventure-world-section"
@@ -125,9 +127,13 @@ export function AdventureMap() {
                     {completed.length}/{stages.length}
                   </strong>
                   <span>cleared</span>
-                  <div className="pixel-bar adventure-progress-bar">
-                    <div style={{ width: `${worldClearedPercent}%` }} />
-                  </div>
+                  <Progress
+                    value={completed.length}
+                    max={stages.length}
+                    size="md"
+                    tone="success"
+                    aria-label={`${theme.name} cleared: ${completed.length} of ${stages.length} stages`}
+                  />
                 </div>
               </div>
 

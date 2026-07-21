@@ -112,3 +112,34 @@
   --ink: oklch(0.14 0.02 270);
   --cream: oklch(0.95 0.02 80);
 }
+
+/* --- Smooth theme transitions --- */
+@media (prefers-reduced-motion: no-preference) {
+  *,
+  *::before,
+  *::after {
+    transition: background 0.25s ease,
+                background-color 0.25s ease,
+                color 0.25s ease,
+                border-color 0.25s ease,
+                outline-color 0.25s ease,
+                box-shadow 0.25s ease;
+  }
+
+  .camp-campfire-flame,
+  .camp-campfire-glow,
+  .camp-building[data-id="campfire"] .camp-building-btn,
+  .camp-building[data-id="campfire"] .camp-building-btn::after,
+  .camp-building[data-glow="true"],
+  .camp-firefly,
+  .camp-butterfly,
+  .camp-petal,
+  .camp-leaf,
+  .camp-cloud,
+  .camp-star,
+  .camp-decor,
+  .camp-pet-inner,
+  .world-particle {
+    transition: none !important;
+  }
+}

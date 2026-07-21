@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { PixelButton, ModalShell, StatCard, RewardCard } from "../modals/ModalShell";
 
@@ -65,15 +66,15 @@ export function LessonResultsModal({
       frameClassName="pixel-modal-frame-lesson"
     >
       <div className="lesson-results-layout">
-        <div className="lesson-results-stars">
+        <div className="lesson-results-stars" aria-label={`${stars} of 3 stars`}>
           {[1, 2, 3].map((star) => (
-            <span key={star} className={star <= stars ? "is-filled" : ""}>
+            <span key={star} className={star <= stars ? "is-filled" : ""} aria-hidden="true">
               <PixelIcon emoji="⭐" />
             </span>
           ))}
         </div>
 
-        <div className="lesson-results-title">Lesson Complete!</div>
+        <h2 className="lesson-results-title">Lesson Complete!</h2>
 
         <div className="lesson-results-stats">
           <StatCard
@@ -105,24 +106,24 @@ export function LessonResultsModal({
           </div>
         )}
 
-        <div className="lesson-results-tip">
+        <div className="lesson-results-tip" role="status" aria-live="polite">
           {coachLoading
             ? "Analyzing your run..."
             : coachError
-              ? "Keep typing and Ixll have feedback ready!"
+              ? "Keep typing and I'll have feedback ready!"
               : (coachInsight?.text ?? "Great work out there!")}
         </div>
 
         <div className="lesson-results-actions">
-          <PixelButton variant="secondary" onClick={onReset} icon={<span>?</span>}>
+          <PixelButton variant="secondary" onClick={onReset} icon={<RotateCcw size={16} />}>
             Retry
           </PixelButton>
           {hasNext ? (
-            <PixelButton variant="primary" onClick={() => onNextLesson?.()} icon={<span>?</span>}>
+            <PixelButton variant="primary" onClick={() => onNextLesson?.()} icon={<ArrowRight size={16} />}>
               Next Lesson
             </PixelButton>
           ) : (
-            <PixelButton variant="primary" onClick={() => onClose?.()} icon={<span>?</span>}>
+            <PixelButton variant="primary" onClick={() => onClose?.()} icon={<ArrowLeft size={16} />}>
               Back to Lessons
             </PixelButton>
           )}

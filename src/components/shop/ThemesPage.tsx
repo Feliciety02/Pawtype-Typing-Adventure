@@ -139,6 +139,7 @@ export function ThemesPage() {
                   variant={equipped || ownedT ? "secondary" : "default"}
                   disabled={locked || (ownedT ? equipped : !canAfford)}
                   onClick={() => (ownedT ? equipTheme(t) : buyTheme(t))}
+                  aria-pressed={ownedT ? equipped : undefined}
                 >
                   {equipped
                     ? "Equipped"

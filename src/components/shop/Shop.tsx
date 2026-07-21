@@ -1,5 +1,6 @@
 import { useLocal } from "../../hooks/useLocal";
 import { type ShopTab } from "@/lib/shop/shopData";
+import { AnimatedTabPanel } from "../ui/shared/AnimatedTabPanel";
 import { SegmentedSwitcher } from "./SegmentedSwitcher";
 import { PetsPage } from "./PetsPage";
 import { ThemesPage } from "./ThemesPage";
@@ -22,26 +23,14 @@ export function Shop() {
         <SegmentedSwitcher value={tab} onChange={setTab} />
       </div>
 
-      {/* Animated tab body */}
-      <div
-        key={tab}
+      <AnimatedTabPanel
+        panelKey={tab}
         id="shop-active-panel"
-        className="shop-tab-enter"
-        role="tabpanel"
-        aria-labelledby={`shop-tab-${tab}`}
+        labelledBy={`shop-tab-${tab}`}
+        className="shop-tab-panel"
       >
         {tab === "pets" ? <PetsPage /> : <ThemesPage />}
-      </div>
-
-      <style>{`
-        .shop-tab-enter {
-          animation: shop-fade-slide 260ms ease-out;
-        }
-        @keyframes shop-fade-slide {
-          from { opacity: 0; transform: translateX(12px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-      `}</style>
+      </AnimatedTabPanel>
     </div>
   );
 }

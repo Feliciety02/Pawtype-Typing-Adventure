@@ -15,6 +15,7 @@ import {
 import { loadCompletedLessons } from "../../lib/game/curriculum";
 import { loadChestLessons, loadClaimedChests } from "../../lib/game/chests";
 import { THEMES, DOODADS, PETS } from "../../lib/shop/shopData";
+import { Progress } from "@/components/ui/progress";
 
 export function InventoryPage() {
   const { state } = useGame();
@@ -73,9 +74,14 @@ export function InventoryPage() {
           Egg #{progress.nextIndex} · {progress.progress}/{progress.total} lessons ·{" "}
           {claimed.size} hatched
         </div>
-        <div className="inventory-progress">
-          <div style={{ width: `${(progress.progress / progress.total) * 100}%` }} />
-        </div>
+        <Progress
+          className="my-2"
+          value={progress.progress}
+          max={progress.total}
+          size="sm"
+          tone="coin"
+          aria-label={`Next egg: ${progress.progress} of ${progress.total} lessons`}
+        />
         <p className="font-pixel text-[0.55rem] text-muted-foreground">
           Every {LESSONS_PER_EGG} completed lessons awards a new pet egg.
         </p>

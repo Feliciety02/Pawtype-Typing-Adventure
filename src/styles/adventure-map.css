@@ -78,23 +78,6 @@
   padding: 0.9rem;
 }
 
-.adventure-progress-bar {
-  height: 12px;
-}
-
-.adventure-progress-bar > div {
-  height: 100%;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      color-mix(in oklab, white 24%, transparent) 0 5px,
-      transparent 5px 9px
-    ),
-    linear-gradient(90deg, var(--leaf), var(--coin));
-  box-shadow: 0 0 10px color-mix(in oklab, var(--leaf) 36%, transparent);
-  transition: width 260ms ease;
-}
-
 .adventure-next-line {
   display: flex;
   justify-content: space-between;
@@ -794,34 +777,6 @@
   min-height: 0;
 }
 
-.adventure-type-progress {
-  height: 8px;
-  padding: 2px;
-  border: 2px solid color-mix(in oklab, var(--color-border) 70%, transparent);
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklab, var(--color-card) 82%, transparent),
-    color-mix(in oklab, var(--color-muted) 68%, transparent)
-  );
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, white 22%, transparent);
-  overflow: hidden;
-}
-
-.adventure-type-progress > div {
-  height: 100%;
-  border-radius: inherit;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      color-mix(in oklab, white 34%, transparent) 0 5px,
-      transparent 5px 9px
-    ),
-    linear-gradient(90deg, var(--color-primary), var(--coin), var(--leaf));
-  box-shadow: 0 0 12px color-mix(in oklab, var(--color-primary) 36%, transparent);
-  transition: width 120ms linear;
-}
-
 .adventure-typing-panel {
   min-height: clamp(340px, 46dvh, 470px);
   height: 100%;
@@ -933,18 +888,21 @@
 }
 
 .quest-results-overlay {
-  position: fixed;
-  inset: 0;
   z-index: 126;
-  display: grid;
-  place-items: center;
-  padding: 1.2rem;
-  pointer-events: none;
+}
+
+.quest-results-shell {
+  width: min(100%, 960px);
 }
 
 .quest-results-frame {
-  width: min(960px, calc(100% - 2rem));
-  pointer-events: auto;
+  width: 100%;
+}
+
+.quest-results-content {
+  max-height: calc(100dvh - 3.5rem);
+  overflow-y: auto;
+  padding: 0;
 }
 
 .quest-results-layout {
@@ -952,11 +910,6 @@
   grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.12fr);
   gap: 1.45rem;
   padding: 2.1rem 5rem 1.55rem 2rem;
-}
-
-.quest-results-close {
-  top: 0.9rem;
-  right: 0.9rem;
 }
 
 .quest-results-left,

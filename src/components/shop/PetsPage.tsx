@@ -13,6 +13,7 @@ import { RarityBadge, OwnedBadge, PriceBadge, SectionHeader } from "@/lib/shop/s
 import { Button } from "@/components/ui/button";
 import { CheckboxField, NativeSelect } from "@/components/ui/form-controls";
 import { PixelChoiceBar } from "@/components/ui/shared/PixelChoiceBar";
+import { Progress } from "@/components/ui/progress";
 
 export function PetsPage() {
   const { state, dispatch } = useGame();
@@ -175,53 +176,58 @@ export function PetsPage() {
             const selectedCard = selected.id === p.id;
             const canAfford = player.coins >= p.price;
             return (
-              <div
+              <article
                 key={p.id}
-                onClick={() => setSelectedId(p.id)}
-                className="pixel-card-sm p-4 flex flex-col gap-2 cursor-pointer transition-transform hover:-translate-y-0.5"
-                style={{
-                  outline: selectedCard ? "3px solid var(--color-primary)" : "none",
-                  outlineOffset: 2,
-                  opacity: locked ? 0.85 : 1,
-                }}
+                className="shop-pet-card pixel-selectable-card pixel-card-sm p-4 flex flex-col gap-2"
+                data-selected={selectedCard}
+                data-locked={locked}
               >
                 <div className="flex items-start justify-between gap-2">
                   <RarityBadge rarity={p.rarity} />
                   <div className="flex items-center gap-1">
                     {equipped && <OwnedBadge label="Equipped" color="var(--sky)" />}
                     {!equipped && ownedP && <OwnedBadge />}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFav(p.id);
-                      }}
-                      className="text-sm leading-none"
-                      title="Favorite"
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="shop-favorite-button"
+                      onClick={() => toggleFav(p.id)}
+                      aria-label={
+                        fav ? `Remove ${p.name} from favorites` : `Add ${p.name} to favorites`
+                      }
+                      aria-pressed={fav}
+                      title={fav ? "Remove from favorites" : "Add to favorites"}
                     >
-                      {fav ? "❤️" : "🤍"}
-                    </button>
+                      <span aria-hidden="true">{fav ? "❤️" : "🤍"}</span>
+                    </Button>
                   </div>
                 </div>
 
-                <div
-                  className="grid place-items-center rounded my-1"
-                  style={{
-                    height: 110,
-                    background: locked ? "var(--color-foreground)" : "var(--color-muted)",
-                    border: "2px solid var(--color-border)",
-                    fontSize: 56,
-                    filter: locked ? "brightness(0) opacity(0.35)" : "none",
-                  }}
+                <button
+                  type="button"
+                  className="shop-pet-select-target"
+                  onClick={() => setSelectedId(p.id)}
+                  aria-label={`Show details for ${locked ? `a pet unlocked at level ${p.unlockLevel}` : p.name}`}
+                  aria-pressed={selectedCard}
                 >
-                  {locked ? "???" : p.emoji}
-                </div>
+                  <span
+                    className="shop-pet-card-art grid place-items-center rounded my-1"
+                    style={{
+                      background: locked ? "var(--color-foreground)" : "var(--color-muted)",
+                      filter: locked ? "brightness(0) opacity(0.35)" : "none",
+                    }}
+                    aria-hidden="true"
+                  >
+                    {locked ? "???" : p.emoji}
+                  </span>
 
-                <div className="font-pixel text-[0.7rem] leading-tight truncate">
-                  {locked ? "???" : p.name}
-                </div>
-                <div className="font-pixel text-[0.55rem] text-muted-foreground leading-tight line-clamp-2 min-h-[1.6em]">
-                  {locked ? `Unlock at Level ${p.unlockLevel}` : p.description}
-                </div>
+                  <span className="font-pixel text-[0.7rem] leading-tight truncate">
+                    {locked ? "???" : p.name}
+                  </span>
+                  <span className="font-pixel text-[0.55rem] text-muted-foreground leading-tight line-clamp-2 min-h-[1.6em]">
+                    {locked ? `Unlock at Level ${p.unlockLevel}` : p.description}
+                  </span>
+                </button>
 
                 <div className="flex items-center justify-between mt-1">
                   <PriceBadge price={p.price} />
@@ -229,15 +235,12 @@ export function PetsPage() {
                     variant={ownedP ? "secondary" : "default"}
                     size="sm"
                     disabled={ownedP || locked || !canAfford}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      buy(p);
-                    }}
+                    onClick={() => buy(p)}
                   >
                     {ownedP ? "Owned" : locked ? "Locked" : !canAfford ? "Need 🪙" : "Buy"}
                   </Button>
                 </div>
-              </div>
+              </article>
             );
           })}
           {filtered.length === 0 && (
@@ -279,7 +282,6 @@ export function PetsPage() {
             <div className="space-y-2">
               {(["cat", "dog", "rabbit", "dragon"] as PetCategory[]).map((c) => {
                 const [have, total] = totals[c];
-                const pct = total > 0 ? Math.round((have / total) * 100) : 0;
                 return (
                   <div key={c}>
                     <div className="flex justify-between font-pixel text-[0.6rem] mb-1">
@@ -288,22 +290,12 @@ export function PetsPage() {
                         {have} / {total}
                       </span>
                     </div>
-                    <div
-                      style={{
-                        height: 8,
-                        background: "var(--color-muted)",
-                        border: "2px solid var(--color-border)",
-                        borderRadius: 4,
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: `${pct}%`,
-                          height: "100%",
-                          background: "var(--color-primary)",
-                        }}
-                      />
-                    </div>
+                    <Progress
+                      value={have}
+                      max={total}
+                      size="xs"
+                      aria-label={`${c} collection: ${have} of ${total} pets`}
+                    />
                   </div>
                 );
               })}
@@ -356,7 +348,15 @@ export function PetsPage() {
               </p>
               <div className="flex items-center justify-between">
                 <PriceBadge price={p.price} />
-                <Button onClick={() => toggleFav(p.id)} variant="secondary" size="sm">
+                <Button
+                  onClick={() => toggleFav(p.id)}
+                  variant="secondary"
+                  size="sm"
+                  aria-label={
+                    isFav(p.id) ? `Remove ${p.name} from favorites` : `Add ${p.name} to favorites`
+                  }
+                  aria-pressed={isFav(p.id)}
+                >
                   {isFav(p.id) ? "❤️ Favorited" : "🤍 Favorite"}
                 </Button>
               </div>
@@ -373,6 +373,7 @@ export function PetsPage() {
                   className="flex-1"
                   disabled={!ownedP || equipped}
                   onClick={() => equip(p)}
+                  aria-pressed={ownedP ? equipped : undefined}
                 >
                   {equipped ? "Equipped" : "Equip"}
                 </Button>

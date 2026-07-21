@@ -266,6 +266,81 @@
   transform: translateY(-1px) rotate(-45deg) scale(1);
 }
 
+/* ===== Shared progress indicators ===== */
+.pixel-progress {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  padding: 1px;
+  overflow: hidden;
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-muted) 76%, var(--color-card));
+  box-shadow: inset 0 1px 0 color-mix(in oklab, white 24%, transparent);
+}
+
+.pixel-progress[data-size="xs"] {
+  height: 8px;
+  border-width: 1px;
+}
+
+.pixel-progress[data-size="md"] {
+  height: 14px;
+}
+
+.pixel-progress-indicator {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, white 28%, transparent) 0 5px,
+      transparent 5px 9px
+    ),
+    linear-gradient(90deg, var(--color-primary), var(--coin));
+  box-shadow: 0 0 10px color-mix(in oklab, var(--color-primary) 34%, transparent);
+  transition: transform 180ms ease;
+}
+
+.pixel-progress[data-tone="xp"] .pixel-progress-indicator {
+  background:
+    linear-gradient(90deg, color-mix(in oklab, white 24%, transparent), transparent),
+    linear-gradient(90deg, #ff9b7d, #ff6a54 55%, #d33c3c);
+}
+
+.pixel-progress[data-tone="coin"] .pixel-progress-indicator {
+  background: linear-gradient(90deg, var(--coin), color-mix(in oklab, var(--coin) 68%, white));
+}
+
+.pixel-progress[data-tone="success"] .pixel-progress-indicator {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, white 24%, transparent) 0 5px,
+      transparent 5px 9px
+    ),
+    linear-gradient(90deg, var(--leaf), var(--coin));
+}
+
+.pixel-progress[data-tone="danger"] .pixel-progress-indicator {
+  background: linear-gradient(
+    90deg,
+    var(--color-destructive),
+    color-mix(in oklab, var(--color-destructive) 62%, var(--coin))
+  );
+}
+
+.pixel-progress[data-tone="rainbow"] .pixel-progress-indicator {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in oklab, white 28%, transparent) 0 5px,
+      transparent 5px 9px
+    ),
+    linear-gradient(90deg, var(--sakura), var(--coin), var(--accent));
+}
+
 /* ===== Shared page layout safeguards ===== */
 /* --- Awards root background -------------------------------- */
 .awards-section {
@@ -286,14 +361,14 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url("/awards/awards-background-morning.png");
+  background-image: url("/awards/awards-background-morning.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .dark .awards-bg {
-  background-image: url("/awards/awards-background-night.png");
+  background-image: url("/awards/awards-background-night.webp");
 }
 
 .awards-root > .awards-page {
@@ -435,6 +510,18 @@
   min-width: 0;
 }
 
+.pixel-tab-panel-motion {
+  min-width: 0;
+  animation: pixel-tab-panel-fade 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: top center;
+  will-change: opacity, transform;
+}
+
+.shop-tab-panel,
+.docs-active-panel {
+  min-width: 0;
+}
+
 .docs-choice-bar {
   margin-bottom: 1.5rem;
 }
@@ -460,6 +547,20 @@
   background: var(--color-primary);
 }
 
+@keyframes pixel-tab-panel-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+    filter: saturate(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: saturate(1);
+  }
+}
+
 @media (max-width: 560px) {
   .pixel-choice-bar--segmented {
     width: 100%;
@@ -472,6 +573,12 @@
 
   .docs-choice-bar .pixel-choice {
     flex: 1 1 min(100%, 130px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-tab-panel-motion {
+    animation: none;
   }
 }
 
@@ -495,6 +602,7 @@
 
 .shop-pets-layout > aside:not(.shop-preview),
 .shop-preview,
+.shop-pet-card,
 .shop-pets-grid > div,
 .shop-progress-grid > div,
 .shop-egg-grid > div {
@@ -507,6 +615,7 @@
 
 .shop-pets-layout > aside:not(.shop-preview),
 .shop-preview,
+.shop-pet-card,
 .shop-pets-grid > div,
 .shop-progress-grid > div {
   padding: 1rem;
@@ -528,10 +637,105 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
 }
 
-.shop-pets-grid > div {
+.shop-pets-grid > div,
+.shop-pet-card {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+/* ===== Shared selectable cards ===== */
+.pixel-selectable-card {
+  position: relative;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.pixel-selectable-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+}
+
+.pixel-selectable-card[data-selected="true"] {
+  border-color: var(--color-primary);
+  box-shadow:
+    0 0 0 2px var(--color-primary),
+    var(--shadow-pixel-sm);
+}
+
+button.pixel-selectable-card {
+  color: var(--color-card-foreground);
+  cursor: pointer;
+}
+
+button.pixel-selectable-card:focus-visible,
+.shop-pet-select-target:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+.shop-pet-card:has(.shop-pet-select-target:focus-visible) {
+  border-color: var(--color-primary);
+}
+
+.shop-pet-card[data-locked="true"] {
+  opacity: 0.85;
+}
+
+.shop-pet-select-target {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.shop-pet-card-art {
+  width: 100%;
+  height: 110px;
+  border: 2px solid var(--color-border);
+  font-size: 56px;
+}
+
+.shop-favorite-button {
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+}
+
+.shop-favorite-button[aria-pressed="true"] {
+  background: color-mix(in oklab, var(--color-primary) 18%, transparent);
+}
+
+.pixel-selectable-card-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0.45rem 0.7rem;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-card);
+  box-shadow: var(--shadow-pixel-sm);
+  color: var(--color-foreground);
+  font-family: var(--font-pixel);
+  font-size: 0.58rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.theme-set-card[data-selected="true"] .pixel-selectable-card-status {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
 }
 
 .shop-progress-grid {
@@ -1414,7 +1618,7 @@
   height: 46%;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/awards/shelf.png");
+  background-image: url("/awards/shelf.webp");
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100% auto;

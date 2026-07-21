@@ -1,0 +1,233 @@
+/* --- Camp building modals ---------------------------------- */
+.pixel-modal-shell-camp {
+  width: min(100%, 680px);
+}
+
+.pixel-modal-shell-camp.is-wide {
+  width: min(100%, 1040px);
+}
+
+.pixel-modal-shell-camp .pixel-modal-content {
+  max-height: calc(100dvh - 4.5rem);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.camp-modal-content {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.camp-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding-right: 3rem;
+}
+
+.camp-modal-header-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid #b98a68;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fffdf5 0%, #f1dfbe 100%);
+  box-shadow: 3px 3px 0 rgba(111, 73, 51, 0.35);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.camp-modal-heading {
+  min-width: 0;
+}
+
+.camp-modal-title {
+  margin: 0;
+  color: #4b2d27;
+  font-family: var(--font-display), var(--font-pixel), monospace;
+  font-size: clamp(1.55rem, 4vw, 2rem);
+  line-height: 0.95;
+}
+
+.camp-modal-subtitle {
+  margin: 0.4rem 0 0;
+  color: #6b5147;
+  font-family: var(--font-pixel), monospace;
+  font-size: 0.62rem;
+  line-height: 1.55;
+}
+
+/* --- Supply wagon chest interaction ------------------------ */
+.camp-chest-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 0;
+}
+
+.camp-chest {
+  display: grid;
+  place-items: center;
+  min-width: 96px;
+  min-height: 96px;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: clamp(40px, 6vw, 68px);
+  transition: transform 200ms ease;
+}
+
+.camp-chest:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.04);
+}
+
+.camp-chest:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+}
+
+.camp-chest:disabled {
+  cursor: default;
+}
+
+.camp-chest.is-ready {
+  animation: camp-chest-ready 2.4s ease-in-out infinite;
+}
+.camp-chest.is-shaking {
+  animation: camp-chest-shake 500ms ease;
+}
+.camp-chest.is-open {
+  animation: camp-chest-burst 700ms ease forwards;
+}
+
+.camp-chest-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.camp-chest-burst span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 22px;
+  animation: camp-chest-particle 900ms ease-out forwards;
+}
+
+.camp-reward-status {
+  padding: 0.9rem 1rem;
+  text-align: center;
+}
+
+.camp-reward-kicker {
+  color: var(--color-muted-foreground);
+  font-family: var(--font-pixel), monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+}
+
+.camp-reward-label {
+  margin-top: 0.35rem;
+  font-family: var(--font-display), var(--font-pixel), monospace;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.camp-reward-coins {
+  margin-top: 0.35rem;
+  color: var(--coin);
+  font-family: var(--font-pixel), monospace;
+  font-size: 0.68rem;
+}
+
+.pet-room-header {
+  display: grid;
+  gap: 0.4rem;
+  padding-right: 3rem;
+}
+
+.pet-room-modal-title {
+  margin: 0;
+}
+
+.pet-room-modal-subtitle {
+  margin: 0;
+  color: #6b5147;
+  font-family: var(--font-pixel), monospace;
+  font-size: 0.62rem;
+  line-height: 1.55;
+}
+
+.pet-room-pet-card {
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.pet-room-pet-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--coin) 65%, #bc8d6e);
+}
+
+.pet-room-pet-card:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+.pet-room-pet-card.is-active {
+  border-color: var(--coin);
+  box-shadow:
+    0 0 0 2px var(--coin) inset,
+    3px 3px 0 0 rgba(111, 73, 51, 0.35);
+}
+
+@media (max-width: 640px) {
+  .pixel-modal-shell-camp .pixel-modal-content {
+    max-height: calc(100dvh - 3.5rem);
+  }
+
+  .camp-modal-content {
+    padding: 1rem;
+  }
+
+  .camp-modal-header {
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding-right: 2.5rem;
+  }
+
+  .camp-modal-header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    font-size: 1.55rem;
+  }
+
+  .camp-modal-title {
+    font-size: 1.45rem;
+  }
+
+  .camp-modal-subtitle,
+  .pet-room-modal-subtitle {
+    font-size: 0.58rem;
+  }
+
+  .pet-room-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  .pet-room-pet-card {
+    padding: 0.75rem 0.5rem;
+  }
+}
+

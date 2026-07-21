@@ -95,7 +95,7 @@ export function PixelLoginScreen() {
         <div className="pixel-login-hero">
           <span className="pixel-login-badge">Press Start to Type</span>
           <div className="pixel-login-title-row">
-            <img src="/Logo.png" alt="" className="pixel-login-logo-mark" />
+            <img src="/Logo.webp" alt="" className="pixel-login-logo-mark" />
             <h1 className="pixel-login-wordmark">PawType</h1>
           </div>
           <p className="pixel-login-subtitle">Every Keystroke Begins an Adventure.</p>

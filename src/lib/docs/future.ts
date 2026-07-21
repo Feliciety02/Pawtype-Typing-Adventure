@@ -1,8 +1,48 @@
 export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
+## Shipped
+
+✅ **Shipped** - Pet Nursery eggs now share their nest's vertical slot alignment, and nest gaps are 20% wider.
+
+✅ **Shipped** - Camp skies now schedule randomized shooting stars from twilight through pre-dawn. Every meteor receives a different wait time, start position, path, speed, and glowing trail length instead of replaying one fixed animation.
+
+**Shipped** - Pet Nursery now follows the global light/dark display mode used by Awards, showing \`pet-nursery_morning.webp\` in light mode and a WebP-converted \`pet-nursery_evening.webp\` in dark mode.
+
+✅ **Shipped** - Locked Lessons content now uses a higher-contrast stone palette in light mode. Disabled chapters, path steps, cards, artwork, and actions remain clearly identifiable as unavailable while their labels and lock controls stay readable.
+
+✅ **Shipped** - The Pet Nursery now keeps its label-free, spaced egg-and-nest row on the left, with every egg visually centered over its nest and both layers moved down together. All nests and eggs are enlarged by 20%, with the tier-two nest and tier-five egg retaining their additional tier upgrade. Its decorative WebP ramp sits on the right, shifted 70% left and enlarged by 30% from its prior size. A warm, muted palette grade blends the ramp and eggs into the room’s amber wood and moss tones, while eggs, nests, and ramp use pronounced stepped pixel-art shadows.
+
+✅ **Shipped** - The blacksmith now uses the camp's shared warm ground halo, matching the other interactive buildings while keeping its forge visually lit.
+
+✅ **Shipped** - The Camp home screen now has a soft background-only vignette. It darkens the outer edges of the full painted world and atmosphere without layering over buildings, HUD controls, or open page content.
+
+✅ **Shipped** - Pet Nursery nests and eggs now render in separate positionable layers. The egg collection can move together, while every egg keeps independent horizontal and vertical placement without moving its nest.
+âœ… **Shipped** - Camp lit buildings now use one shared warm halo system. The campfire and reward-ready wagon reuse the same ground-glow recipe as the rest of the scene, so boosted light effects stay readable without looking like a separate bloom style.
+
+âœ… **Shipped** - Pet Nursery copy is now pared back, locked eggs stay fully solid with no faded opacity, the Next Unlock badge stays solid, egg nest spacing is tighter across the stage, each nest now supports its own vertical offset, and clickable eggs open the hatch flow directly from the nursery. The centered nursery row scales down with the viewport so all five nests remain visible, while unavailable nests are non-interactive and each egg has a subtle staggered hover-and-wobble treatment.
+
+âœ… **Shipped** - Camp styles are now split out of the old monolithic \`camp.css\` file into \`src/styles/camp/scene.css\`, \`nursery.css\`, \`modals.css\`, and \`animations.css\`, with \`src/styles/camp/index.css\` as the ordered entrypoint.
+
+✅ **Shipped** - The Lessons quest log now has a dedicated high-readability dark palette. Chapter headers, egg milestones, progress tracks, lesson descriptions, reward tiles, current actions, path nodes, focus rings, and locked states use clearer contrast while preserving the pixel RPG hierarchy.
+
+✅ **Shipped** - The active top-HUD navigation tab now keeps the same label color as inactive tabs, removing the white-text state while preserving the highlighted button background and glow.
+
+✅ **Shipped** - Adventure and lesson result dialogs now use the shared modal behavior and consistent action iconography. Adventure results gain dialog semantics, backdrop dismissal, Escape handling, trapped/restored focus, and bounded responsive scrolling while retaining their layer above the quest scene; lesson results use a semantic heading, announce asynchronous coach feedback, expose the earned star count, and replace placeholder glyphs with clear retry/next/back icons.
+
+✅ **Shipped** - Camp building dialogs now use consistent compact and wide modal layouts, semantic headings, shared responsive spacing, and bounded mobile scrolling. The Pet Nursery now opens as a dedicated full-page camp interior with an unboxed, floor-anchored egg roost, a viewport-locked layout, and compact overlay companion controls, while the Supply Wagon still announces reward progress, disables its chest after activation, and clears pending animation timers when closed.
+✅ **Shipped** - Camp building hover labels now raise above adjacent sprites while active, preventing nearby art like the mailbox from covering floating text over entries such as the Pet Nursery.
+
+✅ **Shipped** - Camp building interactions now separate decorative scenery from real buttons, use consistent keyboard focus and accessible names, and keep the background scene inert while the Cabin inventory is open. Cabin navigation uses the shared button style, supports Escape, restores focus to the Cabin on return, and stacks cleanly on phones; the library sprite is consistently identified as the Training Board it opens.
+
+✅ **Shipped** - HUD XP, pet XP, Shop collections, lesson chapters and egg milestones, inventory milestones, Adventure completion, boss health, stage timing, and typing completion now use one accessible pixel progress component. Every bar clamps invalid values, reports its current value and maximum, supports consistent sizes and semantic color tones, and remains legible in high-contrast mode.
+
+✅ **Shipped** - Selectable Shop cards now share consistent hover, selected, focus, and high-contrast states. Pet cards use a dedicated keyboard-accessible details control instead of a clickable container with nested actions, while favorites, equipped pets, and active theme sets expose their pressed state to assistive technology.
+
 ✅ **Shipped** - Ordinary text inputs, native selects, and checkbox fields now share one pixel form-control system with consistent sizing, theme-aware surfaces, labels, hover, disabled, invalid, keyboard-focus, and high-contrast states. Pet filters use fully clickable native labels, while hidden typing capture inputs remain visually untouched.
 
 ✅ **Shipped** - Shop section tabs, pet/theme/doodad category filters, and Library document tabs now share one responsive pixel choice bar. Tabs connect to their active panels, filters expose pressed states, and all variants use consistent selected, hover, focus, high-contrast, and arrow-key behavior without inline styling.
+
+✅ **Shipped** - Shop, Settings, and Library tab panels now use the same subtle fade-and-rise transition on each switch, softening abrupt layout changes and masking panel-to-panel visual differences without overriding reduced-motion preferences.
 
 ✅ **Shipped** - The shared HUD now adapts from the full desktop profile/navigation layout to compact icon-first tablet controls and a two-row phone layout. All six destinations remain visible without horizontal page overflow, while profile and notification controls expose accessible labels, focus states, current-page state, and expanded-menu state.
 
@@ -11,6 +51,8 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 ✅ **Shipped** - Standard buttons now share one pixel-game component and consistent primary, secondary, destructive, ghost, link, size, disabled, and keyboard-focus states. HUD menus, Settings account actions, notifications, world switching, Shop purchases, typing controls, and modal actions now use that shared foundation.
 
 ✅ **Shipped** - The global HUD day/night toggle is back. The header and Settings now use one synchronized saved theme choice, so display mode stays consistent across the app.
+
+✅ **Shipped** - Camp now follows the global Day/Night toggle without losing its local-clock behavior. Night mode forces the campsite into night only when the real local time is still daytime, Day mode forces a morning campsite only when the real local time is already night, and matching toggle/time combinations keep the normal real-time scene progression.
 
 ✅ **Shipped** - Awards museum shelf art, badges, and pedestal platforms now move downward together by 30% as one aligned exhibit group.
 
@@ -71,7 +113,7 @@ Planned features and high-potential additions to expand the game.
 ## ✅ Shipped
 
 ### 🏕 Camp — Living Home Base
-✅ **Shipped** - The Camp (Hub) is no longer a dashboard of cards. It is now a living pixel campsite scene with interactive buildings, a wandering pet, ambient particles, and time-of-day lighting. \`CampScene\` now swaps in dedicated painted background art for morning, afternoon, and evening/night directly from \`public/camp-scene\`, then places the library, cabin, tent, supply wagon, nursery, mailbox, blacksmith, and campfire to match the illustrated campsite composition. Buildings — Painter's Tent (themes), Pet Nursery, Supply Wagon (daily reward chest with shake/burst animation), Training Board (stats), Cabin (unlocks at Lv 20), Mailbox (Lv 10), Windmill (Lv 35) — open modals via click. The active pet wanders the ground autonomously and jumps on rewards. Ambient particles change per theme (butterflies in the meadow, petals under sakura, fireflies at night, stars in space, etc.). Selecting a theme in the tent triggers a scene crossfade. Camp visibly evolves through 7 progression tiers at levels 1/10/20/35/50/75/100, adding fence → cabin → windmill → stone paths → statues → sanctuary as the player levels up.
+✅ **Shipped** - The Camp (Hub) is no longer a dashboard of cards. It is now a living pixel campsite scene with interactive buildings, a wandering pet, ambient particles, and time-of-day lighting. The blacksmith uses the shared warm ground halo so it matches the other interactive buildings. \`CampScene\` now swaps in dedicated painted background art for morning, afternoon, and evening/night directly from \`public/camp-scene\`, then places the library, cabin, tent, supply wagon, nursery, mailbox, blacksmith, and campfire to match the illustrated campsite composition. Buildings — Painter's Tent (themes), Pet Nursery, Supply Wagon (daily reward chest with shake/burst animation), Training Board (stats), Cabin (unlocks at Lv 20), Mailbox (Lv 10), Windmill (Lv 35) — open modals via click. The active pet wanders the ground autonomously and jumps on rewards. Ambient particles change per theme (butterflies in the meadow, petals under sakura, fireflies at night, stars in space, etc.). Selecting a theme in the tent triggers a scene crossfade. Camp visibly evolves through 7 progression tiers at levels 1/10/20/35/50/75/100, adding fence → cabin → windmill → stone paths → statues → sanctuary as the player levels up.
 
 
 ✅ **Shipped** - Shared page margins now use explicit app shell/view wrapper classes, and Shop, Awards, and Train have responsive layout safeguards so cards, filters, badge grids, and typing panels keep consistent gaps across desktop and smaller windows.
@@ -84,7 +126,7 @@ Planned features and high-potential additions to expand the game.
 
 ✅ **Shipped** - The Camp scene now starts at the very top of the body and runs behind the shared HUD, with the HUD overlaid instead of reserving blank space above the scene.
 
-✅ **Shipped** - Camp now uses a reusable local-clock day/night renderer. The terrain and building layout stay static while sky, sun, moon, stars, constellations, lighting tint, water highlights, and particles interpolate continuously across the full 24-hour cycle.
+✅ **Shipped** - Camp now uses a reusable local-clock day/night renderer. The terrain and building layout stay static while sky, sun, moon, stars, constellations, lighting tint, water highlights, and particles interpolate continuously across the full 24-hour cycle, with the global Day/Night toggle able to force morning or night only when it would otherwise conflict with the current real local time.
 
 ✅ **Shipped** - The day/night renderer now updates on minute boundaries with long linear atmosphere transitions and a locked static environment layer, preventing subtle image shimmer while preserving the local-clock cycle.
 
@@ -102,7 +144,7 @@ Planned features and high-potential additions to expand the game.
 
 ✅ **Shipped** - Awards badge artwork now renders larger with roomier responsive grid cells so the collection page feels more readable and closer to the pixel badge art scale.
 
-✅ **Shipped** - The Awards tab now swaps between \`public/awards/awards-background-morning.png\` and \`public/awards/awards-background-night.png\`, and its full museum ambience follows the global day/night toggle with warmer morning light versus cooler night glow.
+✅ **Shipped** - The Awards tab now swaps between \`public/awards/awards-background-morning.webp\` and \`public/awards/awards-background-night.webp\`, and its full museum ambience follows the global day/night toggle with warmer morning light versus cooler night glow.
 
 ✅ **Shipped** - The Awards collection now renders as gamified trophy shelves, with each badge category displayed on a wooden shelf and each badge shown in its own collectible slot.
 

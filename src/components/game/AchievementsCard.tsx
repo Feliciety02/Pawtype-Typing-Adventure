@@ -30,7 +30,7 @@ const WINGS: MuseumWing[] = [
     label: "Speed Wing",
     shortLabel: "Speed",
     description: "Relics earned by pushing your typing pace beyond ordinary limits.",
-    banner: "speed-wing-banner.png",
+    banner: "speed-wing-banner.webp",
   },
   {
     id: "accuracy",
@@ -38,7 +38,7 @@ const WINGS: MuseumWing[] = [
     label: "Accuracy Wing",
     shortLabel: "Accuracy",
     description: "Treasures reserved for precise, careful, mistake-resistant typing.",
-    banner: "accuracy-wing-banner.png",
+    banner: "accuracy-wing-banner.webp",
   },
   {
     id: "challenge",
@@ -46,7 +46,7 @@ const WINGS: MuseumWing[] = [
     label: "Challenge Wing",
     shortLabel: "Challenge",
     description: "Heroic honors collected from major milestones and difficult trials.",
-    banner: "challenge-wing-banner.png",
+    banner: "challenge-wing-banner.webp",
   },
   {
     id: "pet",
@@ -54,7 +54,7 @@ const WINGS: MuseumWing[] = [
     label: "Companion Wing",
     shortLabel: "Companion",
     description: "Keepsakes celebrating the fuzzy friends who travel beside you.",
-    banner: "companion-wing-banner.png",
+    banner: "companion-wing-banner.webp",
   },
   {
     id: "learning",
@@ -62,7 +62,7 @@ const WINGS: MuseumWing[] = [
     label: "Learning Wing",
     shortLabel: "Learning",
     description: "Ancient knowledge pieces gained through lessons and steady study.",
-    banner: "learning-wing-banner.png",
+    banner: "learning-wing-banner.webp",
   },
   {
     id: "combo",
@@ -70,7 +70,7 @@ const WINGS: MuseumWing[] = [
     label: "Combo Wing",
     shortLabel: "Combo",
     description: "Flame-forged artifacts awarded for long, unbroken typing streaks.",
-    banner: "combo-wing-banner.png",
+    banner: "combo-wing-banner.webp",
   },
 ];
 
@@ -231,7 +231,7 @@ const AwardSlot = memo(function AwardSlot({
         />
         {!achievement.unlocked && (
           <span className="awards-artifact-lock">
-            <img src="/icons/lock.png" alt="Locked" className="awards-artifact-lock-img" />
+            <img src="/icons/lock.webp" alt="Locked" className="awards-artifact-lock-img" />
           </span>
         )}
       </span>
@@ -249,7 +249,7 @@ function MuseumShelf({ awards }: { awards: Achievement[] }) {
     <section className="awards-museum-shelf" aria-label="Museum shelf">
       <img
         className="awards-shelf-art"
-        src={`${AWARDS_BASE}/shelf.png`}
+        src={`${AWARDS_BASE}/shelf.webp`}
         alt=""
         loading="lazy"
         decoding="async"

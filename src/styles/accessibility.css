@@ -28,6 +28,8 @@
 .pawtype-reduce-motion .camp-petal,
 .pawtype-reduce-motion .camp-leaf,
 .pawtype-reduce-motion .camp-cloud,
+.pawtype-reduce-motion .camp-building-particle,
+.pawtype-reduce-motion .camp-building-sparkle,
 .pawtype-reduce-motion .egg-hatch-sparkle,
 .pawtype-reduce-motion .camp-chest-burst,
 .pawtype-reduce-motion .confetti,
@@ -62,15 +64,33 @@
 .pawtype-high-contrast .settings-panel,
 .pawtype-high-contrast .settings-toggle-card,
 .pawtype-high-contrast .pixel-choice,
+.pawtype-high-contrast .pixel-selectable-card,
 .pawtype-high-contrast .pixel-input,
 .pawtype-high-contrast .pixel-select,
 .pawtype-high-contrast .pixel-checkbox,
+.pawtype-high-contrast .pixel-progress,
+.pawtype-high-contrast .camp-modal-header-icon,
+.pawtype-high-contrast .pet-room-pet-card,
 .pawtype-high-contrast .pixel-modal-frame,
 .pawtype-high-contrast .pixel-frame,
 .pawtype-high-contrast .inventory-card {
   border-width: 3px !important;
   border-color: var(--color-border) !important;
   box-shadow: 4px 4px 0 0 var(--color-border) !important;
+}
+
+.pawtype-high-contrast .pixel-selectable-card[data-selected="true"] {
+  outline: 4px double var(--color-foreground);
+  outline-offset: 3px;
+}
+
+.pawtype-high-contrast .pet-room-pet-card.is-active {
+  outline: 4px double var(--color-foreground);
+  outline-offset: 3px;
+}
+
+.pawtype-high-contrast .pixel-progress-indicator {
+  background: var(--color-foreground) !important;
 }
 
 .pawtype-high-contrast .quest-card-desc,
@@ -205,17 +225,6 @@
   font-family: var(--font-pixel, monospace);
   font-size: 0.9rem;
   margin: 8px 0 4px;
-}
-.inventory-progress {
-  margin: 4px 0 8px;
-  height: 10px;
-  border-radius: 5px;
-  background: color-mix(in oklab, var(--color-border) 20%, transparent);
-  overflow: hidden;
-}
-.inventory-progress > div {
-  height: 100%;
-  background: linear-gradient(90deg, #f6c86a, #f4a541);
 }
 .inventory-empty {
   font-family: var(--font-pixel, monospace);

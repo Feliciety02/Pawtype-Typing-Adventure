@@ -41,6 +41,7 @@ import {
 import { EggHatchModal } from "../shop/EggHatchModal";
 import { generateLessonText } from "../../lib/game/textGenerator";
 import type { Zone } from "../../lib/game/engine/generator";
+import { Progress } from "@/components/ui/progress";
 
 const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string }> = {
   beginner: { label: "Beginner", color: "var(--leaf)" },
@@ -248,12 +249,14 @@ export function LessonsCard() {
           <div className="quest-milestone-title">
             Egg #{eggProgress.nextIndex} · {eggProgress.progress}/{eggProgress.total} lessons
           </div>
-          <div className="quest-milestone-bar">
-            <div
-              className="quest-milestone-fill"
-              style={{ width: `${(eggProgress.progress / eggProgress.total) * 100}%` }}
-            />
-          </div>
+          <Progress
+            className="quest-milestone-bar"
+            value={eggProgress.progress}
+            max={eggProgress.total}
+            size="sm"
+            tone="coin"
+            aria-label={`Next egg: ${eggProgress.progress} of ${eggProgress.total} lessons`}
+          />
         </div>
         <div className="quest-milestone-hint">Every 10 lessons = 1 pet egg</div>
       </div>
@@ -299,9 +302,14 @@ export function LessonsCard() {
                   <div className="quest-chapter-title">{unit.title}</div>
                   <div className="quest-chapter-purpose">{unit.purpose}</div>
                   <div className="quest-chapter-progress">
-                    <div className="quest-chapter-bar">
-                      <div className="quest-chapter-fill" style={{ width: `${pct}%` }} />
-                    </div>
+                    <Progress
+                      className="quest-chapter-bar"
+                      value={prog.done}
+                      max={prog.total}
+                      size="xs"
+                      tone="success"
+                      aria-label={`${unit.title}: ${prog.done} of ${prog.total} lessons complete`}
+                    />
                     <span className="quest-chapter-count">{pct}%</span>
                   </div>
                 </div>

@@ -1,6 +1,5 @@
 import { WORLDS, type WorldId } from "../shared/WorldTheme";
 import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
-import { buttonVariants } from "@/components/ui/button";
 
 export function ThemeSetsSection({
   activeWorld,
@@ -39,12 +38,10 @@ export function ThemeSetsSection({
               key={theme.id}
               type="button"
               onClick={() => onSelectWorld(theme.id)}
-              className="pixel-card-sm p-3 text-left transition-transform hover:-translate-y-1"
-              style={
-                isActive
-                  ? { outline: "3px solid var(--color-primary)", outlineOffset: 2 }
-                  : undefined
-              }
+              className="theme-set-card pixel-selectable-card pixel-card-sm p-3 text-left"
+              data-selected={isActive}
+              aria-label={`${isActive ? "Current" : "Use"} ${theme.name} theme`}
+              aria-pressed={isActive}
             >
               <div className="flex items-center justify-between gap-3 mb-3">
                 <div className="min-w-0">
@@ -155,12 +152,7 @@ export function ThemeSetsSection({
                 <span className="font-pixel text-[0.55rem] text-muted-foreground uppercase">
                   {isActive ? "Active world" : "Click to switch"}
                 </span>
-                <span
-                  className={`${buttonVariants({
-                    variant: "secondary",
-                    size: "sm",
-                  })} pointer-events-none`}
-                >
+                <span className="pixel-selectable-card-status" aria-hidden="true">
                   {isActive ? "Using Theme" : "Use Theme"}
                 </span>
               </div>

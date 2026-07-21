@@ -2,6 +2,7 @@ import type { PetState, EvolutionStage } from "../../lib/game/types";
 import { petEvolutionStage, petXpForLevel } from "../../lib/game/types";
 import { PixelMascot } from "./PixelMascot";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { Progress } from "@/components/ui/progress";
 
 const EVO_GLOW: Record<EvolutionStage, string> = {
   baby: "none",
@@ -73,12 +74,14 @@ export function PixelPet({ pet, size = 96, showDetails = true }: Props) {
             <span>❤ Lv {pet.level}</span>
           </div>
 
-          <div className="pixel-bar w-full max-w-[100px]" style={{ height: 6 }}>
-            <div
-              className="h-full transition-all"
-              style={{ width: `${xpPct}%`, background: "var(--coin)" }}
-            />
-          </div>
+          <Progress
+            className="max-w-[100px]"
+            value={pet.xp}
+            max={needed}
+            size="xs"
+            tone="coin"
+            aria-label={`${pet.name} experience: ${pet.xp} of ${needed}`}
+          />
 
           <p className="font-pixel text-[0.5rem] text-muted-foreground">
             {pet.xp} / {needed} XP

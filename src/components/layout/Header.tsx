@@ -12,6 +12,7 @@ import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { getNotifications, subscribeNotifications } from "../../lib/game/notifications";
 import { ThemeToggle } from "../ui/shared/ThemeToggle";
 import { Button } from "../ui/button";
+import { Progress } from "../ui/progress";
 
 export type View =
   "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings" | "inventory";
@@ -113,7 +114,7 @@ export function Header() {
         <button
           type="button"
           className={`hud-profile-btn ${profileOpen ? "is-active" : ""}`}
-          aria-label={`Open profile menu for ${accountLabel ?? "Demo Adventurer"}`}
+          aria-label={`Open profile menu for ${accountLabel ?? "Demo Adventurer"}, level ${player.level}, ${playerXpPct}% experience`}
           aria-expanded={profileOpen}
           aria-controls="hud-profile-menu"
           onClick={() => {
@@ -135,9 +136,13 @@ export function Header() {
             <span className="hud-profile-name">{accountLabel ?? "Demo Adventurer"}</span>
             <span className="hud-profile-role">Forest Explorer</span>
             <div className="hud-xp-row">
-              <div className="hud-xp-bar">
-                <div style={{ width: `${playerXpPct}%` }} />
-              </div>
+              <Progress
+                className="hud-xp-bar"
+                value={playerXpPct}
+                tone="xp"
+                size="sm"
+                aria-label={`Level ${player.level} experience: ${playerXpPct}%`}
+              />
               <span className="hud-xp-label">{playerXpPct}%</span>
             </div>
           </div>
@@ -231,7 +236,7 @@ export function Header() {
       </nav>
 
       <div className="hud-right">
-        <ThemeToggle className="hud-theme-btn" compact />
+        <ThemeToggle className="hud-theme-btn" />
         <div className="hud-coins">
           <PixelIcon emoji="🪙" className="hud-coins-icon" />
           <strong className="hud-coins-value" suppressHydrationWarning>

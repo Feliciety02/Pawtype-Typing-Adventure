@@ -545,6 +545,8 @@
 }
 
 .lesson-results-title {
+  margin: 0;
+  text-align: center;
   font-size: clamp(1.8rem, 2.8vw, 2.35rem);
   line-height: 0.9;
 }

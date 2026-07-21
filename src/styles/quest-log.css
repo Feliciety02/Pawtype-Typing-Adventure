@@ -49,16 +49,6 @@
 }
 .quest-milestone-bar {
   margin-top: 0.4rem;
-  height: 10px;
-  border: 2px solid var(--color-border);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--color-muted) 80%, transparent);
-  overflow: hidden;
-}
-.quest-milestone-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--coin), var(--primary));
-  transition: width 0.4s ease;
 }
 .quest-milestone-hint {
   font-family: var(--font-pixel);
@@ -93,7 +83,11 @@
     color-mix(in oklab, var(--color-card) 92%, white);
 }
 .quest-chapter.is-locked {
-  opacity: 0.65;
+  /* Keep unavailable chapters visibly inactive without washing out their labels. */
+  opacity: 0.82;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, #8b9299 12%, transparent), transparent 52%),
+    color-mix(in oklab, var(--color-muted) 42%, white);
 }
 
 .quest-chapter-head {
@@ -186,16 +180,6 @@
   flex: 1;
   min-width: 0;
   max-width: 200px;
-  height: 8px;
-  border: 2px solid var(--color-border);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--color-muted) 80%, transparent);
-  overflow: hidden;
-}
-.quest-chapter-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--leaf), var(--coin));
-  transition: width 0.4s ease;
 }
 .quest-chapter-count {
   font-family: var(--font-pixel);
@@ -254,8 +238,8 @@
   animation: path-bounce 1.6s ease-in-out infinite;
 }
 .quest-path-node.is-locked {
-  opacity: 0.35;
-  filter: grayscale(0.8);
+  opacity: 0.62;
+  filter: grayscale(0.4);
 }
 @keyframes path-bounce {
   0%,
@@ -319,7 +303,7 @@
 }
 .quest-card:disabled {
   cursor: not-allowed;
-  opacity: 0.55;
+  opacity: 0.78;
 }
 
 /* Completed quest */
@@ -399,11 +383,12 @@
 
 /* Locked quest — stone, faded */
 .quest-card.is-locked {
-  filter: grayscale(0.6) contrast(0.85);
-  opacity: 0.65;
+  border-color: color-mix(in oklab, #657078 70%, var(--color-border));
+  filter: grayscale(0.3);
+  opacity: 0.86;
   background:
-    linear-gradient(180deg, rgba(124, 130, 132, 0.18), rgba(124, 130, 132, 0.05)),
-    color-mix(in oklab, var(--color-muted) 74%, white);
+    linear-gradient(180deg, rgba(104, 115, 122, 0.2), rgba(104, 115, 122, 0.07)),
+    color-mix(in oklab, var(--color-muted) 58%, white);
 }
 .quest-card.is-locked::after {
   content: "";
@@ -493,8 +478,8 @@
   border-color: color-mix(in oklab, var(--color-primary) 60%, black);
 }
 .quest-card.is-locked .quest-card-art-inner {
-  background: color-mix(in oklab, #8a8a8a 30%, white);
-  border-color: #a0a0a0;
+  background: color-mix(in oklab, #7b858b 42%, white);
+  border-color: #657078;
 }
 
 .quest-card-emoji {
@@ -554,7 +539,7 @@
 .quest-card-locked-icon {
   display: grid;
   place-items: center;
-  color: #a0a0a0;
+  color: #536069;
 }
 .quest-card-vine {
   position: absolute;
@@ -795,7 +780,9 @@
   color: color-mix(in oklab, var(--leaf) 62%, var(--foreground));
 }
 .quest-card-action.is-locked {
-  color: var(--muted-foreground);
+  border-color: #657078;
+  background: color-mix(in oklab, #aeb7ba 32%, white);
+  color: color-mix(in oklab, #536069 72%, var(--foreground));
 }
 .quest-card-play-btn {
   display: inline-flex;
@@ -864,6 +851,321 @@
   50% {
     transform: scale(1.12);
   }
+}
+
+/* ---- Dark mode readability -------------------------------- */
+.dark .quest-log-root {
+  --quest-night-deep: #111831;
+  --quest-night-surface: #242e4d;
+  --quest-night-raised: #303b5d;
+  --quest-night-border: #7f8db3;
+  --quest-night-text: #fff9ea;
+  --quest-night-muted: #d3daeb;
+  --quest-night-subtle: #b8c2da;
+  --quest-night-gold: #ffd36a;
+  color: var(--quest-night-text);
+  border-color: var(--quest-night-border);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(106, 129, 189, 0.14), transparent 34%),
+    linear-gradient(180deg, #202945, #171f3b);
+  box-shadow: 5px 5px 0 #090e20;
+}
+
+.dark .quest-log-root > .mb-4 h2 {
+  color: var(--quest-night-text);
+  text-shadow: 0 2px 0 #080d1d;
+}
+
+.dark .quest-log-root > .mb-4 p {
+  color: var(--quest-night-muted);
+}
+
+.dark .quest-log-root .quest-chest-toolbar button {
+  border-color: var(--quest-night-border);
+  background: #283352;
+  color: var(--quest-night-text);
+  box-shadow: 2px 2px 0 #090e20;
+}
+
+.dark .quest-log-root .quest-chest-toolbar button:hover {
+  border-color: var(--quest-night-gold);
+  background: #354263;
+}
+
+.dark .quest-milestone-banner {
+  border-color: var(--quest-night-border);
+  background:
+    linear-gradient(180deg, rgba(255, 211, 106, 0.14), transparent 64%), var(--quest-night-deep);
+  box-shadow: 3px 3px 0 #080d1c;
+}
+
+.dark .quest-milestone-title {
+  color: var(--quest-night-text);
+  font-size: 0.65rem;
+}
+
+.dark .quest-milestone-hint {
+  color: #e4dcc6;
+  font-size: 0.54rem;
+}
+
+.dark .quest-log-root .pixel-progress {
+  border-color: #8997bb;
+  background: #0d142a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(8, 12, 27, 0.65);
+}
+
+.dark .quest-chapter {
+  border-color: var(--quest-night-border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 42%), var(--quest-night-raised);
+  box-shadow: 4px 4px 0 #090e20;
+}
+
+.dark .quest-chapter.is-done {
+  background:
+    linear-gradient(180deg, rgba(104, 225, 150, 0.16), transparent 55%), var(--quest-night-raised);
+}
+
+.dark .quest-chapter.is-locked {
+  opacity: 0.82;
+  background: linear-gradient(180deg, rgba(191, 200, 222, 0.07), transparent 48%), #272f49;
+}
+
+.dark .quest-chapter-head {
+  color: var(--quest-night-text);
+}
+
+.dark .quest-chapter-head:hover:not(:disabled) {
+  background: rgba(196, 209, 239, 0.07);
+}
+
+.dark .quest-chapter-head:focus-visible,
+.dark .quest-card:focus-visible,
+.dark .quest-log-root .quest-chest-toolbar button:focus-visible {
+  outline: 3px solid var(--quest-night-gold);
+  outline-offset: -5px;
+}
+
+.dark .quest-chapter-emblem {
+  border-color: #0a1022;
+  background: #f3efe4;
+  color: #202946;
+  box-shadow: 3px 3px 0 #090e20;
+}
+
+.dark .quest-chapter.is-done .quest-chapter-emblem {
+  background: #b9efc8;
+}
+
+.dark .quest-chapter-eyebrow,
+.dark .quest-chapter-purpose,
+.dark .quest-chapter-count,
+.dark .quest-chapter-caret {
+  color: var(--quest-night-muted);
+}
+
+.dark .quest-chapter-eyebrow {
+  font-size: 0.54rem;
+}
+
+.dark .quest-chapter-title {
+  color: var(--quest-night-text);
+  text-shadow: 0 2px 0 rgba(8, 13, 29, 0.8);
+}
+
+.dark .quest-chapter-purpose {
+  font-size: 0.6rem;
+}
+
+.dark .quest-chapter-caret {
+  border-radius: 8px;
+  background: rgba(11, 17, 38, 0.36);
+}
+
+.dark .quest-adventure-path {
+  border-top: 1px solid rgba(151, 165, 201, 0.42);
+  background: rgba(10, 16, 35, 0.2);
+}
+
+.dark .quest-path-connector {
+  border-color: #8f9bbb;
+}
+
+.dark .quest-path-node {
+  border-color: #9aa6c4;
+  background: #46516f;
+  box-shadow: 0 2px 0 #090e20;
+}
+
+.dark .quest-path-node.is-done {
+  border-color: #79dfa0;
+  background: #27513d;
+}
+
+.dark .quest-path-node.is-current {
+  border-color: var(--quest-night-gold);
+  background: #5c4921;
+  box-shadow: 0 0 10px rgba(255, 211, 106, 0.36);
+}
+
+.dark .quest-path-node.is-locked {
+  opacity: 0.58;
+  filter: grayscale(0.45);
+}
+
+.dark .quest-card {
+  border-color: var(--quest-night-border);
+  background:
+    linear-gradient(180deg, rgba(167, 185, 225, 0.08), transparent 52%), var(--quest-night-surface);
+  color: var(--quest-night-text);
+  box-shadow: 3px 3px 0 #080d1c;
+}
+
+.dark .quest-card:hover:not(:disabled) {
+  border-color: #a9b6d4;
+  box-shadow: 5px 5px 0 #080d1c;
+}
+
+.dark .quest-card.is-done {
+  background:
+    linear-gradient(135deg, rgba(174, 118, 72, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(103, 224, 148, 0.15), transparent 62%), #22334a;
+}
+
+.dark .quest-card.is-perfect {
+  background: linear-gradient(180deg, rgba(255, 211, 106, 0.2), transparent 58%), #2c334c;
+}
+
+.dark .quest-card.is-boss {
+  background: linear-gradient(180deg, rgba(255, 149, 116, 0.18), transparent 60%), #2d2b48;
+}
+
+.dark .quest-card:disabled,
+.dark .quest-card.is-locked {
+  opacity: 0.8;
+}
+
+.dark .quest-card.is-locked {
+  border-color: #64708f;
+  background: linear-gradient(180deg, rgba(184, 195, 219, 0.07), transparent 58%), #252c43;
+  filter: grayscale(0.22);
+}
+
+.dark .quest-card.is-locked::after {
+  background:
+    radial-gradient(circle at 20% 25%, rgba(190, 204, 233, 0.08), transparent 22%),
+    radial-gradient(circle at 72% 72%, rgba(190, 204, 233, 0.06), transparent 28%);
+}
+
+.dark .quest-card-art-inner {
+  border-color: #0a1022;
+  background: #f1eee6;
+  color: #202946;
+  box-shadow: 3px 3px 0 #080d1c;
+}
+
+.dark .quest-card.is-locked .quest-card-art-inner {
+  border-color: #727d9b;
+  background: #424b66;
+  color: #e2e7f4;
+}
+
+.dark .quest-card-locked-icon {
+  color: #e2e7f4;
+}
+
+.dark .quest-card-status-chip {
+  border-color: #0a1022;
+  background: #e4e9f3;
+  color: #28314d;
+  box-shadow: 2px 2px 0 #080d1c;
+}
+
+.dark .quest-card.is-current .quest-card-status-chip {
+  background: #ffe19a;
+  color: #352509;
+}
+
+.dark .quest-card.is-done .quest-card-status-chip {
+  background: #b5efc7;
+  color: #173825;
+}
+
+.dark .quest-card-title {
+  color: var(--quest-night-text);
+  text-shadow: 0 2px 0 rgba(8, 13, 29, 0.8);
+}
+
+.dark .quest-card:hover .quest-card-title {
+  color: #ffe29b;
+}
+
+.dark .quest-card-desc {
+  color: var(--quest-night-muted);
+  font-size: clamp(0.56rem, 1vw, 0.64rem);
+}
+
+.dark .quest-card-meta {
+  color: var(--quest-night-subtle);
+  font-size: 0.56rem;
+}
+
+.dark .quest-card-best {
+  color: #8be8ad;
+}
+
+.dark .quest-reward-badge,
+.dark .quest-reward-badge.is-collected {
+  border-color: #8492b5;
+  background: linear-gradient(180deg, rgba(255, 211, 106, 0.11), transparent 72%), #18213b;
+  box-shadow: 2px 2px 0 #080d1c;
+  filter: none;
+}
+
+.dark .quest-reward-value {
+  color: var(--quest-night-gold);
+  text-shadow: 0 1px 0 #080d1c;
+}
+
+.dark .quest-reward-label {
+  color: var(--quest-night-muted);
+  font-size: 0.46rem;
+}
+
+.dark .quest-card-claimed {
+  border-color: #75d99a;
+  background: #1b3c31;
+  color: #b9f3ce;
+}
+
+.dark .quest-card-action {
+  border-color: #0a1022;
+  background: linear-gradient(180deg, #ffe294, #efb82f);
+  color: #2c210b;
+  box-shadow: 3px 3px 0 #080d1c;
+}
+
+.dark .quest-card-action.is-done {
+  border-color: #0b2f20;
+  background: linear-gradient(180deg, #b9efca, #70cf94);
+  color: #143523;
+}
+
+.dark .quest-card-action.is-locked {
+  border-color: #707b99;
+  background: #333c58;
+  color: #d5dced;
+}
+
+.dark .quest-card-play-btn {
+  color: inherit;
+}
+
+.dark .quest-big-star.is-empty {
+  filter: grayscale(1) brightness(1.5) opacity(0.58);
 }
 
 /* Mobile */

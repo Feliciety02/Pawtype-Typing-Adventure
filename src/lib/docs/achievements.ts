@@ -15,7 +15,7 @@ Badges are:
 - **Unique personalized crest** matching the badge category
 - **Collectible RPG inventory items**, not flat UI icons
 
-The Awards tab presents the badge collection as a full-page fantasy museum that swaps between \`public/awards/awards-background-morning.png\` and \`public/awards/awards-background-night.png\` with the global day/night toggle. The scene mood follows that choice too: morning uses warmer sunlit haze and golden reflections, while night shifts to cooler moonlit glow and blue-tinted ambience across the page. It shows one wing at a time, uses the provided wing banner art from \`public/awards/banner/\`, and places exactly 10 awards on \`public/awards/shelf.png\` as handcrafted museum exhibits: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf. Shelf placement is driven by a normalized upper/lower anchor grid, so each badge, platform, spotlight, tooltip, and hover lift originates from the same bottom-center shelf coordinate. The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for readability.
+The Awards tab presents the badge collection as a full-page fantasy museum that swaps between \`public/awards/awards-background-morning.webp\` and \`public/awards/awards-background-night.webp\` with the global day/night toggle. The scene mood follows that choice too: morning uses warmer sunlit haze and golden reflections, while night shifts to cooler moonlit glow and blue-tinted ambience across the page. It shows one wing at a time, uses the provided wing banner art from \`public/awards/banner/\`, and places exactly 10 awards on \`public/awards/shelf.webp\` as handcrafted museum exhibits: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf. Shelf placement is driven by a normalized upper/lower anchor grid, so each badge, platform, spotlight, tooltip, and hover lift originates from the same bottom-center shelf coordinate. The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for readability.
 
 ---
 
@@ -199,13 +199,13 @@ Reward difficult accomplishments and special objectives. Crest theme: shields, s
 All badge assets use lowercase snake_case and are served from \`public/badges/<category>/<assetName>\`.
 
 \`\`\`
-badge_speed_tiny_feather.png
-badge_speed_hyper_velocity.png
-badge_accuracy_bullseye.png
-badge_combo_inferno.png
-badge_pet_guardian_paw.png
-badge_world_castle_crest.png
-badge_learning_magic_tome.png
-badge_streak_endless_journey.png
-badge_challenge_ultimate_hero.png
+badge_speed_tiny_feather.webp
+badge_speed_hyper_velocity.webp
+badge_accuracy_bullseye.webp
+badge_combo_inferno.webp
+badge_pet_guardian_paw.webp
+badge_world_castle_crest.webp
+badge_learning_magic_tome.webp
+badge_streak_endless_journey.webp
+badge_challenge_ultimate_hero.webp
 \`\`\``;

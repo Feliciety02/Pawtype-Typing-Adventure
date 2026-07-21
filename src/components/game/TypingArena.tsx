@@ -8,6 +8,7 @@ import { DURATIONS } from "@/lib/game/typing-arena-data";
 import { LessonResultsModal } from "./LessonResultsModal";
 import { useTypingEngine, type TypingEngineProps } from "@/hooks/useTypingEngine";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 
 export function TypingArena(props: TypingEngineProps = {}) {
   const {
@@ -105,23 +106,12 @@ export function TypingArena(props: TypingEngineProps = {}) {
           </div>
 
           {/* Progress bar */}
-          <div
-            className="mx-4 mb-2 shrink-0"
-            style={{
-              height: 4,
-              background: "var(--color-muted)",
-              borderRadius: 999,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${progress}%`,
-                height: "100%",
-                background: `oklch(from var(--leaf) l c h / 0.8)`,
-                borderRadius: 999,
-                transition: "width 0.15s",
-              }}
+          <div className="mx-4 mb-2 shrink-0">
+            <Progress
+              value={progress}
+              size="xs"
+              tone="success"
+              aria-label={`Lesson progress: ${Math.round(progress)}%`}
             />
           </div>
 
@@ -260,9 +250,13 @@ export function TypingArena(props: TypingEngineProps = {}) {
                 </button>
               </div>
 
-              <div className="typing-progress-line relative z-1" aria-hidden="true">
-                <div style={{ width: `${progress}%` }} />
-              </div>
+              <Progress
+                className="typing-progress-line relative z-1"
+                value={progress}
+                size="xs"
+                tone="rainbow"
+                aria-label={`Typing test progress: ${Math.round(progress)}%`}
+              />
 
               <div className="typing-focus-shell relative z-1">
                 <div className="typing-text">

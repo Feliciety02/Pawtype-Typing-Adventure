@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ModalShell } from "../../modals/ModalShell";
 import { StatsView } from "../../game/StatsView";
 import { ThemeSetsSection } from "../../shop/ThemeSetsSection";
@@ -6,11 +6,14 @@ import { PetRoom } from "../../shop/PetRoom";
 import { useGame } from "../../../lib/game/store";
 import { useWorld } from "../../shared/WorldTheme";
 import type { WorldId } from "../../shared/WorldTheme";
-import { xpForLevel, petEvolutionStage } from "../../../lib/game/types";
+import { xpForLevel } from "../../../lib/game/types";
 import { PixelIcon } from "../../../lib/icons/PixelIcon";
 import { InventoryPage } from "../../inventory/InventoryPage";
 
-/* Small shared wrapper */
+const CAMP_MODAL_SHELL = "pixel-modal-shell-camp";
+const CAMP_MODAL_SHELL_WIDE = "pixel-modal-shell-camp is-wide";
+const CAMP_MODAL_CONTENT = "camp-modal-content";
+
 function CampModalHeader({
   icon,
   title,
@@ -21,22 +24,15 @@ function CampModalHeader({
   subtitle?: string;
 }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-      <span style={{ fontSize: 40, lineHeight: 1 }}>{icon}</span>
-      <div>
-        <div className="font-display" style={{ fontSize: "1.6rem", lineHeight: 1 }}>
-          {title}
-        </div>
-        {subtitle && (
-          <div
-            className="font-pixel"
-            style={{ fontSize: "0.6rem", color: "var(--muted-foreground)", marginTop: 4 }}
-          >
-            {subtitle}
-          </div>
-        )}
+    <header className="camp-modal-header">
+      <span className="camp-modal-header-icon" aria-hidden="true">
+        {icon}
+      </span>
+      <div className="camp-modal-heading">
+        <h2 className="camp-modal-title">{title}</h2>
+        {subtitle ? <p className="camp-modal-subtitle">{subtitle}</p> : null}
       </div>
-    </div>
+    </header>
   );
 }
 
@@ -46,7 +42,12 @@ export function CabinModal({ onClose }: { onClose: () => void }) {
   const { player, inventory } = state;
   const needed = xpForLevel(player.level);
   return (
-    <ModalShell ariaLabel="Cabin — Player Profile" onClose={onClose}>
+    <ModalShell
+      ariaLabel="Cabin — Player Profile"
+      onClose={onClose}
+      className={CAMP_MODAL_SHELL}
+      contentClassName={CAMP_MODAL_CONTENT}
+    >
       <CampModalHeader icon="🏡" title="The Cabin" subtitle="Profile · Inventory · Collection" />
 
       <div className="pixel-card-sm p-3 mb-3">
@@ -107,7 +108,12 @@ export function PaintersTentModal({
     onThemeChange(w);
   };
   return (
-    <ModalShell ariaLabel="Painter's Tent — Themes" onClose={onClose} className="max-w-4xl">
+    <ModalShell
+      ariaLabel="Painter's Tent — Themes"
+      onClose={onClose}
+      className={CAMP_MODAL_SHELL_WIDE}
+      contentClassName={CAMP_MODAL_CONTENT}
+    >
       <CampModalHeader
         icon="🎨"
         title="Painter's Tent"
@@ -126,7 +132,12 @@ export function PetNurseryModal({ onClose }: { onClose: () => void }) {
 /* --- Training Board: visualized stats ----------------------- */
 export function TrainingBoardModal({ onClose }: { onClose: () => void }) {
   return (
-    <ModalShell ariaLabel="Training Board — Statistics" onClose={onClose} className="max-w-4xl">
+    <ModalShell
+      ariaLabel="Training Board — Statistics"
+      onClose={onClose}
+      className={CAMP_MODAL_SHELL_WIDE}
+      contentClassName={CAMP_MODAL_CONTENT}
+    >
       <CampModalHeader
         icon="📖"
         title="Training Board"
@@ -153,11 +164,21 @@ export function SupplyWagonModal({
 }) {
   const [phase, setPhase] = useState<"idle" | "shaking" | "open">(claimed ? "open" : "idle");
   const [burst, setBurst] = useState<{ id: number; cx: string; cy: string; emoji: string }[]>([]);
+  const claimTimerRef = useRef<number | null>(null);
+  const burstTimerRef = useRef<number | null>(null);
+  const rewardStatusId = useId();
+
+  useEffect(() => {
+    return () => {
+      if (claimTimerRef.current !== null) window.clearTimeout(claimTimerRef.current);
+      if (burstTimerRef.current !== null) window.clearTimeout(burstTimerRef.current);
+    };
+  }, []);
 
   const claim = () => {
     if (phase !== "idle") return;
     setPhase("shaking");
-    window.setTimeout(() => {
+    claimTimerRef.current = window.setTimeout(() => {
       setPhase("open");
       const parts = Array.from({ length: 14 }).map((_, i) => ({
         id: i,
@@ -168,34 +189,41 @@ export function SupplyWagonModal({
       setBurst(parts);
       onClaim();
       window.dispatchEvent(new Event("pawtype-pet-celebrate"));
-      window.setTimeout(() => setBurst([]), 1200);
+      burstTimerRef.current = window.setTimeout(() => setBurst([]), 1200);
     }, 500);
   };
 
+  const chestLabel =
+    phase === "idle"
+      ? "Open daily reward chest"
+      : phase === "shaking"
+        ? "Opening daily reward chest"
+        : "Daily reward already claimed";
+
   return (
-    <ModalShell ariaLabel="Supply Wagon — Daily Reward" onClose={onClose}>
+    <ModalShell
+      ariaLabel="Supply Wagon — Daily Reward"
+      onClose={onClose}
+      className={CAMP_MODAL_SHELL}
+      contentClassName={CAMP_MODAL_CONTENT}
+    >
       <CampModalHeader
         icon="🎁"
         title="Supply Wagon"
         subtitle={claimed ? "Come back tomorrow for more!" : "A daily gift awaits — open the chest"}
       />
-      <div
-        style={{ position: "relative", display: "grid", placeItems: "center", padding: "24px 0" }}
-      >
+      <div className="camp-chest-stage">
         <button
           type="button"
           onClick={claim}
           className={`camp-chest ${phase === "idle" ? "is-ready" : ""} ${phase === "shaking" ? "is-shaking" : ""} ${phase === "open" ? "is-open" : ""}`}
-          style={{
-            background: "transparent",
-            border: 0,
-            cursor: phase === "idle" ? "pointer" : "default",
-          }}
-          aria-label="Open daily reward chest"
+          disabled={phase !== "idle"}
+          aria-label={chestLabel}
+          aria-describedby={rewardStatusId}
         >
-          {phase === "open" ? "🧰" : "🎁"}
+          <span aria-hidden="true">{phase === "open" ? "🧰" : "🎁"}</span>
         </button>
-        <div className="camp-chest-burst">
+        <div className="camp-chest-burst" aria-hidden="true">
           {burst.map((b) => (
             <span
               key={b.id}
@@ -206,10 +234,22 @@ export function SupplyWagonModal({
           ))}
         </div>
       </div>
-      <div className="pixel-card-sm p-3 text-center">
-        <div className="font-pixel text-[0.6rem] uppercase text-muted-foreground">Reward</div>
-        <div className="font-display text-xl mt-1">{rewardLabel}</div>
-        <div className="font-pixel text-[0.65rem] mt-1" style={{ color: "var(--coin)" }}>
+      <div
+        id={rewardStatusId}
+        className="camp-reward-status pixel-card-sm"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <div className="camp-reward-kicker">
+          {phase === "open"
+            ? "Claimed reward"
+            : phase === "shaking"
+              ? "Opening…"
+              : "Today's reward"}
+        </div>
+        <div className="camp-reward-label">{rewardLabel}</div>
+        <div className="camp-reward-coins">
           <PixelIcon emoji="🪙" /> +{rewardCoins}
         </div>
       </div>
@@ -230,7 +270,12 @@ export function ComingSoonModal({
   children?: ReactNode;
 }) {
   return (
-    <ModalShell ariaLabel={title} onClose={onClose}>
+    <ModalShell
+      ariaLabel={title}
+      onClose={onClose}
+      className={CAMP_MODAL_SHELL}
+      contentClassName={CAMP_MODAL_CONTENT}
+    >
       <CampModalHeader icon={icon} title={title} subtitle="More features coming to camp soon!" />
       <div className="pixel-card-sm p-4 font-pixel text-[0.65rem] text-muted-foreground">
         {children ?? "This building is being built. Level up to unlock new camp features!"}
@@ -242,11 +287,14 @@ export function ComingSoonModal({
 /* --- Bag / Inventory ---------------------------------------- */
 export function InventoryModal({ onClose }: { onClose: () => void }) {
   return (
-    <ModalShell ariaLabel="Bag — Inventory" onClose={onClose} className="max-w-4xl">
+    <ModalShell
+      ariaLabel="Bag — Inventory"
+      onClose={onClose}
+      className={CAMP_MODAL_SHELL_WIDE}
+      contentClassName={CAMP_MODAL_CONTENT}
+    >
       <CampModalHeader icon="🎒" title="Bag" subtitle="Your eggs, pets, rewards, and collection" />
       <InventoryPage />
     </ModalShell>
   );
 }
-
-export { petEvolutionStage };

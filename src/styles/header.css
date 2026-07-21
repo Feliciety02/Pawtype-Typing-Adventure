@@ -85,7 +85,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/awards/awards-background-morning.png");
+  background-image: url("/awards/awards-background-morning.webp");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -97,7 +97,7 @@
 }
 
 .dark .app-shell--awards::before {
-  background-image: url("/awards/awards-background-night.png");
+  background-image: url("/awards/awards-background-night.webp");
 }
 
 .app-shell--awards .game-hud {
@@ -568,21 +568,7 @@
 
 .hud-xp-bar {
   flex: 1;
-  height: clamp(10px, 0.85vw, 12px);
-  padding: 1px;
-  border: 2px solid var(--color-border);
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--color-muted) 72%, var(--color-card));
-  box-shadow: inset 0 1px 0 color-mix(in oklab, white 18%, transparent);
   min-width: 30px;
-}
-
-.hud-xp-bar > div {
-  height: 100%;
-  border-radius: inherit;
-  background:
-    linear-gradient(90deg, color-mix(in oklab, white 24%, transparent), transparent),
-    linear-gradient(90deg, #ff9b7d, #ff6a54 55%, #d33c3c);
 }
 
 .hud-xp-label {
@@ -662,7 +648,7 @@
   background:
     linear-gradient(180deg, color-mix(in oklab, white 14%, transparent), transparent 56%),
     color-mix(in oklab, var(--hud-trim) 60%, var(--color-card));
-  color: var(--color-primary-foreground);
+  color: var(--color-foreground);
   box-shadow:
     2px 2px 0 0 var(--color-border),
     0 0 9px color-mix(in oklab, var(--hud-glow) 58%, transparent);
@@ -698,33 +684,52 @@
   padding: 0;
 }
 
-.hud-theme-btn.pixel-btn {
-  min-width: 96px;
+.hud-theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
   height: 48px;
-  padding: 0 0.75rem;
+  padding: 0;
   border: 2px solid color-mix(in oklab, var(--hud-trim) 40%, var(--color-border));
   border-radius: 8px;
   background:
     linear-gradient(180deg, color-mix(in oklab, var(--hud-trim) 8%, transparent), transparent 60%),
     color-mix(in oklab, var(--color-card) 84%, transparent);
   box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--color-border) 30%, transparent);
-  font-size: 0.6rem;
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition:
+    transform 100ms ease,
+    background 100ms ease;
 }
 
-.hud-theme-btn.pixel-btn:hover {
+.hud-theme-btn:hover {
+  transform: translateY(-1px);
   background: color-mix(in oklab, var(--hud-trim) 20%, var(--color-card));
 }
 
-@media (max-width: 1200px) {
-  .hud-theme-btn.pixel-btn {
-    width: 48px;
-    min-width: 48px;
-    padding-inline: 0;
-  }
+.hud-theme-icon-wrap {
+  position: relative;
+  width: clamp(28px, 2.6vw, 36px);
+  height: clamp(28px, 2.6vw, 36px);
+}
 
-  .hud-theme-btn span {
-    display: none;
-  }
+.hud-theme-icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  pointer-events: none;
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.hud-theme-icon.is-active {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 
 .hud-coins {
@@ -816,6 +821,7 @@
 
 .hud-profile-btn:focus-visible,
 .hud-nav-btn:focus-visible,
+.hud-theme-btn:focus-visible,
 .hud-notif-btn:focus-visible {
   outline: 3px solid var(--color-ring);
   outline-offset: 3px;
@@ -883,7 +889,7 @@
     height: 42px;
   }
 
-  .hud-theme-btn.pixel-btn,
+  .hud-theme-btn,
   .hud-notif-btn {
     width: 42px;
     min-width: 42px;
@@ -896,6 +902,7 @@
   }
 
   .hud-coins-icon,
+  .hud-theme-icon-wrap,
   .hud-notif-icon {
     width: 28px;
     height: 28px;
@@ -943,7 +950,7 @@
     gap: 0.18rem;
   }
 
-  .hud-theme-btn.pixel-btn,
+  .hud-theme-btn,
   .hud-notif-btn {
     width: 38px;
     min-width: 38px;

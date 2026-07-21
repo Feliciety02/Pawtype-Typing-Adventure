@@ -3,6 +3,7 @@ import { useGame } from "../../lib/game/store";
 import { PixelPet } from "../coach/PixelPet";
 import type { PetType } from "../../lib/game/types";
 import { ModalShell, PixelButton } from "../modals/ModalShell";
+import { cn } from "../../lib/utils/utils";
 
 export function PetRoom({ onClose }: { onClose: () => void }) {
   const { state, dispatch } = useGame();
@@ -17,9 +18,17 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <ModalShell ariaLabel="Pet Room" onClose={onClose} className="pixel-modal-shell-pet-room">
+    <ModalShell
+      ariaLabel="Pet Nursery"
+      onClose={onClose}
+      className="pixel-modal-shell-camp pixel-modal-shell-pet-room"
+      contentClassName="camp-modal-content"
+    >
       <div className="pet-room-modal">
-        <div className="pet-room-modal-title">Pet Room</div>
+        <header className="pet-room-header">
+          <h2 className="pet-room-modal-title">Pet Nursery</h2>
+          <p className="pet-room-modal-subtitle">Choose your active companion and share treats.</p>
+        </header>
         {inventory.pets.length === 0 ? (
           <p className="pet-room-empty">No pets yet. Adopt a friend in the Curiosity Cart!</p>
         ) : (
@@ -34,13 +43,11 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
                     onClick={() =>
                       dispatch({ type: "SET_ACTIVE_PET", petType: pet.type as PetType })
                     }
-                    className="pet-room-pet-card"
-                    style={{
-                      borderColor: isActive ? "var(--coin)" : undefined,
-                      boxShadow: isActive ? "0 0 0 2px var(--coin) inset" : undefined,
-                    }}
+                    className={cn("pet-room-pet-card", isActive && "is-active")}
+                    aria-pressed={isActive}
+                    aria-label={`${pet.name}, ${isActive ? "active companion" : "make active companion"}`}
                   >
-                    <PixelPet pet={pet} size={72} />
+                    <PixelPet pet={pet} size={72} showDetails={false} />
                     {isActive ? (
                       <span className="pet-room-active-label">
                         <PixelIcon emoji="⭐" /> Active

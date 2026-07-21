@@ -3,6 +3,7 @@ import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { useGame } from "../../lib/game/store";
 import { useAuth } from "../../hooks/use-auth";
 import { AuthForm } from "../auth/AuthForm";
+import { AnimatedTabPanel } from "../ui/shared/AnimatedTabPanel";
 import { useWorld, WORLDS, type WorldId } from "../shared/WorldTheme";
 import { DocsViewer } from "../shared/DocsViewer";
 import { useThemeMode } from "../../hooks/use-theme-mode";
@@ -134,11 +135,11 @@ export function SettingsPage() {
 
         <div className="settings-content">
           {activeTab === "general" && (
-            <div
+            <AnimatedTabPanel
+              panelKey="general"
               id="settings-panel-general"
               className="settings-general-panel pixel-card"
-              role="tabpanel"
-              aria-labelledby="settings-tab-general"
+              labelledBy="settings-tab-general"
             >
               <div className="settings-page-head">
                 <h2 className="text-3xl leading-none">⚙ Settings</h2>
@@ -351,18 +352,18 @@ export function SettingsPage() {
                   </div>
                 )}
               </div>
-            </div>
+            </AnimatedTabPanel>
           )}
 
           {activeTab === "library" && (
-            <div
+            <AnimatedTabPanel
+              panelKey="library"
               id="settings-panel-library"
               className="settings-library-panel"
-              role="tabpanel"
-              aria-labelledby="settings-tab-library"
+              labelledBy="settings-tab-library"
             >
               <DocsViewer />
-            </div>
+            </AnimatedTabPanel>
           )}
         </div>
       </div>

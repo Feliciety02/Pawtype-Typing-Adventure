@@ -129,8 +129,8 @@ function getConstellationsOpacity(minute: number) {
 }
 
 function getParticleMoods(minute: number): ParticleMood[] {
-  if (minute >= 21 * 60 || minute < 4 * 60) return ["fireflies", "shooting-star"];
-  if (minute >= 19 * 60 + 30 && minute < 21 * 60) return ["fireflies"];
+  // Twilight through pre-dawn shares the nighttime sky ambience.
+  if (minute >= 19 * 60 + 30 || minute < 6 * 60) return ["fireflies", "shooting-star"];
   if (minute >= 18 * 60 && minute < 19 * 60 + 30) return ["dust"];
   if (minute >= 12 * 60 && minute < 18 * 60) return ["butterflies", "pollen"];
   return ["pollen"];
@@ -172,4 +172,3 @@ export function getDayNightState(date: Date = new Date()): DayNightState {
     particleMoods: getParticleMoods(minute),
   };
 }
-

@@ -17,6 +17,7 @@ import { MiniStat } from "./MiniStat";
 import { PixelIcon } from "../../lib/icons/PixelIcon";
 import { sceneImage } from "@/lib/adventure/adventureData";
 import { THEME_BACKGROUND } from "../../lib/game/themeAssets";
+import { Progress, type ProgressTone } from "@/components/ui/progress";
 
 export function StageRunner({
   stage,
@@ -182,6 +183,7 @@ export function StageRunner({
   const bossHp = isBoss ? Math.max(0, 100 - clearPercent) : 0;
   const hpColor =
     bossHp > 66 ? "var(--leaf)" : bossHp > 33 ? "var(--coin)" : "var(--color-destructive)";
+  const hpTone: ProgressTone = bossHp > 66 ? "success" : bossHp > 33 ? "coin" : "danger";
   const currentPhase = isBoss ? Math.min(Math.floor(clearPercent / 34), 2) : 0;
 
   useEffect(() => {
@@ -358,19 +360,22 @@ export function StageRunner({
                 <span className="text-muted-foreground">Boss HP</span>
                 <span style={{ color: hpColor }}>{Math.round(bossHp)}%</span>
               </div>
-              <div className="pixel-bar" style={{ height: 12 }}>
-                <div
-                  className="h-full transition-all duration-200"
-                  style={{ width: `${bossHp}%`, background: hpColor }}
-                />
-              </div>
+              <Progress
+                value={bossHp}
+                size="md"
+                tone={hpTone}
+                aria-label={`Boss health: ${Math.round(bossHp)}%`}
+              />
             </div>
           )}
 
           <div className="adventure-type-wrap" onClick={() => inputRef.current?.focus()}>
-            <div className="adventure-type-progress" aria-hidden="true">
-              <div style={{ width: `${timePercent}%` }} />
-            </div>
+            <Progress
+              value={timePercent}
+              size="xs"
+              tone="rainbow"
+              aria-label={`Stage time elapsed: ${Math.round(timePercent)}%`}
+            />
 
             <div className="adventure-typing-panel">
               <div className="adventure-word-stream">

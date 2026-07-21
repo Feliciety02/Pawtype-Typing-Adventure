@@ -10,5 +10,5 @@
 @import "./styles/modal-system.css";
 @import "./styles/quest-log.css";
 @import "./styles/egg-hatch.css";
-@import "./styles/camp.css";
+@import "./styles/camp/index.css";
 @import "./styles/accessibility.css";

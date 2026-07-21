@@ -1,13 +1,13 @@
 import type { WorldId } from "../../components/shared/WorldTheme";
 
 export const THEME_BACKGROUND: Partial<Record<WorldId, string>> = {
-  cafe: "/themes/cozy-cafe.png",
-  forest: "/themes/mossy-forest.png",
-  ocean: "/themes/tide-pool.png",
-  sakura: "/themes/sakura-park.png",
-  castle: "/themes/royal-castle.png",
-  space: "/themes/stardust.png",
-  autumn: "/themes/cozy-campsite.png",
-  mushroom: "/themes/fairy-mushroom-village.png",
-  sunflower: "/themes/sunflower-meadow.png",
+  cafe: "/themes/cozy-cafe.webp",
+  forest: "/themes/mossy-forest.webp",
+  ocean: "/themes/tide-pool.webp",
+  sakura: "/themes/sakura-park.webp",
+  castle: "/themes/royal-castle.webp",
+  space: "/themes/stardust.webp",
+  autumn: "/themes/cozy-campsite.webp",
+  mushroom: "/themes/fairy-mushroom-village.webp",
+  sunflower: "/themes/sunflower-meadow.webp",
 };

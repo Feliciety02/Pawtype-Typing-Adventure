@@ -1,21 +1,25 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import {
   ComingSoonModal,
   PaintersTentModal,
-  PetNurseryModal,
   SupplyWagonModal,
   TrainingBoardModal,
 } from "./modals/CampModals";
 import { InventoryPage } from "../inventory/InventoryPage";
-import { getCampTier } from "../../lib/camp/progression";
+import { PetNurseryPage } from "./PetNurseryPage";
 import { CampBuildings } from "../../lib/camp/assets/buildings";
 import { useGame } from "../../lib/game/store";
 import { getDailyReward } from "../../lib/game/types";
+import { useThemeMode } from "@/hooks/use-theme-mode";
 import { WorldRenderer } from "../world/WorldRenderer";
+import { getDayNightState, type DayNightState } from "../world/DayNightController";
+import { useDayNightState } from "../world/useDayNightState";
 import { CampBuilding } from "./CampBuilding";
+import { Button } from "@/components/ui/button";
 
-type CampPage = "cabin";
-type OpenBuilding = "blacksmith" | "library" | "mailbox" | "nursery" | "tent" | "wagon";
+type CampPage = "cabin" | "nursery";
+type OpenBuilding = "blacksmith" | "mailbox" | "tent" | "training" | "wagon";
 type CampBuildingConfig = {
   id: string;
   asset: string;
@@ -27,16 +31,35 @@ type CampBuildingConfig = {
   onClick?: () => void;
 };
 
-const CAMP_STATIC_ENVIRONMENT = "/camp/scenes/campscene-background-morning.png";
+const CAMP_ENVIRONMENT_BY_SEGMENT: Record<DayNightState["current"], string> = {
+  midnight: "/camp/scenes/campscene-background-midnight.webp",
+  predawn: "/camp/scenes/campscene-background-pre-dawn.webp",
+  sunrise: "/camp/scenes/campscene-background-sunrise.webp",
+  morning: "/camp/scenes/campscene-background-morning.webp",
+  noon: "/camp/scenes/campscene-background-noon.webp",
+  afternoon: "/camp/scenes/campscene-background-early-afternoon.webp",
+  sunset: "/camp/scenes/campscene-background-sunset.webp",
+  twilight: "/camp/scenes/campscene-background-twilight.webp",
+};
+
+const FORCED_MORNING_STATE = getDayNightState(new Date(2024, 0, 1, 9, 0, 0, 0));
+const FORCED_NIGHT_STATE = getDayNightState(new Date(2024, 0, 1, 22, 0, 0, 0));
+
+function isRealTimeNight(minute: number) {
+  return minute >= 18 * 60 || minute < 6 * 60;
+}
 
 export function CampScene() {
   const { state, dispatch } = useGame();
-  const { player, inventory } = state;
-  const tier = getCampTier(player.level);
+  const { player } = state;
+  const { dark } = useThemeMode();
+  const liveDayNight = useDayNightState();
 
   const [fading, setFading] = useState(false);
   const [activePage, setActivePage] = useState<CampPage | null>(null);
   const [openBuilding, setOpenBuilding] = useState<OpenBuilding | null>(null);
+  const pageTriggerRef = useRef<HTMLElement | null>(null);
+  const pageBackRef = useRef<HTMLButtonElement>(null);
 
   const triggerFade = () => {
     setFading(true);
@@ -45,6 +68,14 @@ export function CampScene() {
 
   const canClaim = !player.dailyRewardClaimed;
   const reward = getDailyReward(player.streak + 1);
+  const realTimeNight = isRealTimeNight(liveDayNight.minute);
+  const sceneState =
+    dark && !realTimeNight
+      ? FORCED_NIGHT_STATE
+      : !dark && realTimeNight
+        ? FORCED_MORNING_STATE
+        : liveDayNight;
+  const environmentSrc = CAMP_ENVIRONMENT_BY_SEGMENT[sceneState.current];
 
   const claimReward = () => {
     if (canClaim) {
@@ -53,20 +84,43 @@ export function CampScene() {
   };
 
   const open = (building: OpenBuilding) => setOpenBuilding(building);
-  const openCabin = () => {
+  const openPage = (page: CampPage) => {
+    pageTriggerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setOpenBuilding(null);
-    setActivePage("cabin");
+    setActivePage(page);
   };
+  const openCabin = () => openPage("cabin");
+  const openNursery = () => openPage("nursery");
+  const closeCabin = () => {
+    setActivePage(null);
+    window.requestAnimationFrame(() => pageTriggerRef.current?.focus());
+  };
+
+  useEffect(() => {
+    if (activePage === null) return;
+
+    pageBackRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setActivePage(null);
+      window.requestAnimationFrame(() => pageTriggerRef.current?.focus());
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [activePage]);
 
   const interactiveBuildings: CampBuildingConfig[] = [
     {
-      id: "library",
+      id: "training",
       asset: CampBuildings.library,
-      label: "Library",
+      label: "Training Board",
       x: 48.8,
       y: 33,
       width: 210,
-      onClick: () => open("library"),
+      onClick: () => open("training"),
     },
     {
       id: "cabin",
@@ -93,7 +147,7 @@ export function CampScene() {
       x: 37,
       y: 62,
       width: 152,
-      onClick: () => open("nursery"),
+      onClick: openNursery,
     },
     {
       id: "wagon",
@@ -138,33 +192,38 @@ export function CampScene() {
 
   return (
     <div className="camp-scene" data-theme-fading={fading}>
-      <div className="camp-scene-world">
-        <WorldRenderer environmentSrc={CAMP_STATIC_ENVIRONMENT} />
+      <div
+        className="camp-scene-world"
+        aria-hidden={activePage !== null ? true : undefined}
+        inert={activePage !== null}
+      >
+        <WorldRenderer environmentSrc={environmentSrc} state={sceneState} />
 
-      <div className="camp-layer">
-        {interactiveBuildings.map((building) => (
-          <CampBuilding key={building.id} {...building} />
-        ))}
-      </div>
+        <div className="camp-layer">
+          {interactiveBuildings.map((building) => (
+            <CampBuilding key={building.id} {...building} />
+          ))}
+        </div>
 
-      <div className="camp-layer">
-        {sceneryBuildings.map((building) => (
-          <CampBuilding key={building.id} {...building} />
-        ))}
-      </div>
-
+        <div className="camp-layer" aria-hidden="true">
+          {sceneryBuildings.map((building) => (
+            <CampBuilding key={building.id} {...building} />
+          ))}
+        </div>
       </div>
 
       {activePage === "cabin" && (
         <section className="camp-interior-page" aria-label="Cabin bag inventory">
           <div className="camp-interior-toolbar">
-            <button
-              type="button"
+            <Button
+              ref={pageBackRef}
+              variant="secondary"
               className="camp-interior-back"
-              onClick={() => setActivePage(null)}
+              onClick={closeCabin}
             >
-              ← Back to Camp
-            </button>
+              <ArrowLeft aria-hidden="true" />
+              Back to Camp
+            </Button>
             <div>
               <h1>Cabin Bag</h1>
               <p>Your eggs, pets, rewards, and camp collection live inside the cabin.</p>
@@ -173,11 +232,11 @@ export function CampScene() {
           <InventoryPage />
         </section>
       )}
+      {activePage === "nursery" && <PetNurseryPage backButtonRef={pageBackRef} onBack={closeCabin} />}
       {openBuilding === "tent" && (
         <PaintersTentModal onClose={() => setOpenBuilding(null)} onThemeChange={triggerFade} />
       )}
-      {openBuilding === "nursery" && <PetNurseryModal onClose={() => setOpenBuilding(null)} />}
-      {openBuilding === "library" && <TrainingBoardModal onClose={() => setOpenBuilding(null)} />}
+      {openBuilding === "training" && <TrainingBoardModal onClose={() => setOpenBuilding(null)} />}
       {openBuilding === "wagon" && (
         <SupplyWagonModal
           onClose={() => setOpenBuilding(null)}

@@ -34,6 +34,7 @@ type ModalShellProps = {
   ariaLabel: string;
   onClose: () => void;
   children: ReactNode;
+  overlayClassName?: string;
   className?: string;
   frameClassName?: string;
   contentClassName?: string;
@@ -45,6 +46,7 @@ export function ModalShell({
   ariaLabel,
   onClose,
   children,
+  overlayClassName,
   className,
   frameClassName,
   contentClassName,
@@ -104,7 +106,7 @@ export function ModalShell({
 
   return createPortal(
     <div
-      className="pixel-modal-overlay"
+      className={cn("pixel-modal-overlay", overlayClassName)}
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}

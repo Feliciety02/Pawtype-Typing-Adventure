@@ -174,7 +174,7 @@ Example:
 **Rarity:** Common
 **Description:** Awarded to players who begin their journey toward becoming faster typists.
 **Unlock Requirement:** Reach the first typing speed milestone.
-**Icon Asset:** `badge_speed_tiny_feather.png`
+**Icon Asset:** `badge_speed_tiny_feather.webp`
 
 ---
 
@@ -184,15 +184,15 @@ Use lowercase snake_case for all badge assets.
 
 Examples:
 
-- `badge_speed_tiny_feather.png`
-- `badge_speed_hyper_velocity.png`
-- `badge_accuracy_bullseye.png`
-- `badge_combo_inferno.png`
-- `badge_pet_guardian_paw.png`
-- `badge_world_castle_crest.png`
-- `badge_learning_magic_tome.png`
-- `badge_streak_endless_journey.png`
-- `badge_challenge_ultimate_hero.png`
+- `badge_speed_tiny_feather.webp`
+- `badge_speed_hyper_velocity.webp`
+- `badge_accuracy_bullseye.webp`
+- `badge_combo_inferno.webp`
+- `badge_pet_guardian_paw.webp`
+- `badge_world_castle_crest.webp`
+- `badge_learning_magic_tome.webp`
+- `badge_streak_endless_journey.webp`
+- `badge_challenge_ultimate_hero.webp`
 
 This convention ensures consistency throughout the codebase and simplifies asset loading and maintenance.
 

@@ -1,3 +1,4 @@
+export { AnimatedTabPanel } from "./AnimatedTabPanel";
 export { ComingSoonBadge } from "./ComingSoonBadge";
 export { Confetti } from "./Confetti";
 export { DocsViewer } from "./DocsViewer";

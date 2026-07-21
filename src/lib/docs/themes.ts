@@ -2,6 +2,8 @@ export const THEMES_DOC = `# Dreaming Worlds - Theme Documentation
 
 Every world is a complete visual theme with its own color palette, ambient particle effects, HUD styling, and background artwork.
 
+Theme-set preview cards are keyboard-accessible selectors with consistent hover, focus, and active styling. The currently applied world exposes its pressed state and a visible **Using Theme** status.
+
 ---
 
 ## Worlds
@@ -90,11 +92,11 @@ Every world is a complete visual theme with its own color palette, ambient parti
 
 1. Each world sets CSS custom properties on \`<html>\` via the \`world-{id}\` class
 2. Light and dark modes each have separate palette overrides; the app uses the saved manual choice and does not auto-follow system theme
-3. The \`.game-hud\` block styles the top navigation bar as a three-part HUD with a clickable player profile card, centered menu strip, and compact day/night, coins, and notifications panel. \`Stats\` and \`Settings\` live in the profile menu, desktop tabs stay on one line, tablet layouts switch to icon-first controls, and phone layouts use a two-row six-slot navigation grid without horizontal page overflow
+3. The \`.game-hud\` block styles the top navigation bar as a three-part HUD with a clickable player profile card, centered menu strip, and compact day/night, coins, and notifications panel. \`Stats\` and \`Settings\` live in the profile menu, desktop tabs stay on one line, tablet layouts switch to icon-first controls, and phone layouts use a two-row six-slot navigation grid without horizontal page overflow. Active nav tabs keep the same readable label color as inactive tabs instead of swapping to white text
 4. \`.ambient-glow\` or \`.ambient-particle\` creates atmospheric effects
-5. Background images are loaded from \`/themes/{slug}.png\`
+5. Background images are loaded from \`/themes/{slug}.webp\`
 6. World selection persists in \`localStorage\`
-7. Adventure node cards load image sets from \`/worlds\` when available; locked nodes use \`/icons/lock.png\` as a larger colored centered overlay without a separate lock panel
+7. Adventure node cards load image sets from \`/worlds\` when available; locked nodes use \`/icons/lock.webp\` as a larger colored centered overlay without a separate lock panel
 8. Adventure stage cards automatically measure transparent PNG margins at runtime and offset the node art so the visible top edge aligns consistently across different world image sets
 9. Settings shows only unlocked worlds in the inline World Wardrobe grid
 10. Perfect-practice confetti now uses a single signature emoji per world theme so celebration bursts stay visually consistent with the active world
