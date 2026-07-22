@@ -2,10 +2,10 @@ import type { WorldId } from "../../../../components/shared/WorldTheme";
 import type { Difficulty, Zone, WordBank, WorldLexicon } from "./types";
 import { DIFFICULTY_VOCAB } from "./vocab";
 import { LEXICONS } from "./lexicons";
-import { TEMPLATES } from "./templates";
 import { pickFact } from "./facts";
 import { pickFresh } from "./tracker";
-import { fillTemplate, pick } from "./filler";
+import { pick } from "./filler";
+import { generateSentence } from "./grammar";
 import { wordZones } from "./zones";
 
 /**
@@ -31,9 +31,7 @@ export async function generateAdventureWords(
   const sentences: string[] = [];
   const sentenceCount = Math.ceil(count / 7);
   for (let i = 0; i < sentenceCount; i++) {
-    const tpl = pick(TEMPLATES.easy);
-    const sentence = fillTemplate(tpl, bank);
-    sentences.push(sentence);
+    sentences.push(generateSentence(bank, "easy"));
   }
 
   const allWords = sentences.join(" ").split(/\s+/).filter(Boolean);
@@ -57,9 +55,7 @@ export async function generateWorldText(worldId: WorldId): Promise<string | null
 
   const sentences: string[] = [];
   for (let i = 0; i < 3; i++) {
-    const tpl = pick(TEMPLATES.easy);
-    const sentence = fillTemplate(tpl, bank);
-    sentences.push(sentence);
+    sentences.push(generateSentence(bank, "easy"));
   }
   return sentences.join(" ");
 }
@@ -82,8 +78,7 @@ export async function generateQuestText(
     adjs: [...DIFFICULTY_VOCAB.easy.adjs, ...lexicon.adjs],
   };
 
-  const tpl = pick(TEMPLATES.easy);
-  const sentence = fillTemplate(tpl, bank);
+  const sentence = generateSentence(bank, "easy");
   return `${stageName}: ${sentence}`;
 }
 
@@ -116,10 +111,7 @@ export async function generateLessonText(
   const sentenceCount = Math.max(1, Math.ceil(count / 7));
   const sentences: string[] = [];
   for (let i = 0; i < sentenceCount; i++) {
-    const templates = TEMPLATES[difficulty];
-    const tpl = pick(templates);
-    const sentence = fillTemplate(tpl, useBank);
-    sentences.push(sentence);
+    sentences.push(generateSentence(useBank, difficulty));
   }
 
   // Mix in an educational fact occasionally
@@ -149,8 +141,7 @@ export async function generateWeakSpotSentences(weakChars: string[]): Promise<st
 
   const sentences: string[] = [];
   for (let i = 0; i < 4; i++) {
-    const tpl = pick(TEMPLATES.easy);
-    sentences.push(fillTemplate(tpl, useBank));
+    sentences.push(generateSentence(useBank, "easy"));
   }
   return sentences;
 }

@@ -6,7 +6,7 @@ export function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function conjugate(verb: string): string {
+export function conjugate(verb: string): string {
   if (verb.endsWith("s") || verb.endsWith("x") || verb.endsWith("ch") || verb.endsWith("sh"))
     return verb + "es";
   if (verb.endsWith("y") && !/[aeiou]y/.test(verb)) return verb.slice(0, -1) + "ies";

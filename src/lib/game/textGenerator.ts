@@ -393,8 +393,23 @@ function createLocalAdventureWords(
       `your paws cross the ${pickLocal(profile.route, seed, i + 13)} while the ${pickLocal(profile.treasures, seed, i + 14)} ${pickLocal(profile.actions, seed, i + 15)} softly`,
     (i: number) =>
       `finish this route with smooth letters careful spaces and a brave heart for the next quest`,
+    (i: number) =>
+      `the ${pickLocal(profile.moods, seed, i + 16)} path winds past ${pickLocal(profile.landmarks, seed, i + 17)} as the ${pickLocal(profile.creatures, seed, i + 18)} ${pickLocal(profile.actions, seed, i + 19)} ahead`,
+    (i: number) =>
+      `from the ${pickLocal(profile.landmarks, seed, i + 20)} the ${pickLocal(profile.route, seed, i + 21)} stretches through ${pickLocal(profile.moods, seed, i + 22)} ${profile.setting}`,
+    (i: number) =>
+      `beyond the ${pickLocal(profile.landmarks, seed, i + 23)} a ${pickLocal(profile.treasures, seed, i + 24)} glows where the ${pickLocal(profile.route, seed, i + 25)} bends`,
+    (i: number) =>
+      `along the ${pickLocal(profile.route, seed, i + 26)} the ${pickLocal(profile.creatures, seed, i + 27)} leads past ${pickLocal(profile.landmarks, seed, i + 28)} toward the ${pickLocal(profile.treasures, seed, i + 29)}`,
+    (i: number) =>
+      `when the ${pickLocal(profile.moods, seed, i + 30)} wind stirs the ${pickLocal(profile.route, seed, i + 31)} the ${pickLocal(profile.landmarks, seed, i + 32)} comes into view`,
+    (i: number) =>
+      `deep in the ${profile.setting} the ${pickLocal(profile.route, seed, i + 33)} narrows and the ${pickLocal(profile.creatures, seed, i + 34)} ${pickLocal(profile.actions, seed, i + 35)} nearby`,
+    (i: number) =>
+      `rest beneath the ${pickLocal(profile.landmarks, seed, i + 36)} where ${pickLocal(profile.moods, seed, i + 37)} shadows gather and the ${pickLocal(profile.treasures, seed, i + 38)} waits`,
+    (i: number) =>
+      `the trail weaves through ${pickLocal(profile.landmarks, seed, i + 39)} and ${pickLocal(profile.landmarks, seed, i + 40)} as the ${pickLocal(profile.moods, seed, i + 41)} light fades`,
   ];
-
   let templateIndex = offset;
   while (words.length < count + 16) {
     const sentence = templates[templateIndex % templates.length](templateIndex);
