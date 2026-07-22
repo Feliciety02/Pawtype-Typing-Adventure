@@ -1,7 +1,10 @@
+// Procedural sentence generator — builds grammatically correct English sentences
+// from word banks at various difficulty levels
 import type { WordBank, Difficulty } from "./types";
 import { pick, conjugate } from "./filler";
 import { pickFresh, trackUsed } from "./tracker";
 
+// Determiners used when the word bank doesn't provide any
 const FALLBACK_DETS = [
   "a",
   "an",
@@ -24,6 +27,7 @@ const FALLBACK_DETS = [
   "most",
 ];
 
+// Prepositions used when the word bank doesn't provide any
 const FALLBACK_PREPS = [
   "above",
   "across",
@@ -64,6 +68,7 @@ const FALLBACK_PREPS = [
   "with",
 ];
 
+// Subordinating conjunctions for complex sentences
 const SUB_CONJ = [
   "when",
   "while",
@@ -77,18 +82,21 @@ const SUB_CONJ = [
   "after",
 ];
 
+// Coordinating conjunctions for compound sentences
 const COORD_CONJ = ["and", "but", "so", "yet"];
 
+// Controls how complex a generated sentence can be at each difficulty level
 type GrammarLimits = {
-  maxAdj: number;
-  maxPP: number;
-  advInVP: boolean;
-  advFront: boolean;
-  ppFront: boolean;
-  sub: boolean;
-  comp: boolean;
+  maxAdj: number;      // Max adjectives per noun phrase
+  maxPP: number;       // Max prepositional phrases per sentence
+  advInVP: boolean;    // Allow adverbs inside verb phrases
+  advFront: boolean;   // Allow fronted adverbs ("Quickly, the fox ran")
+  ppFront: boolean;    // Allow fronted prepositional phrases
+  sub: boolean;        // Allow subordinate clauses
+  comp: boolean;       // Allow compound sentences (coordinated clauses)
 };
 
+// Difficulty presets — beginner is simplest, master allows full sentence variety
 const LIMITS: Record<Difficulty, GrammarLimits> = {
   beginner: {
     maxAdj: 0,
@@ -146,10 +154,12 @@ const LIMITS: Record<Difficulty, GrammarLimits> = {
   },
 };
 
+// Random integer between min and max (inclusive)
 function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Pick a random word, preferring words not recently used (tracked by tracker.ts)
 function pickFreshWord(words: string[], batchSize: number): string {
   const batch = pickFresh(words, batchSize);
   const word =
@@ -168,6 +178,7 @@ function getPreps(bank: WordBank): string[] {
   return bank.preps.length > 0 ? bank.preps : FALLBACK_PREPS;
 }
 
+// "a" → "an" before vowels, "an" → "a" before consonants
 function adjustDet(det: string, nextWord: string): string {
   const vowelStart = /^[aeiou]/i.test(nextWord);
   if (det === "a" && vowelStart) return "an";
@@ -175,6 +186,7 @@ function adjustDet(det: string, nextWord: string): string {
   return det;
 }
 
+// Generate a noun phrase: [det] [adj...] noun
 function generateNP(bank: WordBank, limits: GrammarLimits): string {
   const noun = pickFreshWord(bank.nouns, 20);
   const adjCount = randInt(0, limits.maxAdj);
@@ -189,6 +201,7 @@ function generateNP(bank: WordBank, limits: GrammarLimits): string {
   return `${det} ${adjStr}${noun}`;
 }
 
+// Generate a verb phrase: [adv] verb [adv]
 function generateVP(bank: WordBank, limits: GrammarLimits): string {
   const verb = conjugate(pickFreshWord(bank.verbs, 15));
   if (limits.advInVP && Math.random() < 0.35 && bank.advs.length > 0) {
@@ -198,6 +211,7 @@ function generateVP(bank: WordBank, limits: GrammarLimits): string {
   return verb;
 }
 
+// Generate a prepositional phrase: prep [det] [adj...] noun
 function generatePP(bank: WordBank, limits: GrammarLimits): string {
   const prep = pick(getPreps(bank));
   const subAdj = Math.min(limits.maxAdj, 1);
@@ -205,6 +219,7 @@ function generatePP(bank: WordBank, limits: GrammarLimits): string {
   return `${prep} ${generateNP(bank, subLimits)}`;
 }
 
+// Simple sentence: NP VP (PP*)
 function buildSimple(bank: WordBank, limits: GrammarLimits): string {
   let s = `${generateNP(bank, limits)} ${generateVP(bank, limits)}`;
   const ppCount = randInt(0, limits.maxPP);
@@ -214,25 +229,30 @@ function buildSimple(bank: WordBank, limits: GrammarLimits): string {
   return s;
 }
 
+// Fronted adverb: "Adv, NP VP"
 function buildAdvFront(bank: WordBank, limits: GrammarLimits): string {
   const adv = bank.advs.length > 0 ? pick(bank.advs) : "quietly";
   return `${adv}, ${generateNP(bank, limits)} ${generateVP(bank, limits)}`;
 }
 
+// Fronted PP: "PP, NP VP"
 function buildPPFront(bank: WordBank, limits: GrammarLimits): string {
   const pp = generatePP(bank, limits);
   return `${pp}, ${generateNP(bank, limits)} ${generateVP(bank, limits)}`;
 }
 
+// Subordinate clause first: "conj simple, simple"
 function buildSubFirst(bank: WordBank, limits: GrammarLimits): string {
   const conj = pick(SUB_CONJ);
   return `${conj} ${buildSimple(bank, limits)}, ${buildSimple(bank, limits)}`;
 }
 
+// Compound sentence: "simple conj simple"
 function buildCompound(bank: WordBank, limits: GrammarLimits): string {
   return `${buildSimple(bank, limits)} ${pick(COORD_CONJ)} ${buildSimple(bank, limits)}`;
 }
 
+// Main entry point — generate a random English sentence at a given difficulty
 export function generateSentence(bank: WordBank, difficulty: Difficulty): string {
   const limits = LIMITS[difficulty];
 
@@ -241,6 +261,7 @@ export function generateSentence(bank: WordBank, difficulty: Difficulty): string
     build: () => string;
   }
 
+  // Weighted random selection of sentence structures (simple is most common)
   const structures: Structure[] = [];
   structures.push({ weight: 6, build: () => buildSimple(bank, limits) });
   if (limits.advFront) structures.push({ weight: 2, build: () => buildAdvFront(bank, limits) });
@@ -260,8 +281,10 @@ export function generateSentence(bank: WordBank, difficulty: Difficulty): string
   }
   if (!sentence) sentence = buildSimple(bank, limits);
 
+  // Capitalize first letter
   sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
 
+  // Add terminal punctuation (mostly periods, occasional ! or ?)
   const endRoll = Math.random();
   if (endRoll < 0.04) {
     sentence += "!";

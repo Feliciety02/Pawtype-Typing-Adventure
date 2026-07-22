@@ -1,3 +1,5 @@
+// Lexicon-based text generator — merges world-specific words with difficulty vocabulary
+// into proper sentences using a simple grammar engine
 import type { WorldId } from "../../../../components/shared/WorldTheme";
 import type { Difficulty, Zone, WordBank, WorldLexicon } from "./types";
 import { DIFFICULTY_VOCAB } from "./vocab";
@@ -8,10 +10,7 @@ import { pick } from "./filler";
 import { generateSentence } from "./grammar";
 import { wordZones } from "./zones";
 
-/**
- * Generate a passage of adventure-themed words for a specific world.
- * Preserves original signature but uses improved sentence approach.
- */
+// Generate adventure-stage text by combining world lexicons with seed words
 export async function generateAdventureWords(
   stageName: string,
   worldId: WorldId,
@@ -21,6 +20,7 @@ export async function generateAdventureWords(
   const lexicon = LEXICONS[worldId];
   if (!lexicon) return null;
 
+  // Merge easy vocab + world lexicon + stage seed words
   const bank: WordBank = {
     ...DIFFICULTY_VOCAB.easy,
     nouns: [...DIFFICULTY_VOCAB.easy.nouns, ...lexicon.nouns, ...seedWords],
@@ -38,10 +38,7 @@ export async function generateAdventureWords(
   return allWords.slice(0, count);
 }
 
-/**
- * Generate a world-themed text passage.
- * Preserves original signature but now produces complete sentences.
- */
+// Generate a short world-themed passage (3 sentences)
 export async function generateWorldText(worldId: WorldId): Promise<string | null> {
   const lexicon = LEXICONS[worldId];
   if (!lexicon) return null;
@@ -60,10 +57,7 @@ export async function generateWorldText(worldId: WorldId): Promise<string | null
   return sentences.join(" ");
 }
 
-/**
- * Generate a quest-themed sentence.
- * Preserves original signature.
- */
+// Generate a single quest-themed sentence with the stage name as a prefix
 export async function generateQuestText(
   stageName: string,
   worldId: WorldId,
@@ -82,10 +76,7 @@ export async function generateQuestText(
   return `${stageName}: ${sentence}`;
 }
 
-/**
- * Generate text appropriate for a specific lesson difficulty and keyboard focus.
- * New function — used by the lesson system.
- */
+// Generate lesson text targeting specific keyboard zones at a given difficulty
 export async function generateLessonText(
   difficulty: Difficulty,
   targetZones: Zone[],
@@ -93,7 +84,7 @@ export async function generateLessonText(
 ): Promise<string> {
   const bank = DIFFICULTY_VOCAB[difficulty];
 
-  // Filter vocabulary to prefer target zone words
+  // Prefer words that include letters from the target keyboard zones
   const zoneFiltered = (words: string[]) => {
     if (targetZones.length === 0) return pickFresh(words, Math.min(count, words.length));
     const matched = words.filter((w) => targetZones.some((z) => wordZones(w).has(z)));
@@ -114,7 +105,6 @@ export async function generateLessonText(
     sentences.push(generateSentence(useBank, difficulty));
   }
 
-  // Mix in an educational fact occasionally
   if (Math.random() < 0.3) {
     sentences.push(pickFact());
   }
@@ -122,15 +112,14 @@ export async function generateLessonText(
   return sentences.join(" ");
 }
 
-/**
- * Generate sentences that target specific weak characters.
- */
+// Generate sentences that incorporate characters the player struggles with
 export async function generateWeakSpotSentences(weakChars: string[]): Promise<string[]> {
   if (weakChars.length === 0) return [];
 
   const bank = DIFFICULTY_VOCAB.easy;
   const charSet = new Set(weakChars.map((c) => c.toLowerCase()));
 
+  // Filter vocabulary to only words containing weak characters
   const matching = (words: string[]) => words.filter((w) => [...w].some((c) => charSet.has(c)));
   const useBank: WordBank = {
     ...bank,
@@ -146,7 +135,4 @@ export async function generateWeakSpotSentences(weakChars: string[]): Promise<st
   return sentences;
 }
 
-// ============================================================
-// Re-export WordLexicon type for compatibility
-// ============================================================
 export type { WorldLexicon };
