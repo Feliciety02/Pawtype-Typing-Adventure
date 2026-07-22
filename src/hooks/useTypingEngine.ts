@@ -27,6 +27,8 @@ export type TypingEngineProps = {
   lessonWordCount?: number;
 };
 
+// The main typing engine hook — manages the full lifecycle of a typing test
+// from word generation → input handling → scoring → rewards → coach feedback
 export function useTypingEngine({
   customWords,
   customTitle,
@@ -45,6 +47,7 @@ export function useTypingEngine({
   const currentWorld = WORLDS.find((w) => w.id === world)!;
   const worldArtUrl = THEME_BACKGROUND[world];
 
+  // ---------- UI State ----------
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>(30);
   const [words, setWords] = useState<string[]>(() =>
     customWords && customWords.length ? customWords : [],
@@ -69,6 +72,7 @@ export function useTypingEngine({
   const [coachLoading, setCoachLoading] = useState(false);
   const [coachError, setCoachError] = useState(false);
 
+  // ---------- Refs (values that effects need without re-running) ----------
   const prevLevelRef = useRef(state.player.level);
   const startOffset = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -85,7 +89,10 @@ export function useTypingEngine({
   });
   const typedAllRef = useRef(false);
 
+  // ---------- Derived Values ----------
+  // Full target string = all words joined by spaces
   const target = useMemo(() => words.join(" "), [words]);
+  // Map each word to its start/end index within the full target string
   const wordRanges = useMemo(() => {
     let cursor = 0;
     return words.map((word, index) => {
@@ -95,35 +102,42 @@ export function useTypingEngine({
       return { word, index, start, end };
     });
   }, [words]);
+  // Which word the cursor is currently inside
   const currentWordIndex = useMemo(() => {
     const index = wordRanges.findIndex(({ end }) => typed.length <= end);
     return index === -1 ? wordRanges.length - 1 : index;
   }, [typed.length, wordRanges]);
+  // Sliding window of words shown in the UI (3 behind, 18 ahead)
   const visibleWords = useMemo(() => {
     const start = Math.max(0, currentWordIndex - 3);
     const end = Math.min(words.length, currentWordIndex + 18);
     return wordRanges.slice(start, end);
   }, [currentWordIndex, wordRanges, words.length]);
 
+  // WPM = (correct chars / 5) / minutes  (industry standard formula)
   const wpm = useMemo(() => {
     const minutes = Math.max(elapsed, 1) / 60;
     return Math.round(correctChars / 5 / Math.max(minutes, 1 / 60));
   }, [correctChars, elapsed]);
 
+  // Accuracy = correct / (correct + mistakes) as a percentage
   const accuracy = useMemo(() => {
     const total = correctChars + mistakes;
     if (!total) return 100;
     return Math.round((correctChars / total) * 100);
   }, [correctChars, mistakes]);
 
+  // Rewards scale with WPM
   const xp = useMemo(() => Math.round(wpm * 1.5), [wpm]);
   const coins = useMemo(() => Math.round(wpm / 2), [wpm]);
 
+  // Unique set of characters the player missed (for weak-spot drills)
   const mistakeChars = useMemo(() => {
     return [...new Set(keystrokes.filter((k) => !k.correct).map((k) => k.target))];
   }, [keystrokes]);
 
-  // Timer tick (skipped for untimed lessons)
+  // ---------- Timer ----------
+  // Counts up every 100ms and auto-finishes when duration is reached
   useEffect(() => {
     if (noTimer || !startedAt || finished) return;
     const t = setInterval(() => {
@@ -137,7 +151,7 @@ export function useTypingEngine({
     return () => clearInterval(t);
   }, [startedAt, duration, finished, noTimer]);
 
-  // Finish when all words are typed in untimed mode
+  // For untimed mode: finish when all words are fully typed
   useEffect(() => {
     if (!noTimer || finished) return;
     if (target.length > 0 && typed.length >= target.length && !typedAllRef.current) {
@@ -148,7 +162,8 @@ export function useTypingEngine({
     }
   }, [noTimer, finished, typed, target, startedAt]);
 
-  // Grant rewards & save session when test finishes
+  // ---------- Rewards & Persistence ----------
+  // When the test finishes: award coins/XP, log the session, show results
   useEffect(() => {
     if (!finished) return;
     setResultsOpen(true);
@@ -189,7 +204,7 @@ export function useTypingEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finished]);
 
-  // Notify on level up
+  // Show a notification when the player reaches a new level
   useEffect(() => {
     if (state.player.level > prevLevelRef.current) {
       pushNotification({
@@ -201,6 +216,7 @@ export function useTypingEngine({
     }
   }, [state.player.level]);
 
+  // ---------- Keyboard Shortcuts ----------
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && resultsOpen) {
@@ -213,24 +229,26 @@ export function useTypingEngine({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [resultsOpen]);
 
-  // Idle → sleep after a while
+  // ---------- Mascot ----------
+  // If idle for 6s without typing, the mascot falls asleep
   useEffect(() => {
     if (startedAt || finished) return;
     const t = setTimeout(() => setMood("sleep"), 6000);
     return () => clearTimeout(t);
   }, [startedAt, finished, typed]);
 
-  // Keep world ref in sync for continuous generation
+  // Keep a stable ref to current world (used inside async generators)
   useEffect(() => {
     worldIdRef.current = world;
   }, [world]);
 
-  // Reset typed-all ref on reset
+  // Reset the "all typed" flag whenever words change (new test)
   useEffect(() => {
     typedAllRef.current = false;
   }, [words]);
 
-  // Generate initial words on mount / world change (skipped for lessons)
+  // ---------- Word Generation ----------
+  // Fetch themed words from the text generator when world changes or on mount
   useEffect(() => {
     if (customWords && customWords.length) return;
     setGeneratedText(null);
@@ -246,7 +264,8 @@ export function useTypingEngine({
     });
   }, [world, customWords]);
 
-  // Generate mascot line on mood change with session context
+  // ---------- Mascot Lines ----------
+  // Keep a ref snapshot of current session stats for mascot to reference
   const updateMascotCtx = useCallback(() => {
     mascotCtxRef.current = {
       combo,
@@ -259,6 +278,7 @@ export function useTypingEngine({
   useEffect(() => {
     updateMascotCtx();
   }, [updateMascotCtx]);
+  // When mood changes (idle/happy/oops/sleep), ask the mascot for a line
   useEffect(() => {
     if (prevMoodRef.current === mood) return;
     prevMoodRef.current = mood;
@@ -272,7 +292,8 @@ export function useTypingEngine({
     }).then(setMascotLine);
   }, [mood]);
 
-  // Fetch coach feedback when race finishes
+  // ---------- Coach Feedback ----------
+  // After the test ends, fetch AI coach insights (trends, tips, praise)
   useEffect(() => {
     if (!finished) {
       setCoachInsight(null);
@@ -311,6 +332,8 @@ export function useTypingEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finished, state.sessions]);
 
+  // ---------- Weak-Spot Drill ----------
+  // Generate a new test focused on the characters the player struggled with
   const handleWeakSpotDrill = useCallback(() => {
     generateWeakSpotWords([...mistakeChars]).then((result) => {
       if (result) {
@@ -320,9 +343,12 @@ export function useTypingEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mistakeChars]);
 
+  // ---------- Input Handling ----------
+  // Every keystroke: track accuracy, combo, and mood in real-time
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (finished) return;
     const next = e.target.value;
+    // Start the timer on the very first keystroke
     if (!startedAt && next.length > 0) {
       setStartedAt(Date.now());
       startOffset.current = Date.now();
@@ -334,6 +360,7 @@ export function useTypingEngine({
       setActiveKey(ch);
       const expected = target[lastIdx];
       const isCorrect = ch === expected;
+      // Log every keystroke for detailed analysis later
       setKeystrokes((prev) => [
         ...prev,
         {
@@ -354,17 +381,19 @@ export function useTypingEngine({
         setMood("happy");
       } else {
         setMistakes((m) => m + 1);
-        setCombo(0);
+        setCombo(0); // Combo resets on any mistake
         setMood("oops");
       }
     }
     setTyped(next);
-    // Load more words when nearing the end (never in untimed lessons)
+    // When approaching the end of the word list, load more for continuous play
     if (!noTimer && currentWordIndex >= words.length - 10 && !generatingRef.current) {
       loadMoreWords();
     }
   };
 
+  // ---------- Reset ----------
+  // Clears all state and starts a fresh typing test (optionally with drill words)
   const reset = useCallback(
     (newDuration?: (typeof DURATIONS)[number], drillWords?: string[]) => {
       if (newDuration) setDuration(newDuration);
@@ -395,6 +424,8 @@ export function useTypingEngine({
     [generatedText, customWords],
   );
 
+  // ---------- Infinite Scroll ----------
+  // Fetches the next batch of themed words when the player is close to finishing
   const loadMoreWords = useCallback(async () => {
     if (generatingRef.current) return;
     generatingRef.current = true;
@@ -406,12 +437,14 @@ export function useTypingEngine({
     generatingRef.current = false;
   }, []);
 
+  // Progress bar: % of time elapsed (timed) or % of words typed (untimed)
   const progress = noTimer
     ? target.length > 0
       ? (typed.length / target.length) * 100
       : 0
     : (elapsed / duration) * 100;
 
+  // Friendly message based on accuracy range
   const perfMessage = useMemo(() => {
     if (accuracy === 100) return "🏆 Flawless victory!";
     if (accuracy >= 95) return "⭐ Incredible precision!";
@@ -429,6 +462,7 @@ export function useTypingEngine({
     shape: "star" | "dot";
     color: string;
   };
+  // Celebration particles shown after the test ends (stars & dots)
   const particles = useMemo<Particle[]>(() => {
     if (!finished) return [];
     const COLORS = [
