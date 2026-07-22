@@ -41,9 +41,7 @@
 }
 
 .camp-nursery-page {
-  background:
-    linear-gradient(180deg, rgba(22, 12, 6, 0.26), rgba(22, 12, 6, 0.5)),
-    url("/camp/pet-nursery/pet-nursery_morning.webp") center center / cover no-repeat;
+  background: #5a3a23;
 }
 
 .camp-nursery-shell {
@@ -217,7 +215,6 @@
 .camp-nursery-slot.is-locked .camp-nursery-egg,
 .camp-nursery-slot.is-locked .camp-nursery-nest {
   opacity: 0.38;
-  filter: grayscale(0.2) saturate(0.7);
 }
 
 .camp-nursery-slot-copy {
@@ -413,6 +410,26 @@
   box-sizing: border-box;
   overflow: hidden;
   padding: clamp(6.5rem, 9vw, 8.25rem) clamp(0.75rem, 3vw, 3rem) clamp(0.65rem, 1.5vw, 1rem);
+  isolation: isolate;
+  background: #5a3a23;
+  image-rendering: pixelated;
+}
+
+.camp-nursery-page::before,
+.camp-nursery-page::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  image-rendering: pixelated;
+  transition: opacity 700ms ease;
+}
+
+.camp-nursery-page::before {
   background:
     linear-gradient(
       180deg,
@@ -421,10 +438,10 @@
       rgba(18, 9, 4, 0.22) 100%
     ),
     url("/camp/pet-nursery/pet-nursery_morning.webp") center center / cover no-repeat;
-  image-rendering: pixelated;
 }
 
-.dark .camp-nursery-page {
+.camp-nursery-page::after {
+  opacity: 0;
   background:
     linear-gradient(
       180deg,
@@ -433,6 +450,66 @@
       rgba(12, 7, 5, 0.42) 100%
     ),
     url("/camp/pet-nursery/pet-nursery_evening.webp") center center / cover no-repeat;
+}
+
+.camp-nursery-page.is-night-background::after {
+  opacity: 1;
+}
+
+.camp-nursery-page > :not(.camp-nursery-light-rays) {
+  position: relative;
+  z-index: 1;
+}
+
+.camp-nursery-light-rays {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background: linear-gradient(
+    112deg,
+    transparent 0 16%,
+    rgba(255, 244, 190, 0.08) 16% 18%,
+    rgba(255, 244, 185, 0.5) 18% 23%,
+    rgba(255, 213, 99, 0.17) 23% 27%,
+    transparent 27% 39%,
+    rgba(255, 246, 198, 0.07) 39% 41%,
+    rgba(255, 238, 168, 0.43) 41% 47%,
+    rgba(255, 207, 86, 0.14) 47% 51%,
+    transparent 51% 65%,
+    rgba(255, 246, 204, 0.07) 65% 67%,
+    rgba(255, 232, 151, 0.37) 67% 72.5%,
+    rgba(255, 204, 81, 0.12) 72.5% 77%,
+    transparent 77% 100%
+  );
+  mix-blend-mode: screen;
+  animation: camp-nursery-sun-rays 18s ease-in-out infinite alternate;
+}
+
+.camp-nursery-page.is-night-background .camp-nursery-light-rays {
+  background: linear-gradient(
+    112deg,
+    transparent 0 16%,
+    rgba(208, 232, 255, 0.05) 16% 18%,
+    rgba(192, 222, 255, 0.34) 18% 23%,
+    rgba(116, 169, 255, 0.12) 23% 27%,
+    transparent 27% 39%,
+    rgba(216, 236, 255, 0.05) 39% 41%,
+    rgba(183, 216, 255, 0.28) 41% 47%,
+    rgba(104, 155, 245, 0.1) 47% 51%,
+    transparent 51% 65%,
+    rgba(218, 238, 255, 0.05) 65% 67%,
+    rgba(179, 212, 255, 0.24) 67% 72.5%,
+    rgba(95, 143, 236, 0.08) 72.5% 77%,
+    transparent 77% 100%
+  );
+  animation-name: camp-nursery-moon-rays;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .camp-nursery-light-rays {
+    animation: none;
+  }
 }
 
 .camp-nursery-toolbar {
@@ -555,10 +632,11 @@
   left: clamp(0.25rem, 2vw, 1.75rem);
   bottom: clamp(4.85rem, 7.1vw, 6.64rem);
   --nursery-slot-width: clamp(47px, 9vw, 144px);
+  --nursery-slot-gap: clamp(0.95rem, 2vw, 1.8rem);
   display: grid;
   grid-template-columns: repeat(5, var(--nursery-slot-width));
-  /* Each nest gap is 20% wider than the original row spacing. */
-  gap: clamp(0.48rem, 1.2vw, 1.08rem);
+  /* Both layers use the same gap so each egg remains paired with its nest. */
+  gap: var(--nursery-slot-gap);
   width: max-content;
   justify-items: center;
   transform: translateY(30%);
@@ -580,7 +658,7 @@
   z-index: 2;
   width: clamp(55px, 14.5vw, 210px);
   pointer-events: none;
-  transform: translateX(-70%) scale(1.56);
+  transform: translate(-55%, -30%) scale(2.035);
 }
 
 .camp-nursery-ramp img {
@@ -588,16 +666,52 @@
   width: 100%;
   height: auto;
   image-rendering: pixelated;
-  filter:
-    sepia(0.38)
-    hue-rotate(335deg)
-    saturate(0.72)
-    brightness(0.82)
-    contrast(1.08)
-    drop-shadow(4px 4px 0 rgba(18, 10, 4, 0.56))
-    drop-shadow(8px 8px 0 rgba(18, 10, 4, 0.32))
+  filter: drop-shadow(4px 4px 0 rgba(18, 10, 4, 0.56)) drop-shadow(8px 8px 0 rgba(18, 10, 4, 0.32))
     drop-shadow(0 22px 18px rgba(12, 7, 3, 0.56));
   user-select: none;
+}
+
+.camp-nursery-night-orbs {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.camp-nursery-night-orbs--nests {
+  inset: -20% -5% -30%;
+}
+
+.camp-nursery-night-orbs--ramp {
+  inset: -22%;
+}
+
+.camp-nursery-night-orbs--egg {
+  inset: -15%;
+  z-index: 0;
+}
+
+.camp-nursery-night-orb {
+  position: absolute;
+  width: var(--night-orb-size, 3px);
+  height: var(--night-orb-size, 3px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 5px rgba(225, 241, 255, 0.9);
+}
+
+.dark .camp-nursery-night-orbs {
+  opacity: 1;
+}
+
+.dark .camp-nursery-night-orb {
+  animation: camp-nursery-night-orb-float var(--night-orb-duration, 3s) ease-in-out
+    var(--night-orb-delay, 0s) infinite;
+}
+
+.dark .camp-nursery-ramp img {
+  filter: drop-shadow(4px 4px 0 rgba(18, 10, 4, 0.56)) drop-shadow(8px 8px 0 rgba(18, 10, 4, 0.32))
+    drop-shadow(0 22px 18px rgba(12, 7, 3, 0.56)) drop-shadow(0 0 10px rgba(222, 241, 255, 0.3));
 }
 
 .camp-nursery-nest-slot,
@@ -609,21 +723,28 @@
 }
 
 .camp-nursery-nest-slot {
-  transform: translateY(var(--nursery-slot-y, 0));
+  transform: translate(var(--nursery-pair-x, 0), var(--nursery-slot-y, 0));
 }
 
 .camp-nursery-nest-slot.is-featured {
-  transform: translateY(var(--nursery-slot-y, 0)) scale(1.06);
+  transform: translate(var(--nursery-pair-x, 0), var(--nursery-slot-y, 0)) scale(1.06);
 }
 
 .camp-nursery-egg-slot {
   display: grid;
   gap: 0.18rem;
-  transform: translate(var(--nursery-egg-x, 0), var(--nursery-slot-y, 0));
+  transform: translate(
+    calc(var(--nursery-pair-x, 0) + var(--nursery-egg-x, 0)),
+    calc(var(--nursery-slot-y, 0) + var(--nursery-egg-y, 0))
+  );
 }
 
 .camp-nursery-egg-slot.is-featured {
-  transform: translate(var(--nursery-egg-x, 0), var(--nursery-slot-y, 0)) scale(1.06);
+  transform: translate(
+      calc(var(--nursery-pair-x, 0) + var(--nursery-egg-x, 0)),
+      calc(var(--nursery-slot-y, 0) + var(--nursery-egg-y, 0))
+    )
+    scale(1.06);
 }
 
 .camp-nursery-nest-anchor,
@@ -632,42 +753,82 @@
   aspect-ratio: 1 / 1;
 }
 
+.camp-nursery-egg-anchor {
+  isolation: isolate;
+}
+
+.camp-nursery-egg-anchor::before {
+  position: absolute;
+  top: 50%;
+  left: 56%;
+  z-index: 0;
+  width: 132%;
+  height: 118%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklab, var(--nursery-orb-color, #ffd86b) 32%, transparent) 0%,
+    color-mix(in oklab, var(--nursery-orb-color, #ffd86b) 14%, transparent) 43%,
+    transparent 76%
+  );
+  content: "";
+  mix-blend-mode: screen;
+  opacity: 0.22;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease;
+}
+
+.camp-nursery-egg-slot.is-ready .camp-nursery-egg-anchor::before {
+  opacity: 0.52;
+}
+
+.camp-nursery-egg-slot:hover .camp-nursery-egg-anchor::before,
+.camp-nursery-egg-slot:focus-within .camp-nursery-egg-anchor::before {
+  opacity: 0.72;
+}
+
+.camp-nursery-egg-slot:nth-child(1) .camp-nursery-egg-anchor {
+  --nursery-orb-color: #ffe18b;
+}
+
+.camp-nursery-egg-slot:nth-child(2) .camp-nursery-egg-anchor {
+  --nursery-orb-color: #7de9ef;
+}
+
+.camp-nursery-egg-slot:nth-child(3) .camp-nursery-egg-anchor {
+  --nursery-orb-color: #ff8ca5;
+}
+
+.camp-nursery-egg-slot:nth-child(4) .camp-nursery-egg-anchor {
+  --nursery-orb-color: #ba8cff;
+}
+
+.camp-nursery-egg-slot:nth-child(5) .camp-nursery-egg-anchor {
+  --nursery-orb-color: #8fc9ff;
+}
+
 .camp-nursery-egg-art {
   position: relative;
   position: absolute;
   top: 50%;
   left: 50%;
   isolation: isolate;
+  z-index: 1;
   width: 54%;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
-  filter:
-    sepia(0.23)
-    hue-rotate(335deg)
-    saturate(0.78)
-    brightness(0.88)
-    contrast(1.06)
-    drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.52))
-    drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.26))
+  filter: drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.52)) drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.26))
     drop-shadow(0 12px 10px rgba(12, 7, 3, 0.34));
   transform: translate(-50%, -50%) scale(1.2);
-  transition:
-    transform 160ms ease,
-    filter 160ms ease;
+  transition: transform 160ms ease;
 }
 
 .camp-nursery-egg-art:hover {
   transform: translate(-50%, calc(-50% - 4px)) scale(1.296);
-  filter:
-    sepia(0.23)
-    hue-rotate(335deg)
-    saturate(0.78)
-    brightness(0.92)
-    contrast(1.08)
-    drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.58))
-    drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.3))
+  filter: drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.58)) drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.3))
     drop-shadow(0 16px 12px rgba(12, 7, 3, 0.38));
 }
 
@@ -676,14 +837,7 @@
 }
 
 .camp-nursery-egg-art:disabled:hover {
-  filter:
-    sepia(0.23)
-    hue-rotate(335deg)
-    saturate(0.78)
-    brightness(0.88)
-    contrast(1.06)
-    drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.52))
-    drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.26))
+  filter: drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.52)) drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.26))
     drop-shadow(0 12px 10px rgba(12, 7, 3, 0.34));
   transform: translate(-50%, -50%) scale(1.2);
 }
@@ -712,12 +866,15 @@
   z-index: 1;
   width: 100%;
   display: block;
-  filter:
-    drop-shadow(4px 5px 0 rgba(18, 10, 4, 0.58))
-    drop-shadow(8px 10px 0 rgba(18, 10, 4, 0.3))
+  filter: drop-shadow(4px 5px 0 rgba(18, 10, 4, 0.58)) drop-shadow(8px 10px 0 rgba(18, 10, 4, 0.3))
     drop-shadow(0 18px 15px rgba(12, 7, 3, 0.54));
   transform: scale(1.2);
   transform-origin: center bottom;
+}
+
+.dark .camp-nursery-nest {
+  filter: drop-shadow(4px 5px 0 rgba(18, 10, 4, 0.58)) drop-shadow(8px 10px 0 rgba(18, 10, 4, 0.3))
+    drop-shadow(0 18px 15px rgba(12, 7, 3, 0.54)) drop-shadow(0 0 8px rgba(222, 241, 255, 0.24));
 }
 
 .camp-nursery-nest-slot.is-tier-five .camp-nursery-nest {
@@ -785,6 +942,24 @@
 .camp-nursery-egg-slot.is-locked .camp-nursery-egg {
   opacity: 1;
   filter: none;
+}
+
+@keyframes camp-nursery-night-orb-float {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.55);
+  }
+  25% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(var(--night-orb-x, -5px), var(--night-orb-y, -8px)) scale(1);
+  }
+  75% {
+    opacity: 0.38;
+  }
 }
 
 .camp-nursery-slot-copy {

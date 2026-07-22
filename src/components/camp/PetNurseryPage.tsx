@@ -1,5 +1,5 @@
 import type { CSSProperties, RefObject } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, PawPrint } from "lucide-react";
 
 import { loadCompletedLessons } from "@/lib/game/curriculum";
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { PixelPet } from "@/components/coach/PixelPet";
 import { Progress } from "@/components/ui/progress";
 import { EggHatchModal } from "@/components/shop/EggHatchModal";
+import { useThemeMode } from "@/hooks/use-theme-mode";
 
 type PetNurseryPageProps = {
   backButtonRef: RefObject<HTMLButtonElement | null>;
@@ -24,8 +25,57 @@ type PetNurseryPageProps = {
 };
 
 const NURSERY_SLOT_COUNT = 5;
-const NURSERY_SLOT_Y_OFFSETS = ["4%", "2%", "0%", "1%", "3%"] as const;
-const NURSERY_EGG_X_OFFSETS = ["0%", "0%", "0%", "0%", "0%"] as const;
+const NURSERY_SLOT_Y_OFFSETS = ["4%", "2%", "0%", "1%", "1%"] as const;
+// Fine-tune each nest-and-egg pair to adjust its surrounding gaps.
+const NURSERY_PAIR_X_OFFSETS = ["0%", "0%", "0%", "0%", "14%"] as const;
+// Fine-tune each egg without moving its matching nest.
+const NURSERY_EGG_OFFSETS = [
+  { x: "-35%", y: "-37%" }, // Egg 1
+  { x: "-35%", y: "-37%" }, // Egg 2
+  { x: "-35%", y: "-37%" }, // Egg 3
+  { x: "-35%", y: "-37%" }, // Egg 4
+  { x: "-44%", y: "-50%" }, // Egg 5
+] as const;
+
+const NIGHT_ORB_DIRECTIONS = [
+  { x: -7, y: -11 },
+  { x: 6, y: -8 },
+  { x: -4, y: -14 },
+  { x: 8, y: -6 },
+  { x: -9, y: -7 },
+  { x: 5, y: -12 },
+] as const;
+
+function NightGlowOrbs({ className, count }: { className: string; count: number }) {
+  const orbs = useMemo(
+    () =>
+      Array.from({ length: count }, (_, index) => {
+        const direction = NIGHT_ORB_DIRECTIONS[Math.floor(Math.random() * NIGHT_ORB_DIRECTIONS.length)];
+        const size = Math.floor(Math.random() * 4) + 2;
+
+        return (
+          <span
+            key={index}
+            className="camp-nursery-night-orb"
+            style={
+              {
+                top: `${Math.random() * 86 + 7}%`,
+                left: `${Math.random() * 90 + 5}%`,
+                "--night-orb-size": `${size}px`,
+                "--night-orb-x": `${direction.x}px`,
+                "--night-orb-y": `${direction.y}px`,
+                "--night-orb-duration": `${(Math.random() * 2.4 + 2.4).toFixed(2)}s`,
+                "--night-orb-delay": `${(Math.random() * 3.5).toFixed(2)}s`,
+              } as CSSProperties
+            }
+          />
+        );
+      }),
+    [count],
+  );
+
+  return <span className={`camp-nursery-night-orbs ${className}`} aria-hidden="true">{orbs}</span>;
+}
 
 function tierForSlot(slot: number) {
   return Math.min(slot, NURSERY_SLOT_COUNT);
@@ -37,10 +87,30 @@ function nestAssetForTier(tier: number) {
 
 export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
   const { state, dispatch } = useGame();
+  const { dark } = useThemeMode();
   const { inventory } = state;
   const [showCompanions, setShowCompanions] = useState(false);
   const [activeEgg, setActiveEgg] = useState<ReturnType<typeof milestoneForIndex> | null>(null);
   const [eggRefreshKey, setEggRefreshKey] = useState(0);
+  const [nightBackgroundReady, setNightBackgroundReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const nightBackground = new Image();
+    const markReady = () => {
+      if (!cancelled) setNightBackgroundReady(true);
+    };
+
+    nightBackground.decoding = "async";
+    nightBackground.src = "/camp/pet-nursery/pet-nursery_evening.webp";
+    if (nightBackground.complete) markReady();
+    else nightBackground.addEventListener("load", markReady, { once: true });
+
+    return () => {
+      cancelled = true;
+      nightBackground.removeEventListener("load", markReady);
+    };
+  }, []);
 
   const treatCount = inventory.items.filter((item) => item === "pet-food-day-5").length;
   const activePet =
@@ -81,7 +151,8 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
       locked: !eggIndex,
       featured: slotNumber === 3,
       slotYOffset: NURSERY_SLOT_Y_OFFSETS[slotIndex] ?? "0%",
-      eggXOffset: NURSERY_EGG_X_OFFSETS[slotIndex] ?? "0%",
+      pairXOffset: NURSERY_PAIR_X_OFFSETS[slotIndex] ?? "0%",
+      eggOffset: NURSERY_EGG_OFFSETS[slotIndex] ?? { x: "0%", y: "0%" },
     };
   });
 
@@ -97,7 +168,11 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
   };
 
   return (
-    <section className="camp-interior-page camp-nursery-page" aria-label="Pet Nursery">
+    <section
+      className={`camp-interior-page camp-nursery-page ${dark && nightBackgroundReady ? "is-night-background" : ""}`}
+      aria-label="Pet Nursery"
+    >
+      <div className="camp-nursery-light-rays" aria-hidden="true" />
       <div className="camp-interior-toolbar camp-nursery-toolbar">
         <Button
           ref={backButtonRef}
@@ -148,11 +223,17 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
           </div>
 
           <div className="camp-nursery-nest-group" aria-hidden="true">
+            <NightGlowOrbs className="camp-nursery-night-orbs--nests" count={13} />
             {slots.map((slot) => (
               <div
                 key={slot.id}
                 className={`camp-nursery-nest-slot ${slot.featured ? "is-featured" : ""} ${slot.tier === 5 ? "is-tier-five" : ""}`}
-                style={{ "--nursery-slot-y": `-${slot.slotYOffset}` } as CSSProperties}
+                style={
+                  {
+                    "--nursery-pair-x": slot.pairXOffset,
+                    "--nursery-slot-y": `-${slot.slotYOffset}`,
+                  } as CSSProperties
+                }
               >
                 <div className="camp-nursery-nest-anchor">
                   <img
@@ -173,12 +254,15 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
                 role="listitem"
                 style={
                   {
-                    "--nursery-egg-x": slot.eggXOffset,
+                    "--nursery-egg-x": slot.eggOffset.x,
+                    "--nursery-egg-y": slot.eggOffset.y,
+                    "--nursery-pair-x": slot.pairXOffset,
                     "--nursery-slot-y": `-${slot.slotYOffset}`,
                   } as CSSProperties
                 }
               >
                 <div className="camp-nursery-egg-anchor">
+                  <NightGlowOrbs className="camp-nursery-night-orbs--egg" count={5} />
                   <button
                     type="button"
                     className="camp-nursery-egg-art"
@@ -203,6 +287,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
 
           <div className="camp-nursery-ramp" aria-hidden="true">
             <img src="/camp/pet-nursery/ramp.webp" alt="" />
+            <NightGlowOrbs className="camp-nursery-night-orbs--ramp" count={6} />
           </div>
 
           <div className="camp-nursery-progress">

@@ -1,4 +1,26 @@
 /* --- Keyframes --------------------------------------------- */
+@keyframes camp-nursery-sun-rays {
+  from {
+    transform: translate3d(-0.8%, -0.35%, 0);
+    opacity: 0.78;
+  }
+  to {
+    transform: translate3d(0.8%, 0.35%, 0);
+    opacity: 0.96;
+  }
+}
+
+@keyframes camp-nursery-moon-rays {
+  from {
+    transform: translate3d(-0.55%, -0.25%, 0);
+    opacity: 0.3;
+  }
+  to {
+    transform: translate3d(0.55%, 0.25%, 0);
+    opacity: 0.46;
+  }
+}
+
 @keyframes camp-flame-flicker {
   0%,
   100% {
@@ -342,6 +364,7 @@
   .camp-building-particle,
   .camp-building-sparkle,
   .camp-nursery-egg,
+  .camp-nursery-night-orb,
   .camp-pet-inner,
   .camp-butterfly,
   .camp-firefly,
