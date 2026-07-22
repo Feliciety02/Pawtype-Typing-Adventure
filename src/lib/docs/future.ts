@@ -2,7 +2,23 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
-✅ **Shipped** - Pet Nursery eggs now share their nest's vertical slot alignment, and nest gaps are 20% wider.
+✅ **Shipped** - Pet Nursery now has long foreground sun rays by day and moonlight rays at night. Its preloaded morning/evening backdrop layers crossfade without a blank lapse when the display mode changes.
+
+✅ **Shipped** - The Awards museum now has longer diagonal window-light rays aligned to the painted hall's window columns. Light mode uses brighter warm rays, while dark mode has a cooler, softer moonlight version. The non-interactive rays overlay the HUD and exhibits and stop moving for reduced-motion preferences.
+
+✅ **Shipped** - Pet Nursery nests and its ramp now gain a subtle cool-white glow at night, with small randomly sized and drifting white sparkle orbs inspired by the Awards badge display.
+
+✅ **Shipped** - Pet Nursery eggs now share their nest's vertical slot alignment, use individual egg-only horizontal and vertical adjustments, and every nest-and-egg pair shares a generously sized grid gap.
+
+✅ **Shipped** - Pet Nursery now exposes an individual horizontal pair position for all five nest-and-egg pairs, allowing their gaps to be adjusted independently.
+
+✅ **Shipped** - The fifth Pet Nursery nest-and-egg pair now uses its independent pair position to sit 18% farther right.
+
+✅ **Shipped** - Pet Nursery eggs now have soft Awards-style colored ambient orbs behind their pixel art, with brighter glow for ready, hovered, and focused eggs.
+
+✅ **Shipped** - Pet Nursery egg orbs are aligned to the visual centers of their sprites, and eggs now share the small night-time sparkle orbs used by the nests and ramp.
+
+✅ **Shipped** - Pet Nursery now exposes individual horizontal and vertical placement values for all five eggs, allowing each egg to be adjusted without moving its nest.
 
 ✅ **Shipped** - Camp skies now schedule randomized shooting stars from twilight through pre-dawn. Every meteor receives a different wait time, start position, path, speed, and glowing trail length instead of replaying one fixed animation.
 
@@ -10,7 +26,7 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ✅ **Shipped** - Locked Lessons content now uses a higher-contrast stone palette in light mode. Disabled chapters, path steps, cards, artwork, and actions remain clearly identifiable as unavailable while their labels and lock controls stay readable.
 
-✅ **Shipped** - The Pet Nursery now keeps its label-free, spaced egg-and-nest row on the left, with every egg visually centered over its nest and both layers moved down together. All nests and eggs are enlarged by 20%, with the tier-two nest and tier-five egg retaining their additional tier upgrade. Its decorative WebP ramp sits on the right, shifted 70% left and enlarged by 30% from its prior size. A warm, muted palette grade blends the ramp and eggs into the room’s amber wood and moss tones, while eggs, nests, and ramp use pronounced stepped pixel-art shadows.
+✅ **Shipped** - The Pet Nursery now keeps its label-free, spaced egg-and-nest row on the left, with every egg visually centered over its nest and both layers moved down together. All nests and eggs are enlarged by 20%, with the tier-two nest and tier-five egg retaining their additional tier upgrade. Its decorative WebP ramp sits on the right, shifted 55% left and 30% upward, and enlarged by 70% from its prior size. Ramp and egg assets retain their original colors, while eggs, nests, and ramp use pronounced stepped pixel-art shadows.
 
 ✅ **Shipped** - The blacksmith now uses the camp's shared warm ground halo, matching the other interactive buildings while keeping its forge visually lit.
 
