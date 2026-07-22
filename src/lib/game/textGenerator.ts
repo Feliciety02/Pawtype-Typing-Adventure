@@ -1,3 +1,4 @@
+// Typescript text generation facade — tries AI engine first, falls back to local pools
 import type { WorldId } from "../../components/shared/WorldTheme";
 import {
   generateAdventureWords as aiAdventureWords,
@@ -8,6 +9,7 @@ import {
 import { generateMascotLine as aiMascotLine, type MascotContext } from "./engine/mascot";
 import type { Difficulty, Zone } from "./engine/generator";
 
+// AI prompt descriptions for generating world-themed text (13 worlds)
 const WORLD_THEMES: Partial<Record<WorldId, string>> = {
   cafe: "a cozy cafe with warm coffee, rain tapping windows, and soft jazz",
   forest: "a mossy forest with ferns, dappled sunlight, and a babbling brook",
@@ -27,6 +29,7 @@ const WORLD_THEMES: Partial<Record<WorldId, string>> = {
     "a frozen kingdom with ice crystals, frost-covered pines, frozen waterfalls, and a shimmering ice palace",
 };
 
+// Fallback atmospheric lines per world (used when AI generation fails)
 const WORLD_LINES: Partial<Record<WorldId, string[]>> = {
   cafe: [
     "Steam curls past the window",
@@ -95,6 +98,7 @@ const WORLD_LINES: Partial<Record<WorldId, string[]>> = {
   ],
 };
 
+// A per-world set of nouns, verbs, and adjectives used to procedurally generate quest text
 type QuestWorldProfile = {
   setting: string;
   route: string[];
@@ -105,6 +109,7 @@ type QuestWorldProfile = {
   moods: string[];
 };
 
+// Quest profiles for every world — drives the sentence-template-based adventure text generator
 const QUEST_WORLD_PROFILES: Partial<Record<WorldId, QuestWorldProfile>> = {
   cafe: {
     setting: "coffee village",
@@ -237,6 +242,7 @@ const QUEST_WORLD_PROFILES: Partial<Record<WorldId, QuestWorldProfile>> = {
   },
 };
 
+// Mascot speech lines — one set per mood state (idle, happy, oops, sleep)
 const MASCOT_LINES: Record<string, string[]> = {
   idle: ["Ready when your paws are.", "Tap in and wake the room.", "A cozy run is waiting."],
   happy: ["Nice rhythm, keep gliding.", "Clean strokes, steady paws.", "That flow looks sharp."],
@@ -331,12 +337,14 @@ const WORD_POOL = [
   "willow",
 ];
 
+// Deterministically pick `count` items from an array using a string seed
 function rotatePick<T>(items: T[], count: number, seed: string): T[] {
   if (items.length === 0 || count <= 0) return [];
   const offset = seed.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0) % items.length;
   return Array.from({ length: count }, (_, index) => items[(offset + index) % items.length]);
 }
 
+// Clean words for typing: lowercase, strip non-alpha, enforce length limits
 function normalizeWords(words: string[]) {
   return words
     .map((word) => word.toLowerCase())
@@ -344,18 +352,22 @@ function normalizeWords(words: string[]) {
     .filter((word) => word.length >= 2 && word.length <= 14);
 }
 
+// Get the quest profile for a given world (falls back to cafe)
 function profileFor(worldId: WorldId): QuestWorldProfile {
   return QUEST_WORLD_PROFILES[worldId] ?? QUEST_WORLD_PROFILES.cafe!;
 }
 
+// Stable numeric hash from a seed string
 function stableIndex(seed: string) {
   return seed.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
 }
 
+// Pick an item from an array deterministically based on a seed + index
 function pickLocal<T>(items: T[], seed: string, index: number): T {
   return items[(stableIndex(seed) + index) % items.length];
 }
 
+// Split a quest sentence into individual word tokens for typing
 function tokenizeQuestSentence(sentence: string) {
   return sentence
     .toLowerCase()
@@ -364,6 +376,8 @@ function tokenizeQuestSentence(sentence: string) {
     .filter(Boolean);
 }
 
+// Procedurally generate adventure text using sentence templates + quest world profiles
+// Each template slot pulls a deterministic random word from the profile arrays
 function createLocalAdventureWords(
   stageName: string,
   worldId: WorldId,
@@ -376,6 +390,7 @@ function createLocalAdventureWords(
   const stage = stageWords.join(" ");
   const seed = `${worldId}:${stageName}:${seedWords.join("-")}:${offset}`;
   const words: string[] = [];
+  // 16 sentence templates that weave profile words into immersive descriptions
   const templates = [
     (i: number) =>
       `${stage} begins near the ${pickLocal(profile.landmarks, seed, i)} where ${pickLocal(profile.moods, seed, i)} light covers the ${pickLocal(profile.route, seed, i)}`,

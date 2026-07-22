@@ -1,5 +1,6 @@
 import type { GameState } from "./types";
 
+// The 8 badge categories, each with a display label and emoji
 export type BadgeCategory =
   "speed" | "accuracy" | "combo" | "pet" | "adventure" | "learning" | "streak" | "challenge";
 
@@ -14,6 +15,7 @@ export const CATEGORY_META: Record<BadgeCategory, { label: string; emoji: string
   challenge: { label: "Challenge", emoji: "🏆" },
 };
 
+// 10 rarity tiers — from Common (1) up to Eternal (10)
 export const RARITY_TIERS = [
   { tier: 1, rarity: "Common" },
   { tier: 2, rarity: "Uncommon" },
@@ -27,11 +29,13 @@ export const RARITY_TIERS = [
   { tier: 10, rarity: "Eternal" },
 ];
 
+// Convert a numeric tier to its human-readable rarity label
 export function rarityForTier(tier: number): string {
   const t = RARITY_TIERS.find((r) => r.tier === tier);
   return t?.rarity ?? "Unknown";
 }
 
+// Shape of a single badge: its id, category, tier, display info, and whether the player has it
 export type Achievement = {
   id: string;
   category: BadgeCategory;
@@ -44,18 +48,22 @@ export type Achievement = {
   progress?: { current: number; goal: number };
 };
 
+// Read the player's best WPM from localStorage (persisted across sessions)
 function bestWpm(): number {
   if (typeof window === "undefined") return 0;
   return parseInt(window.localStorage.getItem("pawtype-best-wpm") ?? "0") || 0;
 }
 
+// Read the player's best combo streak from localStorage
 function bestCombo(): number {
   if (typeof window === "undefined") return 0;
   return parseInt(window.localStorage.getItem("pawtype-best-combo") ?? "0") || 0;
 }
 
+// Evaluate every badge against the current game state and return them all
 export function computeAchievements(state: GameState): Achievement[] {
   const { player, inventory, adventures } = state;
+  // Lifetime accuracy across all typing tests ever completed
   const accuracy =
     player.totalCorrectChars + player.totalMistakes > 0
       ? (player.totalCorrectChars / (player.totalCorrectChars + player.totalMistakes)) * 100
@@ -66,6 +74,7 @@ export function computeAchievements(state: GameState): Achievement[] {
   const wpm = bestWpm();
   const combo = bestCombo();
 
+  // Helper that builds an Achievement object from raw badge data
   const badge = (
     category: BadgeCategory,
     tier: number,
@@ -88,7 +97,7 @@ export function computeAchievements(state: GameState): Achievement[] {
 
   const list: Achievement[] = [];
 
-  // ⚡ Speed — all match actual files 10/10
+  // ⚡ Speed badges — 10 tiers from 20 WPM to 120 WPM
   const speedBadges: [number, string, string, string, number][] = [
     [1, "Tiny Feather", "First signs of quick typing.", "badge_speed_tiny_feather.webp", 20],
     [2, "Swift Feather", "Developing speed and confidence.", "badge_speed_swift_feather.webp", 30],

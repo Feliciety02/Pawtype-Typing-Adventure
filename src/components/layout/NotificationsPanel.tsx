@@ -37,49 +37,48 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
   return (
     <div
       id="hud-notifications-panel"
-      className="hud-dropdown hud-dropdown-right animate-pixel-pop"
-      style={{ minWidth: 280, maxWidth: 320 }}
+      className="hud-dropdown hud-dropdown-right hud-notifications-panel animate-pixel-pop"
     >
-      <div className="hud-dropdown-title flex items-center justify-between">
-        <span>Notifications</span>
+      <div className="hud-notifications-head">
+        <div>
+          <span className="hud-notifications-eyebrow">Message board</span>
+          <h2 className="hud-dropdown-title">Notifications</h2>
+        </div>
         {items.length > 0 && (
           <button
             type="button"
             onClick={() => clearNotifications()}
-            className="font-pixel text-[0.5rem] underline"
-            style={{ color: "var(--muted-foreground)" }}
+            className="hud-notifications-clear"
           >
             Clear
           </button>
         )}
       </div>
       {items.length === 0 ? (
-        <p className="font-pixel text-[0.6rem] text-muted-foreground py-3 text-center">
-          No notifications yet. Keep typing!
-        </p>
+        <div className="hud-notifications-empty">
+          <span className="hud-notifications-empty-mark" aria-hidden="true">✦</span>
+          <p>No notifications yet</p>
+          <span>Keep typing to earn updates.</span>
+        </div>
       ) : (
-        <ul className="flex flex-col gap-2 max-h-[280px] overflow-auto">
+        <ul className="hud-notifications-list">
           {items.map((n) => (
             <li
               key={n.id}
-              className="pixel-card-sm p-2 flex items-start gap-2"
+              className="hud-notification-item"
               style={{ borderColor: n.read ? undefined : "var(--coin)" }}
             >
-              <span className="text-lg shrink-0">{n.emoji}</span>
-              <div className="min-w-0 flex-1">
-                <div className="font-pixel text-[0.6rem]">{n.title}</div>
-                <p className="font-pixel text-[0.55rem] text-muted-foreground leading-snug mt-0.5">
-                  {n.body}
-                </p>
-                <div className="font-pixel text-[0.5rem] text-muted-foreground mt-1">
-                  {formatAgo(n.timestamp)}
-                </div>
+              <span className="hud-notification-emoji">{n.emoji}</span>
+              <div className="hud-notification-copy">
+                <strong>{n.title}</strong>
+                <p>{n.body}</p>
+                <time>{formatAgo(n.timestamp)}</time>
               </div>
             </li>
           ))}
         </ul>
       )}
-      <Button variant="secondary" onClick={onClose} className="w-full mt-2">
+      <Button variant="secondary" onClick={onClose} className="hud-notifications-close">
         Close
       </Button>
     </div>

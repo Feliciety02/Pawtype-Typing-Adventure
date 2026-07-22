@@ -2,6 +2,8 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - The HUD notification dropdown now uses a crisp pixel-board frame, with clear title, message, metadata, and action hierarchy for both empty and populated notification states.
+
 ✅ **Shipped** - Pet Nursery now presents its egg row as a compact, mid-ground Nest Stage: eggs are enlarged a further 20%, individually seated in their nest cradles, and spaced 20% farther apart. Nests remain 30% larger than the compact baseline, the lesson ramp is enlarged 50%, and the whole set remains pushed back into the hall for stronger perspective. The nursery overview reads as small carved wood plaques.
 
 ✅ **Shipped** - All public raster assets were audited for file format, dimensions, size, and duplicates. The oversized Awards and Pet Nursery scene assets were recompressed with conservative WebP settings, while already-efficient and transparency-sensitive artwork was preserved.
