@@ -1,5 +1,7 @@
+// Keystroke pattern analysis — identifies weak characters, bigrams, and keyboard zones
 import type { TypingSession, KeystrokeEvent } from "../types";
 
+// Stats for a single character across all sessions
 export type CharStats = {
   char: string;
   attempts: number;
@@ -7,6 +9,7 @@ export type CharStats = {
   accuracy: number;
 };
 
+// Stats for a two-character sequence (e.g., "th", "io")
 export type BigramStats = {
   pair: string;
   attempts: number;
@@ -14,9 +17,11 @@ export type BigramStats = {
   accuracy: number;
 };
 
+// Six keyboard zones: left/right × top/home/bottom rows
 export type KeyboardZone =
   "left-top" | "left-home" | "left-bottom" | "right-top" | "right-home" | "right-bottom";
 
+// Maps each letter key to its physical keyboard zone
 const KEYBOARD_MAP: Record<string, KeyboardZone> = {
   q: "left-top",
   w: "left-top",
@@ -46,6 +51,7 @@ const KEYBOARD_MAP: Record<string, KeyboardZone> = {
   m: "right-bottom",
 };
 
+// Aggregated stats for a keyboard zone
 export type ZoneStats = {
   zone: KeyboardZone;
   total: number;
@@ -54,6 +60,7 @@ export type ZoneStats = {
   label: string;
 };
 
+// Complete pattern analysis result — chars, bigrams, zones, and highlights
 export type PatternReport = {
   chars: CharStats[];
   bigrams: BigramStats[];
@@ -63,6 +70,7 @@ export type PatternReport = {
   weakestZone: ZoneStats | null;
 };
 
+// Human-readable labels for each keyboard zone
 const ZONE_LABELS: Record<KeyboardZone, string> = {
   "left-top": "Left Top Row (Q,W,E,R,T)",
   "left-home": "Left Home Row (A,S,D,F,G)",
@@ -72,10 +80,12 @@ const ZONE_LABELS: Record<KeyboardZone, string> = {
   "right-bottom": "Right Bottom Row (N,M)",
 };
 
+// Flatten all keystroke events from a list of sessions into a single array
 function extractEvents(sessions: TypingSession[]): KeystrokeEvent[] {
   return sessions.flatMap((s) => s.keystrokes ?? []);
 }
 
+// For each letter key, count total attempts vs mistakes and compute accuracy
 function computeCharStats(events: KeystrokeEvent[]): CharStats[] {
   const counts = new Map<string, { attempts: number; mistakes: number }>();
   for (const ev of events) {
@@ -96,9 +106,10 @@ function computeCharStats(events: KeystrokeEvent[]): CharStats[] {
           ? Math.round(((data.attempts - data.mistakes) / data.attempts) * 10000) / 100
           : 100,
     }))
-    .sort((a, b) => a.accuracy - b.accuracy);
+    .sort((a, b) => a.accuracy - b.accuracy); // Worst first
 }
 
+// Analyze all consecutive two-letter sequences for accuracy (bigrams)
 function computeBigramStats(events: KeystrokeEvent[]): BigramStats[] {
   const pairs = new Map<string, { attempts: number; mistakes: number }>();
   for (let i = 0; i < events.length - 1; i++) {
@@ -121,10 +132,11 @@ function computeBigramStats(events: KeystrokeEvent[]): BigramStats[] {
           ? Math.round(((data.attempts - data.mistakes) / data.attempts) * 10000) / 100
           : 100,
     }))
-    .filter((b) => b.attempts >= 3)
+    .filter((b) => b.attempts >= 3) // Ignore rarely-tried pairs
     .sort((a, b) => a.accuracy - b.accuracy);
 }
 
+// Group keystroke accuracy by physical keyboard zone (left/right × row)
 function computeZoneStats(events: KeystrokeEvent[]): ZoneStats[] {
   const zoneData = new Map<KeyboardZone, { total: number; mistakes: number }>();
   for (const [char, zone] of Object.entries(KEYBOARD_MAP)) {
@@ -153,6 +165,7 @@ function computeZoneStats(events: KeystrokeEvent[]): ZoneStats[] {
     .sort((a, b) => a.accuracy - b.accuracy);
 }
 
+// Main entry point — analyze all sessions and produce a full pattern report
 export async function analyzePatterns(sessions: TypingSession[]): Promise<PatternReport | null> {
   try {
     if (sessions.length === 0) return null;
@@ -177,6 +190,7 @@ export async function analyzePatterns(sessions: TypingSession[]): Promise<Patter
   }
 }
 
+// Generate a human-readable drill recommendation from a pattern report
 export function drillRecommendation(report: PatternReport): string | null {
   if (report.topWeakChars.length === 0) return null;
   const chars = report.topWeakChars
