@@ -1,8 +1,11 @@
+// AI Coach — analyzes typing sessions and returns actionable feedback
+// Feedback types: praise, tip, warning, milestone, trend
 import type { TypingSession } from "../types";
 import type { CoachInsight, SessionData } from "./types";
 import { loadRecentSessions, computeTrends, personalBestWpm } from "./history";
 import { analyzePatterns, drillRecommendation } from "./patterns";
 
+// Find the single character with the most mistakes in a session
 function topMistakeChar(
   keystrokes: SessionData["keystrokes"],
 ): { char: string; count: number } | null {
@@ -16,6 +19,7 @@ function topMistakeChar(
   return sorted.length > 0 ? { char: sorted[0][0], count: sorted[0][1] } : null;
 }
 
+// Check if this session shows a meaningful trend vs. recent averages
 function buildTrendInsight(
   session: SessionData,
   trends: NonNullable<ReturnType<typeof computeTrends>>,
@@ -57,6 +61,7 @@ function buildTrendInsight(
     };
   }
 
+  // Plateau detection: flat WPM/accuracy after 5+ sessions
   if (trends.sessionCount >= 5 && wpm.direction === "flat" && accuracy.direction === "flat") {
     return {
       type: "tip",
@@ -67,7 +72,9 @@ function buildTrendInsight(
   return null;
 }
 
+// Praise or warn based on this single session's achievements
 function buildMomentumInsight(session: SessionData, allTimeBest: number): CoachInsight | null {
+  // Perfect accuracy is always worth celebrating
   if (session.isPerfect) {
     return {
       type: "praise",
@@ -75,6 +82,7 @@ function buildMomentumInsight(session: SessionData, allTimeBest: number): CoachI
     };
   }
 
+  // Personal best WPM milestone
   if (session.isPersonalBest && session.wpm > 0) {
     return {
       type: "milestone",
@@ -82,6 +90,7 @@ function buildMomentumInsight(session: SessionData, allTimeBest: number): CoachI
     };
   }
 
+  // Low accuracy warning with specific character feedback
   if (session.accuracy < 80) {
     const mistake = topMistakeChar(session.keystrokes);
     if (mistake) {
@@ -96,6 +105,7 @@ function buildMomentumInsight(session: SessionData, allTimeBest: number): CoachI
     };
   }
 
+  // High combo streaks indicate good hand memory
   if (session.bestCombo >= 40) {
     return {
       type: "praise",
@@ -110,6 +120,7 @@ function buildMomentumInsight(session: SessionData, allTimeBest: number): CoachI
     };
   }
 
+  // Very low speed — suggest home row fundamentals
   if (session.wpm < 20) {
     return {
       type: "tip",
@@ -117,6 +128,7 @@ function buildMomentumInsight(session: SessionData, allTimeBest: number): CoachI
     };
   }
 
+  // Repeated mistakes on a single character
   const mistake = topMistakeChar(session.keystrokes);
   if (mistake && mistake.count >= 3) {
     return {
@@ -128,6 +140,7 @@ function buildMomentumInsight(session: SessionData, allTimeBest: number): CoachI
   return null;
 }
 
+// Last resort: a generic but still useful piece of feedback
 function buildFallbackInsight(session: SessionData): CoachInsight {
   if (session.accuracy >= 97) {
     return {
@@ -141,6 +154,7 @@ function buildFallbackInsight(session: SessionData): CoachInsight {
   };
 }
 
+// Analyze historical patterns for deep insight (weak keys, zones, bigrams)
 async function buildPatternInsight(
   session: SessionData,
   sessions: TypingSession[],
@@ -151,6 +165,7 @@ async function buildPatternInsight(
   const sessionMistake = topMistakeChar(session.keystrokes);
   const topWeak = report.topWeakChars[0];
 
+  // If the player's historically weakest key was fine this session — show improvement
   if (sessionMistake && sessionMistake.char === topWeak.char && session.accuracy > 90) {
     return {
       type: "trend",
@@ -158,6 +173,7 @@ async function buildPatternInsight(
     };
   }
 
+  // Weak keyboard zone (home row, top row, bottom row)
   if (report.weakestZone && report.weakestZone.accuracy < 85 && report.weakestZone.mistakes > 5) {
     return {
       type: "tip",
@@ -165,6 +181,7 @@ async function buildPatternInsight(
     };
   }
 
+  // Problematic two-letter sequences
   if (report.topWeakBigrams.length > 0) {
     const top = report.topWeakBigrams[0];
     return {
@@ -176,6 +193,7 @@ async function buildPatternInsight(
   return null;
 }
 
+// Main entry point — runs all insight builders in priority order and returns the best one
 export async function getCoachFeedback(
   session: SessionData,
   sessions: TypingSession[],
@@ -185,6 +203,7 @@ export async function getCoachFeedback(
     const trends = computeTrends(recent);
     const allTimeBest = recent.length > 0 ? personalBestWpm(recent) : 0;
 
+    // Priority: trends → patterns → momentum → fallback
     const trendInsight = trends ? buildTrendInsight(session, trends) : null;
     if (trendInsight) return trendInsight;
 

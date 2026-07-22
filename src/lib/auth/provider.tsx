@@ -9,6 +9,7 @@ import { isDemoModeEnabled, setDemoModeEnabled, subscribeToDemoMode } from "@/li
 import { getSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/client";
 import { signInWithOAuth, type OAuthProvider } from "@/lib/supabase/oauth";
 
+// Everything the auth context provides to the rest of the app
 type AuthCtx = {
   user: User | null;
   isLoading: boolean;
@@ -27,6 +28,8 @@ type AuthCtx = {
 
 const AuthCtx = createContext<AuthCtx | null>(null);
 
+// Provides authentication state and actions (login, signup, logout, demo mode)
+// to the entire app tree. Wraps Supabase auth with TanStack Query mutations.
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -34,8 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isDemo, setIsDemo] = useState(isDemoModeEnabled);
   const [isSocialLoading, setIsSocialLoading] = useState(false);
 
+  // Sync demo mode state from localStorage
   useEffect(() => subscribeToDemoMode(() => setIsDemo(isDemoModeEnabled())), []);
 
+  // On mount, check if Supabase is configured and resolve the initial auth session
   useEffect(() => {
     if (!isSupabaseBrowserConfigured()) {
       setUser(null);
@@ -46,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabaseBrowserClient();
     let mounted = true;
 
+    // Fetch the current user with a 1.5s timeout (in case of network delay)
     const resolveInitialUser = async () => {
       try {
         const result = await Promise.race([
@@ -65,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     resolveInitialUser();
 
+    // Listen for auth state changes (login, logout, token refresh)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -79,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // Login mutation — calls Supabase signIn, then refreshes the user
   const loginMutation = useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
       try {
@@ -102,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // Signup mutation — creates a new account via Supabase
   const signUpMutation = useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
       try {
@@ -115,6 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // Logout mutation — clears user and demo mode, then invalidates the router
   const logoutMutation = useMutation({
     mutationFn: () => (isDemo ? Promise.resolve({ success: true }) : signOut()),
     onSuccess: () => {
@@ -124,6 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // Sign in with Google, GitHub, etc.
   const loginWithProvider = async (provider: OAuthProvider) => {
     setIsSocialLoading(true);
     try {
@@ -136,6 +147,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Enter offline demo mode (no account needed, state saved to localStorage only)
   const enterDemo = () => {
     setDemoModeEnabled(true);
     setUser(null);
