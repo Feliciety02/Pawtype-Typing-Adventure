@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StatsView } from "@/components/game/StatsView";
+import { StatsView } from "@/components/stats/StatsView";
 
 export const Route = createFileRoute("/_authenticated/stats")({
   component: RouteComponent,

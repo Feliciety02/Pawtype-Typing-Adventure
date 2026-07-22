@@ -103,11 +103,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "PixelType Studio is a modern, pixel-art typing tutor website that gamifies learning touch typing.",
       },
-      { property: "og:image", content: "/shared/brand/pawtype-logo.webp" },
-      { name: "twitter:image", content: "/shared/brand/pawtype-logo.webp" },
+      { property: "og:image", content: "/shared/brand/emblem-logo.webp" },
+      { name: "twitter:image", content: "/shared/brand/emblem-logo.webp" },
     ],
     links: [
-      { rel: "icon", type: "image/webp", href: "/shared/brand/pawtype-logo.webp" },
+      { rel: "icon", type: "image/webp", href: "/shared/brand/emblem-logo.webp" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

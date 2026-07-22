@@ -85,41 +85,11 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/pages/awards/scene/awards-background-morning.webp");
+  background-image: url("/awards/scene/awards-background-morning.webp");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
   image-rendering: pixelated;
-}
-
-/* Warm window light aligned to the museum's painted window columns. It is a
-   foreground, non-interactive layer so the shafts also pass over the exhibits. */
-.app-shell--awards::after {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  content: "";
-  background: linear-gradient(
-    112deg,
-    transparent 0 16%,
-    rgba(255, 238, 163, 0.06) 16% 18%,
-    rgba(255, 247, 190, 0.48) 18% 23%,
-    rgba(255, 222, 112, 0.16) 23% 27%,
-    transparent 27% 39%,
-    rgba(255, 245, 190, 0.06) 39% 41%,
-    rgba(255, 242, 180, 0.4) 41% 47%,
-    rgba(255, 217, 105, 0.13) 47% 51%,
-    transparent 51% 65%,
-    rgba(255, 247, 201, 0.06) 65% 67%,
-    rgba(255, 239, 164, 0.35) 67% 72.5%,
-    rgba(255, 211, 98, 0.11) 72.5% 77%,
-    transparent 77% 100%
-  );
-  mix-blend-mode: screen;
-  opacity: 0.94;
-  transform: translate3d(0, 0, 0);
-  animation: awards-light-rays 18s ease-in-out infinite alternate;
 }
 
 .dark .app-shell--awards {
@@ -127,58 +97,7 @@
 }
 
 .dark .app-shell--awards::before {
-  background-image: url("/pages/awards/scene/awards-background-night.webp");
-}
-
-.dark .app-shell--awards::after {
-  background: linear-gradient(
-    112deg,
-    transparent 0 16%,
-    rgba(195, 225, 255, 0.04) 16% 18%,
-    rgba(198, 228, 255, 0.34) 18% 23%,
-    rgba(124, 179, 255, 0.11) 23% 27%,
-    transparent 27% 39%,
-    rgba(210, 232, 255, 0.04) 39% 41%,
-    rgba(190, 221, 255, 0.28) 41% 47%,
-    rgba(112, 162, 255, 0.09) 47% 51%,
-    transparent 51% 65%,
-    rgba(213, 235, 255, 0.04) 65% 67%,
-    rgba(185, 218, 255, 0.24) 67% 72.5%,
-    rgba(105, 151, 244, 0.08) 72.5% 77%,
-    transparent 77% 100%
-  );
-  opacity: 0.46;
-  animation: awards-moonlight-rays 22s ease-in-out infinite alternate;
-}
-
-@keyframes awards-light-rays {
-  from {
-    transform: translate3d(-0.8%, -0.35%, 0);
-    opacity: 0.78;
-  }
-
-  to {
-    transform: translate3d(0.8%, 0.35%, 0);
-    opacity: 0.96;
-  }
-}
-
-@keyframes awards-moonlight-rays {
-  from {
-    transform: translate3d(-0.55%, -0.25%, 0);
-    opacity: 0.3;
-  }
-
-  to {
-    transform: translate3d(0.55%, 0.25%, 0);
-    opacity: 0.46;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .app-shell--awards::after {
-    animation: none;
-  }
+  background-image: url("/awards/scene/awards-background-night.webp");
 }
 
 .app-shell--awards .game-hud {

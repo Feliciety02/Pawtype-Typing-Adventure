@@ -2,7 +2,31 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
-âœ… **Shipped** - The Learn route now owns its page-specific UI in \`src/pages/lessons/\`, separating the lesson list, lesson-results modal, and star display from shared gameplay components.
+✅ **Shipped** - Pet Nursery now presents its egg row as a compact, mid-ground Nest Stage: eggs are enlarged a further 20%, individually seated in their nest cradles, and spaced 20% farther apart. Nests remain 30% larger than the compact baseline, the lesson ramp is enlarged 50%, and the whole set remains pushed back into the hall for stronger perspective. The nursery overview reads as small carved wood plaques.
+
+✅ **Shipped** - All public raster assets were audited for file format, dimensions, size, and duplicates. The oversized Awards and Pet Nursery scene assets were recompressed with conservative WebP settings, while already-efficient and transparency-sensitive artwork was preserved.
+
+✅ **Shipped** - The Awards wing selector now aligns with the HUD's outer left edge on desktop. Its larger icon-led buttons have high-contrast labels, crisp square pixel bevels, active glow, pressed feedback, and keyboard focus treatment.
+
+✅ **Shipped** - The Awards museum uses a compact banner with enlarged badge display for clearer collection browsing. Its oval pedestals now use feathered, glowing edges instead of solid discs while preserving the surrounding fantasy hall in view.
+
+✅ **Shipped** - All CSS light-ray overlays were removed. Awards now relies solely on the lighting painted into its background artwork.
+
+✅ **Shipped** - The app now suppresses accidental image dragging and text selection across the game UI. A text cursor and selection remain available only inside editable fields, while interactive controls keep their pointer cursor.
+
+✅ **Shipped** - The centered PawType logo on the Login title screen is 50% larger for stronger visual prominence.
+
+✅ **Shipped** - The Login title screen now has six reference-inspired pixel leaf variants falling continuously from the left tree. Their smaller sizes, spawn positions, wind drift, tumble, and timings vary so the canopy never has an empty pause; alternating depth layers pass behind and in front of the logo and Play button, with reduced-motion support.
+
+✅ **Shipped** - The Login page is now a clean title screen using its dedicated painted background and centered combined PawType logo. The Play button opens the account-access modal without leaving the page.
+
+âœ… **Shipped** - Duplicate artwork was consolidated: Cozy Campsite uses one shared scene asset for its preview and final quest node, while the identical Sunrise Camp backdrop now reuses the Morning asset.
+
+âœ… **Shipped** - The full-screen Login page UI now lives in \`src/components/login/\`; shared sign-in controls remain in \`src/components/auth/\` because they are also used by Header and Settings.
+
+âœ… **Shipped** - Shared brand art now uses compact WebP files: the emblem is named \`emblem-logo.webp\`, with matching \`wordmark-logo.webp\` and \`combined-logo.webp\` variants for future page and marketing use.
+
+âœ… **Shipped** - The Learn route now owns its page-specific UI in \`src/components/lessons/\`, separating the lesson list, lesson-results modal, and star display from shared gameplay components.
 
 âœ… **Shipped** - Public artwork is now arranged by consuming page: Adventure nodes and scenes, Shop theme previews, Camp art, Awards scenes and badges, plus shared icons and brand assets. Runtime paths were updated with the move so the visual output is unchanged.
 
@@ -12,7 +36,7 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ✅ **Shipped** - The Pet Nursery foreground light-ray overlay was removed, leaving the illustrated room art unobscured in both display modes.
 
-✅ **Shipped** - The Awards museum now has longer diagonal window-light rays aligned to the painted hall's window columns. Light mode uses brighter warm rays, while dark mode has a cooler, softer moonlight version. The non-interactive rays overlay the HUD and exhibits and stop moving for reduced-motion preferences.
+✅ **Shipped** - The Awards museum no longer uses diagonal CSS window-light rays; its lighting comes entirely from the painted hall artwork.
 
 ✅ **Shipped** - Pet Nursery nests and its ramp now gain a subtle cool-white glow at night, with small randomly sized and drifting white sparkle orbs inspired by the Awards badge display.
 

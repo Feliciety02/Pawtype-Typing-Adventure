@@ -368,9 +368,10 @@ Separate from the rarity ladder. These classify _what the badge represents_, not
 - Badges show their **tier icon** (⭐ to ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐) and **rarity color**
 - Badge image assets are served from `public/badges/<category>/<assetName>`
 - The Awards tab swaps between `public/awards/awards-background-morning.webp` and `public/awards/awards-background-night.webp` as a full-page fantasy museum scene, following the global day/night toggle. The rest of the page ambience follows that state too: morning leans warm and sunlit, while night shifts to cooler moonlit glow. It shows one award wing at a time with the matching banner asset from `public/awards/banner/`, then places exactly 10 awards on `public/awards/shelf.webp` using fixed exhibit positions: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf.
-- The museum background gains three long, window-shaped diagonal light rays aligned to its window columns. Light mode uses brighter warm sunlight; dark mode uses a cooler, softer moonlight version. The non-interactive rays overlay the HUD and exhibits, drift almost imperceptibly, and stop moving when reduced motion is requested.
+- The museum uses only its painted background lighting; no CSS light-ray overlay is applied over the HUD or exhibits.
 - Awards shelf placement is driven by a normalized two-row anchor grid. Every badge, platform, spotlight, tooltip, and hover lift shares the same bottom-center shelf coordinate so platforms stay aligned in straight rows.
 - The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for better readability.
+- On desktop, the award-wing selector shares the HUD's left edge. Its large icon-led pixel buttons use high-contrast labels, crisp square bevels, an active glow, and a pressed state so category changes feel like selecting a museum quest.
 - Unearned badges appear dimmed with "???" as the name
 - Special category badges show their **category emoji** instead of tier icon
 - Badge tooltip shows: name, description, unlock progress (if partial)

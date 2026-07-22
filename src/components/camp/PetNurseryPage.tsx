@@ -30,11 +30,11 @@ const NURSERY_SLOT_Y_OFFSETS = ["4%", "2%", "0%", "1%", "1%"] as const;
 const NURSERY_PAIR_X_OFFSETS = ["0%", "0%", "0%", "0%", "14%"] as const;
 // Fine-tune each egg and its centered interaction target without moving its matching nest.
 const NURSERY_EGG_OFFSETS = [
-  { x: "-3%", y: "-37%" }, // Egg 1
-  { x: "-3%", y: "-37%" }, // Egg 2
-  { x: "-3%", y: "-39%" }, // Egg 3
-  { x: "-3%", y: "-37%" }, // Egg 4
-  { x: "-1%", y: "-51%" }, // Egg 5
+  { x: "-2%", y: "-45%" }, // Egg 1
+  { x: "-3%", y: "-45%" }, // Egg 2
+  { x: "-3%", y: "-49%" }, // Egg 3
+  { x: "-3%", y: "-45%" }, // Egg 4
+  { x: "-2%", y: "-60%" }, // Egg 5
 ] as const;
 
 const NIGHT_ORB_DIRECTIONS = [
@@ -107,7 +107,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
     };
 
     nightBackground.decoding = "async";
-    nightBackground.src = "/pages/camp/pet-nursery/pet-nursery_evening.webp";
+    nightBackground.src = "/camp/pet-nursery/pet-nursery_evening.webp";
     if (nightBackground.complete) markReady();
     else nightBackground.addEventListener("load", markReady, { once: true });
 
@@ -242,7 +242,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
                 <div className="camp-nursery-nest-anchor">
                   <img
                     className="camp-nursery-nest"
-                    src={`/pages/camp/pet-nursery/nests/${nestAssetForTier(slot.tier)}`}
+                    src={`/camp/pet-nursery/nests/${nestAssetForTier(slot.tier)}`}
                     alt=""
                   />
                 </div>
@@ -281,7 +281,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
                   <span className="camp-nursery-egg-art" aria-hidden="true">
                     <img
                       className="camp-nursery-egg"
-                      src={`/pages/camp/pet-nursery/eggs/egg_tier${slot.tier}.webp`}
+                      src={`/camp/pet-nursery/eggs/egg_tier${slot.tier}.webp`}
                       alt=""
                     />
                   </span>
@@ -291,7 +291,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
           </div>
 
           <div className="camp-nursery-ramp" aria-hidden="true">
-            <img src="/pages/camp/pet-nursery/ramp.webp" alt="" />
+            <img src="/camp/pet-nursery/ramp.webp" alt="" />
             <NightGlowOrbs className="camp-nursery-night-orbs--ramp" count={6} />
           </div>
 

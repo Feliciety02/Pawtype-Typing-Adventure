@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ModalShell } from "../../modals/ModalShell";
-import { StatsView } from "../../game/StatsView";
+import { StatsView } from "../../stats/StatsView";
 import { ThemeSetsSection } from "../../shop/ThemeSetsSection";
 import { PetRoom } from "../../shop/PetRoom";
 import { useGame } from "../../../lib/game/store";

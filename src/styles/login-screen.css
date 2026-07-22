@@ -7,6 +7,136 @@
   min-height: 100dvh;
   overflow: hidden;
   padding: 1.25rem;
+  display: grid;
+  place-items: center;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.pixel-login-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 27, 42, 0.12);
+}
+
+.pixel-login-title-screen {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: clamp(1rem, 3vh, 2rem);
+  width: min(90vw, 810px);
+}
+
+.pixel-login-combined-logo {
+  width: min(100%, 645px);
+  height: auto;
+  image-rendering: auto;
+  filter: drop-shadow(0 5px 0 rgba(43, 26, 35, 0.6));
+}
+
+.pixel-login-play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: 172px;
+  padding: 0.9rem 1.5rem;
+  color: #fff9df;
+  font-family: var(--font-pixel, inherit);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: #3d8b3b;
+  border: 3px solid #1c4b28;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 0 #173a21, inset 0 3px 0 rgba(255, 255, 255, 0.22);
+}
+
+.pixel-login-play-btn:hover { background: #4da748; }
+.pixel-login-play-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #173a21; }
+.pixel-login-play-btn:focus-visible { outline: 3px solid #fff5a7; outline-offset: 4px; }
+
+.pixel-login-falling-leaves {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pixel-login-falling-leaves.is-behind { z-index: 0; }
+.pixel-login-falling-leaves.is-front { z-index: 2; }
+
+.pixel-login-leaf {
+  position: absolute;
+  left: var(--leaf-left);
+  top: var(--leaf-top);
+  width: 52px;
+  height: 52px;
+  opacity: 0;
+  object-fit: contain;
+  image-rendering: pixelated;
+  animation: pixel-login-leaf-fall var(--leaf-duration) cubic-bezier(0.35, 0.04, 0.62, 0.96) var(--leaf-delay) infinite;
+}
+
+@keyframes pixel-login-leaf-fall {
+  0% { opacity: 0; transform: translate3d(0, -16px, 0) rotate(0deg) scale(calc(var(--leaf-size) * 0.75)); }
+  8% { opacity: 0.95; }
+  26% { transform: translate3d(var(--leaf-drift), 26vh, 0) rotate(calc(var(--leaf-turn) * 130deg)) scale(var(--leaf-size)); }
+  49% { transform: translate3d(0, 56vh, 0) rotate(calc(var(--leaf-turn) * 265deg)) scale(calc(var(--leaf-size) * 0.92)); }
+  73% { transform: translate3d(var(--leaf-drift), 87vh, 0) rotate(calc(var(--leaf-turn) * 390deg)) scale(calc(var(--leaf-size) * 0.84)); }
+  94% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate3d(0, 118vh, 0) rotate(calc(var(--leaf-turn) * 500deg)) scale(calc(var(--leaf-size) * 0.7)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-login-leaf { animation: none; opacity: 0; }
+}
+
+.pixel-login-backdrop { display: none; }
+
+.pixel-login-layout { display: none; }
+
+.pixel-login-shell.is-auth-open .pixel-login-layout {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(18, 17, 29, 0.7);
+}
+
+.pixel-login-shell.is-auth-open .pixel-login-hero { display: none; }
+
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  width: min(100%, 430px);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+}
+
+/* Override the retired decorative-leaf style used by the former login backdrop. */
+.pixel-login-falling-leaves .pixel-login-leaf {
+  left: var(--leaf-left);
+  top: var(--leaf-top);
+  bottom: auto;
+  width: 52px;
+  height: 52px;
+  opacity: 0;
+  height: 52px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  clip-path: none;
+  animation: pixel-login-leaf-fall var(--leaf-duration) cubic-bezier(0.35, 0.04, 0.62, 0.96) var(--leaf-delay) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-login-falling-leaves .pixel-login-leaf { animation: none; opacity: 0; }
 }
 
 .pixel-login-backdrop {
@@ -965,6 +1095,27 @@
   }
 }
 
+/* Title-screen state must win over the original responsive two-column layout. */
+.pixel-login-shell:not(.is-auth-open) .pixel-login-layout { display: none; }
+
+.pixel-login-shell.is-auth-open .pixel-login-layout {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(18, 17, 29, 0.7);
+}
+
+.pixel-login-shell.is-auth-open .pixel-login-hero { display: none; }
+
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  width: min(100%, 430px);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+}
+
 .coming-soon-badge {
   display: inline-flex;
   align-items: center;
@@ -1128,4 +1279,25 @@
   .pixel-login-hero h1 {
     font-size: clamp(3.5rem, 15vw, 5.5rem);
   }
+}
+
+/* Keep the title-screen and modal states above legacy responsive login rules. */
+.pixel-login-shell:not(.is-auth-open) .pixel-login-layout { display: none; }
+
+.pixel-login-shell.is-auth-open .pixel-login-layout {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(18, 17, 29, 0.7);
+}
+
+.pixel-login-shell.is-auth-open .pixel-login-hero { display: none; }
+
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  width: min(100%, 430px);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
 }

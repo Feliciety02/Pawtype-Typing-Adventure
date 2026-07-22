@@ -75,7 +75,7 @@ export const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
     "/worlds/cozy-campsite/cozy-campsite-02-pine-camp.webp",
     "/worlds/cozy-campsite/cozy-campsite-03-campfire-circle.webp",
     "/worlds/cozy-campsite/cozy-campsite-04-bear-ridge.webp",
-    "/worlds/cozy-campsite/cozy-campsite-05-rangers-lookout.webp",
+    "/shared/scenes/cozy-campsite-rangers-lookout.webp",
   ],
   mushroom: [
     "/worlds/fairy-mushroom-village/fairy-mushroom-village-01-mushroom-trail.webp",
@@ -123,7 +123,7 @@ export const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
 
 for (const paths of Object.values(NODE_IMAGES)) {
   paths?.forEach((path, index) => {
-    paths[index] = path.replace("/worlds/", "/pages/adventure/nodes/");
+    paths[index] = path.replace("/worlds/", "/adventure/nodes/");
   });
 }
 
@@ -152,7 +152,7 @@ export function sceneImage(world: WorldId, stageName: string): string | undefine
       .replace(/['']/g, "")
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
-  return `/pages/adventure/scenes/${dir}/${slug}.webp`;
+  return `/adventure/scenes/${dir}/${slug}.webp`;
 }
 
 export const DIFFICULTY_TIME_LIMITS: Record<Difficulty, number> = {

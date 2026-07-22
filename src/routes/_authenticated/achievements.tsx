@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AchievementsCard } from "@/components/game/AchievementsCard";
+import { AchievementsCard } from "@/components/achievements/AchievementsCard";
 
 export const Route = createFileRoute("/_authenticated/achievements")({
   component: RouteComponent,

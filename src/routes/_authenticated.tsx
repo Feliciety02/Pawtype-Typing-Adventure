@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/hooks/use-auth";
-import { PixelLoginScreen } from "@/components/auth/PixelLoginScreen";
+import { PixelLoginScreen } from "@/components/login/PixelLoginScreen";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,

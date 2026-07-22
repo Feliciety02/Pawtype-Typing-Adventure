@@ -437,7 +437,7 @@
       rgba(18, 9, 4, 0.06) 58%,
       rgba(18, 9, 4, 0.22) 100%
     ),
-    url("/pages/camp/pet-nursery/pet-nursery_morning.webp") center center / cover no-repeat;
+    url("/camp/pet-nursery/pet-nursery_morning.webp") center center / cover no-repeat;
 }
 
 .camp-nursery-page::after {
@@ -449,7 +449,7 @@
       rgba(12, 7, 5, 0.18) 58%,
       rgba(12, 7, 5, 0.42) 100%
     ),
-    url("/pages/camp/pet-nursery/pet-nursery_evening.webp") center center / cover no-repeat;
+    url("/camp/pet-nursery/pet-nursery_evening.webp") center center / cover no-repeat;
 }
 
 .camp-nursery-page.is-night-background::after {
@@ -525,8 +525,8 @@
 
 .camp-nursery-stage-head {
   position: absolute;
-  top: clamp(0.55rem, 1.5vh, 1rem);
-  left: 0;
+  top: clamp(0.65rem, 1.9vh, 1.25rem);
+  left: clamp(0.65rem, 2vw, 1.6rem);
   z-index: 4;
 }
 
@@ -537,7 +537,7 @@
 
 .camp-nursery-stage-copy h2 {
   margin: 0;
-  font-size: clamp(1.15rem, 2.1vw, 1.75rem);
+  font-size: clamp(1.1rem, 2vw, 1.65rem);
   line-height: 1;
 }
 
@@ -549,26 +549,25 @@
 }
 
 .camp-nursery-stage-stats {
-  width: min(32vw, 350px);
-  gap: 0;
+  width: min(34vw, 385px);
+  gap: clamp(0.2rem, 0.5vw, 0.4rem);
 }
 
 .camp-nursery-stage-stat {
-  gap: 0.15rem;
-  padding: 0.3rem 0.6rem;
-  border: 0;
-  border-left: 1px solid rgba(255, 228, 178, 0.3);
-  border-radius: 0;
-  background: transparent;
+  gap: 0.18rem;
+  padding: 0.36rem 0.55rem;
+  border: 2px solid rgba(100, 58, 27, 0.94);
+  border-radius: 7px;
+  background:
+    linear-gradient(180deg, rgba(101, 62, 29, 0.9), rgba(40, 22, 11, 0.94)),
+    repeating-linear-gradient(90deg, transparent 0 8px, rgba(255, 212, 130, 0.04) 8px 10px);
+  box-shadow: inset 0 0 0 1px rgba(244, 190, 105, 0.18), 0 3px 0 rgba(24, 12, 5, 0.72);
   text-shadow: 0 2px 8px rgba(18, 8, 3, 0.95);
 }
 
-.camp-nursery-stage-stat:first-child {
-  border-left: 0;
-}
-
 .camp-nursery-stage-stat strong {
-  font-size: clamp(0.95rem, 1.7vw, 1.25rem);
+  color: #ffe3a3;
+  font-size: clamp(0.88rem, 1.5vw, 1.12rem);
 }
 
 .camp-nursery-stage-stat span {
@@ -578,17 +577,18 @@
 .camp-nursery-nest-group,
 .camp-nursery-egg-group {
   position: absolute;
-  left: clamp(0.25rem, 2vw, 1.75rem);
-  bottom: clamp(4.85rem, 7.1vw, 6.64rem);
-  --nursery-slot-width: clamp(47px, 9vw, 144px);
-  --nursery-slot-gap: clamp(0.95rem, 2vw, 1.8rem);
+  left: clamp(0.5rem, 4.5vw, 4rem);
+  bottom: clamp(7.75rem, 13vw, 11.5rem);
+  --nursery-slot-width: clamp(42px, 7.2vw, 114px);
+  --nursery-slot-gap: clamp(1.08rem, 2.52vw, 2.28rem);
   display: grid;
   grid-template-columns: repeat(5, var(--nursery-slot-width));
   /* Both layers use the same gap so each egg remains paired with its nest. */
   gap: var(--nursery-slot-gap);
   width: max-content;
   justify-items: center;
-  transform: translateY(30%);
+  /* Move the whole hatchery line together so eggs stay paired with their nests. */
+  transform: translateY(20%);
 }
 
 .camp-nursery-nest-group {
@@ -602,12 +602,12 @@
 
 .camp-nursery-ramp {
   position: absolute;
-  right: clamp(0.25rem, 2vw, 1.75rem);
-  bottom: clamp(3.75rem, 5.5vw, 5.25rem);
+  right: clamp(0.5rem, 3vw, 2.5rem);
+  bottom: clamp(7.25rem, 11.5vw, 10.25rem);
   z-index: 2;
-  width: clamp(55px, 14.5vw, 210px);
+  width: clamp(50px, 12vw, 174px);
   pointer-events: none;
-  transform: translate(-55%, -30%) scale(2.035);
+  transform: translate(-120%, -55%) scale(2.7);
 }
 
 .camp-nursery-ramp img {
@@ -655,8 +655,13 @@
 }
 
 .camp-nursery-ramp img {
-  filter: drop-shadow(4px 4px 0 rgba(18, 10, 4, 0.56)) drop-shadow(8px 8px 0 rgba(18, 10, 4, 0.32))
-    drop-shadow(0 22px 18px rgba(12, 7, 3, 0.56)) drop-shadow(0 0 10px rgba(222, 241, 255, 0.3));
+  filter: drop-shadow(4px 4px 0 rgba(18, 10, 4, 0.34)) drop-shadow(8px 8px 0 rgba(18, 10, 4, 0.18))
+    drop-shadow(0 22px 18px rgba(12, 7, 3, 0.3));
+}
+
+.camp-nursery-page.is-night-background .camp-nursery-ramp img {
+  filter: drop-shadow(4px 4px 0 rgba(18, 10, 4, 0.34)) drop-shadow(8px 8px 0 rgba(18, 10, 4, 0.18))
+    drop-shadow(0 22px 18px rgba(12, 7, 3, 0.3)) drop-shadow(0 0 10px rgba(222, 241, 255, 0.3));
 }
 
 .camp-nursery-nest-slot,
@@ -762,9 +767,9 @@
   width: 54%;
   display: block;
   pointer-events: none;
-  filter: drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.52)) drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.26))
-    drop-shadow(0 12px 10px rgba(12, 7, 3, 0.34));
-  transform: translate(-50%, -50%) scale(1.2);
+  filter: drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.32)) drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.16))
+    drop-shadow(0 12px 10px rgba(12, 7, 3, 0.22));
+  transform: translate(-50%, -50%) scale(1.404);
   transition: transform 160ms ease;
 }
 
@@ -784,9 +789,9 @@
 }
 
 .camp-nursery-egg-button:hover + .camp-nursery-egg-art {
-  transform: translate(-50%, calc(-50% - 4px)) scale(1.296);
-  filter: drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.58)) drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.3))
-    drop-shadow(0 16px 12px rgba(12, 7, 3, 0.38));
+  transform: translate(-50%, calc(-50% - 3px)) scale(1.51632);
+  filter: drop-shadow(3px 4px 0 rgba(18, 10, 4, 0.38)) drop-shadow(6px 8px 0 rgba(18, 10, 4, 0.2))
+    drop-shadow(0 16px 12px rgba(12, 7, 3, 0.26));
 }
 
 .camp-nursery-egg-button:disabled {
@@ -799,7 +804,7 @@
 }
 
 .camp-nursery-egg-button:focus-visible + .camp-nursery-egg-art {
-  transform: translate(-50%, calc(-50% - 4px)) scale(1.296);
+  transform: translate(-50%, calc(-50% - 3px)) scale(1.51632);
 }
 
 .camp-nursery-nest {
@@ -807,28 +812,28 @@
   z-index: 1;
   width: 100%;
   display: block;
-  filter: drop-shadow(4px 5px 0 rgba(18, 10, 4, 0.58)) drop-shadow(8px 10px 0 rgba(18, 10, 4, 0.3))
-    drop-shadow(0 18px 15px rgba(12, 7, 3, 0.54));
-  transform: scale(1.2);
+  filter: drop-shadow(4px 5px 0 rgba(18, 10, 4, 0.36)) drop-shadow(8px 10px 0 rgba(18, 10, 4, 0.18))
+    drop-shadow(0 18px 15px rgba(12, 7, 3, 0.3));
+  transform: scale(1.274);
   transform-origin: center bottom;
 }
 
 .camp-nursery-nest {
-  filter: drop-shadow(4px 5px 0 rgba(18, 10, 4, 0.58)) drop-shadow(8px 10px 0 rgba(18, 10, 4, 0.3))
-    drop-shadow(0 18px 15px rgba(12, 7, 3, 0.54)) drop-shadow(0 0 8px rgba(222, 241, 255, 0.24));
+  filter: drop-shadow(4px 5px 0 rgba(18, 10, 4, 0.36)) drop-shadow(8px 10px 0 rgba(18, 10, 4, 0.18))
+    drop-shadow(0 18px 15px rgba(12, 7, 3, 0.3)) drop-shadow(0 0 8px rgba(222, 241, 255, 0.24));
 }
 
 .camp-nursery-nest-slot.is-tier-five .camp-nursery-nest {
-  transform: scale(1.56);
+  transform: scale(1.651);
 }
 
 .camp-nursery-egg-slot.is-tier-five .camp-nursery-egg-art {
-  transform: translate(-50%, -50%) scale(1.56);
+  transform: translate(-50%, -50%) scale(1.8252);
 }
 
 .camp-nursery-egg-slot.is-tier-five .camp-nursery-egg-button:hover + .camp-nursery-egg-art,
 .camp-nursery-egg-slot.is-tier-five .camp-nursery-egg-button:focus-visible + .camp-nursery-egg-art {
-  transform: translate(-50%, calc(-50% - 4px)) scale(1.6848);
+  transform: translate(-50%, calc(-50% - 3px)) scale(1.971216);
 }
 
 .camp-nursery-egg-art {

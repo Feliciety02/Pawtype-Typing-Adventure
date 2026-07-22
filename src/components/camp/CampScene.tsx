@@ -34,7 +34,7 @@ type CampBuildingConfig = {
 const CAMP_ENVIRONMENT_BY_SEGMENT: Record<DayNightState["current"], string> = {
   midnight: "/camp/scenes/campscene-background-midnight.webp",
   predawn: "/camp/scenes/campscene-background-pre-dawn.webp",
-  sunrise: "/camp/scenes/campscene-background-sunrise.webp",
+  sunrise: "/camp/scenes/campscene-background-morning.webp",
   morning: "/camp/scenes/campscene-background-morning.webp",
   noon: "/camp/scenes/campscene-background-noon.webp",
   afternoon: "/camp/scenes/campscene-background-early-afternoon.webp",
@@ -42,12 +42,6 @@ const CAMP_ENVIRONMENT_BY_SEGMENT: Record<DayNightState["current"], string> = {
   twilight: "/camp/scenes/campscene-background-twilight.webp",
 };
 
-for (const segment of Object.keys(CAMP_ENVIRONMENT_BY_SEGMENT) as DayNightState["current"][]) {
-  CAMP_ENVIRONMENT_BY_SEGMENT[segment] = CAMP_ENVIRONMENT_BY_SEGMENT[segment].replace(
-    "/camp/",
-    "/pages/camp/",
-  );
-}
 
 const FORCED_MORNING_STATE = getDayNightState(new Date(2024, 0, 1, 9, 0, 0, 0));
 const FORCED_NIGHT_STATE = getDayNightState(new Date(2024, 0, 1, 22, 0, 0, 0));
