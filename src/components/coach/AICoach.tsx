@@ -59,16 +59,7 @@ export function AICoach(props: Props) {
     return () => {
       cancelled = true;
     };
-  }, [
-    props.wpm,
-    props.accuracy,
-    props.duration,
-    props.correctChars,
-    props.mistakes,
-    props.bestCombo,
-    props.keystrokes,
-    state.sessions,
-  ]);
+  }, [props, state.sessions]);
 
   if (loading) {
     return (

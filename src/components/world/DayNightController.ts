@@ -74,7 +74,13 @@ const CLOUD_TINT: Record<DayNightSegment, string> = {
   twilight: "#6970B9",
 };
 
-function getArcPosition(progress: number, startX: number, endX: number, horizonY: number, apexY: number) {
+function getArcPosition(
+  progress: number,
+  startX: number,
+  endX: number,
+  horizonY: number,
+  apexY: number,
+) {
   const eased = easeInOutSine(progress);
   return {
     x: lerp(startX, endX, eased),
@@ -115,16 +121,20 @@ function getMoonState(minute: number) {
 
 function getStarsOpacity(minute: number) {
   if (minute >= 21 * 60 || minute < 4 * 60) return 1;
-  if (minute >= 18 * 60 && minute < 21 * 60) return lerp(0.4, 1, rangeProgress(minute, 18 * 60, 21 * 60));
+  if (minute >= 18 * 60 && minute < 21 * 60)
+    return lerp(0.4, 1, rangeProgress(minute, 18 * 60, 21 * 60));
   if (minute >= 4 * 60 && minute < 6 * 60) return 1 - rangeProgress(minute, 4 * 60, 6 * 60);
-  if (minute >= 17 * 60 && minute < 18 * 60) return lerp(0, 0.4, rangeProgress(minute, 17 * 60, 18 * 60));
+  if (minute >= 17 * 60 && minute < 18 * 60)
+    return lerp(0, 0.4, rangeProgress(minute, 17 * 60, 18 * 60));
   return 0;
 }
 
 function getConstellationsOpacity(minute: number) {
   if (minute >= 21 * 60 || minute < 4 * 60) return 0.32;
-  if (minute >= 20 * 60 && minute < 21 * 60) return lerp(0, 0.32, rangeProgress(minute, 20 * 60, 21 * 60));
-  if (minute >= 4 * 60 && minute < 5 * 60) return lerp(0.32, 0, rangeProgress(minute, 4 * 60, 5 * 60));
+  if (minute >= 20 * 60 && minute < 21 * 60)
+    return lerp(0, 0.32, rangeProgress(minute, 20 * 60, 21 * 60));
+  if (minute >= 4 * 60 && minute < 5 * 60)
+    return lerp(0.32, 0, rangeProgress(minute, 4 * 60, 5 * 60));
   return 0;
 }
 
@@ -145,7 +155,11 @@ export function getDayNightState(date: Date = new Date()): DayNightState {
     hexToRgb(OVERLAY_COLORS[segment.next]),
     easedProgress,
   );
-  const overlayAlpha = lerp(OVERLAY_ALPHA[segment.current], OVERLAY_ALPHA[segment.next], easedProgress);
+  const overlayAlpha = lerp(
+    OVERLAY_ALPHA[segment.current],
+    OVERLAY_ALPHA[segment.next],
+    easedProgress,
+  );
   const cloudTint = mixRgb(
     hexToRgb(CLOUD_TINT[segment.current]),
     hexToRgb(CLOUD_TINT[segment.next]),

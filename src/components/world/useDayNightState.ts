@@ -9,13 +9,15 @@ export function useDayNightState(): DayNightState {
 
     const scheduleNextMinute = () => {
       const now = new Date();
-      const msUntilNextMinute =
-        (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+      const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
 
-      timeoutId = window.setTimeout(() => {
-        setState(getDayNightState());
-        scheduleNextMinute();
-      }, Math.max(250, msUntilNextMinute));
+      timeoutId = window.setTimeout(
+        () => {
+          setState(getDayNightState());
+          scheduleNextMinute();
+        },
+        Math.max(250, msUntilNextMinute),
+      );
     };
 
     scheduleNextMinute();

@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  type HTMLAttributes,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, type HTMLAttributes, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { PixelIcon } from "../../lib/icons/PixelIcon";

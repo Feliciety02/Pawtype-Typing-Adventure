@@ -3,19 +3,79 @@ import { pick, conjugate } from "./filler";
 import { pickFresh, trackUsed } from "./tracker";
 
 const FALLBACK_DETS = [
-  "a", "an", "the", "this", "that", "every", "each", "some", "any",
-  "no", "one", "two", "many", "several", "all", "both", "few", "more", "most",
+  "a",
+  "an",
+  "the",
+  "this",
+  "that",
+  "every",
+  "each",
+  "some",
+  "any",
+  "no",
+  "one",
+  "two",
+  "many",
+  "several",
+  "all",
+  "both",
+  "few",
+  "more",
+  "most",
 ];
 
 const FALLBACK_PREPS = [
-  "above", "across", "after", "along", "among", "around", "at",
-  "before", "behind", "below", "beneath", "beside", "between", "beyond",
-  "by", "down", "for", "from", "in", "inside", "into", "near", "of", "off",
-  "on", "onto", "out", "outside", "over", "past", "through", "to", "toward",
-  "under", "up", "upon", "with",
+  "above",
+  "across",
+  "after",
+  "along",
+  "among",
+  "around",
+  "at",
+  "before",
+  "behind",
+  "below",
+  "beneath",
+  "beside",
+  "between",
+  "beyond",
+  "by",
+  "down",
+  "for",
+  "from",
+  "in",
+  "inside",
+  "into",
+  "near",
+  "of",
+  "off",
+  "on",
+  "onto",
+  "out",
+  "outside",
+  "over",
+  "past",
+  "through",
+  "to",
+  "toward",
+  "under",
+  "up",
+  "upon",
+  "with",
 ];
 
-const SUB_CONJ = ["when", "while", "although", "because", "if", "though", "as", "since", "until", "after"];
+const SUB_CONJ = [
+  "when",
+  "while",
+  "although",
+  "because",
+  "if",
+  "though",
+  "as",
+  "since",
+  "until",
+  "after",
+];
 
 const COORD_CONJ = ["and", "but", "so", "yet"];
 
@@ -30,12 +90,60 @@ type GrammarLimits = {
 };
 
 const LIMITS: Record<Difficulty, GrammarLimits> = {
-  beginner: { maxAdj: 0, maxPP: 1, advInVP: false, advFront: false, ppFront: false, sub: false, comp: false },
-  easy: { maxAdj: 1, maxPP: 1, advInVP: true, advFront: true, ppFront: false, sub: false, comp: false },
-  intermediate: { maxAdj: 1, maxPP: 2, advInVP: true, advFront: true, ppFront: true, sub: true, comp: false },
-  advanced: { maxAdj: 2, maxPP: 2, advInVP: true, advFront: true, ppFront: true, sub: true, comp: true },
-  expert: { maxAdj: 2, maxPP: 3, advInVP: true, advFront: true, ppFront: true, sub: true, comp: true },
-  master: { maxAdj: 3, maxPP: 3, advInVP: true, advFront: true, ppFront: true, sub: true, comp: true },
+  beginner: {
+    maxAdj: 0,
+    maxPP: 1,
+    advInVP: false,
+    advFront: false,
+    ppFront: false,
+    sub: false,
+    comp: false,
+  },
+  easy: {
+    maxAdj: 1,
+    maxPP: 1,
+    advInVP: true,
+    advFront: true,
+    ppFront: false,
+    sub: false,
+    comp: false,
+  },
+  intermediate: {
+    maxAdj: 1,
+    maxPP: 2,
+    advInVP: true,
+    advFront: true,
+    ppFront: true,
+    sub: true,
+    comp: false,
+  },
+  advanced: {
+    maxAdj: 2,
+    maxPP: 2,
+    advInVP: true,
+    advFront: true,
+    ppFront: true,
+    sub: true,
+    comp: true,
+  },
+  expert: {
+    maxAdj: 2,
+    maxPP: 3,
+    advInVP: true,
+    advFront: true,
+    ppFront: true,
+    sub: true,
+    comp: true,
+  },
+  master: {
+    maxAdj: 3,
+    maxPP: 3,
+    advInVP: true,
+    advFront: true,
+    ppFront: true,
+    sub: true,
+    comp: true,
+  },
 };
 
 function randInt(min: number, max: number): number {
@@ -44,9 +152,10 @@ function randInt(min: number, max: number): number {
 
 function pickFreshWord(words: string[], batchSize: number): string {
   const batch = pickFresh(words, batchSize);
-  const word = batch.length > 0
-    ? batch[Math.floor(Math.random() * batch.length)]
-    : words[Math.floor(Math.random() * words.length)];
+  const word =
+    batch.length > 0
+      ? batch[Math.floor(Math.random() * batch.length)]
+      : words[Math.floor(Math.random() * words.length)];
   trackUsed([word]);
   return word;
 }

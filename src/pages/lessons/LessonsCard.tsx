@@ -239,7 +239,6 @@ export function LessonsCard() {
         </button>
       </div>
 
-
       {/* Egg milestone progress banner */}
       <div className="quest-milestone-banner">
         <div className="quest-milestone-icon" aria-hidden="true">
@@ -674,9 +673,7 @@ export function LessonsCard() {
               <button
                 type="button"
                 className="chest-config-item"
-                onClick={() =>
-                    import("@/lib/game/chests").then((m) => m.setChestLessons([]))
-                }
+                onClick={() => import("@/lib/game/chests").then((m) => m.setChestLessons([]))}
               >
                 Clear All
               </button>
@@ -712,7 +709,6 @@ export function LessonsCard() {
           </div>
         </ModalShell>
       )}
-
 
       {typing &&
         createPortal(

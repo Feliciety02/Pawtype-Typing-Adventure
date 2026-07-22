@@ -14,4 +14,3 @@ export function SunRenderer({ state }: { state: DayNightState }) {
     />
   );
 }
-

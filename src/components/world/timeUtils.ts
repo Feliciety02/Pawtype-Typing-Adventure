@@ -1,12 +1,5 @@
 export type DayNightSegment =
-  | "midnight"
-  | "predawn"
-  | "sunrise"
-  | "morning"
-  | "noon"
-  | "afternoon"
-  | "sunset"
-  | "twilight";
+  "midnight" | "predawn" | "sunrise" | "morning" | "noon" | "afternoon" | "sunset" | "twilight";
 
 export type RgbColor = {
   r: number;
@@ -103,4 +96,3 @@ export function rangeProgress(minutes: number, start: number, end: number) {
   const normalizedMinutes = minutes < start ? minutes + DAY_MINUTES : minutes;
   return clamp01((normalizedMinutes - start) / (normalizedEnd - start));
 }
-

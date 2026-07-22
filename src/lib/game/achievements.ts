@@ -142,7 +142,13 @@ export function computeAchievements(state: GameState): Achievement[] {
     ],
     [2, "Bullseye", "Hitting your marks more often.", "badge_accuracy_bullseye.webp", 80],
     [3, "Eagle Eye", "Sharp focus on every character.", "badge_accuracy_eagle_eye.webp", 85],
-    [4, "Crystal Scope", "Clear vision through the noise.", "badge_accuracy_crystal_scope.webp", 88],
+    [
+      4,
+      "Crystal Scope",
+      "Clear vision through the noise.",
+      "badge_accuracy_crystal_scope.webp",
+      88,
+    ],
     [
       5,
       "Perfect Sight",
@@ -284,8 +290,20 @@ export function computeAchievements(state: GameState): Achievement[] {
       "badge_world_sakura_blossom.webp",
       6,
     ],
-    [7, "Castle Crest", "Royalty runs through your fingertips.", "badge_world_castle_crest.webp", 7],
-    [8, "Moon Crest", "Typing by moonlight — serene and precise.", "badge_world_moon_crest.webp", 8],
+    [
+      7,
+      "Castle Crest",
+      "Royalty runs through your fingertips.",
+      "badge_world_castle_crest.webp",
+      7,
+    ],
+    [
+      8,
+      "Moon Crest",
+      "Typing by moonlight — serene and precise.",
+      "badge_world_moon_crest.webp",
+      8,
+    ],
     [9, "Galaxy Emblem", "Your skills span the cosmos.", "badge_world_galaxy_emblem.webp", 9],
     [
       10,
@@ -381,7 +399,13 @@ export function computeAchievements(state: GameState): Achievement[] {
       "badge_streak_laurel_wreath.webp",
       60,
     ],
-    [6, "Eternal Hourglass", "Days blend into mastery.", "badge_streak_eternal_hourglass.webp", 100],
+    [
+      6,
+      "Eternal Hourglass",
+      "Days blend into mastery.",
+      "badge_streak_eternal_hourglass.webp",
+      100,
+    ],
     [
       7,
       "Celestial Clock",
@@ -396,7 +420,13 @@ export function computeAchievements(state: GameState): Achievement[] {
       "badge_streak_infinity_calendar.webp",
       365,
     ],
-    [9, "Endless Journey", "Beyond time. Beyond measure.", "badge_streak_endless_journey.webp", 730],
+    [
+      9,
+      "Endless Journey",
+      "Beyond time. Beyond measure.",
+      "badge_streak_endless_journey.webp",
+      730,
+    ],
   ];
   for (const [tier, title, desc, asset, goal] of streakBadges) {
     list.push(

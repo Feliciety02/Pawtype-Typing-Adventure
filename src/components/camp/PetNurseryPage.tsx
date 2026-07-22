@@ -50,7 +50,8 @@ function NightGlowOrbs({ className, count }: { className: string; count: number 
   const orbs = useMemo(
     () =>
       Array.from({ length: count }, (_, index) => {
-        const direction = NIGHT_ORB_DIRECTIONS[Math.floor(Math.random() * NIGHT_ORB_DIRECTIONS.length)];
+        const direction =
+          NIGHT_ORB_DIRECTIONS[Math.floor(Math.random() * NIGHT_ORB_DIRECTIONS.length)];
         const size = Math.floor(Math.random() * 4) + 2;
 
         return (
@@ -74,7 +75,11 @@ function NightGlowOrbs({ className, count }: { className: string; count: number 
     [count],
   );
 
-  return <span className={`camp-nursery-night-orbs ${className}`} aria-hidden="true">{orbs}</span>;
+  return (
+    <span className={`camp-nursery-night-orbs ${className}`} aria-hidden="true">
+      {orbs}
+    </span>
+  );
 }
 
 function tierForSlot(slot: number) {

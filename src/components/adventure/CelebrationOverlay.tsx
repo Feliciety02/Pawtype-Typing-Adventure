@@ -200,13 +200,7 @@ function ParticleAssetView({ asset }: { asset: ParticleAsset }) {
   return <PixelIcon emoji={asset.emoji} className="celebration-particle-img" />;
 }
 
-export function PixelConfetti({
-  world,
-  active,
-}: {
-  world: WorldId;
-  active: boolean;
-}) {
+export function PixelConfetti({ world, active }: { world: WorldId; active: boolean }) {
   const particles = useMemo(() => makeVictoryParticles(world), [world]);
 
   if (!active) return null;
@@ -320,13 +314,7 @@ export function FailureParticles({ world, active }: { world: WorldId; active: bo
   );
 }
 
-export function CelebrationOverlay({
-  active,
-  result,
-  world,
-  xp,
-  coins,
-}: CelebrationOverlayProps) {
+export function CelebrationOverlay({ active, result, world, xp, coins }: CelebrationOverlayProps) {
   if (!active || !result) return null;
 
   return result === "win" ? (

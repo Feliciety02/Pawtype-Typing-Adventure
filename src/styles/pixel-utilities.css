@@ -1204,9 +1204,7 @@ button.pixel-selectable-card:focus-visible,
   width: clamp(122px, 10vw, 164px);
   height: clamp(122px, 10vw, 164px);
   overflow: hidden;
-  filter:
-    drop-shadow(0 4px 0 rgba(37, 14, 6, 0.55))
-    drop-shadow(0 0 10px rgba(255, 205, 106, 0.28));
+  filter: drop-shadow(0 4px 0 rgba(37, 14, 6, 0.55)) drop-shadow(0 0 10px rgba(255, 205, 106, 0.28));
 }
 
 .awards-badge-name {
@@ -1352,8 +1350,12 @@ button.pixel-selectable-card:focus-visible,
 }
 
 .awards-museum::after {
-  background:
-    linear-gradient(180deg, transparent 0%, transparent 62%, var(--awards-floor-haze) 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 62%,
+    var(--awards-floor-haze) 100%
+  );
 }
 
 .dark .awards-museum {
@@ -1439,8 +1441,6 @@ button.pixel-selectable-card:focus-visible,
   animation: awards-banner-pull-up 330ms cubic-bezier(0.68, -0.6, 0.32, 1.6) both;
 }
 
-
-
 .awards-museum-stage[data-transition="enter"] .awards-artifact-frame {
   opacity: 0;
   animation: awards-artifact-frame-conjure 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -1451,52 +1451,76 @@ button.pixel-selectable-card:focus-visible,
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(2) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(2) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(2)
+  .awards-artifact-frame {
   animation-delay: 40ms;
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(3) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(3) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(3)
+  .awards-artifact-frame {
   animation-delay: 80ms;
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(4) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(4) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(4)
+  .awards-artifact-frame {
   animation-delay: 120ms;
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(5) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(5) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(5)
+  .awards-artifact-frame {
   animation-delay: 160ms;
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(6) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(6) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(6)
+  .awards-artifact-frame {
   animation-delay: 200ms;
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(7) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(7) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(7)
+  .awards-artifact-frame {
   animation-delay: 240ms;
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(8) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(8) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(8)
+  .awards-artifact-frame {
   animation-delay: 280ms;
 }
 
 .awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(9) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(9) .awards-artifact-frame {
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(9)
+  .awards-artifact-frame {
   animation-delay: 320ms;
 }
 
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(10) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(10) .awards-artifact-frame {
+.awards-museum-stage[data-transition="exit"]
+  .awards-artifact:nth-of-type(10)
+  .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(10)
+  .awards-artifact-frame {
   animation-delay: 360ms;
 }
 
-.awards-museum-stage[data-transition="exit"] .awards-artifact:nth-of-type(11) .awards-artifact-frame,
-.awards-museum-stage[data-transition="enter"] .awards-artifact:nth-of-type(11) .awards-artifact-frame {
+.awards-museum-stage[data-transition="exit"]
+  .awards-artifact:nth-of-type(11)
+  .awards-artifact-frame,
+.awards-museum-stage[data-transition="enter"]
+  .awards-artifact:nth-of-type(11)
+  .awards-artifact-frame {
   animation-delay: 400ms;
 }
 
@@ -1705,13 +1729,12 @@ button.pixel-selectable-card:focus-visible,
   width: 165%;
   height: 138%;
   transform: translateX(-50%);
-  background:
-    radial-gradient(
-      ellipse at 50% 82%,
-      color-mix(in oklab, var(--artifact-color) 16%, transparent) 0%,
-      color-mix(in oklab, var(--artifact-color) 9%, transparent) 34%,
-      transparent 76%
-    );
+  background: radial-gradient(
+    ellipse at 50% 82%,
+    color-mix(in oklab, var(--artifact-color) 16%, transparent) 0%,
+    color-mix(in oklab, var(--artifact-color) 9%, transparent) 34%,
+    transparent 76%
+  );
   opacity: 0;
   mix-blend-mode: screen;
   transition: opacity 220ms ease;
@@ -1762,8 +1785,7 @@ button.pixel-selectable-card:focus-visible,
 }
 
 .awards-artifact[data-unlocked="true"] .awards-artifact-frame img {
-  filter:
-    drop-shadow(0 0 10px color-mix(in oklab, var(--artifact-color) 68%, transparent))
+  filter: drop-shadow(0 0 10px color-mix(in oklab, var(--artifact-color) 68%, transparent))
     saturate(1.08);
 }
 

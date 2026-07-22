@@ -14,4 +14,3 @@ export function MoonRenderer({ state }: { state: DayNightState }) {
     />
   );
 }
-

@@ -26,4 +26,3 @@ export function SkyRenderer({ state }: { state: DayNightState }) {
     </div>
   );
 }
-

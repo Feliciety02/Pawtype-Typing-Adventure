@@ -38,10 +38,13 @@ export function AdventureMap() {
     [goals],
   );
 
-  const orderedWorlds = [
-    ...WORLDS.filter((item) => item.id === world),
-    ...WORLDS.filter((item) => item.id !== world),
-  ];
+  const orderedWorlds = useMemo(
+    () => [
+      ...WORLDS.filter((item) => item.id === world),
+      ...WORLDS.filter((item) => item.id !== world),
+    ],
+    [world],
+  );
   const allStages = useMemo(
     () => orderedWorlds.flatMap((item) => stagesForWorld(item.id)),
     [orderedWorlds, stagesForWorld],

@@ -239,7 +239,9 @@ export function CampScene() {
           <InventoryPage />
         </section>
       )}
-      {activePage === "nursery" && <PetNurseryPage backButtonRef={pageBackRef} onBack={closeCabin} />}
+      {activePage === "nursery" && (
+        <PetNurseryPage backButtonRef={pageBackRef} onBack={closeCabin} />
+      )}
       {openBuilding === "tent" && (
         <PaintersTentModal onClose={() => setOpenBuilding(null)} onThemeChange={triggerFade} />
       )}

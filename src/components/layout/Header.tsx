@@ -15,7 +15,15 @@ import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 
 export type View =
-  "hub" | "practice" | "adventure" | "lessons" | "shop" | "achievements" | "stats" | "settings" | "inventory";
+  | "hub"
+  | "practice"
+  | "adventure"
+  | "lessons"
+  | "shop"
+  | "achievements"
+  | "stats"
+  | "settings"
+  | "inventory";
 
 export function Header() {
   const navigate = useNavigate();

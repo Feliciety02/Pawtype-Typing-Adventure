@@ -71,8 +71,8 @@ export function InventoryPage() {
       <div className="pixel-card p-5">
         <div className="inventory-section-title">🥚 Egg Milestone</div>
         <div className="font-pixel text-[0.6rem] mb-1">
-          Egg #{progress.nextIndex} · {progress.progress}/{progress.total} lessons ·{" "}
-          {claimed.size} hatched
+          Egg #{progress.nextIndex} · {progress.progress}/{progress.total} lessons · {claimed.size}{" "}
+          hatched
         </div>
         <Progress
           className="my-2"
@@ -91,9 +91,7 @@ export function InventoryPage() {
       <div className="pixel-card p-5">
         <div className="inventory-section-title">🥚 Unhatched Eggs ({unhatched.length})</div>
         {unhatched.length === 0 ? (
-          <div className="inventory-empty">
-            No eggs waiting — finish more lessons to earn one!
-          </div>
+          <div className="inventory-empty">No eggs waiting — finish more lessons to earn one!</div>
         ) : (
           <div className="inventory-grid">
             {unhatched.map((idx) => {
@@ -102,9 +100,7 @@ export function InventoryPage() {
                 <div key={idx} className="inventory-card">
                   <span className="inventory-icon">🥚</span>
                   <div className="inventory-title">Egg #{idx}</div>
-                  <div className="inventory-sub">
-                    Contains {petLabel(m.petType)}
-                  </div>
+                  <div className="inventory-sub">Contains {petLabel(m.petType)}</div>
                 </div>
               );
             })}
@@ -123,9 +119,7 @@ export function InventoryPage() {
                   <div key={idx} className="inventory-card" style={{ opacity: 0.7 }}>
                     <span className="inventory-icon">❔</span>
                     <div className="inventory-title">Egg #{idx}</div>
-                    <div className="inventory-sub">
-                      Unlocks at {m.threshold} lessons
-                    </div>
+                    <div className="inventory-sub">Unlocks at {m.threshold} lessons</div>
                   </div>
                 );
               })}
@@ -161,9 +155,7 @@ export function InventoryPage() {
 
       {/* Claimed rewards / owned items */}
       <div className="pixel-card p-5">
-        <div className="inventory-section-title">
-          🎁 Claimed Rewards ({rewardItems.length})
-        </div>
+        <div className="inventory-section-title">🎁 Claimed Rewards ({rewardItems.length})</div>
         {rewardItems.length === 0 ? (
           <div className="inventory-empty">No rewards claimed yet.</div>
         ) : (

@@ -141,7 +141,10 @@ function buildFallbackInsight(session: SessionData): CoachInsight {
   };
 }
 
-async function buildPatternInsight(session: SessionData, sessions: TypingSession[]): Promise<CoachInsight | null> {
+async function buildPatternInsight(
+  session: SessionData,
+  sessions: TypingSession[],
+): Promise<CoachInsight | null> {
   const report = await analyzePatterns(sessions);
   if (!report || report.topWeakChars.length === 0) return null;
 
@@ -173,7 +176,10 @@ async function buildPatternInsight(session: SessionData, sessions: TypingSession
   return null;
 }
 
-export async function getCoachFeedback(session: SessionData, sessions: TypingSession[]): Promise<CoachInsight | null> {
+export async function getCoachFeedback(
+  session: SessionData,
+  sessions: TypingSession[],
+): Promise<CoachInsight | null> {
   try {
     const recent = loadRecentSessions(sessions, 15);
     const trends = computeTrends(recent);

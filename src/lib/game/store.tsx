@@ -291,6 +291,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       sessions: cloudSessions.length > 0 ? cloudSessions : state.sessions,
     };
     dispatch({ type: "LOAD_FROM_CLOUD", state: merged });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudLoad.data, user?.id]);
 
   const cloudSave = useMutation({
@@ -315,6 +316,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     return () => {
       if (syncTimer.current) clearTimeout(syncTimer.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, user]);
 
   return <GameCtx.Provider value={{ state, dispatch }}>{children}</GameCtx.Provider>;

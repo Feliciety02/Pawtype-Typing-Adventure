@@ -5,7 +5,9 @@ export type DifficultyLevel = "Easy" | "Normal" | "Hard" | "Boss";
 
 let cachedGoals: Record<DifficultyLevel, number> | null = null;
 
-export async function precomputeGoals(sessions: TypingSession[]): Promise<Record<DifficultyLevel, number>> {
+export async function precomputeGoals(
+  sessions: TypingSession[],
+): Promise<Record<DifficultyLevel, number>> {
   if (cachedGoals) return cachedGoals;
   cachedGoals = {
     Easy: recommendGoal(sessions, "Easy"),
@@ -139,7 +141,6 @@ export type ProgressSummary = {
 };
 
 export async function progressSummary(sessions: TypingSession[]): Promise<ProgressSummary> {
-
   const total = sessions.length;
   const current = sessions[0] ?? null;
   const recent = sessions.slice(0, 5);

@@ -120,11 +120,19 @@ export function LessonResultsModal({
             Retry
           </PixelButton>
           {hasNext ? (
-            <PixelButton variant="primary" onClick={() => onNextLesson?.()} icon={<ArrowRight size={16} />}>
+            <PixelButton
+              variant="primary"
+              onClick={() => onNextLesson?.()}
+              icon={<ArrowRight size={16} />}
+            >
               Next Lesson
             </PixelButton>
           ) : (
-            <PixelButton variant="primary" onClick={() => onClose?.()} icon={<ArrowLeft size={16} />}>
+            <PixelButton
+              variant="primary"
+              onClick={() => onClose?.()}
+              icon={<ArrowLeft size={16} />}
+            >
               Back to Lessons
             </PixelButton>
           )}

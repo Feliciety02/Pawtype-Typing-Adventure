@@ -186,6 +186,7 @@ export function useTypingEngine({
         keystrokes,
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finished]);
 
   // Notify on level up
@@ -307,6 +308,7 @@ export function useTypingEngine({
       .then(setCoachInsight)
       .catch(() => setCoachError(true))
       .finally(() => setCoachLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finished, state.sessions]);
 
   const handleWeakSpotDrill = useCallback(() => {
@@ -315,6 +317,7 @@ export function useTypingEngine({
         reset(undefined, result);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mistakeChars]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

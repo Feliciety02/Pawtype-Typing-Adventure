@@ -16,11 +16,21 @@
 }
 
 /* Reusable, code-first modal scales. Heights remain content-led and scroll safely. */
-.pixel-modal-shell.pixel-modal-shell--sm { width: min(100%, 420px); }
-.pixel-modal-shell.pixel-modal-shell--md { width: min(100%, 680px); }
-.pixel-modal-shell.pixel-modal-shell--lg { width: min(100%, 760px); }
-.pixel-modal-shell.pixel-modal-shell--xl { width: min(100%, 1040px); }
-.pixel-modal-shell.pixel-modal-shell--game { width: min(100%, 1280px); }
+.pixel-modal-shell.pixel-modal-shell--sm {
+  width: min(100%, 420px);
+}
+.pixel-modal-shell.pixel-modal-shell--md {
+  width: min(100%, 680px);
+}
+.pixel-modal-shell.pixel-modal-shell--lg {
+  width: min(100%, 760px);
+}
+.pixel-modal-shell.pixel-modal-shell--xl {
+  width: min(100%, 1040px);
+}
+.pixel-modal-shell.pixel-modal-shell--game {
+  width: min(100%, 1280px);
+}
 
 .pixel-frame {
   position: relative;
@@ -127,7 +137,9 @@
   border: 2px solid #6a3c2b;
   border-radius: 3px;
   background: #bd4939;
-  box-shadow: 3px 3px 0 0 #59251f, inset 0 0 0 2px #ec8770;
+  box-shadow:
+    3px 3px 0 0 #59251f,
+    inset 0 0 0 2px #ec8770;
   color: #fff8dc;
   cursor: pointer;
   transition:
@@ -272,7 +284,9 @@
   border: 2px solid #b78a6d;
   border-radius: 3px;
   background: #fff7e6;
-  box-shadow: 3px 3px 0 0 #9c6b51, inset 0 0 0 2px #f2d6a7;
+  box-shadow:
+    3px 3px 0 0 #9c6b51,
+    inset 0 0 0 2px #f2d6a7;
   text-align: center;
 }
 
@@ -412,7 +426,9 @@
   border: 2px solid #b78764;
   border-radius: 3px;
   background: #ffefd4;
-  box-shadow: 3px 3px 0 0 #8d6049, inset 0 0 0 2px #f3cfa0;
+  box-shadow:
+    3px 3px 0 0 #8d6049,
+    inset 0 0 0 2px #f3cfa0;
 }
 
 .pixel-coach-badge {
@@ -463,7 +479,9 @@
   border: 2px solid #744635;
   border-radius: 3px;
   background: #f3dfb8;
-  box-shadow: 4px 4px 0 0 #68442e, inset 0 0 0 2px #fff1d1;
+  box-shadow:
+    4px 4px 0 0 #68442e,
+    inset 0 0 0 2px #fff1d1;
   color: #533127;
   cursor: pointer;
   font-family: var(--font-pixel);
@@ -493,7 +511,9 @@
 .pixel-modal-btn.is-primary {
   border-color: #124872;
   background: #3d8550;
-  box-shadow: 4px 4px 0 0 #173d27, inset 0 0 0 2px #79b866;
+  box-shadow:
+    4px 4px 0 0 #173d27,
+    inset 0 0 0 2px #79b866;
   color: #fff9ef;
 }
 

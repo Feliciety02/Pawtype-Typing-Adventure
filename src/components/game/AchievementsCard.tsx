@@ -1,5 +1,9 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { computeAchievements, type Achievement, type BadgeCategory } from "../../lib/game/achievements";
+import {
+  computeAchievements,
+  type Achievement,
+  type BadgeCategory,
+} from "../../lib/game/achievements";
 import { useGame } from "../../lib/game/store";
 
 const BADGE_BASE = "/pages/awards/badges";
@@ -138,7 +142,10 @@ function WingBanner({
         <strong>
           {unlocked} / {total} collected
         </strong>
-        <span className="awards-banner-progress" aria-label={`Collection progress ${unlocked} of ${total}`}>
+        <span
+          className="awards-banner-progress"
+          aria-label={`Collection progress ${unlocked} of ${total}`}
+        >
           {Array.from({ length: total }, (_, index) => (
             <i key={index} data-filled={index < unlocked ? "true" : "false"} />
           ))}
@@ -170,14 +177,16 @@ function SparkleDots() {
         <span
           key={i}
           className="awards-sparkle-dot"
-          style={{
-            top: `${Math.random() * 90 + 5}%`,
-            left: `${Math.random() * 90 + 5}%`,
-            "--dot-x": `${dir.x}px`,
-            "--dot-y": `${dir.y}px`,
-            "--dot-duration": `${(Math.random() * 1.8 + 1.5).toFixed(2)}s`,
-            "--dot-delay": `${(Math.random() * 3).toFixed(2)}s`,
-          } as React.CSSProperties}
+          style={
+            {
+              top: `${Math.random() * 90 + 5}%`,
+              left: `${Math.random() * 90 + 5}%`,
+              "--dot-x": `${dir.x}px`,
+              "--dot-y": `${dir.y}px`,
+              "--dot-duration": `${(Math.random() * 1.8 + 1.5).toFixed(2)}s`,
+              "--dot-delay": `${(Math.random() * 3).toFixed(2)}s`,
+            } as React.CSSProperties
+          }
         />,
       );
     }
@@ -277,13 +286,7 @@ function MuseumShelf({ awards }: { awards: Achievement[] }) {
   );
 }
 
-function MuseumStageView({
-  stage,
-  state,
-}: {
-  stage: MuseumStage;
-  state: "enter" | "exit";
-}) {
+function MuseumStageView({ stage, state }: { stage: MuseumStage; state: "enter" | "exit" }) {
   return (
     <div className="awards-museum-stage" data-transition={state}>
       <WingBanner wing={stage.wing} unlocked={stage.unlocked} total={stage.awards.length} />
@@ -292,13 +295,7 @@ function MuseumStageView({
   );
 }
 
-function AwardTooltip({
-  achievement,
-  percent,
-}: {
-  achievement: Achievement;
-  percent: number;
-}) {
+function AwardTooltip({ achievement, percent }: { achievement: Achievement; percent: number }) {
   return (
     <span className="awards-tooltip">
       <strong>{achievement.title}</strong>
@@ -358,10 +355,7 @@ export function AchievementsCard() {
   );
 
   const unlocked = awards.filter((achievement) => achievement.unlocked).length;
-  const currentStage = useMemo(
-    () => ({ wing, awards, unlocked }),
-    [awards, unlocked, wing],
-  );
+  const currentStage = useMemo(() => ({ wing, awards, unlocked }), [awards, unlocked, wing]);
 
   useEffect(() => {
     if (!previousStage) {
@@ -396,7 +390,11 @@ export function AchievementsCard() {
             state="exit"
           />
         )}
-        <MuseumStageView key={`enter-${wing.id}-${transitionKey}`} stage={currentStage} state="enter" />
+        <MuseumStageView
+          key={`enter-${wing.id}-${transitionKey}`}
+          stage={currentStage}
+          state="enter"
+        />
       </div>
       <WingNavigation activeWing={activeWing} onChange={handleWingChange} />
     </div>
