@@ -24,7 +24,7 @@ export type VisibleImageBounds = {
   naturalHeight: number;
 };
 
-export const LOCK_ICON = "/icons/lock.webp";
+export const LOCK_ICON = "/shared/icons/lock.webp";
 export const NODE_IMAGE_BOUNDS_CACHE = new Map<string, VisibleImageBounds>();
 
 export const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
@@ -121,6 +121,12 @@ export const NODE_IMAGES: Partial<Record<WorldId, string[]>> = {
   ],
 };
 
+for (const paths of Object.values(NODE_IMAGES)) {
+  paths?.forEach((path, index) => {
+    paths[index] = path.replace("/worlds/", "/pages/adventure/nodes/");
+  });
+}
+
 const SCENE_BG_DIRS: Partial<Record<WorldId, string>> = {
   cafe: "cozy-cafe-background",
   forest: "mossy-forest-background",
@@ -146,7 +152,7 @@ export function sceneImage(world: WorldId, stageName: string): string | undefine
       .replace(/['']/g, "")
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
-  return `/themes/${dir}/${slug}.webp`;
+  return `/pages/adventure/scenes/${dir}/${slug}.webp`;
 }
 
 export const DIFFICULTY_TIME_LIMITS: Record<Difficulty, number> = {

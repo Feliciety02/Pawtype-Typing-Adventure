@@ -1,10 +1,10 @@
 export const CampBuildings = {
-  cabin: "/camp/buildings/adventurer-cabin.webp",
-  blacksmith: "/camp/buildings/blacksmith.webp",
-  campfire: "/camp/buildings/campfire.webp",
-  library: "/camp/buildings/library.webp",
-  mailbox: "/camp/buildings/mailbox.webp",
-  paintersTent: "/camp/buildings/painters-tent.webp",
-  petNursery: "/camp/buildings/pet-nursery.webp",
-  supplyWagon: "/camp/buildings/supply-wagon-tent.webp",
+  cabin: "/pages/camp/buildings/adventurer-cabin.webp",
+  blacksmith: "/pages/camp/buildings/blacksmith.webp",
+  campfire: "/pages/camp/buildings/campfire.webp",
+  library: "/pages/camp/buildings/library.webp",
+  mailbox: "/pages/camp/buildings/mailbox.webp",
+  paintersTent: "/pages/camp/buildings/painters-tent.webp",
+  petNursery: "/pages/camp/buildings/pet-nursery.webp",
+  supplyWagon: "/pages/camp/buildings/supply-wagon-tent.webp",
 } as const;

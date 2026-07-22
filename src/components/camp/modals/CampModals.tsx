@@ -46,6 +46,7 @@ export function CabinModal({ onClose }: { onClose: () => void }) {
       ariaLabel="Cabin — Player Profile"
       onClose={onClose}
       className={CAMP_MODAL_SHELL}
+      size="md"
       contentClassName={CAMP_MODAL_CONTENT}
     >
       <CampModalHeader icon="🏡" title="The Cabin" subtitle="Profile · Inventory · Collection" />
@@ -112,6 +113,7 @@ export function PaintersTentModal({
       ariaLabel="Painter's Tent — Themes"
       onClose={onClose}
       className={CAMP_MODAL_SHELL_WIDE}
+      size="xl"
       contentClassName={CAMP_MODAL_CONTENT}
     >
       <CampModalHeader
@@ -136,6 +138,7 @@ export function TrainingBoardModal({ onClose }: { onClose: () => void }) {
       ariaLabel="Training Board — Statistics"
       onClose={onClose}
       className={CAMP_MODAL_SHELL_WIDE}
+      size="xl"
       contentClassName={CAMP_MODAL_CONTENT}
     >
       <CampModalHeader
@@ -205,6 +208,7 @@ export function SupplyWagonModal({
       ariaLabel="Supply Wagon — Daily Reward"
       onClose={onClose}
       className={CAMP_MODAL_SHELL}
+      size="md"
       contentClassName={CAMP_MODAL_CONTENT}
     >
       <CampModalHeader
@@ -274,6 +278,7 @@ export function ComingSoonModal({
       ariaLabel={title}
       onClose={onClose}
       className={CAMP_MODAL_SHELL}
+      size="md"
       contentClassName={CAMP_MODAL_CONTENT}
     >
       <CampModalHeader icon={icon} title={title} subtitle="More features coming to camp soon!" />
@@ -291,6 +296,7 @@ export function InventoryModal({ onClose }: { onClose: () => void }) {
       ariaLabel="Bag — Inventory"
       onClose={onClose}
       className={CAMP_MODAL_SHELL_WIDE}
+      size="xl"
       contentClassName={CAMP_MODAL_CONTENT}
     >
       <CampModalHeader icon="🎒" title="Bag" subtitle="Your eggs, pets, rewards, and collection" />

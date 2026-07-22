@@ -71,6 +71,10 @@ const emojiToPath: Record<string, string> = {
   "🦋": "/icons/cherry-blossom.webp",
 };
 
+for (const emoji of Object.keys(emojiToPath)) {
+  emojiToPath[emoji] = emojiToPath[emoji].replace("/icons/", "/shared/icons/");
+}
+
 export function iconFor(emoji: string): string | undefined {
   return emojiToPath[emoji];
 }

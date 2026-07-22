@@ -7,4 +7,5 @@ export {
   CoachTipCard,
   PixelButton,
 } from "./ModalShell";
+export type { ModalSize } from "./ModalShell";
 export { PracticeResultsModal } from "./PracticeResultsModal";

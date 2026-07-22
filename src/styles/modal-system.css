@@ -6,45 +6,43 @@
   display: grid;
   place-items: center;
   padding: clamp(0.8rem, 2vw, 1.5rem);
-  background:
-    radial-gradient(
-      circle at 50% 25%,
-      color-mix(in oklab, var(--sky) 14%, transparent),
-      transparent 44%
-    ),
-    color-mix(in oklab, var(--background) 74%, transparent);
-  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, #241712 70%, transparent);
 }
 
 .pixel-modal-shell {
-  width: min(100%, 1120px);
+  width: min(100%, 680px);
   max-height: calc(100dvh - 1.6rem);
   animation: pixel-pop 260ms cubic-bezier(0.2, 1.4, 0.4, 1);
 }
+
+/* Reusable, code-first modal scales. Heights remain content-led and scroll safely. */
+.pixel-modal-shell.pixel-modal-shell--sm { width: min(100%, 420px); }
+.pixel-modal-shell.pixel-modal-shell--md { width: min(100%, 680px); }
+.pixel-modal-shell.pixel-modal-shell--lg { width: min(100%, 760px); }
+.pixel-modal-shell.pixel-modal-shell--xl { width: min(100%, 1040px); }
+.pixel-modal-shell.pixel-modal-shell--game { width: min(100%, 1280px); }
 
 .pixel-frame {
   position: relative;
   overflow: hidden;
   border: 3px solid #4f2c22;
-  border-radius: 14px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 12%),
-    linear-gradient(180deg, #875041 0%, #5a3026 100%);
+  border-radius: 4px;
+  background: #71412f;
   box-shadow:
-    0 18px 34px color-mix(in oklab, var(--sky) 22%, transparent),
     0 0 0 2px #2d160f,
-    8px 8px 0 0 rgba(44, 26, 19, 0.92);
+    6px 6px 0 0 #2d160f,
+    inset 0 0 0 3px #a96e4d;
 }
 
 .pixel-frame::before,
 .pixel-frame::after {
-  content: "paw";
+  content: "✦";
   position: absolute;
   font-family: var(--font-pixel);
   font-size: 0.58rem;
   letter-spacing: 0;
-  color: color-mix(in oklab, #d6b89d 55%, transparent);
-  opacity: 0.28;
+  color: #d8a563;
+  opacity: 0.72;
   pointer-events: none;
 }
 
@@ -62,17 +60,11 @@
   position: relative;
   margin: 12px;
   border: 2px solid #b98867;
-  border-radius: 10px;
-  background:
-    radial-gradient(
-      circle at 12% 16%,
-      color-mix(in oklab, white 26%, transparent),
-      transparent 36%
-    ),
-    linear-gradient(180deg, #fff9eb 0%, #f8eed9 48%, #f5ebd7 100%);
+  border-radius: 2px;
+  background: #f8ecd1;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.58),
-    inset 0 -18px 30px rgba(179, 127, 71, 0.07);
+    inset 0 0 0 2px #fff7e8,
+    inset 0 0 0 4px #d7ae7c;
 }
 
 .pixel-modal-corner {
@@ -87,7 +79,7 @@
 .pixel-modal-corner::after {
   content: "";
   position: absolute;
-  background: linear-gradient(180deg, #f8d66c 0%, #dba83b 100%);
+  background: #e2ad46;
   box-shadow:
     inset 0 0 0 1px #7d5320,
     0 0 0 1px #2d160f;
@@ -133,24 +125,33 @@
   width: 44px;
   height: 44px;
   border: 2px solid #6a3c2b;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #fff9ef 0%, #f2e1c3 100%);
-  box-shadow: 3px 3px 0 0 #714330;
-  color: #5a3026;
+  border-radius: 3px;
+  background: #bd4939;
+  box-shadow: 3px 3px 0 0 #59251f, inset 0 0 0 2px #ec8770;
+  color: #fff8dc;
   cursor: pointer;
   transition:
     transform 120ms ease,
-    background 120ms ease;
+    filter 120ms ease;
 }
 
 .pixel-modal-close:hover {
   transform: translateY(-1px);
-  background: linear-gradient(180deg, #fffdf6 0%, #f6ead0 100%);
+  filter: brightness(1.12);
 }
 
 .pixel-modal-content {
   position: relative;
-  padding: 2rem;
+  padding: 3.5rem 2rem 2rem;
+}
+
+.pixel-modal-content > h2,
+.pixel-modal-content .camp-modal-title,
+.pixel-modal-content .lesson-results-title,
+.pixel-modal-content .practice-results-title,
+.pixel-modal-content .quest-detail-title {
+  letter-spacing: 0.035em;
+  text-shadow: 2px 2px 0 #fef4d8;
 }
 
 .pixel-modal-shell-results,
@@ -269,9 +270,9 @@
   min-height: 132px;
   padding: 0.85rem 0.7rem;
   border: 2px solid #b78a6d;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #fffdf6 0%, #f8eedb 100%);
-  box-shadow: 4px 4px 0 0 rgba(98, 64, 44, 0.45);
+  border-radius: 3px;
+  background: #fff7e6;
+  box-shadow: 3px 3px 0 0 #9c6b51, inset 0 0 0 2px #f2d6a7;
   text-align: center;
 }
 
@@ -323,13 +324,11 @@
   min-height: 158px;
   padding: 1rem 1.4rem;
   border: 2px solid #c8d89c;
-  border-radius: 14px;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.45), transparent 40%),
-    linear-gradient(180deg, #f6f7df 0%, #eef3d4 100%);
+  border-radius: 3px;
+  background: #f0f1d4;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5),
-    4px 4px 0 0 rgba(120, 96, 64, 0.35);
+    inset 0 0 0 2px #fffde5,
+    3px 3px 0 0 #7c604b;
 }
 
 .pixel-reward-item {
@@ -373,9 +372,9 @@
   min-height: 58px;
   padding: 0.85rem 1rem;
   border: 2px solid #b78968;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #fffdf5 0%, #f6ead7 100%);
-  box-shadow: 3px 3px 0 0 rgba(111, 73, 51, 0.35);
+  border-radius: 3px;
+  background: #fff4df;
+  box-shadow: 3px 3px 0 0 #8d6049;
 }
 
 .practice-results-practiced-icon {
@@ -411,9 +410,9 @@
   min-height: 210px;
   padding: 1.3rem 1.2rem 1.1rem;
   border: 2px solid #b78764;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #fff9ef 0%, #f8ead1 100%);
-  box-shadow: 4px 4px 0 0 rgba(112, 74, 53, 0.4);
+  border-radius: 3px;
+  background: #ffefd4;
+  box-shadow: 3px 3px 0 0 #8d6049, inset 0 0 0 2px #f3cfa0;
 }
 
 .pixel-coach-badge {
@@ -426,9 +425,9 @@
   height: 36px;
   transform: translateX(-50%);
   border: 2px solid #9f6b35;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #ffd264 0%, #efab35 100%);
-  box-shadow: 2px 2px 0 0 rgba(97, 62, 30, 0.55);
+  border-radius: 3px;
+  background: #e7ae39;
+  box-shadow: 2px 2px 0 0 #613e1e;
 }
 
 .pixel-coach-badge-icon {
@@ -462,9 +461,9 @@
   width: 100%;
   padding: 0.9rem 1rem;
   border: 2px solid #744635;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #fffaf1 0%, #f1e0c5 100%);
-  box-shadow: 4px 4px 0 0 rgba(104, 68, 46, 0.52);
+  border-radius: 3px;
+  background: #f3dfb8;
+  box-shadow: 4px 4px 0 0 #68442e, inset 0 0 0 2px #fff1d1;
   color: #533127;
   cursor: pointer;
   font-family: var(--font-pixel);
@@ -493,8 +492,8 @@
 
 .pixel-modal-btn.is-primary {
   border-color: #124872;
-  background: linear-gradient(180deg, #3a92d2 0%, #2b6fb3 100%);
-  box-shadow: 4px 4px 0 0 #0d3150;
+  background: #3d8550;
+  box-shadow: 4px 4px 0 0 #173d27, inset 0 0 0 2px #79b866;
   color: #fff9ef;
 }
 

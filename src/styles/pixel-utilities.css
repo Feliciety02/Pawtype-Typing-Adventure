@@ -361,14 +361,14 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url("/awards/awards-background-morning.webp");
+  background-image: url("/pages/awards/scene/awards-background-morning.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .dark .awards-bg {
-  background-image: url("/awards/awards-background-night.webp");
+  background-image: url("/pages/awards/scene/awards-background-night.webp");
 }
 
 .awards-root > .awards-page {
@@ -1618,7 +1618,7 @@ button.pixel-selectable-card:focus-visible,
   height: 46%;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/awards/shelf.webp");
+  background-image: url("/pages/awards/scene/shelf.webp");
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100% auto;

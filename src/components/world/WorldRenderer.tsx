@@ -29,7 +29,7 @@ export function WorldRenderer({ environmentSrc, className = "", state }: WorldRe
       "/camp/scenes/campscene-background-early-afternoon.webp",
       "/camp/scenes/campscene-background-sunset.webp",
       "/camp/scenes/campscene-background-twilight.webp",
-    ];
+    ].map((src) => src.replace("/camp/", "/pages/camp/"));
     const images = assets.map((src) => {
       const image = new Image();
       image.decoding = "async";

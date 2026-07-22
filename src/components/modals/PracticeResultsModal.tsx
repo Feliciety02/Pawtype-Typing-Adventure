@@ -38,6 +38,7 @@ export function PracticeResultsModal({
       ariaLabel="Practice results"
       onClose={onClose}
       className="pixel-modal-shell-results"
+      size="game"
       frameClassName="pixel-modal-frame-results"
       contentClassName="pixel-modal-content-results"
     >

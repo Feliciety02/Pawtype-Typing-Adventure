@@ -1,13 +1,15 @@
 import type { WorldId } from "../../components/shared/WorldTheme";
 
+const SHOP_THEME_ASSET_ROOT = "/pages/shop/theme-previews";
+
 export const THEME_BACKGROUND: Partial<Record<WorldId, string>> = {
-  cafe: "/themes/cozy-cafe.webp",
-  forest: "/themes/mossy-forest.webp",
-  ocean: "/themes/tide-pool.webp",
-  sakura: "/themes/sakura-park.webp",
-  castle: "/themes/royal-castle.webp",
-  space: "/themes/stardust.webp",
-  autumn: "/themes/cozy-campsite.webp",
-  mushroom: "/themes/fairy-mushroom-village.webp",
-  sunflower: "/themes/sunflower-meadow.webp",
+  cafe: `${SHOP_THEME_ASSET_ROOT}/cozy-cafe.webp`,
+  forest: `${SHOP_THEME_ASSET_ROOT}/mossy-forest.webp`,
+  ocean: `${SHOP_THEME_ASSET_ROOT}/tide-pool.webp`,
+  sakura: `${SHOP_THEME_ASSET_ROOT}/sakura-park.webp`,
+  castle: `${SHOP_THEME_ASSET_ROOT}/royal-castle.webp`,
+  space: `${SHOP_THEME_ASSET_ROOT}/stardust.webp`,
+  autumn: `${SHOP_THEME_ASSET_ROOT}/cozy-campsite.webp`,
+  mushroom: `${SHOP_THEME_ASSET_ROOT}/fairy-mushroom-village.webp`,
+  sunflower: `${SHOP_THEME_ASSET_ROOT}/sunflower-meadow.webp`,
 };

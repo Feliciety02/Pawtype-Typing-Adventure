@@ -48,6 +48,7 @@ export function QuestResultsModal({
       onClose={onDismiss}
       overlayClassName="quest-results-overlay"
       className="quest-results-shell"
+      size="game"
       frameClassName="quest-results-frame"
       contentClassName="quest-results-content"
       closeLabel="Close quest results"

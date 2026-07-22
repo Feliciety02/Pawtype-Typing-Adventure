@@ -251,6 +251,7 @@ export function StageRunner({
         ariaLabel={`${stage.name} boss intro`}
         onClose={onClose}
         className="pixel-modal-shell-adventure"
+        size="game"
         frameClassName="pixel-modal-frame-adventure"
       >
         <div className="adventure-runner-card animate-pixel-pop">

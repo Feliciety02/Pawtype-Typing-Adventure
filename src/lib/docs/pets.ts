@@ -24,11 +24,11 @@ The Curiosity Cart uses a shared keyboard-accessible choice bar for its Pets/The
 
 ## Pet Nursery
 
-The nursery keeps its morning and evening artwork mounted as stacked background layers. It waits for the night artwork to load before crossfading, so changing display mode never leaves the room blank. Long non-interactive foreground rays overlay the room and its controls: warm sunbeams in light mode and softer cool moonbeams at night.
+The nursery keeps its morning and evening artwork mounted as stacked background layers. It waits for the night artwork to load before crossfading, so changing display mode never leaves the room blank.
 
-The Camp's Pet Nursery uses \`pet-nursery_morning.webp\` in light mode and a WebP-converted \`pet-nursery_evening.webp\` in dark mode, following the same global display-mode switch as the Awards page. Its label-free egg collection is spaced apart on the left, visually centered over each nest, and moved down with the nest layer. All nests and eggs are enlarged by 20%, with the tier-two nest and tier-five egg retaining their additional tier upgrade. Its decorative WebP ramp is anchored on the right, shifted 55% left and 30% upward, and enlarged by 70% from its prior size. The ramp and eggs retain their original asset colors, while eggs, nests, and the ramp use pronounced stepped pixel-art shadows. Clickable eggs enlarge on hover and open the hatch flow, with subtle staggered wobble, bottom-edge milestone progress, and a compact **Companions** tray for pet selection, XP, and feeding.
+The Camp's Pet Nursery uses \`pet-nursery_morning.webp\` in light mode and a WebP-converted \`pet-nursery_evening.webp\` in dark mode, following the same global display-mode switch as the Awards page. Its label-free egg collection is spaced apart on the left, visually centered over each nest, and moved down with the nest layer. All nests and eggs are enlarged by 20%, with the tier-two nest and tier-five egg retaining their additional tier upgrade. Each egg has its own circular, centered interaction target instead of making its transparent sprite canvas the button, so the pointer and keyboard focus region align with every visible egg. Its decorative WebP ramp is anchored on the right, shifted 55% left and 30% upward, and enlarged by 70% from its prior size. The ramp and eggs retain their original asset colors, while eggs, nests, and the ramp use pronounced stepped pixel-art shadows. Clickable eggs enlarge on hover and open the hatch flow, with subtle staggered wobble, bottom-edge milestone progress, and a compact **Companions** tray for pet selection, XP, and feeding.
 
-In dark mode, eggs, nests, and the ramp gain a subtle cool-white glow, with small white Awards-style sparkle orbs that vary in size, placement, timing, and floating motion.
+In both morning and dark modes, eggs, nests, and the ramp gain a subtle cool-white glow, with small white Awards-style sparkle orbs that vary in size, placement, timing, and floating motion.
 
 ---
 
@@ -36,7 +36,7 @@ In dark mode, eggs, nests, and the ramp gain a subtle cool-white glow, with smal
 
 The Pet Nursery aligns each egg to the same vertical slot offset as its nest, applies egg-only horizontal and vertical adjustments, and uses one generously sized shared grid gap between each nest-and-egg pair.
 
-\`NURSERY_EGG_OFFSETS\` in \`PetNurseryPage.tsx\` provides an individual \`x\` and \`y\` placement value for every egg without affecting nest placement.
+\`NURSERY_EGG_OFFSETS\` in \`PetNurseryPage.tsx\` provides an individual \`x\` and \`y\` placement value for every egg and its centered interaction target without affecting nest placement. The current offsets move the full egg controls 30% right from their previous placement.
 
 \`NURSERY_PAIR_X_OFFSETS\` provides an individual horizontal position for every nest-and-egg pair, letting their surrounding gaps be adjusted independently; the fifth pair currently uses an 18% right offset.
 

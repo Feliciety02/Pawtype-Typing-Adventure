@@ -22,6 +22,7 @@ export function PetRoom({ onClose }: { onClose: () => void }) {
       ariaLabel="Pet Nursery"
       onClose={onClose}
       className="pixel-modal-shell-camp pixel-modal-shell-pet-room"
+      size="md"
       contentClassName="camp-modal-content"
     >
       <div className="pet-room-modal">

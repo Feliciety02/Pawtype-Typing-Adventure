@@ -30,14 +30,14 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         ) : (
           <>
             <img
-              src="/icons/nav/sun.webp"
+              src="/shared/icons/nav/sun.webp"
               className={`hud-theme-icon ${!dark ? "is-active" : ""}`}
               alt=""
               aria-hidden="true"
               onError={() => setFailed(true)}
             />
             <img
-              src="/icons/nav/moon.webp"
+              src="/shared/icons/nav/moon.webp"
               className={`hud-theme-icon ${dark ? "is-active" : ""}`}
               alt=""
               aria-hidden="true"

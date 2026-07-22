@@ -2,8 +2,8 @@ import { memo, useEffect, useMemo, useState } from "react";
 import { computeAchievements, type Achievement, type BadgeCategory } from "../../lib/game/achievements";
 import { useGame } from "../../lib/game/store";
 
-const BADGE_BASE = "/badges";
-const AWARDS_BASE = "/awards";
+const BADGE_BASE = "/pages/awards/badges";
+const AWARDS_BASE = "/pages/awards/scene";
 const WING_TRANSITION_MS = 1120;
 
 type MuseumWingId = "speed" | "accuracy" | "challenge" | "pet" | "learning" | "combo";
@@ -231,7 +231,7 @@ const AwardSlot = memo(function AwardSlot({
         />
         {!achievement.unlocked && (
           <span className="awards-artifact-lock">
-            <img src="/icons/lock.webp" alt="Locked" className="awards-artifact-lock-img" />
+            <img src="/shared/icons/lock.webp" alt="Locked" className="awards-artifact-lock-img" />
           </span>
         )}
       </span>

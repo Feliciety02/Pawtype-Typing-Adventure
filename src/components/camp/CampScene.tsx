@@ -42,6 +42,13 @@ const CAMP_ENVIRONMENT_BY_SEGMENT: Record<DayNightState["current"], string> = {
   twilight: "/camp/scenes/campscene-background-twilight.webp",
 };
 
+for (const segment of Object.keys(CAMP_ENVIRONMENT_BY_SEGMENT) as DayNightState["current"][]) {
+  CAMP_ENVIRONMENT_BY_SEGMENT[segment] = CAMP_ENVIRONMENT_BY_SEGMENT[segment].replace(
+    "/camp/",
+    "/pages/camp/",
+  );
+}
+
 const FORCED_MORNING_STATE = getDayNightState(new Date(2024, 0, 1, 9, 0, 0, 0));
 const FORCED_NIGHT_STATE = getDayNightState(new Date(2024, 0, 1, 22, 0, 0, 0));
 

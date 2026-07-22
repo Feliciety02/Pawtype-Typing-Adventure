@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
-import { PixelIcon } from "../../lib/icons/PixelIcon";
-import { PixelButton, ModalShell, StatCard, RewardCard } from "../modals/ModalShell";
+import { PixelIcon } from "@/lib/icons/PixelIcon";
+import { PixelButton, ModalShell, StatCard, RewardCard } from "@/components/modals/ModalShell";
 
 type Props = {
   accuracy: number;
@@ -63,6 +63,7 @@ export function LessonResultsModal({
       ariaLabel="Lesson results"
       onClose={onClose}
       className="pixel-modal-shell-lesson"
+      size="xl"
       frameClassName="pixel-modal-frame-lesson"
     >
       <div className="lesson-results-layout">

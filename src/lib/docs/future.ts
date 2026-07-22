@@ -2,13 +2,27 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
-✅ **Shipped** - Pet Nursery now has long foreground sun rays by day and moonlight rays at night. Its preloaded morning/evening backdrop layers crossfade without a blank lapse when the display mode changes.
+âœ… **Shipped** - The Learn route now owns its page-specific UI in \`src/pages/lessons/\`, separating the lesson list, lesson-results modal, and star display from shared gameplay components.
+
+âœ… **Shipped** - Public artwork is now arranged by consuming page: Adventure nodes and scenes, Shop theme previews, Camp art, Awards scenes and badges, plus shared icons and brand assets. Runtime paths were updated with the move so the visual output is unchanged.
+
+âœ… **Shipped** - Unreferenced Pet Nursery PNG source duplicates were removed after verifying matching WebP runtime assets, reducing the project's raster payload by 6.16 MB without changing the rendered artwork.
+
+âœ… **Shipped** - Modal layouts now use one code-first pixel RPG size scale: Small (420px), Medium (680px), Large (760px), Extra Large (1040px), and a 1280px game-screen variant reserved for major result and story moments. Modal heights remain content-led with viewport-safe scrolling.
+
+✅ **Shipped** - The Pet Nursery foreground light-ray overlay was removed, leaving the illustrated room art unobscured in both display modes.
 
 ✅ **Shipped** - The Awards museum now has longer diagonal window-light rays aligned to the painted hall's window columns. Light mode uses brighter warm rays, while dark mode has a cooler, softer moonlight version. The non-interactive rays overlay the HUD and exhibits and stop moving for reduced-motion preferences.
 
 ✅ **Shipped** - Pet Nursery nests and its ramp now gain a subtle cool-white glow at night, with small randomly sized and drifting white sparkle orbs inspired by the Awards badge display.
 
+✅ **Shipped** - Pet Nursery's ambient sparkle orbs and soft asset glow remain visible with the morning backdrop as well as at night.
+
 ✅ **Shipped** - Pet Nursery eggs now share their nest's vertical slot alignment, use individual egg-only horizontal and vertical adjustments, and every nest-and-egg pair shares a generously sized grid gap.
+
+✅ **Shipped** - Every Pet Nursery egg now uses a separately centered circular interaction target, so the clickable and keyboard-focus region follows the visible egg rather than its transparent artwork canvas.
+
+✅ **Shipped** - The full Pet Nursery egg controls, including their sprites and centered interaction targets, now sit 30% farther right without moving their matching nests.
 
 ✅ **Shipped** - Pet Nursery now exposes an individual horizontal pair position for all five nest-and-egg pairs, allowing their gaps to be adjusted independently.
 

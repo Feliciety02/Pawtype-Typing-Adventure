@@ -85,7 +85,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: url("/awards/awards-background-morning.webp");
+  background-image: url("/pages/awards/scene/awards-background-morning.webp");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -128,7 +128,7 @@
 }
 
 .dark .app-shell--awards::before {
-  background-image: url("/awards/awards-background-night.webp");
+  background-image: url("/pages/awards/scene/awards-background-night.webp");
 }
 
 .dark .app-shell--awards::after {

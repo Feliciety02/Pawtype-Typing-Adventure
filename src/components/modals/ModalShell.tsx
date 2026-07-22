@@ -30,6 +30,8 @@ export function PixelFrame({ className, children, ...props }: HTMLAttributes<HTM
   );
 }
 
+export type ModalSize = "sm" | "md" | "lg" | "xl" | "game";
+
 type ModalShellProps = {
   ariaLabel: string;
   onClose: () => void;
@@ -38,6 +40,8 @@ type ModalShellProps = {
   className?: string;
   frameClassName?: string;
   contentClassName?: string;
+  /** Shared pixel-RPG layout scale; use game only for scene-like moments. */
+  size?: ModalSize;
   showCloseButton?: boolean;
   closeLabel?: string;
 };
@@ -50,6 +54,7 @@ export function ModalShell({
   className,
   frameClassName,
   contentClassName,
+  size = "md",
   showCloseButton = true,
   closeLabel = "Close modal",
 }: ModalShellProps) {
@@ -114,7 +119,7 @@ export function ModalShell({
     >
       <div
         ref={shellRef}
-        className={cn("pixel-modal-shell", className)}
+        className={cn("pixel-modal-shell", `pixel-modal-shell--${size}`, className)}
         onClick={(event) => event.stopPropagation()}
       >
         <PixelFrame className={cn("pixel-modal-frame", frameClassName)}>

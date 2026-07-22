@@ -15,7 +15,7 @@ Badges are:
 - **Unique personalized crest** matching the badge category
 - **Collectible RPG inventory items**, not flat UI icons
 
-The Awards tab presents the badge collection as a full-page fantasy museum that swaps between \`public/awards/awards-background-morning.webp\` and \`public/awards/awards-background-night.webp\` with the global day/night toggle. The scene mood follows that choice too: morning uses warmer sunlit haze and golden reflections, while night shifts to cooler moonlit glow and blue-tinted ambience across the page. It shows one wing at a time, uses the provided wing banner art from \`public/awards/banner/\`, and places exactly 10 awards on \`public/awards/shelf.webp\` as handcrafted museum exhibits: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf. Shelf placement is driven by a normalized upper/lower anchor grid, so each badge, platform, spotlight, tooltip, and hover lift originates from the same bottom-center shelf coordinate. The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for readability.
+The Awards tab presents the badge collection as a full-page fantasy museum that swaps between \`public/pages/awards/scene/awards-background-morning.webp\` and \`public/pages/awards/scene/awards-background-night.webp\` with the global day/night toggle. The scene mood follows that choice too: morning uses warmer sunlit haze and golden reflections, while night shifts to cooler moonlit glow and blue-tinted ambience across the page. It shows one wing at a time, uses the provided wing banner art from \`public/pages/awards/scene/banner/\`, and places exactly 10 awards on \`public/pages/awards/scene/shelf.webp\` as handcrafted museum exhibits: tiers 6-10 on the upper shelf and tiers 1-5 on the lower shelf. Shelf placement is driven by a normalized upper/lower anchor grid, so each badge, platform, spotlight, tooltip, and hover lift originates from the same bottom-center shelf coordinate. The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for readability.
 
 ---
 
@@ -196,7 +196,7 @@ Reward difficult accomplishments and special objectives. Crest theme: shields, s
 
 ## Asset Naming Convention
 
-All badge assets use lowercase snake_case and are served from \`public/badges/<category>/<assetName>\`.
+All badge assets use lowercase snake_case and are served from \`public/pages/awards/badges/<category>/<assetName>\`.
 
 \`\`\`
 badge_speed_tiny_feather.webp

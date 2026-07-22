@@ -5,7 +5,7 @@ import { PetRoom } from "../shop/PetRoom";
 import { PracticeResultsModal } from "../modals/PracticeResultsModal";
 import { Confetti } from "../shared/Confetti";
 import { DURATIONS } from "@/lib/game/typing-arena-data";
-import { LessonResultsModal } from "./LessonResultsModal";
+import { LessonResultsModal } from "@/pages/lessons/LessonResultsModal";
 import { useTypingEngine, type TypingEngineProps } from "@/hooks/useTypingEngine";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";

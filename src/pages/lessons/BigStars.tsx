@@ -1,4 +1,4 @@
-import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { PixelIcon } from "@/lib/icons/PixelIcon";
 
 export function BigStars({ count, size = 22 }: { count: 0 | 1 | 2 | 3; size?: number }) {
   return (

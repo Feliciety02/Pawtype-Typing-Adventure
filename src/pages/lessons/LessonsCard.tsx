@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, ChevronRight, Lock, Play, Crown, Swords, Gift } from "lucide-react";
-import { SectionHeader } from "../layout/SectionHeader";
-import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { SectionHeader } from "@/components/layout/SectionHeader";
+import { PixelIcon } from "@/lib/icons/PixelIcon";
 import { BigStars } from "./BigStars";
-import { RewardBadge } from "./RewardBadge";
+import { RewardBadge } from "@/components/game/RewardBadge";
 import {
   UNITS,
   loadCompletedLessons,
@@ -19,10 +19,10 @@ import {
   type Lesson,
   type Unit,
   type LessonDifficulty,
-} from "../../lib/game/curriculum";
-import { TypingArena } from "./TypingArena";
-import { ModalShell, PixelButton } from "../modals/ModalShell";
-import { useGame } from "../../lib/game/store";
+} from "@/lib/game/curriculum";
+import { TypingArena } from "@/components/game/TypingArena";
+import { ModalShell, PixelButton } from "@/components/modals/ModalShell";
+import { useGame } from "@/lib/game/store";
 import {
   getUnclaimedMilestones,
   queuePendingEgg,
@@ -31,16 +31,16 @@ import {
   progressTowardNextEgg,
   LESSONS_PER_EGG,
   type EggMilestone,
-} from "../../lib/game/eggs";
+} from "@/lib/game/eggs";
 import {
   loadChestLessons,
   toggleChestLesson,
   loadClaimedChests,
   markChestClaimed,
-} from "../../lib/game/chests";
-import { EggHatchModal } from "../shop/EggHatchModal";
-import { generateLessonText } from "../../lib/game/textGenerator";
-import type { Zone } from "../../lib/game/engine/generator";
+} from "@/lib/game/chests";
+import { EggHatchModal } from "@/components/shop/EggHatchModal";
+import { generateLessonText } from "@/lib/game/textGenerator";
+import type { Zone } from "@/lib/game/engine/generator";
 import { Progress } from "@/components/ui/progress";
 
 const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string }> = {
@@ -534,6 +534,7 @@ export function LessonsCard() {
           ariaLabel="Quest details"
           onClose={() => setDetail(null)}
           className="pixel-modal-shell-lesson-detail"
+          size="lg"
         >
           <div className="quest-detail-modal">
             <div className="quest-detail-header">
@@ -644,6 +645,7 @@ export function LessonsCard() {
         <ModalShell
           ariaLabel="Configure treasure chests"
           onClose={() => setShowChestConfig(false)}
+          size="xl"
         >
           <div className="p-4">
             <h3 className="text-xl mb-2">🎁 Configure Treasure Chests</h3>
@@ -664,7 +666,7 @@ export function LessonsCard() {
                   });
                   toggleChestLesson("__reset__"); // no-op trigger event
                   // apply set
-                  import("../../lib/game/chests").then((m) => m.setChestLessons(ids));
+                  import("@/lib/game/chests").then((m) => m.setChestLessons(ids));
                 }}
               >
                 Preset: Every 5th
@@ -673,7 +675,7 @@ export function LessonsCard() {
                 type="button"
                 className="chest-config-item"
                 onClick={() =>
-                  import("../../lib/game/chests").then((m) => m.setChestLessons([]))
+                    import("@/lib/game/chests").then((m) => m.setChestLessons([]))
                 }
               >
                 Clear All
