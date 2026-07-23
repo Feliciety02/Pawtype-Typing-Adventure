@@ -2,13 +2,31 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - Camp interior toolbars now share the main HUD’s responsive width and outer margin. The illustrated Back controls in Cabin, Pet Nursery, and Mailbox align with the header edge at every viewport size.
+
+✅ **Shipped** - The shared HUD uses a supplied pixel-art frame from the top edge of every header. Header and frame move together with a consistent 5px top offset, stay pinned while a page scrolls, retain a responsive mobile fit, and never block header navigation or controls.
+
+✅ **Shipped** - Camp interior pages now use the supplied pixel-art Back artwork through one shared, accessible button component. Cabin, Pet Nursery, and Mailbox preserve their Back to Camp action, keyboard focus treatment, Escape return flow, and focus restoration.
+
+✅ **Shipped** - The Camp Mailbox now opens as its own morning/evening interior. Its stacked artwork crossfades safely after the evening scene loads, follows the global Day/Night display mode, and supports Back to Camp, Escape, and focus restoration like the Pet Nursery.
+
+✅ **Shipped** - All project PNG assets now have pixel-identical, lossless WebP replacements. Runtime image paths use WebP for the login screen, authentication artwork, Awards wing buttons, and leaf sprites; the original PNGs were removed after verification.
+
+✅ **Shipped** - Login title-screen leaves now include a stronger mix of small distant leaves and larger foreground leaves, creating clearer depth while they fall.
+
 ✅ **Shipped** - The HUD notification dropdown uses a compact standard popover with clear title, message, metadata, and action hierarchy for both empty and populated notification states.
 
 ✅ **Shipped** - Pet Nursery now presents its egg row as a compact, mid-ground Nest Stage: eggs are enlarged a further 20%, individually seated in their nest cradles, and spaced 20% farther apart. Nests remain 30% larger than the compact baseline, the lesson ramp is enlarged 50%, and the whole set remains pushed back into the hall for stronger perspective. The nursery overview reads as small carved wood plaques.
 
 ✅ **Shipped** - All public raster assets were audited for file format, dimensions, size, and duplicates. The oversized Awards and Pet Nursery scene assets were recompressed with conservative WebP settings, while already-efficient and transparency-sensitive artwork was preserved.
 
-✅ **Shipped** - The Awards wing selector now aligns with the HUD's outer left edge on desktop. Its larger icon-led buttons have high-contrast labels, crisp square pixel bevels, active glow, pressed feedback, and keyboard focus treatment.
+✅ **Shipped** - The Awards wing selector now uses extracted transparent PNG button assets for every cream inactive and colored active category state. The source art preserves matching icon, label, marker, and pixel-bevel layouts; hover previews a pale version of the corresponding active asset.
+
+✅ **Shipped** - Awards badge halos now use a layered, masked radial fade so the glow feathers naturally into the shelf instead of ending as a solid circular disc.
+
+✅ **Shipped** - Standard Awards shelf badges are now 30% larger across every museum wing, while the dedicated largest relic keeps its existing showcase scale.
+
+✅ **Shipped** - The game now deters casual artwork downloads by blocking the browser context menu, image dragging, and common save/source shortcuts. Static browser assets cannot be made fully private after download; sensitive future artwork should be served through authenticated, expiring URLs.
 
 ✅ **Shipped** - The Awards museum uses a compact banner with enlarged badge display for clearer collection browsing. Its oval pedestals now use feathered, glowing edges instead of solid discs while preserving the surrounding fantasy hall in view.
 
@@ -283,7 +301,10 @@ Planned features and high-potential additions to expand the game.
 ✅ **Shipped** - Supabase auth/cloud save now treat deployment env setup as optional at runtime: missing or placeholder \`SUPABASE_*\` / \`VITE_SUPABASE_*\` values no longer crash the app shell, and the auth callback shows a direct setup error instead.
 
 ### 🕹 Pixel Login Gate
+✅ **Shipped** - The account-access modal now uses the supplied parchment save-file frame and illustrated log-in, sign-up, create-account, social, demo, and close controls while preserving the live email/password fields and authentication flows.
 ✅ **Shipped** - Dedicated full-screen pixel-art login page before the main game, with Google and Facebook OAuth entry points plus a local demo account mode for instant access without cloud sync. The title-screen backdrop uses the cozy sky, fluffy pixel clouds, sun, stepped mountain and hill layers, twinkles, and drifting leaves.
+
+✅ **Shipped** - The save-file gate now has a clearer account panel with an explicit return-to-title control, stronger visual framing, focused keyboard states, responsive spacing, and concise save-sync assurances for a more polished first entry point.
 
 ### 🗺 Adventure Node Pixel UI Polish
 ✅ **Shipped** - Adventure node cards were polished for clearer stage states and rewards, and tab button labels stay contained inside their pixel button plates on compact layouts.

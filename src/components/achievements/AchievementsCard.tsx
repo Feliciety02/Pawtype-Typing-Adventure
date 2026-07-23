@@ -1,5 +1,4 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { BookOpen, Crosshair, Flame, PawPrint, Shield, Zap } from "lucide-react";
 import {
   computeAchievements,
   type Achievement,
@@ -20,7 +19,6 @@ type MuseumWing = {
   shortLabel: string;
   description: string;
   banner: string;
-  icon: typeof Zap;
 };
 
 type MuseumStage = {
@@ -37,7 +35,6 @@ const WINGS: MuseumWing[] = [
     shortLabel: "Speed",
     description: "Relics earned by pushing your typing pace beyond ordinary limits.",
     banner: "speed-wing-banner.webp",
-    icon: Zap,
   },
   {
     id: "accuracy",
@@ -46,7 +43,6 @@ const WINGS: MuseumWing[] = [
     shortLabel: "Accuracy",
     description: "Treasures reserved for precise, careful, mistake-resistant typing.",
     banner: "accuracy-wing-banner.webp",
-    icon: Crosshair,
   },
   {
     id: "challenge",
@@ -55,7 +51,6 @@ const WINGS: MuseumWing[] = [
     shortLabel: "Challenge",
     description: "Heroic honors collected from major milestones and difficult trials.",
     banner: "challenge-wing-banner.webp",
-    icon: Shield,
   },
   {
     id: "pet",
@@ -64,7 +59,6 @@ const WINGS: MuseumWing[] = [
     shortLabel: "Companion",
     description: "Keepsakes celebrating the fuzzy friends who travel beside you.",
     banner: "companion-wing-banner.webp",
-    icon: PawPrint,
   },
   {
     id: "learning",
@@ -73,7 +67,6 @@ const WINGS: MuseumWing[] = [
     shortLabel: "Learning",
     description: "Ancient knowledge pieces gained through lessons and steady study.",
     banner: "learning-wing-banner.webp",
-    icon: BookOpen,
   },
   {
     id: "combo",
@@ -82,9 +75,35 @@ const WINGS: MuseumWing[] = [
     shortLabel: "Combo",
     description: "Flame-forged artifacts awarded for long, unbroken typing streaks.",
     banner: "combo-wing-banner.webp",
-    icon: Flame,
   },
 ];
+
+const WING_BUTTON_ART: Record<MuseumWingId, { inactive: string; active: string }> = {
+  speed: {
+    inactive: "/awards/wing-buttons/speed-inactive.webp",
+    active: "/awards/wing-buttons/speed-active.webp",
+  },
+  accuracy: {
+    inactive: "/awards/wing-buttons/accuracy-inactive.webp",
+    active: "/awards/wing-buttons/accuracy-active.webp",
+  },
+  challenge: {
+    inactive: "/awards/wing-buttons/challenge-inactive.webp",
+    active: "/awards/wing-buttons/challenge-active.webp",
+  },
+  pet: {
+    inactive: "/awards/wing-buttons/companion-inactive.webp",
+    active: "/awards/wing-buttons/companion-active.webp",
+  },
+  learning: {
+    inactive: "/awards/wing-buttons/learning-inactive.webp",
+    active: "/awards/wing-buttons/learning-active.webp",
+  },
+  combo: {
+    inactive: "/awards/wing-buttons/combo-inactive.webp",
+    active: "/awards/wing-buttons/combo-active.webp",
+  },
+};
 
 const SHELF_COLUMNS = [20, 34, 49.5, 65, 79] as const;
 
@@ -330,22 +349,30 @@ function WingNavigation({
     <nav className="awards-wing-nav" aria-label="Award wings">
       <div className="awards-wing-emblems">
         {WINGS.map((wing) => {
-          const Icon = wing.icon;
           const isActive = wing.id === activeWing;
+          const art = WING_BUTTON_ART[wing.id];
           return (
             <button
               key={wing.id}
               type="button"
               className="awards-wing-emblem"
               data-active={isActive ? "true" : "false"}
+              data-wing={wing.id}
               aria-pressed={isActive}
               onClick={() => onChange(wing.id)}
             >
-              <span className="awards-wing-emblem-icon" aria-hidden="true">
-                <Icon size={18} strokeWidth={2.5} />
-              </span>
-              <span className="awards-wing-emblem-label">{wing.shortLabel}</span>
-              <span className="awards-wing-emblem-marker" aria-hidden="true" />
+              <img
+                className="awards-wing-emblem-art awards-wing-emblem-art--inactive"
+                src={art.inactive}
+                alt=""
+                draggable={false}
+              />
+              <img
+                className="awards-wing-emblem-art awards-wing-emblem-art--active"
+                src={art.active}
+                alt=""
+                draggable={false}
+              />
             </button>
           );
         })}

@@ -1,6 +1,6 @@
 import type { CSSProperties, RefObject } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, PawPrint } from "lucide-react";
+import { PawPrint } from "lucide-react";
 
 import { loadCompletedLessons } from "@/lib/game/curriculum";
 import {
@@ -18,6 +18,7 @@ import { PixelPet } from "@/components/coach/PixelPet";
 import { Progress } from "@/components/ui/progress";
 import { EggHatchModal } from "@/components/shop/EggHatchModal";
 import { useThemeMode } from "@/hooks/use-theme-mode";
+import { CampBackButton } from "./CampBackButton";
 
 type PetNurseryPageProps = {
   backButtonRef: RefObject<HTMLButtonElement | null>;
@@ -178,15 +179,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
       aria-label="Pet Nursery"
     >
       <div className="camp-interior-toolbar camp-nursery-toolbar">
-        <Button
-          ref={backButtonRef}
-          variant="secondary"
-          className="camp-interior-back"
-          onClick={onBack}
-        >
-          <ArrowLeft aria-hidden="true" />
-          <span>Back to Camp</span>
-        </Button>
+        <CampBackButton ref={backButtonRef} onClick={onBack} />
         <div className="camp-nursery-toolbar-copy">
           <h1>Pet Nursery</h1>
         </div>

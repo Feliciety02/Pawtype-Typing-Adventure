@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft } from "lucide-react";
 import {
   ComingSoonModal,
   PaintersTentModal,
@@ -7,7 +6,9 @@ import {
   TrainingBoardModal,
 } from "./modals/CampModals";
 import { InventoryPage } from "../inventory/InventoryPage";
+import { MailboxPage } from "./MailboxPage";
 import { PetNurseryPage } from "./PetNurseryPage";
+import { CampBackButton } from "./CampBackButton";
 import { CampBuildings } from "../../lib/camp/assets/buildings";
 import { useGame } from "../../lib/game/store";
 import { getDailyReward } from "../../lib/game/types";
@@ -16,10 +17,9 @@ import { WorldRenderer } from "../world/WorldRenderer";
 import { getDayNightState, type DayNightState } from "../world/DayNightController";
 import { useDayNightState } from "../world/useDayNightState";
 import { CampBuilding } from "./CampBuilding";
-import { Button } from "@/components/ui/button";
 
-type CampPage = "cabin" | "nursery";
-type OpenBuilding = "blacksmith" | "mailbox" | "tent" | "training" | "wagon";
+type CampPage = "cabin" | "mailbox" | "nursery";
+type OpenBuilding = "blacksmith" | "tent" | "training" | "wagon";
 type CampBuildingConfig = {
   id: string;
   asset: string;
@@ -92,6 +92,7 @@ export function CampScene() {
     setActivePage(page);
   };
   const openCabin = () => openPage("cabin");
+  const openMailbox = () => openPage("mailbox");
   const openNursery = () => openPage("nursery");
   const closeCabin = () => {
     setActivePage(null);
@@ -127,8 +128,8 @@ export function CampScene() {
       id: "cabin",
       asset: CampBuildings.cabin,
       label: "The Cabin",
-      x: 26,
-      y: 40,
+      x: 25,
+      y: 35,
       width: 200,
       onClick: openCabin,
     },
@@ -164,10 +165,10 @@ export function CampScene() {
       id: "mailbox",
       asset: CampBuildings.mailbox,
       label: "Mailbox",
-      x: 37,
-      y: 47,
+      x: 35,
+      y: 45,
       width: 88,
-      onClick: () => open("mailbox"),
+      onClick: openMailbox,
     },
     {
       id: "blacksmith",
@@ -216,15 +217,10 @@ export function CampScene() {
       {activePage === "cabin" && (
         <section className="camp-interior-page" aria-label="Cabin bag inventory">
           <div className="camp-interior-toolbar">
-            <Button
+            <CampBackButton
               ref={pageBackRef}
-              variant="secondary"
-              className="camp-interior-back"
               onClick={closeCabin}
-            >
-              <ArrowLeft aria-hidden="true" />
-              Back to Camp
-            </Button>
+            />
             <div>
               <h1>Cabin Bag</h1>
               <p>Your eggs, pets, rewards, and camp collection live inside the cabin.</p>
@@ -235,6 +231,9 @@ export function CampScene() {
       )}
       {activePage === "nursery" && (
         <PetNurseryPage backButtonRef={pageBackRef} onBack={closeCabin} />
+      )}
+      {activePage === "mailbox" && (
+        <MailboxPage backButtonRef={pageBackRef} onBack={closeCabin} />
       )}
       {openBuilding === "tent" && (
         <PaintersTentModal onClose={() => setOpenBuilding(null)} onThemeChange={triggerFade} />
@@ -248,11 +247,6 @@ export function CampScene() {
           rewardLabel={reward.label}
           rewardCoins={reward.coins}
         />
-      )}
-      {openBuilding === "mailbox" && (
-        <ComingSoonModal icon="📮" title="Mailbox" onClose={() => setOpenBuilding(null)}>
-          Letters from friends and event announcements will arrive here.
-        </ComingSoonModal>
       )}
       {openBuilding === "blacksmith" && (
         <ComingSoonModal icon="🔨" title="Blacksmith" onClose={() => setOpenBuilding(null)}>

@@ -4,25 +4,24 @@ import { LoaderCircle, Play } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { buildDemoGameState } from "@/lib/game/demo";
-import { PixelIcon } from "@/lib/icons/PixelIcon";
 import { useGame } from "@/lib/game/store";
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, passwordHint } from "@/lib/auth/shared";
-import loginBackground from "./loginpage_background.png";
+import loginBackground from "./loginpage_background.webp";
 
 const fallingLeaves = [
-  [8, 13, 0, 10.8, 40, 390, 2, 0.82],
+  [8, 13, 0, 10.8, 40, 390, 2, 0.56],
   [16, 9, 0.8, 12.4, -34, 430, 0, 1.05],
-  [25, 17, 1.6, 11.6, 50, 370, 1, 0.9],
+  [25, 17, 1.6, 11.6, 50, 370, 1, 0.68],
   [32, 8, 2.4, 13.1, -42, 450, 3, 1.15],
-  [13, 25, 3.2, 10.2, 36, 405, 0, 0.96],
+  [13, 25, 3.2, 10.2, 36, 405, 0, 0.74],
   [39, 7, 4, 12.8, -28, 420, 2, 0.93],
-  [46, 11, 4.8, 11.1, 34, 395, 1, 0.8],
+  [46, 11, 4.8, 11.1, 34, 395, 1, 0.52],
   [53, 6, 5.6, 13.6, -38, 440, 3, 1.06],
-  [20, 6, 6.4, 10.6, 26, 380, 1, 0.88],
+  [20, 6, 6.4, 10.6, 26, 380, 1, 0.64],
   [35, 20, 7.2, 12.1, -47, 425, 2, 1],
-  [5, 18, 8, 11.4, 31, 400, 3, 0.84],
+  [5, 18, 8, 11.4, 31, 400, 3, 0.58],
   [50, 15, 8.8, 13.3, -30, 445, 0, 0.98],
-  [29, 5, 9.6, 10.9, 45, 390, 2, 0.9],
+  [29, 5, 9.6, 10.9, 45, 390, 2, 0.7],
   [42, 18, 10.4, 12.6, -35, 430, 1, 1.08],
 ] as const;
 
@@ -36,7 +35,7 @@ function FallingLeaves({ layer }: { layer: "behind" | "front" }) {
           <img
             key={index}
             className="pixel-login-leaf"
-            src={`/shared/icons/login-leaves/leaf-${String((index % 6) + 1).padStart(2, "0")}.png`}
+            src={`/shared/icons/login-leaves/leaf-${String((index % 6) + 1).padStart(2, "0")}.webp`}
             alt=""
             style={{
               "--leaf-left": `${left}%`,
@@ -65,6 +64,9 @@ export function PixelLoginScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  const artwork = mode === "login" ? "/shared/auth/login" : "/shared/auth/signin";
+  const submitArtwork = mode === "login" ? "/shared/auth/login-submit.webp" : "/shared/auth/signin-create-account.webp";
 
   const isBusy = isLoggingIn || isSigningUp || isSocialLoading;
 
@@ -167,38 +169,47 @@ export function PixelLoginScreen() {
 
         {/* Right — Auth Panel */}
         <div
-          className="pixel-login-panel"
+          className={`save-auth-modal is-${mode}-mode`}
           role="dialog"
           aria-modal="true"
           aria-label="PawType account access"
           onClick={(event) => event.stopPropagation()}
         >
-          <div className="pixel-login-panel-head">
-            <p className="pixel-login-kicker">Main Gate</p>
-            <h2>{mode === "login" ? "Load Save File" : "Create Save File"}</h2>
-            <p className="pixel-login-panel-desc">
-              Continue your adventure with your saved progress.
-            </p>
-          </div>
-
-          <div className="pixel-auth-tabs">
+          <img
+            className="save-auth-header"
+            src={`${artwork}-header.webp`}
+            alt=""
+            aria-hidden="true"
+          />
+          <button
+            className="save-auth-close"
+            type="button"
+            aria-label="Return to title screen"
+            disabled={isBusy}
+            onClick={() => setIsAuthOpen(false)}
+          >
+            <img src="/shared/auth/auth-close.webp" alt="" aria-hidden="true" />
+          </button>
+          <div className="save-auth-tabs">
             <button
               className={mode === "login" ? "is-active" : ""}
               onClick={() => setMode("login")}
               type="button"
+              aria-label="Log In"
             >
-              Log In
+              <img src={`${artwork}-login-tab.webp`} alt="" aria-hidden="true" />
             </button>
             <button
               className={mode === "signup" ? "is-active" : ""}
               onClick={() => setMode("signup")}
               type="button"
+              aria-label="Sign Up"
             >
-              Sign Up
+              <img src={`${artwork}-signup-tab.webp`} alt="" aria-hidden="true" />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="pixel-auth-form">
+          <form id="pixel-login-auth-form" onSubmit={handleSubmit} className="save-auth-form">
             <label>
               <span>Email</span>
               <input
@@ -252,63 +263,64 @@ export function PixelLoginScreen() {
             ) : null}
 
             {error ? (
-              <p className="pixel-auth-error" role="alert">
+              <p className="save-auth-error" role="alert">
                 {error}
               </p>
             ) : null}
-
-            <button className="pixel-login-enter-btn" disabled={isBusy} type="submit">
-              {isBusy ? (
-                <span className="inline-flex items-center gap-2">
-                  <LoaderCircle className="size-3 animate-spin" />
-                  Opening Gate...
-                </span>
-              ) : mode === "login" ? (
-                "Enter Game"
-              ) : (
-                "Create Account"
-              )}
-            </button>
           </form>
 
-          <div className="pixel-auth-divider">
-            <span>or continue with</span>
-          </div>
+          <button
+            className="save-auth-submit"
+            disabled={isBusy}
+            form="pixel-login-auth-form"
+            type="submit"
+            aria-label={mode === "login" ? "Enter Game" : "Create Account"}
+          >
+            <img src={submitArtwork} alt="" aria-hidden="true" />
+            {isBusy ? (
+              <span className="save-auth-submit-status">
+                <LoaderCircle className="size-3 animate-spin" />
+              </span>
+            ) : null}
+          </button>
 
-          <div className="pixel-auth-provider-grid">
+          <img
+            className="save-auth-divider"
+            src="/shared/auth/or_continue_with-assets.webp"
+            alt=""
+            aria-hidden="true"
+          />
+
+          <div className="save-auth-providers">
             <button
-              className="pixel-login-social-btn"
+              className="save-auth-provider"
               disabled={isBusy}
               onClick={() => handleProvider("google")}
               type="button"
+              aria-label="Continue with Google"
             >
-              <span className="pixel-social-mark is-google">G</span>
-              Google
+              <img src="/shared/auth/auth-google.webp" alt="" aria-hidden="true" />
             </button>
             <button
-              className="pixel-login-social-btn"
+              className="save-auth-provider"
               disabled={isBusy}
               onClick={() => handleProvider("facebook")}
               type="button"
+              aria-label="Continue with Facebook"
             >
-              <span className="pixel-social-mark is-facebook">f</span>
-              Facebook
+              <img src="/shared/auth/auth-facebook.webp" alt="" aria-hidden="true" />
             </button>
           </div>
 
           <button
-            className="pixel-login-demo-btn"
+            className="save-auth-demo"
             disabled={isBusy}
             onClick={handleDemo}
             type="button"
+            aria-label="Play Demo"
           >
-            <PixelIcon emoji="⭐" className="pixel-login-demo-icon" />
-            Play Demo
+            <img src="/shared/auth/demo-btn.webp" alt="" aria-hidden="true" />
           </button>
-
-          <p className="pixel-login-footer-note">
-            Your pets and progress will be waiting when you return.
-          </p>
         </div>
       </div>
     </section>

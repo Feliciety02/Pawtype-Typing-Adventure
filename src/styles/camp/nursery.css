@@ -1,10 +1,11 @@
 /* --- Camp interior pages ----------------------------------- */
 .camp-interior-page {
+  --camp-header-gutter: clamp(0.625rem, 2vw, 2.5rem);
   position: absolute;
   inset: 0;
   z-index: 45;
   overflow-y: auto;
-  padding: clamp(7.25rem, 10vw, 9rem) clamp(1rem, 4vw, 4rem) clamp(2rem, 4vw, 4rem);
+  padding: clamp(7.25rem, 10vw, 9rem) var(--camp-header-gutter) clamp(2rem, 4vw, 4rem);
   background: transparent;
 }
 
@@ -12,7 +13,7 @@
   display: flex;
   align-items: center;
   gap: clamp(0.85rem, 2vw, 1.25rem);
-  width: min(100%, 1180px);
+  width: min(100%, 1400px);
   margin: 0 auto clamp(1rem, 2vw, 1.5rem);
 }
 
@@ -30,9 +31,43 @@
   color: var(--color-muted-foreground);
 }
 
-.camp-interior-back {
+.camp-back-button {
   flex: 0 0 auto;
-  min-height: 44px;
+  width: clamp(142px, 14vw, 224px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.camp-back-button img {
+  display: block;
+  width: 60%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.camp-back-button:hover {
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+}
+
+.camp-back-button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.camp-back-button:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+@media (max-width: 560px) {
+  .camp-back-button {
+    width: 132px;
+  }
 }
 
 .camp-interior-page .inventory-root {
@@ -409,7 +444,7 @@
   grid-template-rows: auto minmax(0, 1fr);
   box-sizing: border-box;
   overflow: hidden;
-  padding: clamp(6.5rem, 9vw, 8.25rem) clamp(0.75rem, 3vw, 3rem) clamp(0.65rem, 1.5vw, 1rem);
+  padding: clamp(6.5rem, 9vw, 8.25rem) var(--camp-header-gutter) clamp(0.65rem, 1.5vw, 1rem);
   isolation: isolate;
   background: #5a3a23;
   image-rendering: pixelated;

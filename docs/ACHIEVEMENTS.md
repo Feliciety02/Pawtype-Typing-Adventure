@@ -371,7 +371,8 @@ Separate from the rarity ladder. These classify _what the badge represents_, not
 - The museum uses only its painted background lighting; no CSS light-ray overlay is applied over the HUD or exhibits.
 - Awards shelf placement is driven by a normalized two-row anchor grid. Every badge, platform, spotlight, tooltip, and hover lift shares the same bottom-center shelf coordinate so platforms stay aligned in straight rows.
 - The active wing banner shows the collected count and progress pips directly on the banner art, enlarged and offset into the open text space for better readability.
-- On desktop, the award-wing selector shares the HUD's left edge. Its large icon-led pixel buttons use high-contrast labels, crisp square bevels, an active glow, and a pressed state so category changes feel like selecting a museum quest.
+- On desktop, the award-wing selector shares the HUD's left edge. Its cream and category-color button states use extracted transparent PNG art, preserving the supplied pixel icon, label, right-side gem, and bevel treatment while keeping a pale active-art hover preview.
+- Badge halos use a layered radial fade and soft mask, so their glow blends into the cabinet without a hard circular edge.
 - Unearned badges appear dimmed with "???" as the name
 - Special category badges show their **category emoji** instead of tier icon
 - Badge tooltip shows: name, description, unlock progress (if partial)

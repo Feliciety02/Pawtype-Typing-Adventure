@@ -11,7 +11,7 @@
   min-height: 100dvh;
   width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
   margin-inline: auto;
-  padding-block: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  padding-block: calc(clamp(1rem, 2vw, 1.5rem) + 5px) clamp(1.5rem, 3vw, 2.5rem);
 }
 
 .app-view-shell {
@@ -42,11 +42,11 @@
 }
 
 .app-shell--camp .game-hud {
-  position: relative;
-  top: auto;
+  position: sticky;
+  top: 5px;
   z-index: 60;
   width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
-  margin: clamp(0.75rem, 2vw, 2rem) auto 0;
+  margin: calc(clamp(0.75rem, 2vw, 2rem) + 5px) auto 0;
 }
 
 .app-view-shell--camp {
@@ -102,10 +102,10 @@
 
 .app-shell--awards .game-hud {
   position: sticky;
-  top: clamp(0.75rem, 2vw, 2rem);
+  top: 5px;
   z-index: 60;
   width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
-  margin: clamp(0.75rem, 2vw, 2rem) auto 0;
+  margin: calc(clamp(0.75rem, 2vw, 2rem) + 5px) auto 0;
 }
 
 .app-view-shell--awards {
@@ -134,7 +134,7 @@
 @media (max-width: 640px) {
   .app-shell {
     width: min(100% - 1rem, 1400px);
-    padding-block-start: 0.75rem;
+    padding-block-start: calc(0.75rem + 5px);
   }
 
   .app-shell--camp {
@@ -144,7 +144,7 @@
 
   .app-shell--camp .game-hud {
     width: min(100% - 1rem, 1400px);
-    margin-top: 0.5rem;
+    margin-top: calc(0.5rem + 5px);
   }
 
   .app-shell--awards .game-hud {
@@ -152,12 +152,24 @@
   }
 
   .app-shell--awards .game-hud {
-    margin-top: 0.5rem;
+    margin-top: calc(0.5rem + 5px);
   }
 
   .app-view-shell--awards {
     width: 100%;
     margin-top: 0;
+  }
+
+  .game-hud {
+    padding: 1.2rem 1.1rem;
+  }
+
+  .game-hud::after {
+    inset: -0.45rem -0.3rem;
+    width: auto;
+    height: auto;
+    aspect-ratio: auto;
+    transform: none;
   }
 }
 
@@ -258,6 +270,13 @@
     var(--hud-surface);
 }
 
+.game-hud {
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(1.65rem, 3vw, 2.75rem);
+}
+
 .world-castle .game-hud {
   --hud-trim: var(--coin);
   --hud-decoration: "?";
@@ -277,6 +296,25 @@
       transparent 6px
     ),
     var(--hud-surface);
+}
+
+.game-hud::after {
+  position: absolute;
+  top: -40px;
+  left: -2.1rem;
+  z-index: 0;
+  width: calc(100% + 4rem);
+  aspect-ratio: 6922 / 709;
+  pointer-events: none;
+  content: "";
+  background: url("/shared/borders/group-279-1.webp") center / 100% 100% no-repeat;
+  image-rendering: pixelated;
+  transform: none;
+}
+
+.game-hud > :not(.hud-particle) {
+  position: relative;
+  z-index: 1;
 }
 
 .world-space .game-hud {
@@ -429,6 +467,9 @@
   gap: clamp(0.25rem, 0.6vw, 0.75rem);
   height: var(--hud-height, 82px);
   padding: 0 clamp(0.5rem, 1.2vw, 1.25rem);
+  position: sticky;
+  top: 5px;
+  z-index: 60;
 }
 
 /* --- Left: profile card - content-sized --- */

@@ -150,6 +150,32 @@ function RootComponent() {
     document.documentElement.setAttribute("data-time-of-day", period);
   }, []);
 
+  useEffect(() => {
+    const preventContextMenu = (event: MouseEvent) => event.preventDefault();
+    const preventDrag = (event: DragEvent) => {
+      if (event.target instanceof HTMLImageElement) event.preventDefault();
+    };
+    const preventCommonSaveShortcuts = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        (key === "s" || key === "u" || (event.shiftKey && ["i", "j", "c"].includes(key)))
+      ) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", preventContextMenu);
+    document.addEventListener("dragstart", preventDrag);
+    document.addEventListener("keydown", preventCommonSaveShortcuts);
+
+    return () => {
+      document.removeEventListener("contextmenu", preventContextMenu);
+      document.removeEventListener("dragstart", preventDrag);
+      document.removeEventListener("keydown", preventCommonSaveShortcuts);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

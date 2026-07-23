@@ -1762,9 +1762,17 @@ button.pixel-selectable-card:focus-visible,
   height: 84%;
   transform: translateX(-50%);
   border-radius: 50% 50% 42% 42%;
-  background:
-    radial-gradient(circle at 50% 45%, rgba(255, 245, 206, 0.3), transparent 47%),
-    linear-gradient(180deg, rgba(255, 230, 139, 0.16), rgba(83, 45, 19, 0.1));
+  /* Keep the badge halo feathered: a solid lower gradient reads as a hard disc on the shelf. */
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    rgba(255, 245, 206, 0.32) 0%,
+    rgba(255, 220, 133, 0.18) 30%,
+    rgba(127, 72, 30, 0.1) 53%,
+    rgba(83, 45, 19, 0.035) 66%,
+    transparent 82%
+  );
+  -webkit-mask-image: radial-gradient(ellipse at 50% 46%, #000 36%, rgba(0, 0, 0, 0.8) 55%, transparent 84%);
+  mask-image: radial-gradient(ellipse at 50% 46%, #000 36%, rgba(0, 0, 0, 0.8) 55%, transparent 84%);
   filter: drop-shadow(0 10px 8px rgba(10, 4, 1, 0.45));
   transition: transform 220ms ease;
 }
@@ -1784,6 +1792,19 @@ button.pixel-selectable-card:focus-visible,
   transition:
     filter 220ms ease,
     opacity 220ms ease;
+}
+
+/* Give every standard exhibit more shelf presence while preserving the dedicated largest relic. */
+.awards-artifact:not(.awards-artifact--legendary) .awards-artifact-frame img {
+  width: 114.4%;
+  height: 114.4%;
+}
+
+/* Prevent casual drag-saving and selection of in-game artwork. */
+img {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .awards-artifact[data-unlocked="true"] .awards-artifact-frame img {
@@ -1942,125 +1963,58 @@ button.pixel-selectable-card:focus-visible,
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: center;
-  gap: 0.62rem;
+  gap: 0.5rem;
 }
 
-.awards-wing-arrow,
 .awards-wing-emblem {
   position: relative;
   display: grid;
-  grid-template-columns: 2.05rem minmax(0, 1fr) 0.55rem;
-  align-items: center;
-  width: clamp(12.25rem, 12.6vw, 14.5rem);
-  min-height: clamp(3.25rem, 3.2vw, 3.8rem);
-  border: 3px solid #6f3d18;
-  border-radius: 3px;
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 235, 163, 0.045) 0 2px, transparent 2px 6px),
-    linear-gradient(180deg, rgba(255, 233, 151, 0.22), transparent 42%),
-    linear-gradient(135deg, #4a2b1c, #211922 68%);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 234, 172, 0.34),
-    inset 0 -4px 0 rgba(8, 5, 10, 0.66),
-    0 5px 0 #170d0a,
-    0 9px 16px rgba(8, 4, 2, 0.38);
-  color: #fff8dc;
+  width: clamp(10.5rem, 13vw, 14rem);
+  aspect-ratio: 104 / 35;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   cursor: pointer;
-  font-family: var(--font-pixel), monospace;
-  font-size: clamp(0.62rem, 0.72vw, 0.76rem);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  text-shadow: 2px 2px 0 #25120b;
-  transition:
-    transform 140ms ease,
-    border-color 140ms ease,
-    background 140ms ease,
-    box-shadow 140ms ease;
-  isolation: isolate;
+  transition: transform 120ms ease;
 }
 
-.awards-wing-arrow {
-  padding: 0.42rem 0.62rem;
-  opacity: 0.86;
+.awards-wing-emblem-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  image-rendering: pixelated;
+  pointer-events: none;
+  transition: opacity 120ms ease, filter 120ms ease;
 }
 
-.awards-wing-emblem {
-  padding: 0.48rem 0.62rem;
+.awards-wing-emblem-art--active {
+  opacity: 0;
 }
 
-.awards-wing-emblem-icon {
-  display: grid;
-  place-items: center;
-  width: 1.85rem;
-  height: 1.85rem;
-  border: 2px solid #d3943e;
-  border-radius: 2px;
-  background:
-    linear-gradient(90deg, rgba(255, 247, 189, 0.2) 0 2px, transparent 2px calc(100% - 2px), rgba(0, 0, 0, 0.2) calc(100% - 2px)),
-    linear-gradient(180deg, #9b5c27, #4a2818);
-  color: #fff0a2;
-  box-shadow:
-    inset 0 2px 0 rgba(255, 246, 190, 0.42),
-    inset 0 -2px 0 rgba(31, 12, 6, 0.52);
+.awards-wing-emblem[data-active="true"] .awards-wing-emblem-art--inactive,
+.awards-wing-emblem[data-active="false"]:is(:hover, :focus-visible) .awards-wing-emblem-art--inactive {
+  opacity: 0;
 }
 
-.awards-wing-emblem-icon svg {
-  shape-rendering: crispEdges;
+.awards-wing-emblem[data-active="true"] .awards-wing-emblem-art--active {
+  opacity: 1;
 }
 
-.awards-wing-emblem-label {
-  min-width: 0;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.awards-wing-emblem-marker {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 0;
-  background: #9d7252;
-  box-shadow: 0 0 0 1px rgba(21, 10, 6, 0.72);
-}
-
-.awards-wing-arrow:hover,
-.awards-wing-emblem:hover,
-.awards-wing-emblem[data-active="true"] {
-  border-color: #ffe08b;
-  background:
-    repeating-linear-gradient(90deg, rgba(255, 247, 180, 0.07) 0 2px, transparent 2px 6px),
-    linear-gradient(180deg, rgba(255, 245, 172, 0.32), transparent 46%),
-    linear-gradient(135deg, #865020, #3c2219 72%);
-  box-shadow:
-    inset 0 2px 0 rgba(255, 247, 193, 0.52),
-    inset 0 -4px 0 rgba(31, 12, 6, 0.62),
-    0 5px 0 #170d0a,
-    0 0 18px rgba(255, 197, 83, 0.54);
-  transform: translateX(4px);
-}
-
-.awards-wing-emblem:hover .awards-wing-emblem-icon,
-.awards-wing-emblem[data-active="true"] .awards-wing-emblem-icon {
-  border-color: #fff0a2;
-  background: linear-gradient(180deg, #c6822d, #754018);
-  color: #fff9cf;
-}
-
-.awards-wing-emblem[data-active="true"] .awards-wing-emblem-marker {
-  background: #fff0a2;
-  box-shadow: 0 0 8px #ffd15c;
+.awards-wing-emblem[data-active="false"]:is(:hover, :focus-visible) .awards-wing-emblem-art--active {
+  opacity: 1;
+  filter: saturate(0.52) brightness(1.22);
 }
 
 .awards-wing-emblem:active {
-  transform: translate(4px, 4px);
-  box-shadow:
-    inset 0 3px 0 rgba(31, 12, 6, 0.52),
-    0 1px 0 #170d0a;
+  transform: translateY(1px);
 }
 
 .awards-wing-emblem:focus-visible {
-  outline: 2px solid #fff3a6;
+  outline: 2px solid #dca64f;
   outline-offset: 3px;
 }
 
@@ -2337,13 +2291,12 @@ button.pixel-selectable-card:focus-visible,
     flex-wrap: wrap;
   }
 
-  .awards-wing-arrow,
   .awards-wing-emblem {
     min-width: 0;
   }
 
   .awards-wing-emblem {
-    width: auto;
+    width: clamp(8rem, 30vw, 11rem);
   }
 }
 

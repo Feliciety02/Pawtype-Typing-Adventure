@@ -113,9 +113,634 @@
 .pixel-login-shell.is-auth-open .pixel-login-hero { display: none; }
 
 .pixel-login-shell.is-auth-open .pixel-login-panel {
-  width: min(100%, 430px);
+  width: min(100%, 460px);
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
+}
+
+/* Final asset-only save-file modal. Kept last to override retired login-panel rules. */
+.pixel-login-shell.is-auth-open .pixel-login-layout {
+  overflow: auto;
+  padding: 0.75rem;
+  background: rgb(20 13 24 / 78%);
+}
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  position: relative !important;
+  display: block;
+  box-sizing: border-box;
+  width: min(92vw, 620px) !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  aspect-ratio: 2219 / 3328;
+  background: url("/shared/auth/signin-modal-frame.webp") center / 100% 100% no-repeat;
+  box-shadow: none;
+}
+.pixel-login-shell.is-auth-open .pixel-login-panel.is-login-mode {
+  aspect-ratio: 2219 / 3044;
+  background-image: url("/shared/auth/login-modal-frame.webp");
+}
+.pixel-login-panel > .pixel-login-header-artwork {
+  position: absolute;
+  z-index: 1;
+  top: 7%;
+  left: 11%;
+  width: 78%;
+  height: auto;
+  pointer-events: none;
+}
+.pixel-login-panel > .pixel-login-close-btn {
+  position: absolute;
+  z-index: 3;
+  top: 6.3%;
+  right: 7%;
+  width: 9%;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.pixel-login-panel > .pixel-login-close-btn img,
+.pixel-login-panel .pixel-auth-tabs img,
+.pixel-login-panel .pixel-login-enter-btn > img,
+.pixel-login-panel .pixel-login-social-btn > img,
+.pixel-login-panel .pixel-login-demo-btn > img { display: block; width: 100%; height: auto; }
+.pixel-login-panel .pixel-auth-tabs {
+  position: absolute;
+  z-index: 2;
+  top: 24.1% !important;
+  left: 12% !important;
+  right: 12% !important;
+  height: auto !important;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4%;
+}
+.pixel-login-panel .pixel-auth-tabs button,
+.pixel-login-panel .pixel-login-enter-btn,
+.pixel-login-panel .pixel-login-social-btn,
+.pixel-login-panel .pixel-login-demo-btn {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.pixel-login-panel .pixel-auth-form {
+  position: absolute;
+  z-index: 2;
+  top: 37.5% !important;
+  left: 14.5% !important;
+  right: 14.5% !important;
+  display: grid;
+  gap: 0.75rem;
+}
+.pixel-login-panel .pixel-auth-form input { box-sizing: border-box; width: 100%; }
+.pixel-login-panel > .pixel-login-enter-btn {
+  position: absolute;
+  z-index: 2;
+  top: 68.8% !important;
+  left: 10% !important;
+  width: 80% !important;
+  height: auto !important;
+  margin: 0;
+}
+.pixel-login-panel > .pixel-auth-provider-grid {
+  position: absolute;
+  z-index: 2;
+  top: 82.5% !important;
+  left: 12% !important;
+  right: 12% !important;
+  height: auto !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4%;
+}
+.pixel-login-panel > .pixel-login-demo-btn {
+  position: absolute;
+  z-index: 2;
+  top: 91.8% !important;
+  left: 12% !important;
+  width: 76% !important;
+  height: auto !important;
+  margin: 0;
+}
+.pixel-login-panel.is-login-mode > .pixel-login-enter-btn { top: 68% !important; }
+.pixel-login-panel.is-login-mode > .pixel-auth-provider-grid { top: 81.7% !important; }
+.pixel-login-panel.is-login-mode > .pixel-login-demo-btn { top: 90.8% !important; }
+
+/* Standalone asset modal: deliberately independent from the retired pixel-login panel styles. */
+.save-auth-modal {
+  position: relative;
+  box-sizing: border-box;
+  width: min(92vw, calc(94dvh * 0.667));
+  aspect-ratio: 2219 / 3328;
+  overflow: hidden;
+  isolation: isolate;
+  background: url("/shared/auth/signin-modal-frame.webp") center / 100% 100% no-repeat;
+}
+.pixel-login-shell.is-auth-open .pixel-login-layout { overflow: hidden !important; padding: 0; }
+.save-auth-modal.is-login-mode {
+  aspect-ratio: 2219 / 3044;
+  background-image: url("/shared/auth/login-modal-frame.webp");
+}
+.save-auth-modal img { display: block; max-width: 100%; }
+.save-auth-header {
+  position: absolute;
+  z-index: 1;
+  top: 11.5%;
+  left: 11%;
+  width: 78%;
+  height: auto;
+  pointer-events: none;
+}
+.save-auth-close {
+  position: absolute;
+  z-index: 3;
+  top: 6.3%;
+  right: 7%;
+  width: 9%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.save-auth-close:focus-visible,
+.save-auth-tabs button:focus-visible,
+.save-auth-submit:focus-visible,
+.save-auth-provider:focus-visible,
+.save-auth-demo:focus-visible { outline: 3px solid #fff5a7; outline-offset: 2px; }
+.save-auth-tabs {
+  position: absolute;
+  z-index: 2;
+  top: 27.1%;
+  left: 12%;
+  right: 12%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4%;
+}
+.save-auth-tabs button,
+.save-auth-submit,
+.save-auth-provider,
+.save-auth-demo {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.save-auth-tabs button:hover,
+.save-auth-submit:hover,
+.save-auth-provider:hover,
+.save-auth-demo:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.save-auth-tabs button:active,
+.save-auth-submit:active,
+.save-auth-provider:active,
+.save-auth-demo:active { transform: translateY(1px); }
+.save-auth-form {
+  position: absolute;
+  z-index: 2;
+  top: 36.5%;
+  left: 14.5%;
+  right: 14.5%;
+  display: grid;
+  gap: clamp(0.4rem, 1.2vh, 0.7rem);
+}
+.save-auth-form label { display: grid; gap: 0.25rem; color: #684025; font-family: var(--font-pixel); font-size: clamp(0.42rem, 1.2vw, 0.6rem); text-transform: uppercase; }
+.save-auth-form input {
+  box-sizing: border-box;
+  width: 100%;
+  height: clamp(2.1rem, 5.6vh, 2.7rem);
+  padding: 0 0.8rem;
+  border: 3px solid #472719;
+  border-radius: 12px;
+  background: #fffcf7;
+  color: #4e2d18;
+  font-family: var(--font-pixel);
+  font-size: clamp(0.64rem, 1.75vw, 0.88rem);
+  box-shadow: none;
+}
+.save-auth-form small { display: none; }
+.save-auth-error { margin: 0; color: #a72323; font-family: var(--font-pixel); font-size: 0.55rem; }
+.save-auth-submit {
+  position: absolute;
+  z-index: 2;
+  top: 65.8%;
+  left: 10%;
+  width: 80%;
+}
+.save-auth-submit-status { position: absolute; inset: 0; display: grid; place-items: center; color: white; font-family: var(--font-pixel); font-size: 0.6rem; text-shadow: 2px 2px #355a20; }
+.save-auth-divider {
+  position: absolute;
+  z-index: 1;
+  top: 76%;
+  left: 12%;
+  width: 76%;
+  height: auto;
+  pointer-events: none;
+}
+.save-auth-providers {
+  position: absolute;
+  z-index: 2;
+  top: 79.5%;
+  left: 12%;
+  right: 12%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4%;
+}
+.save-auth-provider { width: 100%; }
+.save-auth-demo {
+  position: absolute;
+  z-index: 2;
+  top: 88%;
+  left: 12%;
+  width: 76%;
+}
+.save-auth-modal.is-login-mode .save-auth-submit { top: 60%; }
+.save-auth-modal.is-login-mode .save-auth-divider { top: 72%; }
+.save-auth-modal.is-login-mode .save-auth-providers { top: 76%; }
+.save-auth-modal.is-login-mode .save-auth-demo { top: 85.8%; }
+@media (max-width: 480px) {
+  .save-auth-modal { width: min(96vw, calc(94dvh * 0.667)); }
+  .save-auth-form input { height: clamp(2rem, 6vh, 2.4rem); }
+}
+
+/* Illustrated account gate assembled from the supplied parchment and control artwork. */
+.pixel-login-shell.is-auth-open .pixel-login-layout {
+  padding: 0.75rem;
+  background: rgb(20 13 24 / 78%);
+  overflow: auto;
+}
+
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  position: relative;
+  width: min(94vw, 620px);
+  max-height: none;
+  min-height: min(970px, calc(100dvh - 1.5rem));
+  padding: clamp(4.9rem, 10vw, 6.5rem) clamp(2.25rem, 7vw, 4.6rem) clamp(1.75rem, 4vw, 2.6rem);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: url("/shared/auth/signin-modal-frame.webp") center / 100% 100% no-repeat;
+  box-shadow: none;
+  color: #4e2d18;
+}
+
+.pixel-login-panel::after { display: none; }
+.pixel-login-panel > * { position: relative; z-index: 1; }
+
+.pixel-login-close-btn {
+  top: clamp(3.4rem, 7.7vw, 4.8rem);
+  right: clamp(2.3rem, 7vw, 4.4rem);
+  width: clamp(2.85rem, 8vw, 4rem);
+  height: clamp(2.85rem, 8vw, 4rem);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent; 
+  box-shadow: none;
+}
+
+.pixel-login-close-btn img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.pixel-login-close-btn:hover { background: transparent; transform: scale(1.05); }
+.pixel-login-close-btn:active { transform: scale(0.96); box-shadow: none; }
+
+.pixel-login-panel-head { margin: 0 0 0.55rem; text-align: center; }
+.pixel-login-kicker { display: none; }
+.pixel-login-panel h2 {
+  margin: 0;
+  color: #4e2d18;
+  font-size: clamp(1.2rem, 3.1vw, 1.8rem);
+  line-height: 1.15;
+  text-shadow: 1px 1px 0 #fbe1a8;
+}
+.pixel-login-panel-desc { margin: 0.45rem auto 0; max-width: 28rem; color: #7b4a27; font-size: 0.74rem; }
+
+.pixel-auth-tabs { gap: 0.25rem; margin: 0 0 0.75rem; }
+.pixel-auth-tabs button,
+.pixel-login-enter-btn,
+.pixel-login-social-btn,
+.pixel-login-demo-btn {
+  position: relative;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.pixel-auth-tabs button img,
+.pixel-login-enter-btn > img,
+.pixel-login-social-btn > img,
+.pixel-login-demo-btn > img { display: block; width: 100%; height: auto; }
+.pixel-auth-tabs button:hover,
+.pixel-login-enter-btn:hover,
+.pixel-login-social-btn:hover,
+.pixel-login-demo-btn:hover { transform: translateY(-2px); background: transparent; box-shadow: none; filter: brightness(1.05); }
+.pixel-auth-tabs button:active,
+.pixel-login-enter-btn:active,
+.pixel-login-social-btn:active,
+.pixel-login-demo-btn:active { transform: translateY(1px); box-shadow: none; }
+.pixel-auth-tabs button.is-active { background: transparent; color: inherit; box-shadow: none; filter: brightness(1.08) saturate(1.08); }
+
+.pixel-auth-form { gap: 0.55rem; }
+.pixel-auth-form label { gap: 0.2rem; color: #633918; font-size: 0.66rem; }
+.pixel-auth-form label span { font-size: 0.7rem; }
+.pixel-auth-form input {
+  height: 2.5rem;
+  border: 3px solid #8b5428;
+  border-radius: 7px;
+  background: rgb(255 247 218 / 92%);
+  color: #4e2d18;
+  box-shadow: inset 0 2px 0 rgb(117 66 27 / 16%);
+  font-size: 0.85rem;
+}
+.pixel-auth-form input:focus-visible { border-color: #d48719; outline: 3px solid rgb(255 210 82 / 65%); outline-offset: 2px; }
+.pixel-login-enter-btn { width: 100%; margin-top: 0.25rem; }
+.pixel-login-enter-btn:disabled { opacity: 0.65; }
+.pixel-login-button-status { position: absolute; inset: 0; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; color: white; font-family: var(--font-pixel); font-size: 0.65rem; text-shadow: 2px 2px #355a20; }
+
+.pixel-auth-divider { margin: 0.5rem 0; color: #7b4a27; }
+.pixel-auth-divider::before { border-color: #b57943; }
+.pixel-auth-provider-grid { gap: 0.25rem; }
+.pixel-login-demo-btn { width: 100%; margin-top: 0.35rem; }
+.pixel-login-assurance,
+.pixel-login-footer-note { display: none; }
+
+@media (max-width: 480px) {
+  .pixel-login-shell.is-auth-open .pixel-login-panel {
+    width: min(100%, 390px);
+    min-height: min(780px, calc(100dvh - 1.5rem));
+    padding: 3.9rem 1.6rem 1.2rem;
+  }
+  .pixel-login-close-btn { top: 2.7rem; right: 1.65rem; width: 2.45rem; height: 2.45rem; }
+  .pixel-login-panel-desc { font-size: 0.63rem; }
+  .pixel-auth-form input { height: 2.2rem; }
+}
+
+/* The source art is the visual layout. Only real form fields and transparent action targets sit above it. */
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  width: min(92vw, 600px);
+  min-height: 0;
+  padding: 0;
+  aspect-ratio: 2219 / 3328;
+  background: url("/shared/auth/signin-modal-frame.webp") center / 100% 100% no-repeat;
+  overflow: hidden;
+}
+
+.pixel-login-artwork {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.pixel-login-panel-head,
+.pixel-auth-divider,
+.pixel-login-assurance,
+.pixel-login-footer-note { display: none; }
+
+.pixel-login-close-btn {
+  z-index: 2;
+  top: 1.25%;
+  right: 1.4%;
+  width: 9.8%;
+  height: 8.2%;
+  background: transparent;
+}
+.pixel-login-close-btn img { display: none; }
+
+.pixel-auth-tabs {
+  position: absolute;
+  z-index: 2;
+  top: 20.25%;
+  left: 5.1%;
+  right: 5.1%;
+  height: 11.8%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4%;
+  margin: 0;
+}
+.pixel-auth-tabs button,
+.pixel-login-enter-btn,
+.pixel-login-social-btn,
+.pixel-login-demo-btn {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+.pixel-auth-tabs button img,
+.pixel-login-enter-btn > img,
+.pixel-login-social-btn > img,
+.pixel-login-demo-btn > img { display: none; }
+.pixel-auth-tabs button:hover,
+.pixel-login-enter-btn:hover,
+.pixel-login-social-btn:hover,
+.pixel-login-demo-btn:hover { transform: none; }
+.pixel-auth-tabs button:focus-visible,
+.pixel-login-enter-btn:focus-visible,
+.pixel-login-social-btn:focus-visible,
+.pixel-login-demo-btn:focus-visible,
+.pixel-login-close-btn:focus-visible { outline: 3px solid #fff5a7; outline-offset: -3px; }
+
+.pixel-auth-form {
+  position: absolute;
+  z-index: 2;
+  top: 34.4%;
+  left: 14.2%;
+  right: 14.2%;
+  display: grid;
+  gap: 1.45%;
+}
+.pixel-auth-form label { gap: 0.35rem; color: #684025; font-size: clamp(0.45rem, 1.25vw, 0.62rem); }
+.pixel-auth-form label span { font-size: inherit; letter-spacing: 0.08em; }
+.pixel-auth-form input {
+  height: clamp(2.25rem, 6.1vw, 3rem);
+  padding: 0 0.85rem;
+  border: 3px solid #472719;
+  border-radius: 14px;
+  background: #fffcf7;
+  box-shadow: none;
+  font-size: clamp(0.7rem, 2vw, 0.95rem);
+}
+.pixel-auth-form small { display: none; }
+.pixel-auth-error { margin: 0; font-size: 0.58rem; }
+
+.pixel-login-enter-btn {
+  position: absolute;
+  z-index: 2;
+  top: 70.7%;
+  left: 4.5%;
+  width: 91%;
+  height: 11.7%;
+}
+.pixel-login-button-status { font-size: clamp(0.5rem, 1.6vw, 0.75rem); }
+
+.pixel-auth-provider-grid {
+  position: absolute;
+  z-index: 2;
+  top: 85.5%;
+  left: 5.1%;
+  right: 5.1%;
+  height: 8.3%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4%;
+}
+.pixel-login-social-btn { width: 100%; height: 100%; }
+.pixel-login-demo-btn {
+  position: absolute;
+  z-index: 2;
+  top: 94.1%;
+  left: 5.1%;
+  width: 89.8%;
+  height: 5.4%;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .pixel-login-shell.is-auth-open .pixel-login-panel { width: min(98vw, 390px); min-height: 0; padding: 0; }
+  .pixel-auth-form input { height: clamp(2rem, 10.5vw, 2.5rem); }
+}
+
+/* Load Save File has its own supplied sheet and slightly shorter parchment frame. */
+.pixel-login-shell.is-auth-open .pixel-login-panel.is-login-mode {
+  aspect-ratio: 2219 / 3044;
+  background-image: url("/shared/auth/login-modal-frame.webp");
+}
+.pixel-login-panel.is-login-mode .pixel-auth-tabs { top: 23.1%; }
+.pixel-login-panel.is-login-mode .pixel-auth-form { top: 33.4%; }
+.pixel-login-panel.is-login-mode .pixel-login-enter-btn { top: 68.7%; }
+.pixel-login-panel.is-login-mode .pixel-auth-provider-grid { top: 83.7%; }
+.pixel-login-panel.is-login-mode .pixel-login-demo-btn { top: 93.6%; }
+
+/* Final supplied references already include the frame, title, and every button. */
+.pixel-login-shell.is-auth-open .pixel-login-panel,
+.pixel-login-shell.is-auth-open .pixel-login-panel.is-login-mode { background: none; }
+.pixel-login-close-btn { top: 6.2%; right: 7.1%; width: 8.7%; height: 6.8%; }
+
+.pixel-login-panel.is-signup-mode .pixel-auth-tabs { top: 24.4%; left: 10.5%; right: 10.5%; height: 8.1%; gap: 2.4%; }
+.pixel-login-panel.is-signup-mode .pixel-auth-form { top: 35%; left: 14.2%; right: 14.2%; }
+.pixel-login-panel.is-signup-mode .pixel-login-enter-btn { top: 68.8%; left: 10.2%; width: 79.6%; height: 8.8%; }
+.pixel-login-panel.is-signup-mode .pixel-auth-provider-grid { top: 82.1%; left: 10.5%; right: 10.5%; height: 6.6%; }
+.pixel-login-panel.is-signup-mode .pixel-login-demo-btn { top: 89.4%; left: 10.5%; width: 79%; height: 5.3%; }
+
+.pixel-login-panel.is-login-mode .pixel-auth-tabs { top: 25.4%; left: 10.5%; right: 10.5%; height: 8.2%; }
+.pixel-login-panel.is-login-mode .pixel-auth-form { top: 35%; left: 14.2%; right: 14.2%; }
+.pixel-login-panel.is-login-mode .pixel-login-enter-btn { top: 66%; left: 10.2%; width: 79.6%; height: 8.8%; }
+.pixel-login-panel.is-login-mode .pixel-auth-provider-grid { top: 79.5%; left: 10.5%; right: 10.5%; height: 6.6%; }
+.pixel-login-panel.is-login-mode .pixel-login-demo-btn { top: 86.9%; left: 10.5%; width: 79%; height: 5.3%; }
+
+/* Asset assembly: the frame, heading, and every visible control come from the extracted PNG artwork. */
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  background: url("/shared/auth/signin-modal-frame.webp") center / 100% 100% no-repeat;
+}
+.pixel-login-shell.is-auth-open .pixel-login-panel.is-login-mode {
+  background-image: url("/shared/auth/login-modal-frame.webp");
+}
+.pixel-login-header-artwork {
+  position: absolute;
+  z-index: 1;
+  top: 7%;
+  left: 11%;
+  width: 78%;
+  height: auto;
+  pointer-events: none;
+}
+.pixel-login-close-btn {
+  top: 6.3%;
+  right: 7%;
+  width: 9%;
+  height: auto;
+  aspect-ratio: 1;
+}
+.pixel-login-close-btn img,
+.pixel-auth-tabs button img,
+.pixel-login-enter-btn > img,
+.pixel-login-social-btn > img,
+.pixel-login-demo-btn > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.pixel-auth-tabs {
+  top: 24.1% !important;
+  left: 12% !important;
+  right: 12% !important;
+  height: auto !important;
+  align-items: start;
+}
+.pixel-auth-tabs button { height: auto; }
+.pixel-auth-form {
+  top: 37.5% !important;
+  left: 14.5% !important;
+  right: 14.5% !important;
+}
+.pixel-login-enter-btn {
+  top: 68.8% !important;
+  left: 10% !important;
+  width: 80% !important;
+  height: auto !important;
+}
+.pixel-auth-provider-grid {
+  top: 82.5% !important;
+  left: 12% !important;
+  right: 12% !important;
+  height: auto !important;
+  align-items: start;
+}
+.pixel-login-social-btn { height: auto !important; }
+.pixel-login-demo-btn {
+  top: 91.8% !important;
+  left: 12% !important;
+  width: 76% !important;
+  height: auto !important;
+}
+.pixel-login-panel.is-login-mode .pixel-auth-form { top: 37.5% !important; }
+.pixel-login-panel.is-login-mode .pixel-login-enter-btn { top: 68% !important; }
+.pixel-login-panel.is-login-mode .pixel-auth-provider-grid { top: 81.7% !important; }
+.pixel-login-panel.is-login-mode .pixel-login-demo-btn { top: 90.8% !important; }
+
+/* Login gate viewport reset: the legacy two-column layout must not constrain the modal. */
+.pixel-login-shell {
+  width: 100vw;
+  min-width: 100vw;
+  max-width: none;
+  min-height: 100dvh;
+  background-position: center center;
+  background-size: cover;
+}
+
+.pixel-login-shell::before {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+}
+
+.pixel-login-shell.is-auth-open .pixel-login-layout {
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-width: none;
+  margin: 0;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+.pixel-login-shell.is-auth-open .pixel-login-panel {
+  margin: 0;
 }
 
 /* Override the retired decorative-leaf style used by the former login backdrop. */
@@ -774,7 +1399,7 @@
 /* --- Right Panel --- */
 .pixel-login-panel {
   position: relative;
-  padding: 1.25rem;
+  padding: 1.55rem;
   border: 4px solid var(--color-border);
   border-radius: 16px;
   background:
@@ -785,14 +1410,46 @@
     ),
     linear-gradient(180deg, color-mix(in oklab, white 35%, transparent), transparent 24%),
     color-mix(in oklab, var(--color-card) 94%, white);
-  box-shadow: 8px 8px 0 0 var(--color-border);
+  box-shadow: 9px 9px 0 0 var(--color-border), 0 20px 55px rgba(8, 13, 24, 0.35);
 }
+
+.pixel-login-panel::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid color-mix(in oklab, var(--coin) 38%, transparent);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.pixel-login-panel > * { position: relative; z-index: 1; }
+
+.pixel-login-close-btn {
+  position: absolute !important;
+  z-index: 2 !important;
+  top: 0.7rem;
+  right: 0.7rem;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-foreground);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: color-mix(in oklab, white 75%, var(--color-muted));
+  box-shadow: 2px 2px 0 var(--color-border);
+  cursor: pointer;
+}
+
+.pixel-login-close-btn:hover { background: var(--color-primary); color: var(--color-primary-foreground); }
+.pixel-login-close-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 
 .pixel-login-panel-head {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.15rem;
+  padding-right: 2rem;
 }
 
 .pixel-login-kicker {
@@ -804,8 +1461,9 @@
 }
 
 .pixel-login-panel h2 {
-  font-size: 2.1rem;
-  line-height: 0.95;
+  font-size: clamp(1.85rem, 4vw, 2.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .pixel-login-panel-desc {
@@ -853,6 +1511,14 @@
   box-shadow: var(--shadow-pixel);
 }
 
+.pixel-auth-tabs button:focus-visible,
+.pixel-login-social-btn:focus-visible,
+.pixel-login-demo-btn:focus-visible,
+.pixel-login-close-btn:focus-visible {
+  outline: 3px solid #fff1a8;
+  outline-offset: 3px;
+}
+
 /* Auth form */
 .pixel-auth-form {
   display: grid;
@@ -880,8 +1546,10 @@
   box-shadow: var(--shadow-pixel-sm);
   font-family: var(--font-pixel);
   font-size: 0.85rem;
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.15s, border-color 0.15s, background 0.15s;
 }
+
+.pixel-auth-form input:hover { border-color: color-mix(in oklab, var(--color-border) 78%, var(--coin)); }
 
 .pixel-auth-form input:focus-visible {
   outline: 3px solid color-mix(in oklab, var(--color-primary) 45%, white);
@@ -1044,6 +1712,21 @@
   color: var(--color-primary);
 }
 
+.pixel-login-assurance {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  margin-top: 0.85rem;
+  color: color-mix(in oklab, var(--color-foreground) 58%, var(--color-primary));
+  font-family: var(--font-pixel);
+  font-size: 0.45rem;
+  line-height: 1.4;
+}
+
+.pixel-login-assurance span { display: inline-flex; align-items: center; gap: 0.25rem; }
+.pixel-login-assurance svg { color: var(--color-primary); stroke-width: 3; }
+
 .pixel-login-demo-icon {
   width: 16px;
   height: 16px;
@@ -1053,7 +1736,7 @@
 
 /* Footer */
 .pixel-login-footer-note {
-  margin-top: 0.85rem;
+  margin-top: 0.65rem;
   font-family: var(--font-pixel);
   font-size: 0.48rem;
   line-height: 1.5;
@@ -1111,7 +1794,7 @@
 .pixel-login-shell.is-auth-open .pixel-login-hero { display: none; }
 
 .pixel-login-shell.is-auth-open .pixel-login-panel {
-  width: min(100%, 430px);
+  width: min(100%, 460px);
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
 }
@@ -1297,7 +1980,7 @@
 .pixel-login-shell.is-auth-open .pixel-login-hero { display: none; }
 
 .pixel-login-shell.is-auth-open .pixel-login-panel {
-  width: min(100%, 430px);
+  width: min(100%, 460px);
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
 }
