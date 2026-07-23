@@ -83,11 +83,13 @@ export function LessonsCard() {
     window.addEventListener("pawtype-egg-claimed", refresh);
     window.addEventListener("pawtype-chests-changed", refreshChests);
     window.addEventListener("storage", refresh);
+    const unsubDaily = subscribeDailyGoal(() => setDaily(getDailyGoal()));
     return () => {
       window.removeEventListener("pawtype-lesson-completed", refresh);
       window.removeEventListener("pawtype-egg-claimed", refresh);
       window.removeEventListener("pawtype-chests-changed", refreshChests);
       window.removeEventListener("storage", refresh);
+      unsubDaily();
     };
   }, []);
 
