@@ -144,8 +144,14 @@ export function LessonsCard() {
         if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
           queuePendingEgg(newCount / LESSONS_PER_EGG);
         }
+        tickDailyGoal();
       }
       setCompleted(loadCompletedLessons());
+
+      // Floating XP burst
+      const bonus = chestLessons.has(typing.lesson.id) ? 100 : 0;
+      setXpBurst({ xp: rewards.xp, coins: rewards.coins + bonus, petXp: rewards.petExp });
+      window.setTimeout(() => setXpBurst(null), 1500);
     },
     [typing, dispatch, completed, chestLessons, claimedChests],
   );
