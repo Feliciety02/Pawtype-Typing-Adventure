@@ -68,6 +68,8 @@ export function LessonsCard() {
   const [chestLessons, setChestLessons] = useState<Set<string>>(() => loadChestLessons());
   const [claimedChests, setClaimedChests] = useState<Set<string>>(() => loadClaimedChests());
   const [showChestConfig, setShowChestConfig] = useState(false);
+  const [daily, setDaily] = useState(() => getDailyGoal());
+  const [xpBurst, setXpBurst] = useState<{ xp: number; coins: number; petXp: number } | null>(null);
   const deferredAfterEgg = useRef<null | (() => void)>(null);
   const prevTypingRef = useRef(typing);
 
