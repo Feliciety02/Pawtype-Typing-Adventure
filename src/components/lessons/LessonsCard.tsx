@@ -797,6 +797,8 @@ export function LessonsCard() {
           </div>,
           document.body,
         )}
+
+      {xpBurst && <XpBurst xp={xpBurst.xp} coins={xpBurst.coins} petXp={xpBurst.petXp} />}
     </div>
   );
 }
