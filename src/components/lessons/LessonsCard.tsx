@@ -42,6 +42,7 @@ import { EggHatchModal } from "@/components/shop/EggHatchModal";
 import { generateLessonText } from "@/lib/game/textGenerator";
 import type { Zone } from "@/lib/game/engine/generator";
 import { Progress } from "@/components/ui/progress";
+import { getDailyGoal, tickDailyGoal, subscribeDailyGoal } from "@/lib/game/dailyGoal";
 
 const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string }> = {
   beginner: { label: "Beginner", color: "var(--leaf)" },
@@ -56,6 +57,54 @@ function lessonEmojiImg(emoji: string, className = "pixel-icon") {
   return <PixelIcon emoji={emoji} className={className} />;
 }
 
+function DailyGoalWidget({ goal, count, streak }: { goal: number; count: number; streak: number }) {
+  const pct = Math.max(0, Math.min(1, count / goal));
+  const R = 14;
+  const C = 2 * Math.PI * R;
+  const complete = count >= goal;
+  return (
+    <div className={`daily-goal ${complete ? "is-complete" : ""}`} title="Today's lesson goal">
+      <div className="daily-goal-ring" aria-hidden="true">
+        <svg viewBox="0 0 34 34">
+          <circle className="track" cx="17" cy="17" r={R} fill="none" strokeWidth="4" />
+          <circle
+            className="fill"
+            cx="17"
+            cy="17"
+            r={R}
+            fill="none"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray={C}
+            strokeDashoffset={C * (1 - pct)}
+          />
+        </svg>
+        <span className="center">{complete ? "✓" : `${count}/${goal}`}</span>
+      </div>
+      <div className="daily-goal-meta">
+        <strong>Daily Goal</strong>
+        <span className={`daily-goal-streak ${streak >= 3 ? "is-hot" : ""}`}>
+          🔥 {streak}-day streak
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function XpBurst({ xp, coins, petXp }: { xp: number; coins: number; petXp: number }) {
+  return createPortal(
+    <div className="xp-burst" role="status" aria-live="polite">
+      <div className="xp-burst-title">Quest Cleared!</div>
+      <div className="xp-burst-row">
+        <span>+{xp} XP</span>
+        <span>+{coins} 🪙</span>
+        <span>+{petXp} 🐾</span>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 export function LessonsCard() {
   const { dispatch } = useGame();
   const [completed, setCompleted] = useState<Set<string>>(() => loadCompletedLessons());
@@ -67,6 +116,8 @@ export function LessonsCard() {
   const [chestLessons, setChestLessons] = useState<Set<string>>(() => loadChestLessons());
   const [claimedChests, setClaimedChests] = useState<Set<string>>(() => loadClaimedChests());
   const [showChestConfig, setShowChestConfig] = useState(false);
+  const [daily, setDaily] = useState(() => getDailyGoal());
+  const [xpBurst, setXpBurst] = useState<{ xp: number; coins: number; petXp: number } | null>(null);
   const deferredAfterEgg = useRef<null | (() => void)>(null);
   const prevTypingRef = useRef(typing);
 
@@ -80,11 +131,13 @@ export function LessonsCard() {
     window.addEventListener("pawtype-egg-claimed", refresh);
     window.addEventListener("pawtype-chests-changed", refreshChests);
     window.addEventListener("storage", refresh);
+    const unsubDaily = subscribeDailyGoal(() => setDaily(getDailyGoal()));
     return () => {
       window.removeEventListener("pawtype-lesson-completed", refresh);
       window.removeEventListener("pawtype-egg-claimed", refresh);
       window.removeEventListener("pawtype-chests-changed", refreshChests);
       window.removeEventListener("storage", refresh);
+      unsubDaily();
     };
   }, []);
 
@@ -139,8 +192,14 @@ export function LessonsCard() {
         if (newCount > 0 && newCount % LESSONS_PER_EGG === 0) {
           queuePendingEgg(newCount / LESSONS_PER_EGG);
         }
+        tickDailyGoal();
       }
       setCompleted(loadCompletedLessons());
+
+      // Floating XP burst
+      const bonus = chestLessons.has(typing.lesson.id) ? 100 : 0;
+      setXpBurst({ xp: rewards.xp, coins: rewards.coins + bonus, petXp: rewards.petExp });
+      window.setTimeout(() => setXpBurst(null), 1500);
     },
     [typing, dispatch, completed, chestLessons, claimedChests],
   );
@@ -232,7 +291,11 @@ export function LessonsCard() {
         subtitle={`A guided path from home row to graduation — ${totals.done}/${totals.total} quests complete`}
       />
 
-      <div className="quest-chest-toolbar">
+      <div
+        className="quest-chest-toolbar"
+        style={{ justifyContent: "space-between", alignItems: "center", gap: 12 }}
+      >
+        <DailyGoalWidget goal={daily.goal} count={daily.count} streak={daily.streak} />
         <button type="button" onClick={() => setShowChestConfig(true)}>
           <Gift size={12} style={{ display: "inline", verticalAlign: -2, marginRight: 4 }} />
           Configure Chests ({chestLessons.size})
@@ -734,6 +797,8 @@ export function LessonsCard() {
           </div>,
           document.body,
         )}
+
+      {xpBurst && <XpBurst xp={xpBurst.xp} coins={xpBurst.coins} petXp={xpBurst.petXp} />}
     </div>
   );
 }
