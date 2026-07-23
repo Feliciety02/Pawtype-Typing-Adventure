@@ -15,7 +15,7 @@
 }
 
 .app-view-shell {
-  margin-block-start: clamp(1.5rem, 2.25vw, 2.25rem);
+  margin-block-start: calc(clamp(1.5rem, 2.25vw, 2.25rem) + var(--hud-height, 82px) + 5px);
 }
 
 .app-view-shell > section {
@@ -42,11 +42,13 @@
 }
 
 .app-shell--camp .game-hud {
-  position: sticky;
+  position: fixed;
   top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 60;
   width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
-  margin: calc(clamp(0.75rem, 2vw, 2rem) + 5px) auto 0;
+  margin-top: calc(clamp(0.75rem, 2vw, 2rem) + 5px);
 }
 
 .app-view-shell--camp {
@@ -101,11 +103,13 @@
 }
 
 .app-shell--awards .game-hud {
-  position: sticky;
+  position: fixed;
   top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 60;
   width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
-  margin: calc(clamp(0.75rem, 2vw, 2rem) + 5px) auto 0;
+  margin-top: calc(clamp(0.75rem, 2vw, 2rem) + 5px);
 }
 
 .app-view-shell--awards {
@@ -178,7 +182,7 @@
   --hud-glow: color-mix(in oklab, var(--color-primary) 26%, transparent);
   --hud-surface: color-mix(in oklab, var(--color-card) 94%, transparent);
   --hud-decoration: "?";
-  position: sticky;
+  position: fixed;
   top: 0.75rem;
   z-index: 50;
   display: grid;
@@ -467,9 +471,12 @@
   gap: clamp(0.25rem, 0.6vw, 0.75rem);
   height: var(--hud-height, 82px);
   padding: 0 clamp(0.5rem, 1.2vw, 1.25rem);
-  position: sticky;
+  position: fixed;
   top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 60;
+  width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
 }
 
 /* --- Left: profile card - content-sized --- */
