@@ -57,6 +57,54 @@ function lessonEmojiImg(emoji: string, className = "pixel-icon") {
   return <PixelIcon emoji={emoji} className={className} />;
 }
 
+function DailyGoalWidget({ goal, count, streak }: { goal: number; count: number; streak: number }) {
+  const pct = Math.max(0, Math.min(1, count / goal));
+  const R = 14;
+  const C = 2 * Math.PI * R;
+  const complete = count >= goal;
+  return (
+    <div className={`daily-goal ${complete ? "is-complete" : ""}`} title="Today's lesson goal">
+      <div className="daily-goal-ring" aria-hidden="true">
+        <svg viewBox="0 0 34 34">
+          <circle className="track" cx="17" cy="17" r={R} fill="none" strokeWidth="4" />
+          <circle
+            className="fill"
+            cx="17"
+            cy="17"
+            r={R}
+            fill="none"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray={C}
+            strokeDashoffset={C * (1 - pct)}
+          />
+        </svg>
+        <span className="center">{complete ? "✓" : `${count}/${goal}`}</span>
+      </div>
+      <div className="daily-goal-meta">
+        <strong>Daily Goal</strong>
+        <span className={`daily-goal-streak ${streak >= 3 ? "is-hot" : ""}`}>
+          🔥 {streak}-day streak
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function XpBurst({ xp, coins, petXp }: { xp: number; coins: number; petXp: number }) {
+  return createPortal(
+    <div className="xp-burst" role="status" aria-live="polite">
+      <div className="xp-burst-title">Quest Cleared!</div>
+      <div className="xp-burst-row">
+        <span>+{xp} XP</span>
+        <span>+{coins} 🪙</span>
+        <span>+{petXp} 🐾</span>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 export function LessonsCard() {
   const { dispatch } = useGame();
   const [completed, setCompleted] = useState<Set<string>>(() => loadCompletedLessons());
