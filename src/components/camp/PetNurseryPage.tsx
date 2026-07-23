@@ -19,6 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { EggHatchModal } from "@/components/shop/EggHatchModal";
 import { useThemeMode } from "@/hooks/use-theme-mode";
 import { CampBackButton } from "./CampBackButton";
+import { moodFor, markFed, MOOD_META, type PetMood } from "@/lib/game/petMood";
 
 type PetNurseryPageProps = {
   backButtonRef: RefObject<HTMLButtonElement | null>;
