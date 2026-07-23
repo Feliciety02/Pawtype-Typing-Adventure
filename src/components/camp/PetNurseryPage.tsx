@@ -100,6 +100,18 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
   const [activeEgg, setActiveEgg] = useState<ReturnType<typeof milestoneForIndex> | null>(null);
   const [eggRefreshKey, setEggRefreshKey] = useState(0);
   const [nightBackgroundReady, setNightBackgroundReady] = useState(false);
+  const [mood, setMood] = useState<PetMood>(() => moodFor(inventory.activePet));
+
+  useEffect(() => {
+    const refresh = () => setMood(moodFor(inventory.activePet));
+    refresh();
+    window.addEventListener("pawtype-pet-mood-changed", refresh);
+    const id = window.setInterval(refresh, 60_000);
+    return () => {
+      window.removeEventListener("pawtype-pet-mood-changed", refresh);
+      window.clearInterval(id);
+    };
+  }, [inventory.activePet]);
 
   useEffect(() => {
     let cancelled = false;
