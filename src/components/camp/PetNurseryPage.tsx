@@ -337,8 +337,13 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
               <span className="camp-nursery-kicker">Caretaker Bond</span>
               <h2>Active Companion</h2>
             </div>
-            <span className="camp-nursery-chip">
-              <PixelIcon emoji="🐾" /> {activePet ? "Ready" : "Empty"}
+            <span
+              className="pet-mood-chip"
+              style={{ ["--mood-tint" as string]: MOOD_META[mood].tint }}
+              title={`${activePet?.name ?? "Pet"} feels ${MOOD_META[mood].label.toLowerCase()}`}
+            >
+              <span aria-hidden="true">{MOOD_META[mood].emoji}</span>
+              <strong>{MOOD_META[mood].label}</strong>
             </span>
           </div>
 
@@ -360,7 +365,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
                   aria-label={`${activePet.name} XP progress`}
                 />
                 <p>
-                  Feed treats to level up faster and keep this companion ready for the campsite.
+                  Feed treats to level up faster and keep this companion happy at the campsite.
                 </p>
               </div>
             </div>
@@ -370,7 +375,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
             </p>
           )}
 
-          <div className="camp-nursery-actions">
+          <div className="camp-nursery-actions" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Button
               className="camp-nursery-feed-btn"
               type="button"
@@ -379,6 +384,17 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
             >
               Feed Treat ({treatCount}) +25 XP
             </Button>
+            {treatCount === 0 && (
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={feed}
+                disabled={!inventory.activePet || state.player.coins < BUY_TREAT_COST}
+                title={`Buy a snack for ${BUY_TREAT_COST} coins`}
+              >
+                Buy Snack ({BUY_TREAT_COST} 🪙) +15 XP
+              </Button>
+            )}
           </div>
         </div>
 
