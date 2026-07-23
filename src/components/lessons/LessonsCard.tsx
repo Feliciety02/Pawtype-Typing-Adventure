@@ -243,7 +243,11 @@ export function LessonsCard() {
         subtitle={`A guided path from home row to graduation — ${totals.done}/${totals.total} quests complete`}
       />
 
-      <div className="quest-chest-toolbar">
+      <div
+        className="quest-chest-toolbar"
+        style={{ justifyContent: "space-between", alignItems: "center", gap: 12 }}
+      >
+        <DailyGoalWidget goal={daily.goal} count={daily.count} streak={daily.streak} />
         <button type="button" onClick={() => setShowChestConfig(true)}>
           <Gift size={12} style={{ display: "inline", verticalAlign: -2, marginRight: 4 }} />
           Configure Chests ({chestLessons.size})
