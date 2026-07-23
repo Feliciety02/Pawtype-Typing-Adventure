@@ -175,10 +175,20 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
     };
   });
 
+  const BUY_TREAT_COST = 30;
   const feed = () => {
-    if (treatCount === 0 || !inventory.activePet) return;
-    dispatch({ type: "REMOVE_ITEM", itemId: "pet-food-day-5" });
-    dispatch({ type: "ADD_PET_XP", amount: 25 });
+    if (!inventory.activePet) return;
+    if (treatCount > 0) {
+      dispatch({ type: "REMOVE_ITEM", itemId: "pet-food-day-5" });
+      dispatch({ type: "ADD_PET_XP", amount: 25 });
+      markFed(inventory.activePet as PetType);
+      return;
+    }
+    if (state.player.coins >= BUY_TREAT_COST) {
+      dispatch({ type: "SPEND_COINS", amount: BUY_TREAT_COST });
+      dispatch({ type: "ADD_PET_XP", amount: 15 });
+      markFed(inventory.activePet as PetType);
+    }
   };
 
   const openEgg = (eggIndex?: number) => {
