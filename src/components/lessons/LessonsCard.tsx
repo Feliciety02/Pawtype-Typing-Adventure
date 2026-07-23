@@ -42,6 +42,7 @@ import { EggHatchModal } from "@/components/shop/EggHatchModal";
 import { generateLessonText } from "@/lib/game/textGenerator";
 import type { Zone } from "@/lib/game/engine/generator";
 import { Progress } from "@/components/ui/progress";
+import { getDailyGoal, tickDailyGoal, subscribeDailyGoal } from "@/lib/game/dailyGoal";
 
 const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string }> = {
   beginner: { label: "Beginner", color: "var(--leaf)" },
