@@ -5,9 +5,87 @@
 }
 
 @media (min-width: 1024px) {
+  .app-shell--practice,
+  .app-shell--adventure,
+  .app-shell--shop,
+  .app-shell--lessons {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .app-shell--practice .app-view-shell,
+  .app-shell--adventure .app-view-shell,
+  .app-shell--shop .app-view-shell,
+  .app-shell--lessons .app-view-shell {
+    height: calc(100dvh - var(--hud-height, 82px) - clamp(5.75rem, 7vw, 7.5rem));
+    overflow: hidden;
+  }
+
+  .app-shell--practice .app-view-shell > section,
+  .app-shell--adventure .app-view-shell > section,
+  .app-shell--shop .app-view-shell > section,
+  .app-shell--lessons .app-view-shell > section {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .app-shell--practice .app-view-shell > section > *,
+  .app-shell--adventure .app-view-shell > section > *,
+  .app-shell--shop .app-view-shell > section > *,
+  .app-shell--lessons .app-view-shell > section > * {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .app-shell--practice .typing-page-shell {
+    flex: 1 1 auto;
+  }
+
+  .typing-page-shell {
+    height: 100%;
+    min-height: 0;
+    gap: 0.65rem;
+    overflow: hidden;
+  }
+
   .practice-stage-grid {
     grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
     align-items: stretch;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .typing-area,
+  .world-art {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .typing-area {
+    padding: clamp(0.85rem, 1.2vw, 1.2rem);
+  }
+
+  .typing-focus-shell {
+    min-height: 0;
+    height: min(100%, 210px);
+  }
+
+  .world-art-inner {
+    gap: 0.35rem;
+    padding: 0.55rem;
+  }
+
+  .pet-placeholder-square {
+    width: clamp(86px, 8vw, 124px);
+    height: clamp(86px, 8vw, 124px);
+  }
+
+  .typing-toolbar {
+    margin-bottom: 0.2rem;
   }
 }
 
@@ -628,6 +706,30 @@
   border-radius: 8px;
   background: color-mix(in oklab, var(--color-card) 72%, transparent);
   box-shadow: var(--shadow-pixel);
+}
+
+@media (min-width: 1024px) {
+  .keyboard-dock {
+    flex: 0 0 auto;
+    padding: 0.55rem;
+  }
+
+  .pixel-keyboard {
+    gap: 0.28rem;
+  }
+
+  .pixel-keyboard-row {
+    gap: 0.28rem;
+  }
+
+  .pixel-key {
+    width: clamp(24px, 2vw, 32px);
+    height: clamp(24px, 2vw, 32px);
+  }
+
+  .pixel-key-space {
+    height: 26px;
+  }
 }
 
 .pixel-keyboard {

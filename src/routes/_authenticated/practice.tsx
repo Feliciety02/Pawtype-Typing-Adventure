@@ -6,9 +6,12 @@ export const Route = createFileRoute("/_authenticated/practice")({
 });
 
 function RouteComponent() {
+  const drill =
+    typeof window === "undefined" ? null : window.sessionStorage.getItem("pawtype-weak-key-drill");
+  const parsed = drill ? (JSON.parse(drill) as { title: string; words: string[] }) : null;
   return (
     <section>
-      <TypingArena />
+      <TypingArena customWords={parsed?.words} customTitle={parsed?.title} />
     </section>
   );
 }

@@ -42,7 +42,12 @@ import { EggHatchModal } from "@/components/shop/EggHatchModal";
 import { generateLessonText } from "@/lib/game/textGenerator";
 import type { Zone } from "@/lib/game/engine/generator";
 import { Progress } from "@/components/ui/progress";
-import { getDailyGoal, tickDailyGoal, subscribeDailyGoal } from "@/lib/game/dailyGoal";
+import {
+  claimDailyGoalReward,
+  getDailyGoal,
+  tickDailyGoal,
+  subscribeDailyGoal,
+} from "@/lib/game/dailyGoal";
 
 const DIFFICULTY_LABEL: Record<LessonDifficulty, { label: string; color: string }> = {
   beginner: { label: "Beginner", color: "var(--leaf)" },
@@ -57,7 +62,19 @@ function lessonEmojiImg(emoji: string, className = "pixel-icon") {
   return <PixelIcon emoji={emoji} className={className} />;
 }
 
-function DailyGoalWidget({ goal, count, streak }: { goal: number; count: number; streak: number }) {
+function DailyGoalWidget({
+  goal,
+  count,
+  streak,
+  claimed,
+  onClaim,
+}: {
+  goal: number;
+  count: number;
+  streak: number;
+  claimed: boolean;
+  onClaim: () => void;
+}) {
   const pct = Math.max(0, Math.min(1, count / goal));
   const R = 14;
   const C = 2 * Math.PI * R;
@@ -86,6 +103,11 @@ function DailyGoalWidget({ goal, count, streak }: { goal: number; count: number;
         <span className={`daily-goal-streak ${streak >= 3 ? "is-hot" : ""}`}>
           🔥 {streak}-day streak
         </span>
+        {complete ? (
+          <button type="button" onClick={onClaim} disabled={claimed}>
+            {claimed ? "Reward claimed" : "Claim +75 coins"}
+          </button>
+        ) : null}
       </div>
     </div>
   );
@@ -295,7 +317,19 @@ export function LessonsCard() {
         className="quest-chest-toolbar"
         style={{ justifyContent: "space-between", alignItems: "center", gap: 12 }}
       >
-        <DailyGoalWidget goal={daily.goal} count={daily.count} streak={daily.streak} />
+        <DailyGoalWidget
+          goal={daily.goal}
+          count={daily.count}
+          streak={daily.streak}
+          claimed={daily.rewardClaimed}
+          onClaim={() => {
+            if (claimDailyGoalReward()) {
+              dispatch({ type: "EARN_COINS", amount: 75 });
+              dispatch({ type: "ADD_PET_XP", amount: 20 });
+              setDaily(getDailyGoal());
+            }
+          }}
+        />
         <button type="button" onClick={() => setShowChestConfig(true)}>
           <Gift size={12} style={{ display: "inline", verticalAlign: -2, marginRight: 4 }} />
           Configure Chests ({chestLessons.size})

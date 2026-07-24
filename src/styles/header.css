@@ -51,6 +51,16 @@
   margin-top: calc(clamp(0.75rem, 2vw, 2rem) + 5px);
 }
 
+/* Practice uses the same framed HUD placement as the full-screen Camp view.
+   Keep this limited to the HUD so the fixed practice workspace can size itself
+   independently below it. */
+.app-shell--practice .game-hud,
+.app-shell--adventure .game-hud,
+.app-shell--shop .game-hud,
+.app-shell--lessons .game-hud {
+  margin-top: calc(clamp(0.75rem, 2vw, 2rem) + 5px);
+}
+
 .app-view-shell--camp {
   position: absolute;
   inset: 0;
@@ -148,6 +158,13 @@
 
   .app-shell--camp .game-hud {
     width: min(100% - 1rem, 1400px);
+    margin-top: calc(0.5rem + 5px);
+  }
+
+  .app-shell--practice .game-hud,
+  .app-shell--adventure .game-hud,
+  .app-shell--shop .game-hud,
+  .app-shell--lessons .game-hud {
     margin-top: calc(0.5rem + 5px);
   }
 

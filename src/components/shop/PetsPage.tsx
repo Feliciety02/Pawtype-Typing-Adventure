@@ -31,6 +31,17 @@ export function PetsPage() {
   const isEquipped = (p: PetItem) => inventory.activePet === p.petType;
   const isLocked = (p: PetItem) => player.level < p.unlockLevel;
   const isFav = (id: string) => favorites.includes(id);
+  const mysteryEggCost = 350;
+  const hatchMysteryEgg = () => {
+    const candidates = PETS.filter((pet) => !isOwned(pet) && !isLocked(pet));
+    if (player.coins < mysteryEggCost || candidates.length === 0) return;
+    const pet = candidates[Math.floor(Math.random() * candidates.length)];
+    dispatch({ type: "SPEND_COINS", amount: mysteryEggCost });
+    dispatch({
+      type: "ADOPT_PET",
+      pet: { type: pet.petType, name: pet.name, xp: 0, level: 1, adoptedAt: Date.now() },
+    });
+  };
 
   const toggleFav = (id: string) => {
     setFavorites(isFav(id) ? favorites.filter((x) => x !== id) : [...favorites, id]);
@@ -253,7 +264,7 @@ export function PetsPage() {
         {/* Bottom section: Eggs + progress */}
         <div className="shop-progress-grid grid gap-4 md:grid-cols-2 mt-8">
           <div className="pixel-card-sm p-4">
-            <SectionHeader title="Mystery Eggs" subtitle="Random pet — coming soon" />
+            <SectionHeader title="Mystery Eggs" subtitle="Hatch an unlocked companion at random" />
             <div className="shop-egg-grid grid grid-cols-5 gap-2">
               {[
                 { r: "common", emoji: "🥚", color: RARITY_COLOR.common },
@@ -275,6 +286,15 @@ export function PetsPage() {
                 </div>
               ))}
             </div>
+            <Button
+              className="mt-3"
+              disabled={
+                player.coins < mysteryEggCost || PETS.every((pet) => isOwned(pet) || isLocked(pet))
+              }
+              onClick={hatchMysteryEgg}
+            >
+              Hatch Mystery Egg ({mysteryEggCost} coins)
+            </Button>
           </div>
 
           <div className="pixel-card-sm p-4">

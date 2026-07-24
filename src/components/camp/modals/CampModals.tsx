@@ -131,6 +131,79 @@ export function PetNurseryModal({ onClose }: { onClose: () => void }) {
   return <PetRoom onClose={onClose} />;
 }
 
+const BLACKSMITH_UPGRADES = [
+  {
+    id: "forge-combo-charm",
+    name: "Combo Charm",
+    cost: 250,
+    icon: "🔥",
+    detail: "A forged keepsake for long typing streaks.",
+  },
+  {
+    id: "forge-pet-bowl",
+    name: "Treat Bowl",
+    cost: 180,
+    icon: "🐾",
+    detail: "A sturdy bowl for your campsite companion.",
+  },
+  {
+    id: "forge-keyboard-trim",
+    name: "Keyboard Trim",
+    cost: 400,
+    icon: "⚒️",
+    detail: "A polished frame for your typing station.",
+  },
+] as const;
+
+export function BlacksmithModal({ onClose }: { onClose: () => void }) {
+  const { state, dispatch } = useGame();
+  return (
+    <ModalShell
+      ariaLabel="Blacksmith Forge"
+      onClose={onClose}
+      className={CAMP_MODAL_SHELL}
+      size="md"
+      contentClassName={CAMP_MODAL_CONTENT}
+    >
+      <CampModalHeader
+        icon="⚒️"
+        title="Blacksmith Forge"
+        subtitle={`${state.player.coins} coins available`}
+      />
+      <div className="grid gap-2">
+        {BLACKSMITH_UPGRADES.map((upgrade) => {
+          const owned = state.inventory.items.includes(upgrade.id);
+          const affordable = state.player.coins >= upgrade.cost;
+          return (
+            <div key={upgrade.id} className="pixel-card-sm flex items-center gap-3 p-3">
+              <span className="text-2xl" aria-hidden="true">
+                {upgrade.icon}
+              </span>
+              <div className="min-w-0 flex-1">
+                <strong className="font-display">{upgrade.name}</strong>
+                <p className="m-0 font-pixel text-[0.52rem] text-muted-foreground">
+                  {upgrade.detail}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="pixel-button"
+                disabled={owned || !affordable}
+                onClick={() => {
+                  dispatch({ type: "SPEND_COINS", amount: upgrade.cost });
+                  dispatch({ type: "ADD_ITEM", itemId: upgrade.id });
+                }}
+              >
+                {owned ? "Forged" : `${upgrade.cost} coins`}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </ModalShell>
+  );
+}
+
 /* --- Training Board: visualized stats ----------------------- */
 export function TrainingBoardModal({ onClose }: { onClose: () => void }) {
   return (

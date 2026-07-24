@@ -4,12 +4,13 @@
 const KEY = "pawtype-daily-goal";
 const DEFAULT_GOAL = 3;
 
-type DailyStore = {
+export type DailyStore = {
   date: string; // YYYY-MM-DD
   count: number;
   goal: number;
   streak: number; // consecutive days meeting the goal
   lastMetDate: string | null;
+  rewardClaimed: boolean;
 };
 
 function today(): string {
@@ -24,7 +25,14 @@ function yesterday(d: string) {
 
 function read(): DailyStore {
   if (typeof window === "undefined") {
-    return { date: today(), count: 0, goal: DEFAULT_GOAL, streak: 0, lastMetDate: null };
+    return {
+      date: today(),
+      count: 0,
+      goal: DEFAULT_GOAL,
+      streak: 0,
+      lastMetDate: null,
+      rewardClaimed: false,
+    };
   }
   try {
     const raw = window.localStorage.getItem(KEY);
@@ -36,12 +44,20 @@ function read(): DailyStore {
         goal: parsed.goal ?? DEFAULT_GOAL,
         streak: parsed.streak ?? 0,
         lastMetDate: parsed.lastMetDate ?? null,
+        rewardClaimed: parsed.rewardClaimed ?? false,
       };
     }
   } catch {
     /* ignore */
   }
-  return { date: today(), count: 0, goal: DEFAULT_GOAL, streak: 0, lastMetDate: null };
+  return {
+    date: today(),
+    count: 0,
+    goal: DEFAULT_GOAL,
+    streak: 0,
+    lastMetDate: null,
+    rewardClaimed: false,
+  };
 }
 
 function write(store: DailyStore) {
@@ -60,9 +76,9 @@ function rollToToday(store: DailyStore): DailyStore {
   if (store.date === t) return store;
   // If we missed a day (lastMetDate is not yesterday and not today), reset streak
   if (store.lastMetDate && store.lastMetDate !== yesterday(t) && store.lastMetDate !== t) {
-    return { ...store, date: t, count: 0, streak: 0 };
+    return { ...store, date: t, count: 0, streak: 0, rewardClaimed: false };
   }
-  return { ...store, date: t, count: 0 };
+  return { ...store, date: t, count: 0, rewardClaimed: false };
 }
 
 export function getDailyGoal() {
@@ -91,6 +107,14 @@ export function tickDailyGoal(): DailyStore {
     streak: nextStreak,
     lastMetDate: justMetGoal ? t : rolled.lastMetDate,
   };
+  write(next);
+  return next;
+}
+
+export function claimDailyGoalReward(): DailyStore | null {
+  const store = rollToToday(read());
+  if (store.count < store.goal || store.rewardClaimed) return null;
+  const next = { ...store, rewardClaimed: true };
   write(next);
   return next;
 }

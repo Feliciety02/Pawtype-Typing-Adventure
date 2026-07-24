@@ -14,6 +14,10 @@ function AuthLayout() {
   const pathname = location.pathname;
   const isCampView = pathname === "/";
   const isAwardsView = pathname === "/achievements";
+  const isPracticeView = pathname === "/practice";
+  const isAdventureView = pathname === "/adventure";
+  const isShopView = pathname === "/shop";
+  const isLessonsView = pathname === "/lessons";
 
   if (isLoading) {
     return (
@@ -31,7 +35,7 @@ function AuthLayout() {
 
   return (
     <main
-      className={`app-shell ${isCampView ? "app-shell--camp" : ""} ${isAwardsView ? "app-shell--awards" : ""}`}
+      className={`app-shell ${isCampView ? "app-shell--camp" : ""} ${isAwardsView ? "app-shell--awards" : ""} ${isPracticeView ? "app-shell--practice" : ""} ${isAdventureView ? "app-shell--adventure" : ""} ${isShopView ? "app-shell--shop" : ""} ${isLessonsView ? "app-shell--lessons" : ""}`}
     >
       <Header />
 

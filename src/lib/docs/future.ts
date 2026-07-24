@@ -2,6 +2,16 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - Desktop Practice, Quest, Shop, and Learn now use viewport-locked page shells with the same inset shared HUD placement. Practice keeps its typing panel, companion art, and compact keyboard fully visible without browser-page scrolling; Quest, Shop, and Learn share the fixed document shell while preserving responsive scrolling on smaller screens.
+
+✅ **Shipped** - Owned Shop doodads now appear as persistent decorations around the Camp scene, using the existing decor inventory as the placement source.
+
+✅ **Shipped** - Mystery Eggs in the Pet Shop now spend coins to hatch one randomly selected, currently unlocked companion that the player does not already own.
+
+✅ **Shipped** - The Camp Blacksmith is now a functional coin sink with persistent forge upgrades for combo, companion-care, and keyboard cosmetics.
+
+✅ **Shipped** - Daily lesson goals now form a claimable Daily Quest: completing the target grants 75 coins and 20 active-companion XP once per day, with claim state persisted locally.
+
 ✅ **Shipped** - Pet Nursery's Companions tray now uses the supplied pixel-art \`companion-button.webp\` asset. The native image button preserves its open/close behavior, accessible state, keyboard focus, and live companion-count badge, which reuses the HUD notification indicator styling.
 
 ✅ **Shipped** - Gamification pass: Lessons page gained a daily-goal ring with a persistent daily-streak counter, and every lesson clear now floats an XP/coin/pet-XP burst overlay. Pet Nursery gained a live mood chip (Happy → Content → Hungry) that decays over time, feeding the active pet or petting the wandering companion refreshes the mood, and a "Buy Snack" fallback lets players spend coins for a treat when the pantry is empty. The wandering pet also gives a small pet-XP nudge on interaction with a cooldown.

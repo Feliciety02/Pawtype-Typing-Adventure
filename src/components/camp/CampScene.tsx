@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ComingSoonModal,
+  BlacksmithModal,
   PaintersTentModal,
   SupplyWagonModal,
   TrainingBoardModal,
@@ -17,6 +18,7 @@ import { WorldRenderer } from "../world/WorldRenderer";
 import { getDayNightState, type DayNightState } from "../world/DayNightController";
 import { useDayNightState } from "../world/useDayNightState";
 import { CampBuilding } from "./CampBuilding";
+import { DOODADS } from "@/lib/shop/shopData";
 
 type CampPage = "cabin" | "mailbox" | "nursery";
 type OpenBuilding = "blacksmith" | "tent" | "training" | "wagon";
@@ -75,6 +77,7 @@ export function CampScene() {
         ? FORCED_MORNING_STATE
         : liveDayNight;
   const environmentSrc = CAMP_ENVIRONMENT_BY_SEGMENT[sceneState.current];
+  const placedDecor = DOODADS.filter((doodad) => state.inventory.items.includes(doodad.id));
 
   const claimReward = () => {
     if (canClaim) {
@@ -209,6 +212,16 @@ export function CampScene() {
           {sceneryBuildings.map((building) => (
             <CampBuilding key={building.id} {...building} />
           ))}
+          {placedDecor.map((doodad, index) => (
+            <span
+              key={doodad.id}
+              className="camp-decor is-fixed"
+              style={{ left: `${18 + (index % 5) * 15}%`, top: `${72 - Math.floor(index / 5) * 9}%` }}
+              title={doodad.name}
+            >
+              {doodad.emoji}
+            </span>
+          ))}
         </div>
       </div>
 
@@ -241,11 +254,7 @@ export function CampScene() {
           rewardCoins={reward.coins}
         />
       )}
-      {openBuilding === "blacksmith" && (
-        <ComingSoonModal icon="🔨" title="Blacksmith" onClose={() => setOpenBuilding(null)}>
-          Forge powerful tools and upgrade your gear - coming soon!
-        </ComingSoonModal>
-      )}
+      {openBuilding === "blacksmith" && <BlacksmithModal onClose={() => setOpenBuilding(null)} />}
     </div>
   );
 }

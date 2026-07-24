@@ -11,6 +11,8 @@ import {
 import { useGame } from "../../lib/game/store";
 
 import { PixelIcon } from "../../lib/icons/PixelIcon";
+import { generateWeakSpotSentences } from "@/lib/game/engine/generator/generate";
+import { Button } from "@/components/ui/button";
 
 const CHAR_GRID = "abcdefghijklmnopqrstuvwxyz.,;:'\"!?-()[]{}1234567890@#$%^&*_+=/\\|`~<>".split(
   "",
@@ -62,6 +64,18 @@ export function StatsView() {
     0.01,
     ...Array.from(mistakeCount.entries()).map(([c, m]) => m / (totalCount.get(c) ?? 1)),
   );
+  const weakChars = [...mistakeCount.entries()]
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3)
+    .map(([char]) => char);
+  const startWeakKeyDrill = async () => {
+    const sentences = await generateWeakSpotSentences(weakChars);
+    window.sessionStorage.setItem(
+      "pawtype-weak-key-drill",
+      JSON.stringify({ title: `Weak Key Drill: ${weakChars.join(", ")}`, words: sentences.join(" ").split(/\s+/) }),
+    );
+    window.location.assign("/practice");
+  };
 
   return (
     <div className="stats-page">
@@ -87,6 +101,13 @@ export function StatsView() {
           accent="var(--coin)"
         />
       </div>
+
+      {weakChars.length > 0 && (
+        <div className="stats-panel pixel-card p-5 flex items-center justify-between gap-4">
+          <div><h3 className="text-2xl mb-1">Weak Key Drill</h3><p className="m-0 font-pixel text-[0.6rem] text-muted-foreground">Practice focused passages for: {weakChars.join(", ").toUpperCase()}</p></div>
+          <Button type="button" onClick={startWeakKeyDrill}>Start Drill</Button>
+        </div>
+      )}
 
       {/* WPM Chart */}
       <div className="stats-panel pixel-card p-5">
