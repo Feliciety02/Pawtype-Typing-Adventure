@@ -25,22 +25,45 @@
   height: 100%;
   transform: rotate(-90deg);
 }
-.daily-goal-ring .track { stroke: color-mix(in oklab, var(--color-border) 25%, transparent); }
-.daily-goal-ring .fill  { stroke: var(--coin, #f4c86a); transition: stroke-dashoffset 400ms ease; }
+.daily-goal-ring .track {
+  stroke: color-mix(in oklab, var(--color-border) 25%, transparent);
+}
+.daily-goal-ring .fill {
+  stroke: var(--coin, #f4c86a);
+  transition: stroke-dashoffset 400ms ease;
+}
 .daily-goal-ring .center {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-pixel, monospace);
   font-size: 0.55rem;
 }
-.daily-goal-meta { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
-.daily-goal-meta strong { font-size: 0.7rem; }
-.daily-goal-streak {
-  display: inline-flex; align-items: center; gap: 3px;
-  font-size: 0.55rem; opacity: 0.85;
+.daily-goal-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.1;
 }
-.daily-goal-streak.is-hot { color: #d95a26; }
-.daily-goal.is-complete { background: linear-gradient(180deg, #fbe6a4, #f4c86a); color: #4f2c22; }
+.daily-goal-meta strong {
+  font-size: 0.7rem;
+}
+.daily-goal-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.55rem;
+  opacity: 0.85;
+}
+.daily-goal-streak.is-hot {
+  color: #d95a26;
+}
+.daily-goal.is-complete {
+  background: linear-gradient(180deg, #fbe6a4, #f4c86a);
+  color: #4f2c22;
+}
 
 /* XP burst floating popup — fired after lesson completion */
 .xp-burst {
@@ -74,12 +97,26 @@
   font-size: 0.8rem;
 }
 @keyframes xp-burst-rise {
-  0%   { opacity: 0; transform: translate(-50%, -30%) scale(0.6); }
-  25%  { opacity: 1; transform: translate(-50%, -55%) scale(1.05); }
-  70%  { opacity: 1; transform: translate(-50%, -70%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -95%) scale(0.95); }
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%) scale(0.6);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -55%) scale(1.05);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -70%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -95%) scale(0.95);
+  }
 }
-.pawtype-reduce-motion .xp-burst { animation-duration: 400ms; }
+.pawtype-reduce-motion .xp-burst {
+  animation-duration: 400ms;
+}
 
 /* Pet mood chip in nursery header */
 .pet-mood-chip {
@@ -93,7 +130,9 @@
   font-size: 0.6rem;
   background: color-mix(in oklab, var(--mood-tint, var(--coin)) 25%, var(--color-card, #fffef8));
 }
-.pet-mood-chip strong { color: var(--color-foreground); }
+.pet-mood-chip strong {
+  color: var(--color-foreground);
+}
 
 /* Heart bubble for wandering pet clicks */
 .camp-pet-heart {
@@ -106,8 +145,19 @@
   filter: drop-shadow(2px 2px 0 #2d160f);
 }
 @keyframes heart-pop {
-  0%   { opacity: 0; transform: translateY(4px) scale(0.5); }
-  20%  { opacity: 1; transform: translateY(-4px) scale(1.15); }
-  100% { opacity: 0; transform: translateY(-40px) scale(0.9); }
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.9);
+  }
 }
-.pawtype-reduce-motion .camp-pet-heart { animation-duration: 300ms; }
+.pawtype-reduce-motion .camp-pet-heart {
+  animation-duration: 300ms;
+}

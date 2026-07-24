@@ -1771,8 +1771,18 @@ button.pixel-selectable-card:focus-visible,
     rgba(83, 45, 19, 0.035) 66%,
     transparent 82%
   );
-  -webkit-mask-image: radial-gradient(ellipse at 50% 46%, #000 36%, rgba(0, 0, 0, 0.8) 55%, transparent 84%);
-  mask-image: radial-gradient(ellipse at 50% 46%, #000 36%, rgba(0, 0, 0, 0.8) 55%, transparent 84%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at 50% 46%,
+    #000 36%,
+    rgba(0, 0, 0, 0.8) 55%,
+    transparent 84%
+  );
+  mask-image: radial-gradient(
+    ellipse at 50% 46%,
+    #000 36%,
+    rgba(0, 0, 0, 0.8) 55%,
+    transparent 84%
+  );
   filter: drop-shadow(0 10px 8px rgba(10, 4, 1, 0.45));
   transition: transform 220ms ease;
 }
@@ -1831,9 +1841,21 @@ img {
   transform: translate(-50%, -50%);
   border-radius: 999px;
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(255, 240, 193, 0.7), rgba(239, 174, 83, 0.46) 34%, transparent 72%),
+    radial-gradient(
+      ellipse at 50% 42%,
+      rgba(255, 240, 193, 0.7),
+      rgba(239, 174, 83, 0.46) 34%,
+      transparent 72%
+    ),
     radial-gradient(ellipse at 50% 78%, rgba(18, 8, 3, 0.54), transparent 76%),
-    linear-gradient(90deg, transparent 0%, rgba(132, 74, 32, 0.35) 14%, rgba(214, 151, 71, 0.9) 35% 65%, rgba(132, 74, 32, 0.35) 86%, transparent 100%);
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(132, 74, 32, 0.35) 14%,
+      rgba(214, 151, 71, 0.9) 35% 65%,
+      rgba(132, 74, 32, 0.35) 86%,
+      transparent 100%
+    );
   box-shadow:
     inset 0 2px 0 rgba(255, 242, 197, 0.58),
     inset 0 -2px 0 rgba(30, 13, 5, 0.32),
@@ -1988,7 +2010,9 @@ img {
   object-fit: fill;
   image-rendering: pixelated;
   pointer-events: none;
-  transition: opacity 120ms ease, filter 120ms ease;
+  transition:
+    opacity 120ms ease,
+    filter 120ms ease;
 }
 
 .awards-wing-emblem-art--active {
@@ -1996,7 +2020,8 @@ img {
 }
 
 .awards-wing-emblem[data-active="true"] .awards-wing-emblem-art--inactive,
-.awards-wing-emblem[data-active="false"]:is(:hover, :focus-visible) .awards-wing-emblem-art--inactive {
+.awards-wing-emblem[data-active="false"]:is(:hover, :focus-visible)
+  .awards-wing-emblem-art--inactive {
   opacity: 0;
 }
 
@@ -2004,7 +2029,8 @@ img {
   opacity: 1;
 }
 
-.awards-wing-emblem[data-active="false"]:is(:hover, :focus-visible) .awards-wing-emblem-art--active {
+.awards-wing-emblem[data-active="false"]:is(:hover, :focus-visible)
+  .awards-wing-emblem-art--active {
   opacity: 1;
   filter: saturate(0.52) brightness(1.22);
 }

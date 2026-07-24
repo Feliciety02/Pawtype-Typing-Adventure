@@ -82,21 +82,6 @@ const PARTICLE_MAP: Record<WorldId, ParticleConfig> = {
     glow: "rgba(207, 164, 255, 0.35)",
     failure: FAILURE_PARTICLES,
   },
-  moonlit: {
-    victory: "🌙",
-    glow: "rgba(167, 184, 255, 0.34)",
-    failure: FAILURE_PARTICLES,
-  },
-  rainy: {
-    victory: "🌧️",
-    glow: "rgba(142, 168, 196, 0.34)",
-    failure: FAILURE_PARTICLES,
-  },
-  snowy: {
-    victory: "❄️",
-    glow: "rgba(230, 242, 255, 0.36)",
-    failure: FAILURE_PARTICLES,
-  },
   sunflower: {
     victory: "🌻",
     glow: "rgba(238, 201, 89, 0.36)",

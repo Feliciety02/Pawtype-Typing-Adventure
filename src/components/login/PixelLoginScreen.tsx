@@ -37,16 +37,18 @@ function FallingLeaves({ layer }: { layer: "behind" | "front" }) {
             className="pixel-login-leaf"
             src={`/shared/icons/login-leaves/leaf-${String((index % 6) + 1).padStart(2, "0")}.webp`}
             alt=""
-            style={{
-              "--leaf-left": `${left}%`,
-              "--leaf-top": `${top}%`,
-              "--leaf-delay": `${delay}s`,
-              "--leaf-duration": `${duration}s`,
-              "--leaf-drift": `${drift}px`,
-              "--leaf-distance": `${distance}px`,
-              "--leaf-turn": `${turn}`,
-              "--leaf-size": `${size}`,
-            } as CSSProperties}
+            style={
+              {
+                "--leaf-left": `${left}%`,
+                "--leaf-top": `${top}%`,
+                "--leaf-delay": `${delay}s`,
+                "--leaf-duration": `${duration}s`,
+                "--leaf-drift": `${drift}px`,
+                "--leaf-distance": `${distance}px`,
+                "--leaf-turn": `${turn}`,
+                "--leaf-size": `${size}`,
+              } as CSSProperties
+            }
           />
         );
       })}
@@ -66,7 +68,8 @@ export function PixelLoginScreen() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const artwork = mode === "login" ? "/shared/auth/login" : "/shared/auth/signin";
-  const submitArtwork = mode === "login" ? "/shared/auth/login-submit.webp" : "/shared/auth/signin-create-account.webp";
+  const submitArtwork =
+    mode === "login" ? "/shared/auth/login-submit.webp" : "/shared/auth/signin-create-account.webp";
 
   const isBusy = isLoggingIn || isSigningUp || isSocialLoading;
 
@@ -113,7 +116,11 @@ export function PixelLoginScreen() {
     >
       <FallingLeaves layer="behind" />
       <div className="pixel-login-title-screen">
-        <img src="/shared/brand/combined-logo.webp" alt="PawType" className="pixel-login-combined-logo" />
+        <img
+          src="/shared/brand/combined-logo.webp"
+          alt="PawType"
+          className="pixel-login-combined-logo"
+        />
         <button className="pixel-login-play-btn" type="button" onClick={() => setIsAuthOpen(true)}>
           <Play aria-hidden="true" fill="currentColor" size={17} />
           Play

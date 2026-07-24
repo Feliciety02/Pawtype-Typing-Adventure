@@ -2,6 +2,8 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - Pet Nursery's Companions tray now uses the supplied pixel-art \`companion-button.webp\` asset. The native image button preserves its open/close behavior, accessible state, keyboard focus, and live companion-count badge, which reuses the HUD notification indicator styling.
+
 ✅ **Shipped** - Gamification pass: Lessons page gained a daily-goal ring with a persistent daily-streak counter, and every lesson clear now floats an XP/coin/pet-XP burst overlay. Pet Nursery gained a live mood chip (Happy → Content → Hungry) that decays over time, feeding the active pet or petting the wandering companion refreshes the mood, and a "Buy Snack" fallback lets players spend coins for a treat when the pantry is empty. The wandering pet also gives a small pet-XP nudge on interaction with a cooldown.
 
 ✅ **Shipped** - Camp interior toolbars now share the main HUD’s responsive width and outer margin. The illustrated Back controls in Cabin, Pet Nursery, and Mailbox align with the header edge at every viewport size.

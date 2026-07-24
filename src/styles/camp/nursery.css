@@ -39,12 +39,14 @@
   background: transparent;
   cursor: pointer;
   line-height: 0;
-  transition: transform 160ms ease, filter 160ms ease;
+  transition:
+    transform 160ms ease,
+    filter 160ms ease;
 }
 
 .camp-back-button img {
   display: block;
-  width: 60%;
+  width: 72%;
   height: auto;
   image-rendering: pixelated;
 }
@@ -522,17 +524,52 @@
 }
 
 .camp-nursery-companion-toggle {
-  min-height: 44px;
+  position: relative;
+  align-self: start;
+  width: auto;
+  height: clamp(36.4px, 3.581vw, 57.4px);
+  margin-top: clamp(0.45rem, 0.72vw, 0.7rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  line-height: 0;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 5px rgba(19, 10, 3, 0.35));
+  transition:
+    filter 160ms ease,
+    transform 160ms ease;
 }
 
-.camp-nursery-companion-toggle strong {
-  display: grid;
-  place-items: center;
-  min-width: 1.45rem;
-  height: 1.45rem;
-  border-radius: 999px;
-  background: rgba(86, 52, 26, 0.48);
-  font-family: var(--font-display), var(--font-pixel), monospace;
+.camp-nursery-companion-toggle img {
+  display: block;
+  width: auto;
+  height: 100%;
+}
+
+.camp-nursery-toolbar .camp-back-button {
+  align-self: start;
+  margin-top: clamp(0.45rem, 0.72vw, 0.7rem);
+}
+
+.camp-nursery-companion-toggle:hover {
+  filter: brightness(1.06) drop-shadow(0 5px 7px rgba(19, 10, 3, 0.42));
+  transform: translateY(-1px);
+}
+
+.camp-nursery-companion-toggle:focus-visible {
+  outline: 3px solid #fff1b8;
+  outline-offset: 3px;
+}
+
+.camp-nursery-companion-toggle:active {
+  transform: translateY(1px);
+}
+
+.camp-nursery-companion-toggle .camp-nursery-companion-count {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+  z-index: 1;
 }
 
 .camp-nursery-shell {
@@ -596,7 +633,9 @@
   background:
     linear-gradient(180deg, rgba(101, 62, 29, 0.9), rgba(40, 22, 11, 0.94)),
     repeating-linear-gradient(90deg, transparent 0 8px, rgba(255, 212, 130, 0.04) 8px 10px);
-  box-shadow: inset 0 0 0 1px rgba(244, 190, 105, 0.18), 0 3px 0 rgba(24, 12, 5, 0.72);
+  box-shadow:
+    inset 0 0 0 1px rgba(244, 190, 105, 0.18),
+    0 3px 0 rgba(24, 12, 5, 0.72);
   text-shadow: 0 2px 8px rgba(18, 8, 3, 0.95);
 }
 
@@ -1216,25 +1255,16 @@
 }
 
 @media (max-width: 520px) {
-  .camp-nursery-toolbar .camp-interior-back,
   .camp-nursery-companion-toggle {
-    width: 44px;
-    min-width: 44px;
+    width: auto;
+    height: 33.7px;
+    min-width: 0;
     padding-inline: 0;
   }
 
-  .camp-nursery-toolbar .camp-interior-back span,
-  .camp-nursery-companion-toggle span {
-    display: none;
-  }
-
-  .camp-nursery-companion-toggle strong {
-    position: absolute;
-    top: -0.3rem;
-    right: -0.3rem;
-    min-width: 1.1rem;
-    height: 1.1rem;
-    font-size: 0.54rem;
+  .camp-nursery-companion-toggle .camp-nursery-companion-count {
+    top: -0.25rem;
+    right: -0.25rem;
   }
 
   .camp-nursery-toolbar h1 {

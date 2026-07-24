@@ -41,8 +41,6 @@ const CAMP_ENVIRONMENT_BY_SEGMENT: Record<DayNightState["current"], string> = {
   sunset: "/camp/scenes/campscene-background-sunset.webp",
   twilight: "/camp/scenes/campscene-background-twilight.webp",
 };
-
-
 const FORCED_MORNING_STATE = getDayNightState(new Date(2024, 0, 1, 9, 0, 0, 0));
 const FORCED_NIGHT_STATE = getDayNightState(new Date(2024, 0, 1, 22, 0, 0, 0));
 
@@ -217,10 +215,7 @@ export function CampScene() {
       {activePage === "cabin" && (
         <section className="camp-interior-page" aria-label="Cabin bag inventory">
           <div className="camp-interior-toolbar">
-            <CampBackButton
-              ref={pageBackRef}
-              onClick={closeCabin}
-            />
+            <CampBackButton ref={pageBackRef} onClick={closeCabin} />
             <div>
               <h1>Cabin Bag</h1>
               <p>Your eggs, pets, rewards, and camp collection live inside the cabin.</p>
@@ -232,9 +227,7 @@ export function CampScene() {
       {activePage === "nursery" && (
         <PetNurseryPage backButtonRef={pageBackRef} onBack={closeCabin} />
       )}
-      {activePage === "mailbox" && (
-        <MailboxPage backButtonRef={pageBackRef} onBack={closeCabin} />
-      )}
+      {activePage === "mailbox" && <MailboxPage backButtonRef={pageBackRef} onBack={closeCabin} />}
       {openBuilding === "tent" && (
         <PaintersTentModal onClose={() => setOpenBuilding(null)} onThemeChange={triggerFade} />
       )}

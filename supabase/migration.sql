@@ -49,6 +49,9 @@ create table if not exists public.game_states (
   updated_at timestamptz not null default now()
 );
 
+alter table public.game_states
+  add column if not exists sessions jsonb not null default '[]'::jsonb;
+
 alter table public.game_states enable row level security;
 
 create index if not exists idx_game_states_user_id on public.game_states(user_id);

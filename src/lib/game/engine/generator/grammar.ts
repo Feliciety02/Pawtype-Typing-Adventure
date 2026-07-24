@@ -87,13 +87,13 @@ const COORD_CONJ = ["and", "but", "so", "yet"];
 
 // Controls how complex a generated sentence can be at each difficulty level
 type GrammarLimits = {
-  maxAdj: number;      // Max adjectives per noun phrase
-  maxPP: number;       // Max prepositional phrases per sentence
-  advInVP: boolean;    // Allow adverbs inside verb phrases
-  advFront: boolean;   // Allow fronted adverbs ("Quickly, the fox ran")
-  ppFront: boolean;    // Allow fronted prepositional phrases
-  sub: boolean;        // Allow subordinate clauses
-  comp: boolean;       // Allow compound sentences (coordinated clauses)
+  maxAdj: number; // Max adjectives per noun phrase
+  maxPP: number; // Max prepositional phrases per sentence
+  advInVP: boolean; // Allow adverbs inside verb phrases
+  advFront: boolean; // Allow fronted adverbs ("Quickly, the fox ran")
+  ppFront: boolean; // Allow fronted prepositional phrases
+  sub: boolean; // Allow subordinate clauses
+  comp: boolean; // Allow compound sentences (coordinated clauses)
 };
 
 // Difficulty presets — beginner is simplest, master allows full sentence variety

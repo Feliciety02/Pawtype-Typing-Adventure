@@ -44,6 +44,7 @@ export interface Database {
           player: Json;
           inventory: Json;
           adventures: Json;
+          sessions: Json;
           updated_at: string;
         };
         Insert: {
@@ -52,6 +53,7 @@ export interface Database {
           player: Json;
           inventory: Json;
           adventures: Json;
+          sessions?: Json;
           updated_at?: string;
         };
         Update: {
@@ -60,6 +62,7 @@ export interface Database {
           player?: Json;
           inventory?: Json;
           adventures?: Json;
+          sessions?: Json;
           updated_at?: string;
         };
         Relationships: [

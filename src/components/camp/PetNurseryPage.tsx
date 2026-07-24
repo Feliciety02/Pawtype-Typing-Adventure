@@ -1,6 +1,5 @@
 import type { CSSProperties, RefObject } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { PawPrint } from "lucide-react";
 
 import { loadCompletedLessons } from "@/lib/game/curriculum";
 import {
@@ -206,17 +205,16 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
         <div className="camp-nursery-toolbar-copy">
           <h1>Pet Nursery</h1>
         </div>
-        <Button
+        <button
           type="button"
-          variant="secondary"
           className="camp-nursery-companion-toggle"
           aria-expanded={showCompanions}
+          aria-label={`Toggle companions tray (${inventory.pets.length} companions)`}
           onClick={() => setShowCompanions((visible) => !visible)}
         >
-          <PawPrint aria-hidden="true" />
-          <span>Companions</span>
-          <strong>{inventory.pets.length}</strong>
-        </Button>
+          <img src="/shared/buttons/companion-button.webp" alt="" aria-hidden="true" />
+          <span className="hud-badge camp-nursery-companion-count">{inventory.pets.length}</span>
+        </button>
       </div>
 
       <div className={`camp-nursery-shell ${showCompanions ? "is-companion-open" : ""}`}>
@@ -364,9 +362,7 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
                   tone="success"
                   aria-label={`${activePet.name} XP progress`}
                 />
-                <p>
-                  Feed treats to level up faster and keep this companion happy at the campsite.
-                </p>
+                <p>Feed treats to level up faster and keep this companion happy at the campsite.</p>
               </div>
             </div>
           ) : (
@@ -375,7 +371,10 @@ export function PetNurseryPage({ backButtonRef, onBack }: PetNurseryPageProps) {
             </p>
           )}
 
-          <div className="camp-nursery-actions" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div
+            className="camp-nursery-actions"
+            style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
+          >
             <Button
               className="camp-nursery-feed-btn"
               type="button"

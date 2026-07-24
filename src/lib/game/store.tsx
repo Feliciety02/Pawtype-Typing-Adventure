@@ -331,7 +331,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     onError: () => console.warn("Cloud save failed"),
   });
 
-  const syncTimer = useRef<ReturnType<typeof setTimeout>>();
+  const syncTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Debounce: wait 2s after last state change before saving to cloud
   useEffect(() => {
