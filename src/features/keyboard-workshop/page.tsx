@@ -78,7 +78,6 @@ export default function KeyboardWorkshopPage() {
         {/* Center — 3D viewport */}
         <main className="flex-1 flex flex-col overflow-hidden relative">
           <div className="flex-1 relative">
-            {!drawerOpen && <div className="workshop-empty-state"><strong>Click any key to customize it</strong><span>Or choose a group below to style several keys at once.</span></div>}
             <TestTypingBanner />
             {mounted ? (
               <Suspense fallback={<SceneLoader />}>

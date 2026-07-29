@@ -89,6 +89,97 @@
 .workshop-overview__parts { display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; }
 .workshop-overview__parts button { display: flex; align-items: center; gap: .3rem; min-height: 1.9rem; padding: .3rem .48rem; color: #eef2f4; background: #353c42; border: 1px solid #5b656d; border-radius: .35rem; font-size: .72rem; }
 .workshop-overview__parts button:hover { background: #4a565f; }
+
+.workshop-overview__layout {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  min-height: 1.9rem;
+  padding: .2rem .35rem .2rem .48rem;
+  color: #cbd3d8;
+  background: #2c343a;
+  border: 1px solid #5b656d;
+  border-radius: .35rem;
+  font-size: .72rem;
+}
+
+.workshop-overview__layout select {
+  color: #f4f7f8;
+  background: #353c42;
+  border: 0;
+  border-radius: .2rem;
+  font-size: inherit;
+  padding: .18rem .25rem;
+}
+
+.workshop-overview__more { position: relative; }
+
+.workshop-overview__more-menu {
+  position: absolute;
+  top: calc(100% + .35rem);
+  left: 0;
+  z-index: 30;
+  display: grid;
+  min-width: 10rem;
+  gap: .25rem;
+  padding: .4rem;
+  background: #252d32;
+  border: 1px solid #637078;
+  border-radius: .45rem;
+  box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .35);
+}
+
+.workshop-overview__more-menu button {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.workshop-overview__more-menu .workshop-overview__layout {
+  justify-content: space-between;
+}
+
+.workshop-overview__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .4rem;
+  min-width: min(100%, 31rem);
+}
+
+.workshop-overview__steps button {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  min-width: 0;
+  padding: .45rem .55rem;
+  color: #d9e1e5;
+  background: #2d353b;
+  border: 1px solid #505c64;
+  border-radius: .42rem;
+  text-align: left;
+}
+
+.workshop-overview__steps button:hover,
+.workshop-overview__steps button.is-complete,
+.workshop-overview__steps button.is-ready { background: #3b4851; border-color: #6e8790; }
+
+.workshop-overview__steps b {
+  display: grid;
+  place-items: center;
+  flex: 0 0 1.35rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  color: #f8fafb;
+  background: #526975;
+  border-radius: 999px;
+  font-size: .72rem;
+}
+
+.workshop-overview__steps span { min-width: 0; font-size: .72rem; font-weight: 700; }
+.workshop-overview__steps small { display: block; overflow: hidden; color: #aab8c0; font-size: .63rem; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .workshop-overview__steps { grid-template-columns: 1fr; }
+}
 .workshop-overview__controls label, .workshop-overview__controls button { display: flex; align-items: center; gap: 0.35rem; min-height: 1.9rem; padding: 0.25rem 0.45rem; color: #e5e8ea; background: #353c42; border: 1px solid #5b656d; border-radius: 0.3rem; }
 .workshop-overview__controls input { width: 1.2rem; height: 1.2rem; padding: 0; background: transparent; border: 0; cursor: pointer; }
 .workshop-overview__controls button:hover { background: #454e55; }

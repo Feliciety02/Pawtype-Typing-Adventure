@@ -7,6 +7,7 @@ import type { BadgeCustomization } from "../types"
 type Props = {
   position: [number, number, number]
   badge: BadgeCustomization
+  onClick?: () => void
 }
 
 const PAW_PATHS = [
@@ -17,12 +18,12 @@ const PAW_PATHS = [
   { x: 0.13, z: -0.15, r: 0.035 },
 ]
 
-export function KeyboardBadge3D({ position, badge }: Props) {
+export function KeyboardBadge3D({ position, badge, onClick }: Props) {
   if (!badge.enabled || badge.type === "none") return null
   const color = useMemo(() => new THREE.Color(badge.color), [badge.color])
 
   return (
-    <group position={position}>
+    <group position={position} onClick={(event) => { event.stopPropagation(); onClick?.() }}>
       {/* Badge plate */}
       <mesh>
         <boxGeometry args={[0.5, 0.06, 0.3]} />

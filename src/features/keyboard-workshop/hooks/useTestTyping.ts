@@ -38,7 +38,7 @@ const CODE_TO_ID: Record<string, string> = {
 }
 
 export function useTestTyping() {
-  const { testTypingMode, setPressedKey } = useWorkshopStore()
+  const { testTypingMode, setPressedKey, currentBuild } = useWorkshopStore()
 
   useEffect(() => {
     if (!testTypingMode) return
@@ -46,7 +46,7 @@ export function useTestTyping() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.nativeEvent?.isComposing || e.keyCode === 229) return
       const keyId = CODE_TO_ID[e.code]
-      if (keyId) setPressedKey(keyId, true)
+      if (keyId) { setPressedKey(keyId, true); if (!ke.repeat) playKeySound(currentBuild.sound, keyId) }
     }
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -73,5 +73,16 @@ export function useTestTyping() {
       window.removeEventListener("keydown", down)
       window.removeEventListener("keyup", up)
     }
-  }, [testTypingMode, setPressedKey])
+  }, [testTypingMode, setPressedKey, currentBuild.sound])
+}
+
+function playKeySound(sound: { profile: string; volume: number; pitch: number; pitchVariation: number }, keyId: string) {
+  const Context = window.AudioContext ?? (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+  if (!Context || sound.volume <= 0) return
+  const context = new Context(), oscillator = context.createOscillator(), gain = context.createGain()
+  const profiles: Record<string, [OscillatorType, number]> = { soft: ["sine", 150], creamy: ["sine", 120], thock: ["triangle", 92], clack: ["square", 180], silent: ["sine", 70], wood: ["triangle", 105], ceramic: ["square", 220], crystal: ["sine", 320], stone: ["triangle", 78], retro: ["square", 135], magical: ["sine", 260] }
+  const [type, frequency] = profiles[sound.profile] ?? profiles.thock
+  oscillator.type = type; oscillator.frequency.value = (frequency + ((keyId.charCodeAt(0) || 0) % 7 - 3) * sound.pitchVariation * 18) * sound.pitch
+  gain.gain.setValueAtTime(Math.min(.16, sound.volume * .16), context.currentTime); gain.gain.exponentialRampToValueAtTime(.001, context.currentTime + .075)
+  oscillator.connect(gain).connect(context.destination); oscillator.start(); oscillator.stop(context.currentTime + .08); oscillator.addEventListener("ended", () => void context.close())
 }

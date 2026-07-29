@@ -49,6 +49,26 @@ export function KeyboardKnob3D({ position, knob, radius, explodeOffset = 0, onCl
             <meshLambertMaterial color={color} flatShading />
           </mesh>
         )
+      case "potion":
+        return (
+          <group>
+            <mesh position={[0, -h * 0.12, 0]}>
+              <sphereGeometry args={[radius * 0.78, 16, 12]} />
+              <meshStandardMaterial color={color} roughness={0.22} metalness={0.08} transparent opacity={0.9} />
+            </mesh>
+            <mesh position={[0, h * 0.38, 0]}>
+              <cylinderGeometry args={[radius * 0.28, radius * 0.34, h * 0.32, 10]} />
+              <meshStandardMaterial color="#d7d9dc" roughness={0.35} metalness={0.65} />
+            </mesh>
+          </group>
+        )
+      case "star-dial":
+        return (
+          <mesh rotation={[0, Math.PI / 4, 0]}>
+            <cylinderGeometry args={[radius, radius * 0.82, h, 8]} />
+            <meshStandardMaterial color={color} roughness={0.28} metalness={0.45} />
+          </mesh>
+        )
       case "mushroom":
         return (
           <group>
@@ -85,6 +105,7 @@ export function KeyboardKnob3D({ position, knob, radius, explodeOffset = 0, onCl
   return (
     <group ref={knobRef} position={[position[0], position[1] + explodeOffset, position[2]]} onClick={(event) => { event.stopPropagation(); onClick?.() }}>
       <KnobShape />
+      {knob.glow && <pointLight color={knob.glowColor} intensity={1.2} distance={2.4} />}
     </group>
   )
 }

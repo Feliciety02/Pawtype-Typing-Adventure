@@ -61,13 +61,6 @@ type HistoryEntry = {
   build: KeyboardBuild
 }
 
-function upsertSavedBuild(savedBuilds: KeyboardBuild[], build: KeyboardBuild) {
-  const index = savedBuilds.findIndex((saved) => saved.id === build.id)
-  return index === -1
-    ? [...savedBuilds, build]
-    : savedBuilds.map((saved) => saved.id === build.id ? build : saved)
-}
-
 type WorkshopState = {
   // Current working build
   currentBuild: KeyboardBuild
@@ -331,9 +324,8 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
         set((s) => {
           const currentBuild = { ...s.currentBuild, keys, updatedAt: new Date().toISOString() }
           return {
-          currentBuild,
-          savedBuilds: upsertSavedBuild(s.savedBuilds, currentBuild),
-          unsavedChanges: false,
+            currentBuild,
+            unsavedChanges: true,
         }})
       },
 
@@ -350,9 +342,8 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
         set((s) => {
           const currentBuild = { ...s.currentBuild, keys, updatedAt: new Date().toISOString() }
           return {
-          currentBuild,
-          savedBuilds: upsertSavedBuild(s.savedBuilds, currentBuild),
-          unsavedChanges: false,
+            currentBuild,
+            unsavedChanges: true,
         }})
       },
 
@@ -365,11 +356,10 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
         set((s) => {
           const currentBuild = { ...s.currentBuild, keys, updatedAt: new Date().toISOString() }
           return {
-          currentBuild,
-          savedBuilds: upsertSavedBuild(s.savedBuilds, currentBuild),
-          selectedKeyIds: Object.keys(keys),
-          selectedPart: "keycaps",
-          unsavedChanges: false,
+            currentBuild,
+            selectedKeyIds: Object.keys(keys),
+            selectedPart: "keycaps",
+            unsavedChanges: true,
         }})
       },
 
@@ -380,16 +370,13 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
         if (keys[keyId]) keys[keyId] = deepMerge(keys[keyId], patch) as KeyCustomization
         set((s) => {
           const currentBuild = { ...s.currentBuild, keys, updatedAt: new Date().toISOString() }
-          return { currentBuild, savedBuilds: upsertSavedBuild(s.savedBuilds, currentBuild), unsavedChanges: false }
+          return { currentBuild, unsavedChanges: true }
         })
       },
 
-      // Selecting a key calls selectKey first, then selects the keycap editor.
-      // Preserve that key selection so the contextual drawer can open.
-      setSelectedPart: (part) => set((state) => ({
-        selectedPart: part,
-        selectedKeyIds: part === "keycaps" ? state.selectedKeyIds : [],
-      })),
+      // Keep a key selection while inspecting another part. Returning to Keycaps
+      // should never make the player reselect the work they were editing.
+      setSelectedPart: (part) => set({ selectedPart: part }),
 
       updateCase: (patch) => {
         get().pushHistory()
@@ -466,8 +453,18 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
       undo: () => {
         const { history, historyIndex } = get()
         if (historyIndex <= 0) return
-        const newIndex = historyIndex - 1
-        set({ currentBuild: { ...history[newIndex].build }, historyIndex: newIndex, unsavedChanges: true })
+        // Mutations capture the build immediately before they are applied. Swap the
+        // live build into that history slot before stepping back, so Redo can restore
+        // the exact state that was undone.
+        const previous = history[historyIndex].build
+        const nextHistory = [...history]
+        nextHistory[historyIndex] = { build: JSON.parse(JSON.stringify(get().currentBuild)) }
+        set({
+          currentBuild: { ...previous },
+          history: nextHistory,
+          historyIndex: historyIndex - 1,
+          unsavedChanges: true,
+        })
       },
 
       redo: () => {

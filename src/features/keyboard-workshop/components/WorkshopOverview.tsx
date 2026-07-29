@@ -1,24 +1,16 @@
-import { Search, Paintbrush, RotateCcw, Box, CircleDot, Sparkles, Save } from "lucide-react"
+import { Search, Paintbrush, Box, CircleDot, Sparkles, Save, Volume2, Sticker } from "lucide-react"
 import { useWorkshopStore } from "../store"
 import { LAYOUTS } from "../layout-data"
 
 export function WorkshopOverview() {
-  const {
-    currentBuild,
-    selectedKeyIds,
-    selectGroup,
-    setSelectedPart,
-    updateAllKeys,
-    setCameraPreset,
-  } = useWorkshopStore()
+  const { currentBuild, selectedKeyIds, selectGroup, setSelectedPart, setCameraPreset, setLayout } = useWorkshopStore()
   const keys = Object.values(currentBuild.keys)
-  const firstKey = keys[0]
 
   const findKeys = (query: string) => {
-    const normalized = query.trim().toLowerCase()
-    if (!normalized) return
+    const queryText = query.trim().toLowerCase()
+    if (!queryText) return
     const matches = (LAYOUTS[currentBuild.layout] ?? [])
-      .filter((key) => `${key.id} ${key.label} ${key.primaryLegend ?? ""} ${key.type}`.toLowerCase().includes(normalized))
+      .filter((key) => `${key.id} ${key.label} ${key.primaryLegend ?? ""}`.toLowerCase().includes(queryText))
       .map((key) => key.id)
     if (matches.length) {
       setSelectedPart("keycaps")
@@ -28,59 +20,26 @@ export function WorkshopOverview() {
   }
 
   return (
-    <section className="workshop-overview" aria-label="Keyboard overview and quick controls">
+    <section className="workshop-overview" aria-label="Keyboard controls">
       <div className="workshop-overview__stats">
         <strong>{currentBuild.name}</strong>
-        <span>{currentBuild.layout} · {keys.length} keys · {firstKey?.profile ?? "Cherry"} · {firstKey?.material ?? "PBT"}</span>
-        <span>{selectedKeyIds.length ? `${selectedKeyIds.length} selected` : "Select a key or group"}</span>
+        <span>{currentBuild.layout} keyboard</span>
+        <span>{selectedKeyIds.length ? `${selectedKeyIds.length} keys selected` : "Pick a key to start"}</span>
       </div>
-
-      <div className="workshop-overview__parts" aria-label="Choose what to customize">
-        <button type="button" onClick={() => setSelectedPart("keycaps")}><Paintbrush size={13} /> Keycaps</button>
-        <button type="button" onClick={() => setSelectedPart("case")}><Box size={13} /> Case</button>
+      <div className="workshop-overview__parts" aria-label="Choose what to change">
+        <button type="button" onClick={() => setSelectedPart("keycaps")}><Paintbrush size={13} /> Keys</button>
+        <button type="button" onClick={() => setSelectedPart("case")}><Box size={13} /> Keyboard</button>
         <button type="button" onClick={() => setSelectedPart("knob")}><CircleDot size={13} /> Knob</button>
-        <button type="button" onClick={() => setSelectedPart("lighting")}><Sparkles size={13} /> Lighting</button>
-        <button type="button" onClick={() => setSelectedPart("builds")}><Save size={13} /> Builds</button>
+        <button type="button" onClick={() => setSelectedPart("lighting")}><Sparkles size={13} /> Lights</button>
+        <button type="button" onClick={() => setSelectedPart("badge")}><Sticker size={13} /> Logo</button>
+        <button type="button" onClick={() => setSelectedPart("sound")}><Volume2 size={13} /> Sounds</button>
+        <button type="button" onClick={() => setSelectedPart("builds")}><Save size={13} /> My builds</button>
+        <label className="workshop-overview__layout">Size <select value={currentBuild.layout} onChange={(event) => setLayout(event.target.value)}><option value="75%">75%</option><option value="65%">65%</option><option value="60%">60%</option></select></label>
       </div>
-
       <label className="workshop-overview__search">
         <Search size={14} />
-        <input
-          placeholder="Find a key: Enter, Space, Arrow…"
-          onKeyDown={(event) => {
-            if (event.key === "Enter") findKeys(event.currentTarget.value)
-          }}
-        />
+        <input placeholder="Find a key" aria-label="Find a key" onKeyDown={(event) => { if (event.key === "Enter") findKeys(event.currentTarget.value) }} />
       </label>
-
-      <div className="workshop-overview__controls">
-        <label title="Apply this color to every keycap">
-          <Paintbrush size={14} /> All keycaps
-          <input
-            type="color"
-            value={firstKey?.colors.top ?? "#e8dfc8"}
-            onChange={(event) => {
-              if (!firstKey) return
-              const top = event.target.value
-              updateAllKeys({ colors: { ...firstKey.colors, top } })
-            }}
-          />
-        </label>
-        <label title="Apply this color to every keyboard legend">
-          Legend
-          <input
-            type="color"
-            value={firstKey?.legend.color ?? "#303438"}
-            onChange={(event) => {
-              if (!firstKey) return
-              updateAllKeys({ legend: { ...firstKey.legend, color: event.target.value } })
-            }}
-          />
-        </label>
-        <button type="button" onClick={() => { selectGroup(Object.keys(currentBuild.keys)); setSelectedPart("keycaps") }}>
-          <RotateCcw size={14} /> Select all
-        </button>
-      </div>
     </section>
   )
 }

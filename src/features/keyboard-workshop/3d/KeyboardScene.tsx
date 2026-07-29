@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect, useMemo, Suspense } from "react"
-import { Canvas, useThree } from "@react-three/fiber"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { OrbitControls, Environment } from "@react-three/drei"
 import * as THREE from "three"
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib"
@@ -14,6 +14,9 @@ import { KeyboardFrame3D } from "./KeyboardFrame3D"
 import { KeyboardSwitch3D } from "./KeyboardSwitch3D"
 import { KeyboardStabilizer3D } from "./KeyboardStabilizer3D"
 import { KeyboardKnob3D } from "./KeyboardKnob3D"
+import { KeyboardBadge3D } from "./KeyboardBadge3D"
+import type { LightingCustomization } from "../types"
+import { makeDefaultKey } from "../defaults"
 
 // ─── Camera presets ───────────────────────────────────────────────────────────
 
@@ -67,6 +70,62 @@ const ENV_MAP: Record<string, string> = {
   "royal-candlelight": "lobby",
   stardust:            "night",
   cafe:                "apartment",
+}
+
+function KeyboardLighting({ lighting, pressedCount }: { lighting: LightingCustomization; pressedCount: number }) {
+  const keyLight = useRef<THREE.PointLight>(null)
+  const fillLight = useRef<THREE.PointLight>(null)
+  const primary = useMemo(() => new THREE.Color(lighting.primaryColor), [lighting.primaryColor])
+  const secondary = useMemo(() => new THREE.Color(lighting.secondaryColor), [lighting.secondaryColor])
+
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime()
+    const speed = 0.35 + lighting.speed * 4
+    const wave = (Math.sin(time * speed) + 1) / 2
+    const active = lighting.trigger === "on-keypress" ? pressedCount > 0 : lighting.trigger === "idle" ? pressedCount === 0 : true
+    const animated = lighting.effect === "static" ? 1 : 0.35 + wave * 0.65
+    const intensity = active ? (0.15 + lighting.intensity * 2.2) * animated : 0
+    const colorMix = lighting.effect === "static" ? 0 : wave
+    if (keyLight.current) {
+      keyLight.current.color.copy(primary).lerp(secondary, colorMix)
+      keyLight.current.intensity = intensity
+      const travel = Math.sin(time * speed) * 5
+      if (lighting.direction === "top-bottom" || lighting.direction === "bottom-top") keyLight.current.position.set(0, 2.2, travel)
+      else if (lighting.direction === "radial" || lighting.direction === "center-out") keyLight.current.position.set(Math.cos(time * speed) * 4, 2.2, Math.sin(time * speed) * 3)
+      else keyLight.current.position.set(lighting.direction === "right-left" ? -travel : travel, 2.2, 0)
+    }
+    if (fillLight.current) {
+      fillLight.current.color.copy(secondary)
+      fillLight.current.intensity = intensity * 0.45
+    }
+  })
+
+  return (
+    <>
+      <ambientLight intensity={0.08 + lighting.ambientLight * 0.8} />
+      {/* Only the high, broad key light creates shadows.  A fixed bias avoids
+          self-shadow acne when a keycap sits close to the plate. */}
+      <directionalLight
+        position={[8, 16, 10]}
+        intensity={0.35 + lighting.brightness * 1.25}
+        color={lighting.primaryColor}
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.00008}
+        shadow-normalBias={0.035}
+        shadow-camera-near={1}
+        shadow-camera-far={40}
+        shadow-camera-left={-14}
+        shadow-camera-right={14}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+      />
+      {/* Fill light is intentionally shadow-free so dark side faces stay readable. */}
+      <directionalLight position={[-6, 10, -4]} intensity={0.32 + lighting.brightness * 0.32} color={lighting.secondaryColor} />
+      <pointLight ref={keyLight} position={[0, 2.2, 0]} distance={15} />
+      <pointLight ref={fillLight} position={[0, 1.5, -3]} distance={12} />
+    </>
+  )
 }
 
 // ─── Keyboard code → key id map ───────────────────────────────────────────────
@@ -162,16 +221,7 @@ function KeyboardAssembly() {
   return (
     <>
       {/* Lighting */}
-      <ambientLight intensity={0.65} />
-      <directionalLight
-        position={[10, 14, 10]}
-        intensity={1.3}
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.001}
-      />
-      <directionalLight position={[-6, 8, -4]} intensity={0.4} />
-      <directionalLight position={[0, 5, 8]} intensity={0.25} color="#fff8f0" />
+      <KeyboardLighting lighting={currentBuild.lighting} pressedCount={pressedKeys.size} />
       <Environment preset={envPreset} />
       <CameraController />
 
@@ -200,6 +250,12 @@ function KeyboardAssembly() {
           onClick={() => setSelectedPart("plate")}
         />
 
+        <KeyboardBadge3D
+          position={[bounds.minX + 0.48, 0.33, -bounds.minY + 0.35]}
+          badge={currentBuild.badge}
+          onClick={() => setSelectedPart("badge")}
+        />
+
         {/* Stabilizers */}
         <KeyboardStabilizer3D
           positions={positions}
@@ -217,8 +273,9 @@ function KeyboardAssembly() {
 
         {/* Keycaps */}
         {positions.map((pos) => {
-          const key = currentBuild.keys[pos.keyId]
-          if (!key) return null
+          // Older locally saved builds may predate keys added to the current
+          // layout. Render a safe default instead of leaving an empty gap.
+          const key = currentBuild.keys[pos.keyId] ?? makeDefaultKey(pos.keyId, pos.primaryLegend, pos.type)
           return (
             <KeyboardKeycap3D
               key={pos.keyId}

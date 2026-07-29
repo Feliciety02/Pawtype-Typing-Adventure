@@ -1,7 +1,7 @@
 "use client"
-import { useRef, useMemo, useCallback, useState } from "react"
+import { useRef, useMemo, useCallback, useEffect, useState } from "react"
 import { useFrame } from "@react-three/fiber"
-import { Html, Text } from "@react-three/drei"
+import { Html, Text, useTexture } from "@react-three/drei"
 import * as THREE from "three"
 import type { KeyPosition } from "../layout-data"
 import type { KeyCustomization } from "../types"
@@ -163,6 +163,16 @@ type Props = {
   explodeOffset?: number
 }
 
+function KeycapArtwork({ source, wrap, width, depth, height, scale }: { source: string; wrap: boolean; width: number; depth: number; height: number; scale: number }) {
+  const texture = useTexture(source)
+  useEffect(() => { texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping; texture.repeat.set(scale, scale); texture.needsUpdate = true }, [texture, scale])
+  const image = () => <meshBasicMaterial map={texture} transparent alphaTest={0.03} side={THREE.DoubleSide} />
+  return <group>
+    <mesh position={[0, height + .012, 0]} rotation={[-Math.PI / 2, 0, 0]}>{image()}<planeGeometry args={[width * .94, depth * .92]} /></mesh>
+    {wrap && <><mesh position={[0, height / 2, depth / 2 + .003]}>{image()}<planeGeometry args={[width, height]} /></mesh><mesh position={[0, height / 2, -depth / 2 - .003]} rotation={[0, Math.PI, 0]}>{image()}<planeGeometry args={[width, height]} /></mesh><mesh position={[-width / 2 - .003, height / 2, 0]} rotation={[0, -Math.PI / 2, 0]}>{image()}<planeGeometry args={[depth, height]} /></mesh><mesh position={[width / 2 + .003, height / 2, 0]} rotation={[0, Math.PI / 2, 0]}>{image()}<planeGeometry args={[depth, height]} /></mesh></>}
+  </group>
+}
+
 export function KeyboardKeycap3D({
   position,
   customization,
@@ -198,6 +208,8 @@ export function KeyboardKeycap3D({
     () => new THREE.Color(customization.colors.top),
     [customization.colors.top]
   )
+  const materialProps = useMemo(() => customization.material === "silver" ? { roughness: .26, metalness: .8 } : customization.material === "walnut" ? { roughness: .72, metalness: 0 } : { roughness: .46, metalness: .03 }, [customization.material])
+  const keycapHeight = PROFILES[customization.profile]?.height ?? .4
 
   const handleClick = useCallback(
     (e: { stopPropagation?: () => void; shiftKey?: boolean }) => {
@@ -233,19 +245,23 @@ export function KeyboardKeycap3D({
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
         castShadow
-        receiveShadow
+        // Keycaps cast a soft shadow onto the plate, but never receive one
+        // from a neighbouring cap. This prevents dark square artifacts.
+        receiveShadow={false}
       >
         {/* Use one material on every face so a keycap remains a solid color. */}
-        <meshBasicMaterial color={topColor} side={THREE.DoubleSide} />
-        <meshBasicMaterial color={topColor} side={THREE.DoubleSide} />
+        <meshStandardMaterial color={topColor} side={THREE.DoubleSide} {...materialProps} />
+        <meshStandardMaterial color={topColor} side={THREE.DoubleSide} {...materialProps} />
       </mesh>
+
+      {customization.artwork.source && <KeycapArtwork source={customization.artwork.source} wrap={customization.artwork.mapping === "full-wrap"} width={w} depth={d} height={keycapHeight} scale={customization.artwork.scale} />}
 
       {/* Selection outline — slightly larger, rendered as back-face only */}
 
       {/* Legends via Html overlay — rendered at top face center */}
       {(showPrimary || showSecondary) && (
         <group
-          position={[0, (PROFILES[customization.profile]?.height ?? 0.40) + 0.008, 0]}
+          position={[0, keycapHeight + 0.016, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
         >
           {showPrimary && (

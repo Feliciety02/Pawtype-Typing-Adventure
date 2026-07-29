@@ -131,7 +131,8 @@ const ROW_SHIFT: KeyboardRowConfig = {
     // Sized to centre ArrowUp exactly over ArrowDown in the inverted-T cluster.
     { id: "ShiftR",    label: "Shift", primaryLegend: "Shift", row: 4, width: 2.22, type: "modifier" },
     // Inverted-T arrow cluster upper key sits inline here
-    { id: "ArrowUp",   label: "↑",     primaryLegend: "↑",     row: 4, width: 1, gapBefore: 0.1, type: "arrow" },
+    // Triangle legends stay crisp in the keyboard font at every camera angle.
+    { id: "ArrowUp",   label: "▲",     primaryLegend: "▲",     row: 4, width: 1, gapBefore: 0.1, type: "arrow" },
     // Right nav column — End
     { id: "End",       label: "End",   primaryLegend: "End",   row: 4, width: 1, gapBefore: 0.1, type: "navigation" },
   ],
@@ -149,7 +150,7 @@ const ROW_BOTTOM: KeyboardRowConfig = {
     { id: "CtrlR",      label: "Ctrl",  primaryLegend: "Ctrl",  row: 5, width: 1.25, type: "modifier" },
     // Inverted-T arrow cluster — Left / Down / Right
     { id: "ArrowLeft",  label: "←",     primaryLegend: "←",     row: 5, width: 1, gapBefore: 0.1, type: "arrow" },
-    { id: "ArrowDown",  label: "↓",     primaryLegend: "↓",     row: 5, width: 1, type: "arrow" },
+    { id: "ArrowDown",  label: "▼",     primaryLegend: "▼",     row: 5, width: 1, type: "arrow" },
     { id: "ArrowRight", label: "→",     primaryLegend: "→",     row: 5, width: 1, type: "arrow" },
   ],
 }
