@@ -1,0 +1,121 @@
+.app-shell--workshop {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 100dvh;
+  max-width: none;
+  padding: 0;
+  overflow: hidden;
+  background: #17191b !important;
+}
+
+.app-shell--workshop .game-hud {
+  position: fixed;
+  top: 5px;
+  left: 50%;
+  z-index: 60;
+  width: min(100% - clamp(1.25rem, 4vw, 5rem), 1400px);
+  margin-top: calc(clamp(0.75rem, 2vw, 2rem) + 5px);
+  transform: translateX(-50%);
+}
+
+.app-shell--workshop .app-view-shell {
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+}
+
+.keyboard-workshop {
+  width: 100%;
+  height: 100dvh;
+  min-height: 600px;
+  padding-top: calc(var(--hud-height, 82px) + 3rem);
+  overflow: hidden;
+}
+
+/* Neutralize the imported workshop's inline brown/gold chrome without
+   affecting the actual keyboard colours the player chooses. */
+.keyboard-workshop > header[style],
+.keyboard-workshop aside[style],
+.keyboard-workshop footer[style] {
+  background: #20252a !important;
+  color: #e8ecef !important;
+  border-color: #4b555e !important;
+}
+
+.keyboard-workshop > header [style*="background"],
+.keyboard-workshop aside [style*="background"],
+.keyboard-workshop footer [style*="background"] {
+  background: #2b3238 !important;
+}
+
+.keyboard-workshop > header button[style],
+.keyboard-workshop aside button[style],
+.keyboard-workshop footer button[style] {
+  color: #e4e9ec !important;
+  border-color: #59646d !important;
+}
+
+.keyboard-workshop > header button:hover,
+.keyboard-workshop aside button:hover,
+.keyboard-workshop footer button:hover {
+  background: #3c474f !important;
+}
+
+.keyboard-workshop [aria-selected="true"],
+.keyboard-workshop [aria-pressed="true"] {
+  background: #53616b !important;
+  color: #fff !important;
+  border-color: #aeb9c1 !important;
+}
+
+.workshop-overview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0.45rem 1rem;
+  color: #e8eaec;
+  background: #252a2e;
+  border-bottom: 1px solid #4f575e;
+}
+
+.workshop-overview__stats { display: grid; gap: 0.05rem; min-width: 13rem; font-size: 0.68rem; }
+.workshop-overview__stats strong { font-size: 0.8rem; }
+.workshop-overview__stats span { color: #b9c0c6; }
+.workshop-overview__search { display: flex; align-items: center; gap: 0.4rem; flex: 1; max-width: 22rem; padding: 0.35rem 0.55rem; background: #181c1f; border: 1px solid #58616a; border-radius: 0.35rem; color: #bac2c8; }
+.workshop-overview__search input { width: 100%; color: #f3f5f6; background: transparent; outline: none; font-size: 0.75rem; }
+.workshop-overview__controls { display: flex; align-items: center; gap: 0.45rem; margin-left: auto; font-size: 0.7rem; }
+.workshop-overview__parts { display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; }
+.workshop-overview__parts button { display: flex; align-items: center; gap: .3rem; min-height: 1.9rem; padding: .3rem .48rem; color: #eef2f4; background: #353c42; border: 1px solid #5b656d; border-radius: .35rem; font-size: .72rem; }
+.workshop-overview__parts button:hover { background: #4a565f; }
+.workshop-overview__controls label, .workshop-overview__controls button { display: flex; align-items: center; gap: 0.35rem; min-height: 1.9rem; padding: 0.25rem 0.45rem; color: #e5e8ea; background: #353c42; border: 1px solid #5b656d; border-radius: 0.3rem; }
+.workshop-overview__controls input { width: 1.2rem; height: 1.2rem; padding: 0; background: transparent; border: 0; cursor: pointer; }
+.workshop-overview__controls button:hover { background: #454e55; }
+
+.quick-selection { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; padding: .55rem .8rem; color: #c8d0d5; background: #20262b; border-top: 1px solid #47525a; }
+.quick-selection span { margin-right: .25rem; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.quick-selection button { padding: .36rem .58rem; color: #e6ebee; background: #313a41; border: 1px solid #56636d; border-radius: .35rem; font-size: .72rem; text-transform: capitalize; }
+.quick-selection button:hover { background: #44515b; }
+.quick-selection i { flex: 1; }
+.workshop-drawer { width: min(360px, 32vw); flex: 0 0 auto; overflow: hidden; border-left: 1px solid #54606a; box-shadow: -12px 0 28px rgb(0 0 0 / 18%); }
+.workshop-empty-state { position: absolute; inset: 0; z-index: 10; display: grid; place-content: center; gap: .45rem; text-align: center; pointer-events: none; color: #ecf0f2; text-shadow: 0 2px 12px #000; }
+.workshop-empty-state strong { font-size: 1.1rem; }
+.workshop-empty-state span { color: #c6cdd1; font-size: .8rem; }
+
+@media (max-width: 900px) {
+  .workshop-overview { flex-wrap: wrap; }
+  .workshop-overview__controls { margin-left: 0; }
+}
+
+@media (max-width: 720px) {
+  .app-shell--workshop .game-hud {
+    width: min(100% - 1rem, 1400px);
+    margin-top: calc(0.5rem + 5px);
+  }
+
+  .keyboard-workshop {
+    min-height: 520px;
+    padding-top: calc(var(--hud-height, 82px) + 2.5rem);
+  }
+}
