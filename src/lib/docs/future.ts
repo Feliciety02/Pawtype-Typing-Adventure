@@ -2,6 +2,12 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - Keyboard Workshop keycap edits now save immediately to the active local build, including intentional blank legends. Keycap side color, legend size, and material finish all update in the live preview.
+
+✅ **Shipped** - The Keyboard Workshop is now part of Pawtype Studio. The new Workshop tab offers a live 3D keyboard editor with locally saved builds, test typing, part customization, and JSON export.
+
+✅ **Shipped** - Keyboard Workshop now includes a configurator-style overview: default legends, a neutral premium build, keyboard-wide keycap and legend color controls, key search, bulk selection, visible build statistics, contextual Inspector labels, and key hover feedback.
+
 ✅ **Shipped** - Desktop Practice, Quest, Shop, and Learn now use viewport-locked page shells with the same inset shared HUD placement. Practice keeps its typing panel, companion art, and compact keyboard fully visible without browser-page scrolling; Quest, Shop, and Learn share the fixed document shell while preserving responsive scrolling on smaller screens.
 
 ✅ **Shipped** - Owned Shop doodads now appear as persistent decorations around the Camp scene, using the existing decor inventory as the placement source.
