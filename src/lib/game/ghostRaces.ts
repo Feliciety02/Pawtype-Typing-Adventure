@@ -4,7 +4,7 @@ export type GhostRace = Pick<TypingSession, "timestamp" | "duration" | "wpm" | "
 
 export function personalBestGhost(sessions: TypingSession[]): GhostRace | null {
   if (sessions.length === 0) return null;
-  return sessions.reduce<GhostRace>((best, session) =>
+  return sessions.reduce((best, session) =>
     session.wpm > best.wpm || (session.wpm === best.wpm && session.accuracy > best.accuracy)
       ? session
       : best,

@@ -14,9 +14,9 @@ type Props = {
 
 // Default case config for layouts without a model (65%, 60%)
 const DEFAULT_MODEL_CASE: KeyboardCaseConfig = {
-  bezelX:      0.40,
-  bezelTop:    0.50,
-  bezelBottom: 0.65,
+  bezelX:      0.23,
+  bezelTop:    0.23,
+  bezelBottom: 0.23,
   cornerRadius: 0.12,
   caseHeight:  0.44,
   bottomHeight: 0.28,

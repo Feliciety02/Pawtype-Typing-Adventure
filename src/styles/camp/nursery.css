@@ -474,7 +474,7 @@
       rgba(18, 9, 4, 0.06) 58%,
       rgba(18, 9, 4, 0.22) 100%
     ),
-    url("/camp/pet-nursery/pet-nursery_morning.webp") center center / cover no-repeat;
+    url("/camp/pet-nursery-page/pet-nursery_morning.webp") center center / cover no-repeat;
 }
 
 .camp-nursery-page::after {
@@ -486,7 +486,7 @@
       rgba(12, 7, 5, 0.18) 58%,
       rgba(12, 7, 5, 0.42) 100%
     ),
-    url("/camp/pet-nursery/pet-nursery_evening.webp") center center / cover no-repeat;
+    url("/camp/pet-nursery-page/pet-nursery_evening.webp") center center / cover no-repeat;
 }
 
 .camp-nursery-page.is-night-background::after {

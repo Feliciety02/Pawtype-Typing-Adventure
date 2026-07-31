@@ -2,15 +2,7 @@
 import { RotateCcw, Upload, ImageOff } from "lucide-react"
 import { useWorkshopStore } from "../../store"
 import { LAYOUTS } from "../../layout-data"
-import { Section, ChipSelector, Select, Toggle, ColorPicker, Slider } from "./EditorPrimitives"
-import type { KeycapProfile } from "../../types"
-
-const PROFILES: Array<{ value: KeycapProfile; label: string }> = [
-  { value: "cherry", label: "Classic" },
-  { value: "pixel-flat", label: "Flat" },
-  { value: "rounded-fantasy", label: "Rounded" },
-  { value: "artisan", label: "Artisan" },
-]
+import { Section, Select, Toggle, ColorPicker, Slider } from "./EditorPrimitives"
 
 const MATERIALS = [
   { value: "painted-plastic", label: "Plastic" },
@@ -48,7 +40,14 @@ export function KeycapEditor() {
     }
     updateSelectedKeys(patch)
   }
-  const uploadArtwork = async (file: File) => update({ artwork: { ...firstKey.artwork, source: await resizeArtwork(file) } })
+  const uploadArtwork = async (file: File) => update({
+    artwork: {
+      ...firstKey.artwork,
+      source: await resizeArtwork(file),
+      useDefault: false,
+    },
+    legend: { ...firstKey.legend, visible: true },
+  })
 
   return (
     <div>
@@ -58,7 +57,10 @@ export function KeycapEditor() {
       </div>
 
       <Section title="Style">
-        <ChipSelector label="Keycap shape" value={firstKey.profile} options={PROFILES} onChange={(profile) => update({ profile })} />
+        <p className="text-xs" style={{ color: "#a08050" }}>
+          AULA F75-inspired Cherry profile — every key uses the same beveled
+          shape. Wider keys only extend the shared footprint.
+        </p>
       </Section>
 
       <Section title="Color">
@@ -78,7 +80,10 @@ export function KeycapEditor() {
         {firstKey.artwork.source && <>
           <Select label="Apply image" value={firstKey.artwork.mapping} options={[{ value: "top-decal", label: "Top only" }, { value: "full-wrap", label: "Top and sides" }]} onChange={(mapping) => update({ artwork: { ...firstKey.artwork, mapping } })} />
           <Slider label="Image scale" value={firstKey.artwork.scale} min={0.5} max={2} step={0.05} onChange={(scale) => update({ artwork: { ...firstKey.artwork, scale } })} />
-          <button onClick={() => update({ artwork: { ...firstKey.artwork, source: null } })} className="mt-2 flex items-center gap-1 text-xs underline" style={{ color: "#d98b8b" }}><ImageOff size={13} /> Remove image</button>
+          <button onClick={() => update({
+            artwork: { ...firstKey.artwork, source: null, useDefault: false },
+            legend: { ...firstKey.legend, visible: true },
+          })} className="mt-2 flex items-center gap-1 text-xs underline" style={{ color: "#d98b8b" }}><ImageOff size={13} /> Remove image</button>
         </>}
       </Section>
 

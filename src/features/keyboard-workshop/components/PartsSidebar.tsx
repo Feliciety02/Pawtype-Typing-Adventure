@@ -43,6 +43,9 @@ const LAYOUT_OPTIONS: { id: KeyboardLayoutId; label: string }[] = [
 export function PartsSidebar() {
   const { selectedPart, setSelectedPart, currentBuild, setLayout, selectGroup, applyPreset, keyGroups } = useWorkshopStore()
   const [expanded, setExpanded] = useState<string | null>("parts")
+  const activeKeyIds = new Set(
+    (LAYOUTS[currentBuild.layout] ?? []).map((key) => key.id),
+  )
 
   const toggle = (section: string) =>
     setExpanded((v) => (v === section ? null : section))
@@ -137,7 +140,11 @@ export function PartsSidebar() {
                 key={g.label}
                 onClick={() => {
                   setSelectedPart("keycaps")
-                  selectGroup(g.ids.length ? g.ids : (LAYOUTS[currentBuild.layout] ?? []).map((key) => key.id))
+                  selectGroup(
+                    g.ids.length
+                      ? g.ids.filter((id) => activeKeyIds.has(id))
+                      : [...activeKeyIds],
+                  )
                 }}
                 className="text-left px-3 py-1.5 rounded text-xs transition-all hover:opacity-80"
                 style={{ background: "#2a1e10", color: "#c8a870" }}

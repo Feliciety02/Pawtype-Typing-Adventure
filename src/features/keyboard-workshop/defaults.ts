@@ -19,6 +19,15 @@ import {
   flattenModelKeys,
 } from "./layout-data"
 
+const LEGACY_WIDE_TOPS = new Set([
+  "Enter",
+])
+
+function getBundledTopSource(keyId: string) {
+  const assetSet = LEGACY_WIDE_TOPS.has(keyId) ? "stardust" : "royal-cream"
+  return `/workshop/keycaps/${assetSet}/${keyId}.png`
+}
+
 // ─── Per-key default factory ──────────────────────────────────────────────────
 
 export function makeDefaultKey(
@@ -42,9 +51,11 @@ export function makeDefaultKey(
     },
     builtInTexture: { id: null, scale: 1, rotation: 0 },
     artwork: {
-      source:   null,
-      mapping:  "top-decal",
-      fit:      "contain",
+      source:   getBundledTopSource(keyId),
+      useDefault: true,
+      mapping:  "full-wrap",
+      // Fill the physical top face so wide, non-square keys have no bare strip.
+      fit:      "stretch",
       scale:    1,
       offsetX:  0,
       offsetY:  0,
@@ -57,7 +68,8 @@ export function makeDefaultKey(
     },
     legend: {
       text:     label,
-      visible:  true,
+      // The bundled crop already contains the exact legend from the artwork.
+      visible:  false,
       font:     "pixel",
       color:    palette.legend,
       position: "center",

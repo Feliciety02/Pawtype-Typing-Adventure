@@ -21,7 +21,7 @@ export function MailboxPage({ backButtonRef, onBack }: MailboxPageProps) {
     };
 
     nightBackground.decoding = "async";
-    nightBackground.src = "/camp/mailbox/mailbox_background_evening.webp";
+    nightBackground.src = "/camp/mailbox-page/mailbox_background_evening.webp";
     if (nightBackground.complete) markReady();
     else nightBackground.addEventListener("load", markReady, { once: true });
 

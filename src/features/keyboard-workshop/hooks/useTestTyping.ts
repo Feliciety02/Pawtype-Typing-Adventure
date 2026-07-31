@@ -1,6 +1,7 @@
 "use client"
 import { useEffect } from "react"
-import { useWorkshopStore } from "../store"
+import { useWorkshopStore, useWorkshopTypingStore } from "../store"
+import type { SoundCustomization } from "../types"
 
 // Maps KeyboardEvent.code → key ID used in the layout
 const CODE_TO_ID: Record<string, string> = {
@@ -38,51 +39,104 @@ const CODE_TO_ID: Record<string, string> = {
 }
 
 export function useTestTyping() {
-  const { testTypingMode, setPressedKey, currentBuild } = useWorkshopStore()
+  const testTypingMode = useWorkshopStore((state) => state.testTypingMode)
+  const sound = useWorkshopStore((state) => state.currentBuild.sound)
 
   useEffect(() => {
     if (!testTypingMode) return
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.nativeEvent?.isComposing || e.keyCode === 229) return
-      const keyId = CODE_TO_ID[e.code]
-      if (keyId) { setPressedKey(keyId, true); if (!ke.repeat) playKeySound(currentBuild.sound, keyId) }
-    }
+    const heldKeys = new Set<string>()
+    const { setPressedKey, clearPressedKeys } =
+      useWorkshopTypingStore.getState()
 
-    const handleKeyUp = (e: KeyboardEvent) => {
-      const keyId = CODE_TO_ID[e.code]
-      if (keyId) setPressedKey(keyId, false)
+    const down = (event: KeyboardEvent) => {
+      if (event.isComposing || event.keyCode === 229) return
+      const keyId = CODE_TO_ID[event.code]
+      if (!keyId) return
+      event.preventDefault()
+      if (event.repeat || heldKeys.has(keyId)) return
+      heldKeys.add(keyId)
+      setPressedKey(keyId, true)
+      playKeySound(sound, keyId)
     }
-
-    // Cast to work without nativeEvent (native DOM events)
-    const down = (e: Event) => {
-      const ke = e as KeyboardEvent
-      const keyId = CODE_TO_ID[ke.code]
-      if (keyId) setPressedKey(keyId, true)
+    const up = (event: KeyboardEvent) => {
+      const keyId = CODE_TO_ID[event.code]
+      if (!keyId) return
+      event.preventDefault()
+      heldKeys.delete(keyId)
+      setPressedKey(keyId, false)
     }
-    const up = (e: Event) => {
-      const ke = e as KeyboardEvent
-      const keyId = CODE_TO_ID[ke.code]
-      if (keyId) setPressedKey(keyId, false)
+    const releaseAll = () => {
+      heldKeys.clear()
+      clearPressedKeys()
     }
 
     window.addEventListener("keydown", down)
     window.addEventListener("keyup", up)
+    window.addEventListener("blur", releaseAll)
 
     return () => {
       window.removeEventListener("keydown", down)
       window.removeEventListener("keyup", up)
+      window.removeEventListener("blur", releaseAll)
+      releaseAll()
     }
-  }, [testTypingMode, setPressedKey, currentBuild.sound])
+  }, [sound, testTypingMode])
 }
 
-function playKeySound(sound: { profile: string; volume: number; pitch: number; pitchVariation: number }, keyId: string) {
+const SOUND_PROFILES: Record<string, [OscillatorType, number]> = {
+  soft: ["sine", 150],
+  creamy: ["sine", 120],
+  thock: ["triangle", 92],
+  clack: ["square", 180],
+  silent: ["sine", 70],
+  wood: ["triangle", 105],
+  ceramic: ["square", 220],
+  crystal: ["sine", 320],
+  stone: ["triangle", 78],
+  retro: ["square", 135],
+  magical: ["sine", 260],
+}
+
+let sharedAudioContext: AudioContext | null = null
+
+function getAudioContext() {
   const Context = window.AudioContext ?? (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-  if (!Context || sound.volume <= 0) return
-  const context = new Context(), oscillator = context.createOscillator(), gain = context.createGain()
-  const profiles: Record<string, [OscillatorType, number]> = { soft: ["sine", 150], creamy: ["sine", 120], thock: ["triangle", 92], clack: ["square", 180], silent: ["sine", 70], wood: ["triangle", 105], ceramic: ["square", 220], crystal: ["sine", 320], stone: ["triangle", 78], retro: ["square", 135], magical: ["sine", 260] }
-  const [type, frequency] = profiles[sound.profile] ?? profiles.thock
-  oscillator.type = type; oscillator.frequency.value = (frequency + ((keyId.charCodeAt(0) || 0) % 7 - 3) * sound.pitchVariation * 18) * sound.pitch
-  gain.gain.setValueAtTime(Math.min(.16, sound.volume * .16), context.currentTime); gain.gain.exponentialRampToValueAtTime(.001, context.currentTime + .075)
-  oscillator.connect(gain).connect(context.destination); oscillator.start(); oscillator.stop(context.currentTime + .08); oscillator.addEventListener("ended", () => void context.close())
+  if (!Context) return null
+  if (!sharedAudioContext || sharedAudioContext.state === "closed") {
+    sharedAudioContext = new Context({ latencyHint: "interactive" })
+  }
+  if (sharedAudioContext.state === "suspended") {
+    void sharedAudioContext.resume()
+  }
+  return sharedAudioContext
+}
+
+function playKeySound(sound: SoundCustomization, keyId: string) {
+  if (sound.volume <= 0) return
+  const context = getAudioContext()
+  if (!context) return
+
+  const oscillator = context.createOscillator()
+  const gain = context.createGain()
+  const [type, frequency] =
+    SOUND_PROFILES[sound.profile] ?? SOUND_PROFILES.thock
+  const now = context.currentTime
+
+  oscillator.type = type
+  oscillator.frequency.value =
+    (frequency +
+      ((keyId.charCodeAt(0) || 0) % 7 - 3) *
+        sound.pitchVariation *
+        18) *
+    sound.pitch
+  gain.gain.setValueAtTime(Math.min(0.16, sound.volume * 0.16), now)
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.075)
+  oscillator.connect(gain).connect(context.destination)
+  oscillator.start(now)
+  oscillator.stop(now + 0.08)
+  oscillator.addEventListener("ended", () => {
+    oscillator.disconnect()
+    gain.disconnect()
+  })
 }

@@ -27,14 +27,14 @@
 .camp-mailbox-page::before {
   background:
     linear-gradient(180deg, rgba(29, 16, 8, 0.1), rgba(29, 16, 8, 0.3)),
-    url("/camp/mailbox/mailbox_background_morning.webp") center / cover no-repeat;
+    url("/camp/mailbox-page/mailbox_background_morning.webp") center / cover no-repeat;
 }
 
 .camp-mailbox-page::after {
   opacity: 0;
   background:
     linear-gradient(180deg, rgba(10, 8, 19, 0.22), rgba(10, 8, 19, 0.5)),
-    url("/camp/mailbox/mailbox_background_evening.webp") center / cover no-repeat;
+    url("/camp/mailbox-page/mailbox_background_evening.webp") center / cover no-repeat;
 }
 
 .camp-mailbox-page.is-night-background::after {

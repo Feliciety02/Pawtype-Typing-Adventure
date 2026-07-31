@@ -7,20 +7,20 @@ import {
 } from "./modals/CampModals";
 import { InventoryPage } from "../inventory/InventoryPage";
 import { MailboxPage } from "./MailboxPage";
+import { BlacksmithPage } from "./BlacksmithPage";
 import { PetNurseryPage } from "./PetNurseryPage";
 import { CampBackButton } from "./CampBackButton";
 import { CampBuildings } from "../../lib/camp/assets/buildings";
 import { useGame } from "../../lib/game/store";
 import { getDailyReward } from "../../lib/game/types";
 import { useThemeMode } from "@/hooks/use-theme-mode";
-import { useNavigate } from "@tanstack/react-router";
 import { WorldRenderer } from "../world/WorldRenderer";
 import { getDayNightState, type DayNightState } from "../world/DayNightController";
 import { useDayNightState } from "../world/useDayNightState";
 import { CampBuilding } from "./CampBuilding";
 import { DOODADS } from "@/lib/shop/shopData";
 
-type CampPage = "cabin" | "mailbox" | "nursery";
+type CampPage = "blacksmith" | "cabin" | "mailbox" | "nursery";
 type OpenBuilding = "tent" | "training" | "wagon";
 type CampBuildingConfig = {
   id: string;
@@ -52,7 +52,6 @@ function isRealTimeNight(minute: number) {
 
 export function CampScene() {
   const { state, dispatch } = useGame();
-  const navigate = useNavigate();
   const { player } = state;
   const { dark } = useThemeMode();
   const liveDayNight = useDayNightState();
@@ -95,6 +94,7 @@ export function CampScene() {
   };
   const openCabin = () => openPage("cabin");
   const openMailbox = () => openPage("mailbox");
+  const openBlacksmith = () => openPage("blacksmith");
   const openNursery = () => openPage("nursery");
   const closeCabin = () => {
     setActivePage(null);
@@ -179,7 +179,7 @@ export function CampScene() {
       x: 62,
       y: 61,
       width: 190,
-      onClick: () => navigate({ to: "/workshop" }),
+      onClick: openBlacksmith,
     },
   ];
 
@@ -242,6 +242,9 @@ export function CampScene() {
         <PetNurseryPage backButtonRef={pageBackRef} onBack={closeCabin} />
       )}
       {activePage === "mailbox" && <MailboxPage backButtonRef={pageBackRef} onBack={closeCabin} />}
+      {activePage === "blacksmith" && (
+        <BlacksmithPage backButtonRef={pageBackRef} onBack={closeCabin} />
+      )}
       {openBuilding === "tent" && (
         <PaintersTentModal onClose={() => setOpenBuilding(null)} onThemeChange={triggerFade} />
       )}

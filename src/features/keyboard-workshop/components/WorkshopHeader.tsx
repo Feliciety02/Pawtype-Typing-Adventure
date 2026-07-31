@@ -1,11 +1,19 @@
 "use client"
-import { useState } from "react"
+import { useState, type RefObject } from "react"
 import { Save, ChevronDown, Copy, Trash2, Check } from "lucide-react"
 import { useNavigate } from "@tanstack/react-router"
 import { CampBackButton } from "@/components/camp/CampBackButton"
 import { useWorkshopStore } from "../store"
 
-export function WorkshopHeader() {
+export function WorkshopHeader({
+  embedded = false,
+  onBack,
+  backButtonRef,
+}: {
+  embedded?: boolean
+  onBack?: () => void
+  backButtonRef?: RefObject<HTMLButtonElement | null>
+}) {
   const navigate = useNavigate()
   const {
     currentBuild,
@@ -45,19 +53,23 @@ export function WorkshopHeader() {
 
   return (
     <header
-      className="flex items-center gap-3 px-4 py-2 border-b"
+      className={`workshop-header flex items-center gap-3 px-4 py-2 border-b ${
+        embedded ? "workshop-header--embedded" : ""
+      }`}
       style={{ background: "#3a2a1a", borderColor: "#5a3a20" }}
     >
-      <CampBackButton onClick={() => navigate({ to: "/" })} />
+      <CampBackButton ref={backButtonRef} onClick={onBack ?? (() => navigate({ to: "/" }))} />
 
-      <div className="h-5 w-px" style={{ background: "#5a3a20" }} />
+      {!embedded && <div className="h-5 w-px" style={{ background: "#5a3a20" }} />}
 
       {/* Title */}
-      <span className="text-sm font-bold tracking-wide hidden sm:inline" style={{ color: "#e8d5a0" }}>
-        Keyboard Workshop
-      </span>
+      {!embedded && (
+        <span className="text-sm font-bold tracking-wide hidden sm:inline" style={{ color: "#e8d5a0" }}>
+          Keyboard Workshop
+        </span>
+      )}
 
-      <div className="h-5 w-px hidden sm:block" style={{ background: "#5a3a20" }} />
+      {!embedded && <div className="h-5 w-px hidden sm:block" style={{ background: "#5a3a20" }} />}
 
       {/* Build name */}
       <div className="flex items-center gap-2 flex-1">

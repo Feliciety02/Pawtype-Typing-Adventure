@@ -1,6 +1,7 @@
 import { Search, Paintbrush, Box, CircleDot, Sparkles, Save, Volume2, Sticker } from "lucide-react"
 import { useWorkshopStore } from "../store"
 import { LAYOUTS } from "../layout-data"
+import type { KeyboardLayoutId } from "../types"
 
 export function WorkshopOverview() {
   const { currentBuild, selectedKeyIds, selectGroup, setSelectedPart, setCameraPreset, setLayout } = useWorkshopStore()
@@ -34,7 +35,7 @@ export function WorkshopOverview() {
         <button type="button" onClick={() => setSelectedPart("badge")}><Sticker size={13} /> Logo</button>
         <button type="button" onClick={() => setSelectedPart("sound")}><Volume2 size={13} /> Sounds</button>
         <button type="button" onClick={() => setSelectedPart("builds")}><Save size={13} /> My builds</button>
-        <label className="workshop-overview__layout">Size <select value={currentBuild.layout} onChange={(event) => setLayout(event.target.value)}><option value="75%">75%</option><option value="65%">65%</option><option value="60%">60%</option></select></label>
+        <label className="workshop-overview__layout">Size <select value={currentBuild.layout} onChange={(event) => setLayout(event.target.value as KeyboardLayoutId)}><option value="75%">75%</option><option value="65%">65%</option><option value="60%">60%</option></select></label>
       </div>
       <label className="workshop-overview__search">
         <Search size={14} />

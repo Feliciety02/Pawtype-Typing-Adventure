@@ -210,3 +210,37 @@
     padding-top: calc(var(--hud-height, 82px) + 2.5rem);
   }
 }
+
+/* Camp Blacksmith workbench */
+.camp-blacksmith-page .keyboard-workshop--embedded { color: #fff0cc !important; }
+.camp-blacksmith-page .keyboard-workshop--embedded > header {
+  position: relative; min-height: 4.5rem; background: rgba(48, 23, 10, .95) !important;
+  border-color: #9a5a20 !important; box-shadow: 0 3px 0 #1a0b04, 0 8px 18px rgba(0,0,0,.4);
+}
+.camp-blacksmith-page .keyboard-workshop--embedded > header::after {
+  position: absolute; left: 50%; top: 50%; z-index: 3; padding: .45rem 1.45rem;
+  content: "Blacksmith Workshop"; color: #fff0c5; border: 2px solid #ad6b27;
+  background: linear-gradient(#713817, #391607); box-shadow: inset 0 0 0 2px #210e05, 0 3px 0 #180903;
+  font-family: var(--font-display), var(--font-pixel), monospace; font-size: clamp(1rem, 2vw, 1.5rem);
+  letter-spacing: .08em; text-transform: uppercase; transform: translate(-50%, -50%); pointer-events: none;
+}
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-layout {
+  display: grid; grid-template-columns: minmax(170px, 15vw) minmax(0, 1fr) minmax(230px, 19vw);
+  min-height: 0; overflow: hidden; border-top: 2px solid #814619; background: rgba(24, 10, 4, .25);
+}
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-layout > aside {
+  min-width: 0; background: rgba(50, 23, 10, .93) !important; border-color: #8d4f1b !important;
+  box-shadow: inset 0 0 0 1px rgba(255,190,95,.13);
+}
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-layout > main { min-width: 0; min-height: 0; }
+.camp-blacksmith-page .keyboard-workshop--embedded footer { color: #ffe4ad; background: rgba(54,25,11,.95) !important; border-color: #92521d !important; }
+.camp-blacksmith-page .keyboard-workshop--embedded [aria-selected="true"],
+.camp-blacksmith-page .keyboard-workshop--embedded [aria-pressed="true"] { color: #fff1c9 !important; border-color: #d58735 !important; background: linear-gradient(#8b3e82, #51205f) !important; }
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-drawer { width: auto; box-shadow: -5px 0 14px rgba(0,0,0,.3); }
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-drawer > aside,
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-drawer [style] { color: #4b270e !important; background: #f2d49a !important; border-color: #a86b2a !important; }
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-drawer button,
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-drawer input,
+.camp-blacksmith-page .keyboard-workshop--embedded .workshop-drawer select { color: #45240d !important; border-color: #bb7a30 !important; background-color: #ffe7b8 !important; }
+@media (max-width: 980px) { .camp-blacksmith-page .keyboard-workshop--embedded .workshop-layout { grid-template-columns: minmax(145px, 22vw) minmax(0, 1fr); } .camp-blacksmith-page .keyboard-workshop--embedded .workshop-drawer { display: none; } }
+@media (max-width: 700px) { .camp-blacksmith-page .keyboard-workshop--embedded > header::after, .camp-blacksmith-page .keyboard-workshop--embedded .workshop-layout > aside:first-child { display: none; } .camp-blacksmith-page .keyboard-workshop--embedded .workshop-layout { grid-template-columns: 1fr; } }

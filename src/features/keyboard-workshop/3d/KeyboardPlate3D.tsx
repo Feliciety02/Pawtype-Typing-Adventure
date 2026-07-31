@@ -16,7 +16,7 @@ export function KeyboardPlate3D({ bounds, plateConfig, explodeOffset = 0, onClic
   return (
     <group position={[0, explodeOffset, 0]} onClick={(event) => { event.stopPropagation(); onClick?.() }}>
       <mesh receiveShadow castShadow>
-        <boxGeometry args={[bounds.w + 0.15, 0.08, bounds.h + 0.15]} />
+        <boxGeometry args={[bounds.w + 0.08, 0.08, bounds.h + 0.08]} />
         <meshLambertMaterial color={color} flatShading />
       </mesh>
     </group>

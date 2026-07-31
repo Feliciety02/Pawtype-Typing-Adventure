@@ -2,6 +2,52 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - The Keyboard Workshop 3D layout now closes the visual seam between keycaps from 0.5 mm to 0.15 mm, shortening the whole keyboard matrix while keeping the 18 mm keycap size. Because the case, frame, and plate bounds are derived from the key positions, they automatically shrink with the tighter gaps and stay equally spaced from the keycaps.
+
+✅ **Shipped** - The Keyboard Workshop case now uses the same compact keycap-to-shell clearance on its left, right, top, and bottom edges. Removing the oversized top and front lips shortens the case while preserving the key layout, switch pitch, and aligned frame and plate.
+
+✅ **Shipped** - Keyboard Workshop bevel geometry now matches the bundled side sprite's measured 72% top-to-base silhouette, with the intermediate shoulder constrained to the same straight bevel plane so transparent artwork cannot expose mismatched wedges. Top and side backing materials now use cached, alpha-aware majority colors from the images wrapping those surfaces; side backings receive the same palette tint as the rendered side image so the exposed shell remains an exact visual match.
+
+✅ **Shipped** - Wide Keyboard Workshop keys now preserve the same fixed physical bevel inset as a 1u key. The spacebar and modifiers grow only through their flat center span, so their end-wall angle matches neighboring normal keys instead of becoming progressively steeper with width.
+
+✅ **Shipped** - The supplied royal-cream top atlas drives the visible standard default keycaps: cream alphas and numbers, purple modifiers, cream navigation keys, charcoal arrows, the knob, the decorated paw-print Space top, the purple arrow Backspace top, and distinct long-left and short-right Shift tops are cropped into dedicated transparent assets. Enter alone omits its bundled top-art layer while retaining its physical cap and matched side sprites. Crop boundaries follow the actual cap rows and per-key starts, remove the outer baked sprite fringe, and normalize each generated output to its physical key width. Bundled non-square artwork fills its complete top plane; sampled light tops select cream walls, neutral black tops select charcoal walls, and saturated dark tops retain the purple wall set.
+
+✅ **Shipped** - Bundled top artwork now UV-wraps onto an exact duplicate of each keycap's top-face geometry instead of a floating rectangular plane, keeping square and wide images clipped to the real surface and aligned with the bevel. Aspect-preserving custom artwork retains its centered contain behavior.
+
+✅ **Shipped** - Keycap pixel textures now disable transparent-edge mipmaps and clamp their outer texels, removing black texture bleed at angled views. Side-art meshes span the full base extent so the sprites' own 72% opaque silhouette supplies the taper exactly once, reaching the outer top corners without a second inset or dark vertical seams.
+
+✅ **Shipped** - Royal-cream side sprites now use a cleaned warm edge ramp in place of the source artwork's near-black opaque outline, eliminating the compressed black stripe on end faces while retaining visible pixel bevel detail. Purple and charcoal side palettes keep their intended dark outlines.
+
+✅ **Shipped** - Artwork-backed keycap shells now use the same unlit majority colors as their top and side sprites. Transparent side-sprite margins no longer expose a standard-lit backing face that turns black at oblique angles.
+
+✅ **Shipped** - Royal-cream wall artwork now stretches vertically by a 4% overscan at each edge, overlapping the top/body junction to conceal residual seams. Purple and charcoal side artwork retains its original proportions.
+
+✅ **Shipped** - Bundled Keyboard Workshop keycaps now use the squared front-wall sprite on both physical end faces. The triangular left/right atlas profiles were removed from rendering, so front, back, left, and right views all retain the same boxier side-panel treatment.
+
+✅ **Shipped** - The bundled keycap side atlas uses the opposite front/back assignment in 3D to account for the atlas viewpoint convention.
+
+✅ **Shipped** - Bundled Keyboard Workshop side sprites now retain their full silhouette instead of being tapered twice and partially hidden inside the solid keycap wall. Their overlays follow the keycap's base, shoulder, and top bevel rings, while left/right end artwork is selected by physical key depth so wide modifiers and the spacebar no longer crush or crop long-side images onto their short ends.
+
+✅ **Shipped** - The embedded Blacksmith Workshop now removes its redundant top part shortcut strip and bottom key-group strip because those controls already live in the left rail. Its header uses the Blacksmith plaque without repeating the generic Workshop title, leaving a simpler workbench with one part navigator, one Inspector, and one compact camera/typing/history action bar.
+
+✅ **Shipped** - The Keyboard Workshop camera now fits the complete rendered keyboard and case to the available 3D viewport for every full-board preset. It responds to narrow Blacksmith side-panel layouts, viewport resizing, and exploded view dimensions without cropping the model, while dedicated close-up presets retain their tighter framing.
+
+✅ **Shipped** - The default Keyboard Workshop model now follows the AULA F75 key layout reference: an 80-key 75% arrangement with a top-right rotary knob, standard ANSI modifier widths, an 18 mm cap on a 19.05 mm pitch, and compact navigation and inverted-T arrow clusters. Row alignment is handled by cluster spacing rather than stretched keycaps.
+
+✅ **Shipped** - The bundled purple-and-gold Keyboard Workshop skin now uses dedicated directional side artwork instead of repeating each top crop on all walls. Front, back, left, and right sprites are selected independently from ten width classes (1u through 7u), preserving the sheet's bevels, asymmetric side slopes, gold corner accents, wide modifiers, and spacebar proportions. Custom uploaded full-wrap artwork retains its original wrapping behavior.
+
+✅ **Shipped** - Keyboard Workshop keycaps now use one consistent AULA F75-inspired Cherry shape across every keyboard row. Wider modifiers and the spacebar extend the same shared footprint without changing its height, tilt, or bevel, and the Inspector no longer offers conflicting per-key shape choices.
+
+✅ **Shipped** - The Keyboard Workshop now ships with the supplied royal-cream, purple, and charcoal pixel keycap set. Every physical key uses its own transparent top crop, including wide modifiers, navigation keys, arrows, the knob, and the decorated spacebar. Existing saved builds follow the latest bundled source while custom uploads and intentionally removed artwork remain independent.
+
+✅ **Shipped** - The Blacksmith Keyboard Workshop now uses a forge-bench layout inspired by the camp's pixel-art workshop: a dedicated title plaque, collection rail, central transparent 3D keyboard bench, and a parchment-style Inspector. Existing keyboard editing, testing, saving, and equipping controls remain available within the new layout.
+
+✅ **Shipped** - Keyboard Workshop Test Typing keeps high-frequency keypress state separate from the persisted editor store and applies it directly to 3D refs, so keydown and keyup no longer cause React component renders. Keycap travel and RGB flare use a near-instant attack with a softer release, switch stems update only when their own pressed state changes, and scene lighting reads the current held-key count inside the render loop. A single low-latency audio context is reused across presses, browser defaults and duplicate/auto-repeat events are suppressed, and held keys are released on blur or mode exit for an immediate, reliable preview.
+
+✅ **Shipped** - Keyboard Workshop now has Aula-style reactive RGB backlighting: every key keeps a subtle colored underglow and pulses brightly when clicked in the 3D preview or pressed in Test Typing mode.
+
+✅ **Shipped** - The Camp Blacksmith now opens as a dedicated morning/evening forge interior with the full Keyboard Workshop directly overlaid on the scene. Its supplied PNG backgrounds crossfade after the evening artwork has loaded, follow the global Day/Night display mode, and remain visible through the transparent 3D keyboard viewport while controls retain a readable solid surface. The workshop fills the available interior height down to the screen edge. Back to Camp, Escape, and focus restoration match Pet Nursery and Mailbox.
+
 ✅ **Shipped** - Keyboard Workshop keycap edits now save immediately to the active local build, including intentional blank legends. Keycap side color, legend size, and material finish all update in the live preview.
 
 ✅ **Shipped** - The Keyboard Workshop is now part of Pawtype Studio. The new Workshop tab offers a live 3D keyboard editor with locally saved builds, test typing, part customization, and JSON export.

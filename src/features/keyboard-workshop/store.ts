@@ -17,6 +17,7 @@ import type {
   BadgeCustomization,
   LightingCustomization,
   SoundCustomization,
+  KeyboardLayoutId,
 } from "./types"
 import { makeDefaultBuild, makeDefaultKey } from "./defaults"
 import { LAYOUT_75, LAYOUTS, getKeyboardModel, flattenModelKeys } from "./layout-data"
@@ -45,11 +46,28 @@ function normalizeBuildKeys(build: KeyboardBuild): KeyboardBuild {
     const normalized = saved
       ? deepMerge(defaults, { ...saved, keyId: layoutKey.id }) as KeyCustomization
       : defaults
+
+    const savedHasArtworkMode = Boolean(
+      saved?.artwork && "useDefault" in saved.artwork
+    )
+    if (!savedHasArtworkMode && !saved?.artwork?.source) {
+      // Upgrade pre-atlas builds once. A later explicit removal carries
+      // useDefault=false and therefore remains removed across reloads.
+      normalized.artwork = { ...defaults.artwork }
+    } else if (!savedHasArtworkMode) {
+      normalized.artwork.useDefault = false
+    } else if (saved?.artwork.useDefault) {
+      normalized.artwork.source = defaults.artwork.source
+      normalized.artwork.fit = defaults.artwork.fit
+    }
+
     normalized.legend = {
       ...normalized.legend,
       // An intentionally blank legend is a customization and must survive reloads.
       text: saved?.legend && "text" in saved.legend ? saved.legend.text : defaults.legend.text,
-      visible: saved?.legend?.visible ?? true,
+      visible: !savedHasArtworkMode && !saved?.artwork?.source
+        ? defaults.legend.visible
+        : saved?.legend?.visible ?? defaults.legend.visible,
     }
     keys[layoutKey.id] = normalized
   }
@@ -60,6 +78,35 @@ function normalizeBuildKeys(build: KeyboardBuild): KeyboardBuild {
 type HistoryEntry = {
   build: KeyboardBuild
 }
+
+type WorkshopTypingState = {
+  pressedKeys: Set<string>
+  setPressedKey: (keyId: string, pressed: boolean) => void
+  clearPressedKeys: () => void
+}
+
+/**
+ * Keystrokes are high-frequency, transient preview state. Keeping them outside
+ * the persisted editor store prevents unrelated Workshop panels from rendering
+ * on every keydown and keyup.
+ */
+export const useWorkshopTypingStore = create<WorkshopTypingState>()((set) => ({
+  pressedKeys: new Set(),
+  setPressedKey: (keyId, pressed) => {
+    set((state) => {
+      if (state.pressedKeys.has(keyId) === pressed) return state
+      const pressedKeys = new Set(state.pressedKeys)
+      if (pressed) pressedKeys.add(keyId)
+      else pressedKeys.delete(keyId)
+      return { pressedKeys }
+    })
+  },
+  clearPressedKeys: () => {
+    set((state) =>
+      state.pressedKeys.size === 0 ? state : { pressedKeys: new Set() },
+    )
+  },
+}))
 
 type WorkshopState = {
   // Current working build
@@ -80,7 +127,6 @@ type WorkshopState = {
   explodeAmount: number
   // Test typing
   testTypingMode: boolean
-  pressedKeys: Set<string>
   // History
   history: HistoryEntry[]
   historyIndex: number
@@ -96,7 +142,7 @@ type WorkshopState = {
 type WorkshopActions = {
   // Build
   setBuildName: (name: string) => void
-  setLayout: (layoutId: string) => void
+  setLayout: (layoutId: KeyboardLayoutId) => void
   setModelId: (modelId: string) => void
   saveBuild: () => void
   saveAsNewBuild: (name: string) => void
@@ -136,7 +182,6 @@ type WorkshopActions = {
   setExplodeAmount: (amount: number) => void
   // Test Typing
   setTestTypingMode: (enabled: boolean) => void
-  setPressedKey: (code: string, pressed: boolean) => void
   // Undo/Redo
   undo: () => void
   redo: () => void
@@ -164,7 +209,6 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
       explodedView: false,
       explodeAmount: 0,
       testTypingMode: false,
-      pressedKeys: new Set(),
       history: [{ build: initialBuild }],
       historyIndex: 0,
       unsavedChanges: false,
@@ -198,7 +242,7 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
         set((s) => ({
           currentBuild: {
             ...s.currentBuild,
-            layout: layoutId as any,
+            layout: layoutId,
             keys,
             updatedAt: new Date().toISOString(),
           },
@@ -280,7 +324,9 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
           build.id = nanoid()
           build.updatedAt = new Date().toISOString()
           set((s) => ({ savedBuilds: [...s.savedBuilds, build] }))
-        } catch {}
+        } catch {
+          /* ignore malformed import */
+        }
       },
 
       exportBuild: () => JSON.stringify(get().currentBuild, null, 2),
@@ -436,18 +482,9 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
 
       setExplodeAmount: (amount) => set({ explodeAmount: amount }),
 
-      setTestTypingMode: (enabled) => set({ testTypingMode: enabled, pressedKeys: new Set() }),
-
-      setPressedKey: (code, pressed) => {
-        set((s) => {
-          const next = new Set(s.pressedKeys)
-          if (pressed) {
-            next.add(code)
-          } else {
-            next.delete(code)
-          }
-          return { pressedKeys: next }
-        })
+      setTestTypingMode: (enabled) => {
+        useWorkshopTypingStore.getState().clearPressedKeys()
+        set({ testTypingMode: enabled })
       },
 
       undo: () => {

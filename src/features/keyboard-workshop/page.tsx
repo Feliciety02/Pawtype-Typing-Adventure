@@ -1,8 +1,9 @@
-import { lazy, Suspense, useEffect, useState } from "react"
+import { lazy, Suspense, useEffect, useState, type RefObject } from "react"
 import { useTestTyping } from "./hooks/useTestTyping"
 import { WorkshopHeader } from "./components/WorkshopHeader"
 import { WorkshopToolbar } from "./components/WorkshopToolbar"
 import { PropertiesPanel } from "./components/PropertiesPanel"
+import { PartsSidebar } from "./components/PartsSidebar"
 import { QuickSelectionBar } from "./components/QuickSelectionBar"
 import { WorkshopOverview } from "./components/WorkshopOverview"
 import { useWorkshopStore } from "./store"
@@ -56,24 +57,35 @@ function TestTypingBanner() {
   )
 }
 
-export default function KeyboardWorkshopPage() {
+export default function KeyboardWorkshopPage({
+  embedded = false,
+  onBack,
+  backButtonRef,
+}: {
+  embedded?: boolean
+  onBack?: () => void
+  backButtonRef?: RefObject<HTMLButtonElement | null>
+}) {
   const [mounted, setMounted] = useState(false)
-  const { selectedKeyIds, selectedPart } = useWorkshopStore()
-  const drawerOpen = selectedKeyIds.length > 0 || selectedPart !== "keycaps"
   useTestTyping()
 
   useEffect(() => setMounted(true), [])
 
   return (
     <div
-      className="keyboard-workshop flex flex-col"
+      className={`keyboard-workshop ${embedded ? "keyboard-workshop--embedded" : ""} flex flex-col`}
       style={{ background: "#100c06", color: "#e8d5a0" }}
     >
       {/* Header */}
-      <WorkshopHeader />
-      <WorkshopOverview />
+      <WorkshopHeader
+        embedded={embedded}
+        onBack={onBack}
+        backButtonRef={backButtonRef}
+      />
+      {!embedded && <WorkshopOverview />}
       {/* Main workspace */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="workshop-layout flex flex-1 overflow-hidden">
+        <PartsSidebar />
         {/* Left sidebar — parts */}
         {/* Center — 3D viewport */}
         <main className="flex-1 flex flex-col overflow-hidden relative">
@@ -88,12 +100,12 @@ export default function KeyboardWorkshopPage() {
             )}
           </div>
           {/* Bottom toolbar */}
-          <QuickSelectionBar />
+          {!embedded && <QuickSelectionBar />}
           <WorkshopToolbar />
         </main>
 
         {/* Right sidebar — properties */}
-        {drawerOpen && <aside className="workshop-drawer"><PropertiesPanel /></aside>}
+        <aside className="workshop-drawer"><PropertiesPanel /></aside>
       </div>
     </div>
   )

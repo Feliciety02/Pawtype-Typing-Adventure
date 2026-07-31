@@ -4,23 +4,35 @@ import type {
   KeyboardRowConfig,
 } from "./types"
 
-const U = 1   // 1 keyboard unit
-// Real keycaps have only a narrow seam between them. Keeping this small also
-// makes the overall keyboard footprint more compact.
-const GAP = 0.008
+// Keep the familiar 18 mm cap size but use a tighter 0.15 mm visual seam for the
+// compact 75% board. Values remain normalized against a standard 19.05 mm
+// mechanical pitch so the complete matrix becomes shorter as the gaps close.
+// The case, frame, and plate derive their bounds from this layout, so they
+// automatically shrink as the gaps tighten.
+const MECHANICAL_KEY_PITCH_MM = 19.05
+const KEYCAP_SIZE_MM = 18
+const KEYCAP_GAP_MM = 0.15
+const U = KEYCAP_SIZE_MM / MECHANICAL_KEY_PITCH_MM
+const GAP = KEYCAP_GAP_MM / MECHANICAL_KEY_PITCH_MM
 
-export { U, GAP }
+export {
+  U,
+  GAP,
+  MECHANICAL_KEY_PITCH_MM,
+  KEYCAP_SIZE_MM,
+  KEYCAP_GAP_MM,
+}
 
-// ─── Pawtype 75 Knob V1 ───────────────────────────────────────────────────────
+// ─── Pawtype 75 / AULA F75 reference ─────────────────────────────────────────
 //
-// Compact 75% mechanical keyboard with a rotary knob.
+// Compact 80-key 75% mechanical keyboard with a rotary knob.
 // Layout:
 //   Row 0 — Esc | F1–F4 | F5–F8 | F9–F12 | Knob    (+ right nav column: Del)
 //   Row 1 — ` 1–0 - = Backspace Delete
 //   Row 2 — Tab Q–P [ ] \                             (+ PgUp)
 //   Row 3 — CapsLock A–; ' Enter                      (+ PgDn)
 //   Row 4 — LShift Z–/ RShift | Up | End
-//   Row 5 — Ctrl Win Alt Spacebar Fn Ctrl | Left Down Right
+//   Row 5 — Ctrl Win Alt Spacebar Alt Fn | Left Down Right
 
 const ROW_FN: KeyboardRowConfig = {
   id: "fn-row",
@@ -68,9 +80,6 @@ const ROW_NUMBER: KeyboardRowConfig = {
   ],
 }
 
-// Give Backspace a matching long modifier footprint.
-ROW_NUMBER.keys.find((key) => key.id === "Backspace")!.width = 2.563
-
 const ROW_QWERTY: KeyboardRowConfig = {
   id: "qwerty-row",
   keys: [
@@ -87,7 +96,7 @@ const ROW_QWERTY: KeyboardRowConfig = {
     { id: "P",         label: "P",    row: 2, width: 1,   type: "standard" },
     { id: "BracketL",  label: "[",    primaryLegend: "[", secondaryLegend: "{", row: 2, width: 1, type: "standard" },
     { id: "BracketR",  label: "]",    primaryLegend: "]", secondaryLegend: "}", row: 2, width: 1, type: "standard" },
-    { id: "Backslash", label: "\\",   primaryLegend: "\\",secondaryLegend: "|", row: 2, width: 2.063, type: "modifier" },
+    { id: "Backslash", label: "\\",   primaryLegend: "\\",secondaryLegend: "|", row: 2, width: 1.5, type: "modifier" },
     // Right nav column — Page Up
     { id: "PageUp",    label: "PgUp", primaryLegend: "PgUp", row: 2, width: 1, gapBefore: 0.1, type: "navigation" },
   ],
@@ -108,7 +117,7 @@ const ROW_HOME: KeyboardRowConfig = {
     { id: "L",         label: "L",     row: 3, width: 1,   type: "standard" },
     { id: "Semicolon", label: ";",     primaryLegend: ";", secondaryLegend: ":", row: 3, width: 1, type: "standard" },
     { id: "Quote",     label: "'",     primaryLegend: "'", secondaryLegend: '"', row: 3, width: 1, type: "standard" },
-    { id: "Enter",     label: "Enter", primaryLegend: "Enter", row: 3, width: 2.821, type: "modifier" },
+    { id: "Enter",     label: "Enter", primaryLegend: "Enter", row: 3, width: 2.25, type: "modifier" },
     // Right nav column — Page Down
     { id: "PageDown",  label: "PgDn",  primaryLegend: "PgDn",  row: 3, width: 1, gapBefore: 0.1, type: "navigation" },
   ],
@@ -128,8 +137,7 @@ const ROW_SHIFT: KeyboardRowConfig = {
     { id: "Comma",     label: ",",     primaryLegend: ",", secondaryLegend: "<", row: 4, width: 1, type: "standard" },
     { id: "Period",    label: ".",     primaryLegend: ".", secondaryLegend: ">", row: 4, width: 1, type: "standard" },
     { id: "Slash",     label: "/",     primaryLegend: "/", secondaryLegend: "?", row: 4, width: 1, type: "standard" },
-    // Sized to centre ArrowUp exactly over ArrowDown in the inverted-T cluster.
-    { id: "ShiftR",    label: "Shift", primaryLegend: "Shift", row: 4, width: 2.22, type: "modifier" },
+    { id: "ShiftR",    label: "Shift", primaryLegend: "Shift", row: 4, width: 1.75, type: "modifier" },
     // Inverted-T arrow cluster upper key sits inline here
     // Triangle legends stay crisp in the keyboard font at every camera angle.
     { id: "ArrowUp",   label: "▲",     primaryLegend: "▲",     row: 4, width: 1, gapBefore: 0.1, type: "arrow" },
@@ -147,7 +155,6 @@ const ROW_BOTTOM: KeyboardRowConfig = {
     { id: "Space",      label: "Space", primaryLegend: "SPACE",  row: 5, width: 6.25, type: "spacebar" },
     { id: "AltR",       label: "Alt",   primaryLegend: "Alt",   row: 5, width: 1.25, type: "modifier" },
     { id: "Fn",         label: "Fn",    primaryLegend: "Fn",    row: 5, width: 1, type: "modifier" },
-    { id: "CtrlR",      label: "Ctrl",  primaryLegend: "Ctrl",  row: 5, width: 1.25, type: "modifier" },
     // Inverted-T arrow cluster — Left / Down / Right
     { id: "ArrowLeft",  label: "←",     primaryLegend: "←",     row: 5, width: 1, gapBefore: 0.1, type: "arrow" },
     { id: "ArrowDown",  label: "▼",     primaryLegend: "▼",     row: 5, width: 1, type: "arrow" },
@@ -157,13 +164,15 @@ const ROW_BOTTOM: KeyboardRowConfig = {
 
 export const PAWTYPE_75_KNOB_V1: KeyboardModel = {
   id: "pawtype-75-knob-v1",
-  name: "Pawtype 75 Knob V1",
+  name: "Pawtype AULA F75 Reference",
   layoutType: "75%",
   rows: [ROW_FN, ROW_NUMBER, ROW_QWERTY, ROW_HOME, ROW_SHIFT, ROW_BOTTOM],
   caseConfig: {
-    bezelX:         0.40,
-    bezelTop:       0.55,
-    bezelBottom:    0.70,   // slightly thicker front lip
+    // Keep the outer shell equally spaced from the keycap bounds on every side.
+    // The former deep top and bottom lips made the case look stretched.
+    bezelX:         0.23,
+    bezelTop:       0.23,
+    bezelBottom:    0.23,
     rightExtension: 0,
     cornerRadius:   0.15,
     caseHeight:     0.46,
@@ -218,7 +227,7 @@ export function validateKeyboardLayout(rows: KeyboardRowConfig[]) {
 
 if (import.meta.env.DEV) {
   const result = validateKeyboardLayout(PAWTYPE_75_KNOB_V1.rows)
-  if (result.keyCount !== 81 || result.duplicateIds.length || result.missingLegends.length || result.invalidWidths.length || result.emptyRows.length) {
+  if (result.keyCount !== 80 || result.duplicateIds.length || result.missingLegends.length || result.invalidWidths.length || result.emptyRows.length) {
     console.error("Invalid Pawtype 75 keyboard layout", result)
   }
 }
@@ -409,7 +418,7 @@ export type KeyPosition = {
 
 export function computeKeyPositions(
   keys: KeyboardLayoutKey[],
-  unitSize: number = 1,
+  unitSize: number = U,
   gap: number = GAP
 ): KeyPosition[] {
   const rows: Record<number, KeyboardLayoutKey[]> = {}
@@ -450,10 +459,15 @@ export function computeKeyPositions(
     // Leave F12 in its natural group position so the knob can occupy the
     // remaining first-row space inside the case.
     const rowEndSpacer = row === 0 ? 0 : targetRowWidth - naturalWidth
+    const rowEndSpacerIndex = rowKeys.reduce(
+      (lastIndex, key, index) =>
+        key.gapBefore !== undefined ? index : lastIndex,
+      rowKeys.length - 1,
+    )
     let x = 0
     for (const [keyIndex, key] of rowKeys.entries()) {
       if (key.gapBefore !== undefined) x += key.gapBefore * (unitSize + gap)
-      if (keyIndex === rowKeys.length - 1) x += rowEndSpacer
+      if (keyIndex === rowEndSpacerIndex) x += rowEndSpacer
       const w = key.width * unitSize + (key.width - 1) * gap
       const cx = x + w / 2
       positions.push({

@@ -1,11 +1,18 @@
 "use client"
-import { useRef, useEffect, useMemo, Suspense } from "react"
+import {
+  useRef,
+  useEffect,
+  useMemo,
+  Suspense,
+  type ComponentProps,
+  type RefObject,
+} from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { OrbitControls, Environment } from "@react-three/drei"
 import * as THREE from "three"
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib"
-import { useWorkshopStore } from "../store"
-import { LAYOUTS, computeKeyPositions, GAP, getKeyboardModel } from "../layout-data"
+import { useWorkshopStore, useWorkshopTypingStore } from "../store"
+import { LAYOUTS, computeKeyPositions, GAP, U, getKeyboardModel } from "../layout-data"
 import { LAYOUT_75 } from "../layout-data"
 import { KeyboardKeycap3D } from "./KeyboardKeycap3D"
 import { KeyboardCase3D } from "./KeyboardCase3D"
@@ -31,16 +38,94 @@ const CAMERA_PRESETS: Record<string, [number, number, number]> = {
   "case-closeup":   [0, 5, 9],
 }
 
-function CameraController() {
+const FULL_KEYBOARD_PRESETS = new Set([
+  "isometric",
+  "top",
+  "front",
+  "left",
+  "right",
+  "typing",
+])
+
+function CameraController({
+  contentRef,
+  fitKey,
+}: {
+  contentRef: RefObject<THREE.Group | null>
+  fitKey: string
+}) {
   const controlsRef = useRef<OrbitControlsImpl>(null!)
-  const { camera } = useThree()
+  const { camera, size, invalidate } = useThree()
   const preset = useWorkshopStore((s) => s.cameraPreset)
 
   useEffect(() => {
     const pos = CAMERA_PRESETS[preset] ?? CAMERA_PRESETS.isometric
-    camera.position.set(...pos)
-    camera.lookAt(0, 0, 0)
-  }, [preset, camera])
+    const target = new THREE.Vector3()
+    const direction = new THREE.Vector3(...pos).normalize()
+
+    if (
+      FULL_KEYBOARD_PRESETS.has(preset) &&
+      contentRef.current &&
+      camera instanceof THREE.PerspectiveCamera
+    ) {
+      const box = new THREE.Box3().setFromObject(contentRef.current)
+
+      if (!box.isEmpty()) {
+        box.getCenter(target)
+
+        // Build the selected view orientation first, then measure every corner
+        // in camera space. This fits wide and shallow viewports without relying
+        // on a fixed distance that can crop the keyboard behind side panels.
+        camera.position.copy(target).add(direction)
+        camera.lookAt(target)
+        camera.updateMatrixWorld()
+
+        const worldToViewRotation = camera.quaternion.clone().invert()
+        const verticalFov = THREE.MathUtils.degToRad(camera.fov)
+        const horizontalFov =
+          2 * Math.atan(Math.tan(verticalFov / 2) * Math.max(camera.aspect, 0.01))
+        const verticalTangent = Math.tan(verticalFov / 2)
+        const horizontalTangent = Math.tan(horizontalFov / 2)
+        const min = box.min
+        const max = box.max
+        let distance = 0
+
+        for (const x of [min.x, max.x]) {
+          for (const y of [min.y, max.y]) {
+            for (const z of [min.z, max.z]) {
+              const corner = new THREE.Vector3(x, y, z)
+                .sub(target)
+                .applyQuaternion(worldToViewRotation)
+
+              distance = Math.max(
+                distance,
+                corner.z + (Math.abs(corner.x) * 1.14) / horizontalTangent,
+                corner.z + (Math.abs(corner.y) * 1.14) / verticalTangent,
+              )
+            }
+          }
+        }
+
+        camera.position.copy(target).addScaledVector(direction, distance)
+      }
+    } else {
+      camera.position.set(...pos)
+    }
+
+    camera.lookAt(target)
+    camera.updateProjectionMatrix()
+    controlsRef.current?.target.copy(target)
+    controlsRef.current?.update()
+    invalidate()
+  }, [
+    preset,
+    camera,
+    contentRef,
+    fitKey,
+    invalidate,
+    size.width,
+    size.height,
+  ])
 
   return (
     <OrbitControls
@@ -59,7 +144,11 @@ function CameraController() {
 
 // ─── Lighting environment map ─────────────────────────────────────────────────
 
-const ENV_MAP: Record<string, string> = {
+type EnvironmentPreset = NonNullable<
+  ComponentProps<typeof Environment>["preset"]
+>
+
+const ENV_MAP: Record<string, EnvironmentPreset> = {
   "neutral-studio":    "studio",
   "warm-workshop":     "sunset",
   morning:             "dawn",
@@ -72,13 +161,22 @@ const ENV_MAP: Record<string, string> = {
   cafe:                "apartment",
 }
 
-function KeyboardLighting({ lighting, pressedCount }: { lighting: LightingCustomization; pressedCount: number }) {
+const BACKLIGHT_COLORS = ["#7c5cff", "#00d9ff", "#ff4fc3", "#72f6aa", "#ffd34d"]
+
+function backlightColorForKey(keyId: string) {
+  const hash = Array.from(keyId).reduce((value, character) => value + character.charCodeAt(0), 0)
+  return BACKLIGHT_COLORS[hash % BACKLIGHT_COLORS.length]
+}
+
+function KeyboardLighting({ lighting }: { lighting: LightingCustomization }) {
   const keyLight = useRef<THREE.PointLight>(null)
   const fillLight = useRef<THREE.PointLight>(null)
   const primary = useMemo(() => new THREE.Color(lighting.primaryColor), [lighting.primaryColor])
   const secondary = useMemo(() => new THREE.Color(lighting.secondaryColor), [lighting.secondaryColor])
 
   useFrame(({ clock }) => {
+    const pressedCount =
+      useWorkshopTypingStore.getState().pressedKeys.size
     const time = clock.getElapsedTime()
     const speed = 0.35 + lighting.speed * 4
     const wave = (Math.sin(time * speed) + 1) / 2
@@ -159,18 +257,14 @@ const CODE_TO_KEY_ID: Record<string, string> = {
 // ─── Inner 3D assembly ────────────────────────────────────────────────────────
 
 function KeyboardAssembly() {
-  const {
-    currentBuild,
-    selectedKeyIds,
-    pressedKeys,
-    explodedView,
-    explodeAmount,
-    testTypingMode,
-    selectKey,
-    setSelectedPart,
-    deselectAll,
-    lightingEnv,
-  } = useWorkshopStore()
+  const assemblyRef = useRef<THREE.Group>(null)
+  const currentBuild = useWorkshopStore((state) => state.currentBuild)
+  const selectedKeyIds = useWorkshopStore((state) => state.selectedKeyIds)
+  const explodedView = useWorkshopStore((state) => state.explodedView)
+  const explodeAmount = useWorkshopStore((state) => state.explodeAmount)
+  const selectKey = useWorkshopStore((state) => state.selectKey)
+  const setSelectedPart = useWorkshopStore((state) => state.setSelectedPart)
+  const lightingEnv = useWorkshopStore((state) => state.lightingEnv)
 
   // Resolve the active keyboard model
   const model = useMemo(
@@ -184,7 +278,7 @@ function KeyboardAssembly() {
   )
 
   const positions = useMemo(
-    () => computeKeyPositions(layoutKeys, 1, GAP),
+    () => computeKeyPositions(layoutKeys, U, GAP),
     [layoutKeys]
   )
 
@@ -216,16 +310,17 @@ function KeyboardAssembly() {
     return [x, 0.3, z]
   }, [model.knobConfig, positions, bounds])
 
-  const envPreset = (ENV_MAP[lightingEnv] ?? "studio") as any
+  const envPreset = ENV_MAP[lightingEnv] ?? "studio"
+  const cameraFitKey = `${model.id}:${currentBuild.layout}:${explodedView}:${explodeAmount}`
 
   return (
     <>
       {/* Lighting */}
-      <KeyboardLighting lighting={currentBuild.lighting} pressedCount={pressedKeys.size} />
+      <KeyboardLighting lighting={currentBuild.lighting} />
       <Environment preset={envPreset} />
-      <CameraController />
+      <CameraController contentRef={assemblyRef} fitKey={cameraFitKey} />
 
-      <group>
+      <group ref={assemblyRef}>
         {/* Case — tightly wraps the layout */}
         <KeyboardCase3D
           bounds={bounds}
@@ -267,7 +362,6 @@ function KeyboardAssembly() {
         <KeyboardSwitch3D
           positions={positions}
           switches={currentBuild.switches}
-          pressedKeys={testTypingMode ? pressedKeys : new Set()}
           explodeOffset={explodedView ? EX * 0.9 : 0}
         />
 
@@ -282,8 +376,8 @@ function KeyboardAssembly() {
               position={pos}
               customization={key}
               isSelected={selectedKeyIds.includes(pos.keyId)}
-              isPressed={testTypingMode && pressedKeys.has(pos.keyId)}
               isHovered={false}
+              backlightColor={backlightColorForKey(pos.keyId)}
               onClick={(id, multi) => {
                 selectKey(id, multi)
                 setSelectedPart("keycaps")
@@ -294,7 +388,7 @@ function KeyboardAssembly() {
         })}
 
         {/* Knob — upper-right corner, aligned with function row */}
-        {currentBuild.layout === "75%" && currentBuild.knob.enabled && model.hasKnob && (
+        {currentBuild.layout === "75%" && currentBuild.knob.enabled && model.hasKnob && model.knobConfig && (
           <KeyboardKnob3D
             position={knobPos}
             knob={currentBuild.knob}
@@ -321,8 +415,10 @@ export function KeyboardScene() {
       <Canvas
         shadows="soft"
         gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false }}
+        onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
         camera={{ position: [14, 11, 16], fov: 40 }}
         dpr={[1, 1.5]}
+        style={{ background: "transparent" }}
         onPointerMissed={() => {
           deselectAll()
           setSelectedPart("keycaps")

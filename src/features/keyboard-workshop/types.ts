@@ -66,6 +66,13 @@ export type KeyboardModel = {
 // ─── Keycap ───────────────────────────────────────────────────────────────────
 
 export type KeycapProfile =
+  | "dom"
+  | "tai-hao"
+  | "kat"
+  | "g20"
+  | "kam"
+  | "tea"
+  | "apple"
   | "pixel-flat"
   | "cherry"
   | "oem"
@@ -117,6 +124,8 @@ export type KeyCustomization = {
   }
   artwork: {
     source: string | null
+    /** Distinguishes the bundled per-key skin from custom uploads/removals. */
+    useDefault: boolean
     mapping: ArtworkMapping
     fit: ArtworkFit
     scale: number

@@ -27,7 +27,7 @@ const FRAME_STYLE_COLORS: Record<string, { outer: string; inner: string; corner:
 
 export function KeyboardFrame3D({ bounds, frameConfig, explodeOffset = 0, onClick }: Props) {
   const { w, h } = bounds
-  const fw = 0.35 // frame width (each side)
+  const fw = 0.20 // compact frame width on each side
   const fh = 0.12  // frame height
 
   const style = FRAME_STYLE_COLORS[frameConfig.style] ?? FRAME_STYLE_COLORS.minimal

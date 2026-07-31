@@ -19,8 +19,8 @@ const PAW_PATHS = [
 ]
 
 export function KeyboardBadge3D({ position, badge, onClick }: Props) {
-  if (!badge.enabled || badge.type === "none") return null
   const color = useMemo(() => new THREE.Color(badge.color), [badge.color])
+  if (!badge.enabled || badge.type === "none") return null
 
   return (
     <group position={position} onClick={(event) => { event.stopPropagation(); onClick?.() }}>
