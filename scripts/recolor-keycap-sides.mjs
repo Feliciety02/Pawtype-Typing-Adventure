@@ -98,7 +98,7 @@ async function recolorDirectory(source, output) {
       count += await recolorDirectory(sourcePath, outputPath)
       continue
     }
-    if (!entry.isFile() || path.extname(entry.name).toLowerCase() !== ".png") {
+    if (!entry.isFile() || path.extname(entry.name).toLowerCase() !== ".webp") {
       continue
     }
 
@@ -115,7 +115,7 @@ async function recolorDirectory(source, output) {
         channels: 4,
       },
     })
-      .png({ compressionLevel: 9, palette: true })
+      .webp({ lossless: true, effort: 6 })
       .toFile(outputPath)
     count += 1
   }

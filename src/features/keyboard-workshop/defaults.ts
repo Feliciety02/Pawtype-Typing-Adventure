@@ -20,7 +20,7 @@ import {
 } from "./layout-data"
 
 function getBundledTopSource(keyId: string) {
-  return `/workshop/keycaps/royal-cream/${keyId}.png`
+  return `/workshop/keycaps/royal-cream/${keyId}.webp`
 }
 
 // ─── Per-key default factory ──────────────────────────────────────────────────

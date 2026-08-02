@@ -20,7 +20,7 @@ export function BlacksmithPage({ backButtonRef, onBack }: BlacksmithPageProps) {
     };
 
     nightBackground.decoding = "async";
-    nightBackground.src = "/camp/blacksmith-page/blacksmith-background-evening.png";
+    nightBackground.src = "/camp/blacksmith-page/blacksmith-background-evening.webp";
     if (nightBackground.complete) markReady();
     else nightBackground.addEventListener("load", markReady, { once: true });
 

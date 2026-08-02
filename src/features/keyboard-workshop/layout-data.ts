@@ -228,7 +228,7 @@ export function validateKeyboardLayout(rows: KeyboardRowConfig[]) {
 
 if (import.meta.env.DEV) {
   const result = validateKeyboardLayout(PAWTYPE_75_KNOB_V1.rows)
-  if (result.keyCount !== 80 || result.duplicateIds.length || result.missingLegends.length || result.invalidWidths.length || result.emptyRows.length) {
+  if (result.keyCount !== 81 || result.duplicateIds.length || result.missingLegends.length || result.invalidWidths.length || result.emptyRows.length) {
     console.error("Invalid Pawtype 75 keyboard layout", result)
   }
 }

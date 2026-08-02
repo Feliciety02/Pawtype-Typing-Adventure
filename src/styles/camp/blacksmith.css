@@ -25,12 +25,12 @@
 }
 
 .camp-blacksmith-page::before {
-  background: linear-gradient(180deg, rgba(42, 20, 12, 0.08), rgba(42, 20, 12, 0.3)), url("/camp/blacksmith-page/blacksmith-background-morning.png") center / cover no-repeat;
+  background: linear-gradient(180deg, rgba(42, 20, 12, 0.08), rgba(42, 20, 12, 0.3)), url("/camp/blacksmith-page/blacksmith-background-morning.webp") center / cover no-repeat;
 }
 
 .camp-blacksmith-page::after {
   opacity: 0;
-  background: linear-gradient(180deg, rgba(10, 6, 12, 0.16), rgba(10, 6, 12, 0.46)), url("/camp/blacksmith-page/blacksmith-background-evening.png") center / cover no-repeat;
+  background: linear-gradient(180deg, rgba(10, 6, 12, 0.16), rgba(10, 6, 12, 0.46)), url("/camp/blacksmith-page/blacksmith-background-evening.webp") center / cover no-repeat;
 }
 
 .camp-blacksmith-page.is-night-background::after { opacity: 1; }

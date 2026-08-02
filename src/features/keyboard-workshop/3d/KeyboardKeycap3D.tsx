@@ -28,7 +28,7 @@ const FIXED_KEYCAP_PROFILE: ResolvedKeycapProfile = {
 const DEFAULT_SIDE_COLOR = new THREE.Color("#2c0b3d")
 const BUNDLED_SIDE_TINT = new THREE.Color("#858585")
 const LIGHT_SIDE_TINT = new THREE.Color("#ffffff")
-const BUNDLED_SIDE_ASSET_VERSION = "cream-edge-v2"
+const BUNDLED_SIDE_ASSET_VERSION = "lossless-webp-v1"
 const CREAM_SIDE_VERTICAL_OVERSCAN_RATIO = 0.04
 // Keep the decal just above the wall to avoid z-fighting without extending it
 // into the very narrow seam between adjacent keycaps.
@@ -342,9 +342,7 @@ const SIDE_PROFILE_SIZES = [
   { units: 2, token: "2u" },
   { units: 2.25, token: "2-25u" },
   { units: 2.75, token: "2-75u" },
-  { units: 3, token: "3u" },
   { units: 6.25, token: "6-25u" },
-  { units: 7, token: "7u" },
 ] as const
 
 function getSideProfileToken(width: number) {
@@ -493,10 +491,10 @@ function KeycapProfileSides({
   const shortSidePath =
     `/workshop/keycaps/sides/${variant}/${shortSideToken}`
   const [front, back, left, right] = useTexture([
-    `${longSidePath}/back.png?v=${BUNDLED_SIDE_ASSET_VERSION}`,
-    `${longSidePath}/front.png?v=${BUNDLED_SIDE_ASSET_VERSION}`,
-    `${shortSidePath}/front.png?v=${BUNDLED_SIDE_ASSET_VERSION}`,
-    `${shortSidePath}/front.png?v=${BUNDLED_SIDE_ASSET_VERSION}`,
+    `${longSidePath}/back.webp?v=${BUNDLED_SIDE_ASSET_VERSION}`,
+    `${longSidePath}/front.webp?v=${BUNDLED_SIDE_ASSET_VERSION}`,
+    `${shortSidePath}/front.webp?v=${BUNDLED_SIDE_ASSET_VERSION}`,
+    `${shortSidePath}/front.webp?v=${BUNDLED_SIDE_ASSET_VERSION}`,
   ])
 
   useEffect(() => {

@@ -6,7 +6,7 @@ const [source, outputDirectory] = process.argv.slice(2)
 
 if (!source || !outputDirectory) {
   console.error(
-    "Usage: node scripts/crop-keycap-sides.mjs <atlas.png> <output-directory>",
+    "Usage: node scripts/crop-keycap-sides.mjs <atlas.webp> <output-directory>",
   )
   process.exit(1)
 }
@@ -54,25 +54,14 @@ const profiles = {
     left: [292, 470, 258, 58],
     right: [292, 528, 258, 58],
   },
-  "3u": {
-    front: [586, 360, 296, 58],
-    back: [586, 418, 296, 52],
-    left: [586, 470, 296, 58],
-    right: [586, 528, 296, 58],
-  },
   "6-25u": {
     front: [60, 622, 370, 58],
     back: [60, 680, 370, 46],
     left: [60, 726, 370, 42],
     right: [60, 768, 370, 42],
   },
-  "7u": {
-    front: [468, 622, 450, 58],
-    back: [468, 680, 450, 46],
-    left: [468, 726, 450, 42],
-    right: [468, 768, 450, 42],
-  },
 }
+const RENDERED_ORIENTATIONS = new Set(["front", "back"])
 
 function removeChroma(data) {
   for (let index = 0; index < data.length; index += 4) {
@@ -95,6 +84,8 @@ for (const [size, orientations] of Object.entries(profiles)) {
   for (const [orientation, [left, top, width, height]] of Object.entries(
     orientations,
   )) {
+    if (!RENDERED_ORIENTATIONS.has(orientation)) continue
+
     const extracted = await sharp(source)
       .extract({ left, top, width, height })
       .ensureAlpha()
@@ -111,8 +102,8 @@ for (const [size, orientations] of Object.entries(profiles)) {
       },
     })
       .trim({ background: { r: 0, g: 0, b: 0, alpha: 0 }, threshold: 4 })
-      .png({ compressionLevel: 9, palette: true })
-      .toFile(path.join(sizeDirectory, `${orientation}.png`))
+      .webp({ lossless: true, effort: 6 })
+      .toFile(path.join(sizeDirectory, `${orientation}.webp`))
 
     cropCount += 1
   }

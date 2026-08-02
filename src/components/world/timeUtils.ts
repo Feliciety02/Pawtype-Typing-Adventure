@@ -9,15 +9,18 @@ export type RgbColor = {
 
 export const DAY_MINUTES = 24 * 60;
 
+// Boundaries realigned to the standard "parts of the day" (Britannica / Wikipedia):
+// night 21:30–04:30, pre-dawn 04:30–06:00, sunrise 06:00–07:00, morning 07:00–11:00,
+// noon (midday) 11:00–13:00, afternoon 13:00–17:00, sunset/dusk 17:00–19:00, evening 19:00–21:30.
 export const DAY_NIGHT_SCHEDULE: { segment: DayNightSegment; minute: number }[] = [
-  { segment: "midnight", minute: 0 },
+  { segment: "midnight", minute: 21 * 60 + 30 },
   { segment: "predawn", minute: 4 * 60 + 30 },
   { segment: "sunrise", minute: 6 * 60 },
-  { segment: "morning", minute: 9 * 60 },
-  { segment: "noon", minute: 12 * 60 },
-  { segment: "afternoon", minute: 15 * 60 },
-  { segment: "sunset", minute: 18 * 60 },
-  { segment: "twilight", minute: 19 * 60 + 30 },
+  { segment: "morning", minute: 7 * 60 },
+  { segment: "noon", minute: 11 * 60 },
+  { segment: "afternoon", minute: 13 * 60 },
+  { segment: "sunset", minute: 17 * 60 },
+  { segment: "twilight", minute: 19 * 60 },
 ];
 
 export function getLocalMinutes(date: Date = new Date()) {

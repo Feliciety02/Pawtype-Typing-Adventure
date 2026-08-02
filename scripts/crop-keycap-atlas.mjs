@@ -5,7 +5,7 @@ import sharp from "sharp"
 const [source, outputDirectory] = process.argv.slice(2)
 
 if (!source || !outputDirectory) {
-  console.error("Usage: node scripts/crop-keycap-atlas.mjs <atlas.png> <output-directory>")
+  console.error("Usage: node scripts/crop-keycap-atlas.mjs <atlas.webp> <output-directory>")
   process.exit(1)
 }
 
@@ -105,6 +105,10 @@ const ROW_KEYS = [
     "ArrowRight",
   ],
 ]
+const UNUSED_TOP_ASSETS = new Set(["Knob"])
+const OUTPUT_KEY_COUNT = ROW_KEYS.flat().filter(
+  (keyId) => !UNUSED_TOP_ASSETS.has(keyId),
+).length
 
 const KEY_WIDTH_UNITS = {
   Backspace: 2,
@@ -290,6 +294,8 @@ const { data, info } = await sharp(source)
   .toBuffer({ resolveWithObject: true })
 
 async function writeKeyCrop(keyId, bounds, widthUnits = null) {
+  if (UNUSED_TOP_ASSETS.has(keyId)) return
+
   const extracted = await sharp(source)
     .extract(bounds)
     .ensureAlpha()
@@ -325,8 +331,8 @@ async function writeKeyCrop(keyId, bounds, widthUnits = null) {
   }
 
   await output
-    .png({ compressionLevel: 9, palette: true })
-    .toFile(path.join(outputDirectory, `${keyId}.png`))
+    .webp({ lossless: true, effort: 6 })
+    .toFile(path.join(outputDirectory, `${keyId}.webp`))
 }
 
 if (
@@ -366,7 +372,7 @@ if (
   }
 
   console.log(
-    `Cropped ${ROW_KEYS.flat().length} royal-cream keycap tops from ${path.basename(source)}.`,
+    `Cropped ${OUTPUT_KEY_COUNT} royal-cream keycap tops from ${path.basename(source)}.`,
   )
   process.exit(0)
 }
@@ -439,5 +445,5 @@ for (let rowIndex = 0; rowIndex < rowRuns.length; rowIndex += 1) {
 }
 
 console.log(
-  `Cropped ${ROW_KEYS.flat().length} individual keycap assets from ${path.basename(source)}.`,
+  `Cropped ${OUTPUT_KEY_COUNT} individual keycap assets from ${path.basename(source)}.`,
 )

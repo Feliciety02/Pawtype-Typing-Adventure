@@ -2,7 +2,11 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
-✅ **Shipped** - The Keyboard Workshop mechanical layout now restores the 1u right Ctrl key between Fn and the arrow cluster, using the existing bundled \`CtrlR.png\` top artwork and matching fitted side artwork. Saved builds receive the restored key automatically without losing their customizations.
+✅ **Shipped** - The public image library has been pruned of 145 verified-unused WebP files (1.20 MB): the superseded Stardust keycap set, unloaded directional side sprites, side sizes absent from every available layout, the unused knob top, the retired outdoor Bag sprite, and three replaced login controls. Dynamic Adventure, Awards, Camp, Shop, nursery-egg, and login-leaf assets remain intact.
+
+✅ **Shipped** - Every remaining public PNG asset now has a lossless WebP replacement. All 272 converted images preserve their dimensions, alpha, and visible RGBA pixels, while the Blacksmith backgrounds and Workshop keycap assets shrink from 6.61 MB to 5.23 MB overall. Runtime paths and keycap-generation tools now use WebP directly so PNG files are not reintroduced.
+
+✅ **Shipped** - The Keyboard Workshop mechanical layout now restores the 1u right Ctrl key between Fn and the arrow cluster, using the existing bundled \`CtrlR.webp\` top artwork and matching fitted side artwork. Saved builds receive the restored key automatically without losing their customizations.
 
 ✅ **Shipped** - Keyboard Workshop side artwork now fits the exact base, shoulder, and top outline of every keycap. Texture rows are cropped to the narrowing wall instead of extending beyond it, and the surface offset stays inside the inter-key seam so the 2u Backspace artwork no longer overlaps adjacent keys.
 
@@ -16,7 +20,7 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ✅ **Shipped** - Wide Keyboard Workshop keys now preserve the same fixed physical bevel inset as a 1u key. The spacebar and modifiers grow only through their flat center span, so their end-wall angle matches neighboring normal keys instead of becoming progressively steeper with width.
 
-✅ **Shipped** - The supplied royal-cream top atlas drives the visible standard default keycaps: cream alphas and numbers, purple modifiers and Enter, cream navigation keys, charcoal arrows, the knob, the decorated paw-print Space top, the purple arrow Backspace top, and distinct long-left and short-right Shift tops are cropped into dedicated transparent assets. Crop boundaries follow the actual cap rows and per-key starts, remove the outer baked sprite fringe, and normalize each generated output to its physical key width. Bundled non-square artwork fills its complete top plane; sampled light tops select cream walls, neutral black tops select charcoal walls, and saturated dark tops retain the purple wall set.
+✅ **Shipped** - The supplied royal-cream top atlas drives the visible standard default keycaps: cream alphas and numbers, purple modifiers and Enter, cream navigation keys, charcoal arrows, the decorated paw-print Space top, the purple arrow Backspace top, and distinct long-left and short-right Shift tops are cropped into dedicated transparent assets. The rotary knob is rendered from customizable 3D geometry rather than a top image. Crop boundaries follow the actual cap rows and per-key starts, remove the outer baked sprite fringe, and normalize each generated output to its physical key width. Bundled non-square artwork fills its complete top plane; sampled light tops select cream walls, neutral black tops select charcoal walls, and saturated dark tops retain the purple wall set.
 
 ✅ **Shipped** - Bundled top artwork now UV-wraps onto an exact duplicate of each keycap's top-face geometry instead of a floating rectangular plane, keeping square and wide images clipped to the real surface and aligned with the bevel. Aspect-preserving custom artwork retains its centered contain behavior.
 
@@ -40,11 +44,11 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ✅ **Shipped** - The default Keyboard Workshop model now follows the AULA F75 key layout reference: an 81-key 75% arrangement with a top-right rotary knob, standard ANSI modifier widths, an 18 mm cap on a 19.05 mm pitch, and compact navigation and inverted-T arrow clusters. Row alignment is handled by cluster spacing rather than stretched keycaps.
 
-✅ **Shipped** - The bundled purple-and-gold Keyboard Workshop skin now uses dedicated directional side artwork instead of repeating each top crop on all walls. Front, back, left, and right sprites are selected independently from ten width classes (1u through 7u), preserving the sheet's bevels, asymmetric side slopes, gold corner accents, wide modifiers, and spacebar proportions. Custom uploaded full-wrap artwork retains its original wrapping behavior.
+✅ **Shipped** - The bundled purple-and-gold Keyboard Workshop skin uses dedicated front and back wall artwork instead of repeating each top crop on all walls. The squared front sprite is reused on both physical ends across the eight width classes required by the available layouts, preserving the sheet's bevels, gold corner accents, wide modifiers, and spacebar proportions. Custom uploaded full-wrap artwork retains its original wrapping behavior.
 
 ✅ **Shipped** - Keyboard Workshop keycaps now use one consistent AULA F75-inspired Cherry shape across every keyboard row. Wider modifiers and the spacebar extend the same shared footprint without changing its height, tilt, or bevel, and the Inspector no longer offers conflicting per-key shape choices.
 
-✅ **Shipped** - The Keyboard Workshop now ships with the supplied royal-cream, purple, and charcoal pixel keycap set. Every physical key uses its own transparent top crop, including wide modifiers, navigation keys, arrows, the knob, and the decorated spacebar. Existing saved builds follow the latest bundled source while custom uploads and intentionally removed artwork remain independent.
+✅ **Shipped** - The Keyboard Workshop now ships with the supplied royal-cream, purple, and charcoal pixel keycap set. Every physical key uses its own transparent top crop, including wide modifiers, navigation keys, arrows, and the decorated spacebar, while the rotary knob uses customizable 3D geometry. Existing saved builds follow the latest bundled source while custom uploads and intentionally removed artwork remain independent.
 
 ✅ **Shipped** - The Blacksmith Keyboard Workshop now uses a forge-bench layout inspired by the camp's pixel-art workshop: a dedicated title plaque, collection rail, central transparent 3D keyboard bench, and a parchment-style Inspector. Existing keyboard editing, testing, saving, and equipping controls remain available within the new layout.
 
@@ -275,6 +279,8 @@ Planned features and high-potential additions to expand the game.
 ✅ **Shipped** - Camp now uses a reusable local-clock day/night renderer. The terrain and building layout stay static while sky, sun, moon, stars, constellations, lighting tint, water highlights, and particles interpolate continuously across the full 24-hour cycle, with the global Day/Night toggle able to force morning or night only when it would otherwise conflict with the current real local time.
 
 ✅ **Shipped** - The day/night renderer now updates on minute boundaries with long linear atmosphere transitions and a locked static environment layer, preventing subtle image shimmer while preserving the local-clock cycle.
+
+✅ **Shipped** - The Camp day/night schedule was realigned to the standard parts of the day (Britannica/Wikipedia): night runs 21:30-04:30, pre-dawn 04:30-06:00, sunrise 06:00-07:00, morning 07:00-11:00, noon 11:00-13:00, afternoon 13:00-17:00, sunset/dusk 17:00-19:00, and evening 19:00-21:30. The eight scene backgrounds and their matching artwork stay mapped to the closest segment, so the output image at each real local hour now matches the part of day it actually represents.
 
 ✅ **Shipped** - The campfire sprite anchor was tuned to sit slightly lower and render 10% smaller, so the center of the campsite reads cleaner against the painted firepit art.
 
