@@ -19,13 +19,8 @@ import {
   flattenModelKeys,
 } from "./layout-data"
 
-const LEGACY_WIDE_TOPS = new Set([
-  "Enter",
-])
-
 function getBundledTopSource(keyId: string) {
-  const assetSet = LEGACY_WIDE_TOPS.has(keyId) ? "stardust" : "royal-cream"
-  return `/workshop/keycaps/${assetSet}/${keyId}.png`
+  return `/workshop/keycaps/royal-cream/${keyId}.png`
 }
 
 // ─── Per-key default factory ──────────────────────────────────────────────────

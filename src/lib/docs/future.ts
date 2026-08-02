@@ -2,6 +2,12 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - The Keyboard Workshop mechanical layout now restores the 1u right Ctrl key between Fn and the arrow cluster, using the existing bundled \`CtrlR.png\` top artwork and matching fitted side artwork. Saved builds receive the restored key automatically without losing their customizations.
+
+✅ **Shipped** - Keyboard Workshop side artwork now fits the exact base, shoulder, and top outline of every keycap. Texture rows are cropped to the narrowing wall instead of extending beyond it, and the surface offset stays inside the inter-key seam so the 2u Backspace artwork no longer overlaps adjacent keys.
+
+✅ **Shipped** - The mechanical keyboard in the Keyboard Workshop now displays the existing royal-cream Enter key image on its top surface, matching the rest of the bundled keycap set while retaining its fitted 2.25u shape and side artwork.
+
 ✅ **Shipped** - The Keyboard Workshop 3D layout now closes the visual seam between keycaps from 0.5 mm to 0.15 mm, shortening the whole keyboard matrix while keeping the 18 mm keycap size. Because the case, frame, and plate bounds are derived from the key positions, they automatically shrink with the tighter gaps and stay equally spaced from the keycaps.
 
 ✅ **Shipped** - The Keyboard Workshop case now uses the same compact keycap-to-shell clearance on its left, right, top, and bottom edges. Removing the oversized top and front lips shortens the case while preserving the key layout, switch pitch, and aligned frame and plate.
@@ -10,7 +16,7 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ✅ **Shipped** - Wide Keyboard Workshop keys now preserve the same fixed physical bevel inset as a 1u key. The spacebar and modifiers grow only through their flat center span, so their end-wall angle matches neighboring normal keys instead of becoming progressively steeper with width.
 
-✅ **Shipped** - The supplied royal-cream top atlas drives the visible standard default keycaps: cream alphas and numbers, purple modifiers, cream navigation keys, charcoal arrows, the knob, the decorated paw-print Space top, the purple arrow Backspace top, and distinct long-left and short-right Shift tops are cropped into dedicated transparent assets. Enter alone omits its bundled top-art layer while retaining its physical cap and matched side sprites. Crop boundaries follow the actual cap rows and per-key starts, remove the outer baked sprite fringe, and normalize each generated output to its physical key width. Bundled non-square artwork fills its complete top plane; sampled light tops select cream walls, neutral black tops select charcoal walls, and saturated dark tops retain the purple wall set.
+✅ **Shipped** - The supplied royal-cream top atlas drives the visible standard default keycaps: cream alphas and numbers, purple modifiers and Enter, cream navigation keys, charcoal arrows, the knob, the decorated paw-print Space top, the purple arrow Backspace top, and distinct long-left and short-right Shift tops are cropped into dedicated transparent assets. Crop boundaries follow the actual cap rows and per-key starts, remove the outer baked sprite fringe, and normalize each generated output to its physical key width. Bundled non-square artwork fills its complete top plane; sampled light tops select cream walls, neutral black tops select charcoal walls, and saturated dark tops retain the purple wall set.
 
 ✅ **Shipped** - Bundled top artwork now UV-wraps onto an exact duplicate of each keycap's top-face geometry instead of a floating rectangular plane, keeping square and wide images clipped to the real surface and aligned with the bevel. Aspect-preserving custom artwork retains its centered contain behavior.
 
@@ -32,7 +38,7 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ✅ **Shipped** - The Keyboard Workshop camera now fits the complete rendered keyboard and case to the available 3D viewport for every full-board preset. It responds to narrow Blacksmith side-panel layouts, viewport resizing, and exploded view dimensions without cropping the model, while dedicated close-up presets retain their tighter framing.
 
-✅ **Shipped** - The default Keyboard Workshop model now follows the AULA F75 key layout reference: an 80-key 75% arrangement with a top-right rotary knob, standard ANSI modifier widths, an 18 mm cap on a 19.05 mm pitch, and compact navigation and inverted-T arrow clusters. Row alignment is handled by cluster spacing rather than stretched keycaps.
+✅ **Shipped** - The default Keyboard Workshop model now follows the AULA F75 key layout reference: an 81-key 75% arrangement with a top-right rotary knob, standard ANSI modifier widths, an 18 mm cap on a 19.05 mm pitch, and compact navigation and inverted-T arrow clusters. Row alignment is handled by cluster spacing rather than stretched keycaps.
 
 ✅ **Shipped** - The bundled purple-and-gold Keyboard Workshop skin now uses dedicated directional side artwork instead of repeating each top crop on all walls. Front, back, left, and right sprites are selected independently from ten width classes (1u through 7u), preserving the sheet's bevels, asymmetric side slopes, gold corner accents, wide modifiers, and spacebar proportions. Custom uploaded full-wrap artwork retains its original wrapping behavior.
 

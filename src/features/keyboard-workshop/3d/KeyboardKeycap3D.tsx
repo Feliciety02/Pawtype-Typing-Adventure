@@ -30,11 +30,10 @@ const BUNDLED_SIDE_TINT = new THREE.Color("#858585")
 const LIGHT_SIDE_TINT = new THREE.Color("#ffffff")
 const BUNDLED_SIDE_ASSET_VERSION = "cream-edge-v2"
 const CREAM_SIDE_VERTICAL_OVERSCAN_RATIO = 0.04
+// Keep the decal just above the wall to avoid z-fighting without extending it
+// into the very narrow seam between adjacent keycaps.
+const SIDE_ARTWORK_SURFACE_OFFSET = 0.001
 const DOMINANT_COLOR_CACHE = new WeakMap<THREE.Texture, string>()
-const BUNDLED_TOP_HIDDEN_KEYS = new Set([
-  "Enter",
-])
-
 function sampleDominantTextureColor(texture: THREE.Texture) {
   const cached = DOMINANT_COLOR_CACHE.get(texture)
   if (cached) return cached
@@ -398,7 +397,6 @@ function buildSideArtworkGeometry(
   const stretchedHeight = height + verticalOverscan * 2
   const stretchY = (y: number) =>
     (y / height) * stretchedHeight - verticalOverscan
-  const offset = 0.008
   const profileRows = [
     {
       y: stretchY(0),
@@ -423,28 +421,38 @@ function buildSideArtworkGeometry(
     ({ y, halfWidth, halfDepth, shiftZ }) =>
       direction === "front"
         ? [
-            -baseHalfWidth, y, halfDepth - shiftZ + offset,
-            baseHalfWidth, y, halfDepth - shiftZ + offset,
+            -halfWidth, y, halfDepth - shiftZ + SIDE_ARTWORK_SURFACE_OFFSET,
+            halfWidth, y, halfDepth - shiftZ + SIDE_ARTWORK_SURFACE_OFFSET,
           ]
         : direction === "back"
           ? [
-              baseHalfWidth, y, -halfDepth - shiftZ - offset,
-              -baseHalfWidth, y, -halfDepth - shiftZ - offset,
+              halfWidth, y, -halfDepth - shiftZ - SIDE_ARTWORK_SURFACE_OFFSET,
+              -halfWidth, y, -halfDepth - shiftZ - SIDE_ARTWORK_SURFACE_OFFSET,
             ]
           : direction === "left"
             ? [
-                -halfWidth - offset, y, -baseHalfDepth - shiftZ,
-                -halfWidth - offset, y, baseHalfDepth - shiftZ,
+                -halfWidth - SIDE_ARTWORK_SURFACE_OFFSET, y, -halfDepth - shiftZ,
+                -halfWidth - SIDE_ARTWORK_SURFACE_OFFSET, y, halfDepth - shiftZ,
               ]
             : [
-                halfWidth + offset, y, baseHalfDepth - shiftZ,
-                halfWidth + offset, y, -baseHalfDepth - shiftZ,
+                halfWidth + SIDE_ARTWORK_SURFACE_OFFSET, y, halfDepth - shiftZ,
+                halfWidth + SIDE_ARTWORK_SURFACE_OFFSET, y, -halfDepth - shiftZ,
               ],
   )
   const shoulderV = shoulderHeight / height
   const sideProfile = direction === "left" || direction === "right"
-  const startU = sideProfile ? 1 : 0
-  const endU = sideProfile ? 0 : 1
+  const uvs = profileRows.flatMap(({ halfWidth, halfDepth }, rowIndex) => {
+    // Crop each texture row to the wall's actual span. This preserves the
+    // sprite's physical scale while clipping decorative edge pixels that sit
+    // outside a keycap's narrowing shoulder or top face.
+    const halfSpan = sideProfile ? halfDepth : halfWidth
+    const baseHalfSpan = sideProfile ? baseHalfDepth : baseHalfWidth
+    const inset = Math.max(0, (1 - halfSpan / baseHalfSpan) / 2)
+    const startU = sideProfile ? 1 - inset : inset
+    const endU = sideProfile ? inset : 1 - inset
+    const v = rowIndex === 0 ? 0 : rowIndex === 1 ? shoulderV : 1
+    return [startU, v, endU, v]
+  })
 
   const geometry = new THREE.BufferGeometry()
   geometry.setAttribute(
@@ -453,17 +461,7 @@ function buildSideArtworkGeometry(
   )
   geometry.setAttribute(
     "uv",
-    new THREE.Float32BufferAttribute(
-      [
-        startU, 0,
-        endU, 0,
-        startU, shoulderV,
-        endU, shoulderV,
-        startU, 1,
-        endU, 1,
-      ],
-      2,
-    ),
+    new THREE.Float32BufferAttribute(uvs, 2),
   )
   geometry.setIndex([
     0, 1, 3,
@@ -897,7 +895,7 @@ export function KeyboardKeycap3D({
           : <meshStandardMaterial color={sideColor} side={THREE.DoubleSide} flatShading={profile.shoulderRoundness < 0.2} {...materialProps} />}
       </mesh>
 
-      {customization.artwork.source && <KeycapArtwork source={customization.artwork.source} wrap={customization.artwork.mapping === "full-wrap"} showTop={!customization.artwork.useDefault || !BUNDLED_TOP_HIDDEN_KEYS.has(position.keyId)} useProfileSides={customization.artwork.useDefault} width={w} depth={d} profile={profile} scale={customization.artwork.scale} fit={customization.artwork.fit} sideVariant={bundledSideVariant} onTopDominantColor={setTopDominantColor} onSideDominantColor={setSideDominantColor} />}
+      {customization.artwork.source && <KeycapArtwork source={customization.artwork.source} wrap={customization.artwork.mapping === "full-wrap"} showTop useProfileSides={customization.artwork.useDefault} width={w} depth={d} profile={profile} scale={customization.artwork.scale} fit={customization.artwork.fit} sideVariant={bundledSideVariant} onTopDominantColor={setTopDominantColor} onSideDominantColor={setSideDominantColor} />}
 
       {/* Selection outline — slightly larger, rendered as back-face only */}
 

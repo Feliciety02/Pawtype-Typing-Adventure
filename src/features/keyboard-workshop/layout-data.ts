@@ -25,7 +25,7 @@ export {
 
 // ─── Pawtype 75 / AULA F75 reference ─────────────────────────────────────────
 //
-// Compact 80-key 75% mechanical keyboard with a rotary knob.
+// Compact 81-key 75% mechanical keyboard with a rotary knob.
 // Layout:
 //   Row 0 — Esc | F1–F4 | F5–F8 | F9–F12 | Knob    (+ right nav column: Del)
 //   Row 1 — ` 1–0 - = Backspace Delete
@@ -155,6 +155,7 @@ const ROW_BOTTOM: KeyboardRowConfig = {
     { id: "Space",      label: "Space", primaryLegend: "SPACE",  row: 5, width: 6.25, type: "spacebar" },
     { id: "AltR",       label: "Alt",   primaryLegend: "Alt",   row: 5, width: 1.25, type: "modifier" },
     { id: "Fn",         label: "Fn",    primaryLegend: "Fn",    row: 5, width: 1, type: "modifier" },
+    { id: "CtrlR",      label: "Ctrl",  primaryLegend: "Ctrl",  row: 5, width: 1, type: "modifier" },
     // Inverted-T arrow cluster — Left / Down / Right
     { id: "ArrowLeft",  label: "←",     primaryLegend: "←",     row: 5, width: 1, gapBefore: 0.1, type: "arrow" },
     { id: "ArrowDown",  label: "▼",     primaryLegend: "▼",     row: 5, width: 1, type: "arrow" },
