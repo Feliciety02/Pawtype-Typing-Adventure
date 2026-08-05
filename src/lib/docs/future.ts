@@ -2,6 +2,49 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - The Blacksmith Workshop's left selector and right Inspector are now 10% taller, extending upward while keeping their lower edges aligned with the workbench. The live keyboard name also sits 10 percentage points higher on the title plaque.
+
+✅ **Shipped** - Route changes now remount one optimized entrance transition, with regular page sections appearing in short staggered steps instead of popping in together. Authentication and lazy-route fallbacks use the same compact paw-and-dots loading sequence, and all entrance/stagger animations are disabled when reduced motion is preferred.
+
+✅ **Shipped** - The raster library was re-audited and optimized after the Blacksmith UI import. Eight oversized full-scene WebPs, both authentication frames, and the new Workshop and shared UI art now use display-aware dimensions and conservative role-specific WebP settings while preserving alpha and aspect ratios. Six byte-identical Workshop hover sprites were removed and now reuse their active-state artwork; the footer's missing divider image request was replaced with a lightweight CSS separator.
+
+✅ **Shipped** - The embedded Blacksmith's left customization rail and right Inspector now continue below the centered action buttons by a responsive visual gap. Both side panels retain matching full-workbench height while the footer sits slightly higher, keeping the panel bottoms clearly longer without crowding the viewport edge.
+
+✅ **Shipped** - The Blacksmith Workshop title plaque is displayed 40% smaller across desktop and compact layouts while preserving the supplied artwork's native aspect ratio and transparency.
+
+✅ **Shipped** - The Blacksmith Workshop title now uses the supplied complete 2048:710 plaque artwork with transparent surrounding space. Responsive sizing follows that native aspect ratio, preserving the original top and bottom padding without cropping or stretching.
+
+✅ **Shipped** - The Blacksmith interior now centers an illustrated Blacksmith Workshop plaque above the forge editor and displays the active keyboard's live name on the sign directly below its main title lettering. The separate Back to Camp control stays independently aligned on the left instead of being wrapped into the plaque or selector sidebar.
+
+✅ **Shipped** - The embedded Blacksmith layout no longer draws an outer container around the keyboard, selector sidebar, and Inspector modal. Its structural wrapper is transparent, borderless, outline-free, and shadow-free while retaining the responsive three-area grid.
+
+✅ **Shipped** - The Blacksmith Workshop selector now labels Presets as step 4 and uses the same state-accurate accordion chevron as the first three steps: right when collapsed and down when expanded.
+
+✅ **Shipped** - The Keyboard Workshop's centered Typing/rest camera now uses one canonical startup, Reset, and primary-drag-release composition matching the straight, more elevated reference: direction `[
+  (0, 12, 13)
+]`, complete keyboard framed 20% smaller, and projection shifted upward by 15% of its displayed height, another five percentage units lower than the prior position. OrbitControls damping is explicitly disabled instead of relying on the library default, which is enabled and was retaining a rotation delta that caused hidden post-release movement. Wheel events emitted while the primary button remains held continue zooming from the current inspection angle; their immediate OrbitControls end events cannot request a rest return, which now waits for the actual primary release. DOM pointer tracking and OrbitControls' own interaction-end event otherwise provide redundant, deduplicated return triggers. A click already at the destination skips animation entirely, while the optimized return keeps a fixed world-up reference and hands the exact final transform to the controls without a second constraint pass.
+
+✅ **Shipped** - The public image library is fully WebP: all 470 public raster assets use `
+  .webp`, with no remaining PNG, JPEG, GIF, BMP, or TIFF files. Render-diagnostic paths and documentation also reference their WebP replacements, while the lossless conversion utility remains available for future source imports.
+
+✅ **Shipped** - The Blacksmith's left customization sidebar now keeps one fixed responsive width while sections expand or collapse. Its scrollbar gutter is permanently reserved and its contents are inline-size-contained, preventing taller button grids or the scrollbar from shrinking, widening, or horizontally shifting the rail.
+
+✅ **Shipped** - Releasing the primary mouse button after rotating the Keyboard Workshop preview restores a straight, centered Typing presentation instead of leaving the keyboard diagonally in the Isometric view. One post-pointer-event return owns camera position, orientation, zoom, and projection offset; direct orbit input has no competing damping or control remount, while mouse-wheel zoom remains independently usable.
+
+✅ **Shipped** - The Keyboard Workshop camera now supports unlimited level 360-degree horizontal orbit plus top-to-underside tilt without permitting sideways camera roll. Camera presets restore a level horizon, while zoom, pan, interaction fades, distance limits, and orthographic Front view remain supported.
+
+✅ **Shipped** - The Blacksmith footer's ISO, Front, Reset, Undo, and Redo controls now share Test Typing's larger proportional footprint. All six primary buttons use equal grid space and retain their native 456:168 artwork ratio, increasing both height and length without stretching; compact layouts scale the complete row down together.
+
+✅ **Shipped** - The embedded Blacksmith keyboard canvas now spans the full workbench behind the selector and Inspector instead of being clipped to the center column. Its default camera fit reserves the visible panel widths, free orbit/pan/zoom can use the complete workbench when the panels fade, and the action footer remains constrained to the unobstructed center.
+
+✅ **Shipped** - The Blacksmith Workshop's left selector is wider, and its Back to Camp control now lives in the shared, independent Camp interior toolbar above the workbench. It uses the same responsive size, artwork scale, and centered 1400px alignment as the other Camp interior Back controls without being wrapped by the selector rail.
+
+✅ **Shipped** - Rotating, panning, or zooming the Keyboard Workshop's 3D preview now fades out the left selector and right Inspector for an unobstructed view. A held primary mouse button keeps both panels hidden across overlapping orbit and zoom input, and they fade back in only after the button is released and zooming stops. The bottom action footer remains visible and usable throughout.
+
+✅ **Shipped** - The Blacksmith footer's More build-actions menu now renders in a page-level portal anchored above the gear button, so it can extend outside the footer and workshop clipping boundaries.
+
+✅ **Shipped** - The embedded Blacksmith Workshop center grid is fully transparent, removing the translucent dark rectangle around the 3D keyboard so the forge background remains unobstructed.
+
 ✅ **Shipped** - The public image library has been pruned of 145 verified-unused WebP files (1.20 MB): the superseded Stardust keycap set, unloaded directional side sprites, side sizes absent from every available layout, the unused knob top, the retired outdoor Bag sprite, and three replaced login controls. Dynamic Adventure, Awards, Camp, Shop, nursery-egg, and login-leaf assets remain intact.
 
 ✅ **Shipped** - Every remaining public PNG asset now has a lossless WebP replacement. All 272 converted images preserve their dimensions, alpha, and visible RGBA pixels, while the Blacksmith backgrounds and Workshop keycap assets shrink from 6.61 MB to 5.23 MB overall. Runtime paths and keycap-generation tools now use WebP directly so PNG files are not reintroduced.
@@ -51,6 +94,14 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 ✅ **Shipped** - The Keyboard Workshop now ships with the supplied royal-cream, purple, and charcoal pixel keycap set. Every physical key uses its own transparent top crop, including wide modifiers, navigation keys, arrows, and the decorated spacebar, while the rotary knob uses customizable 3D geometry. Existing saved builds follow the latest bundled source while custom uploads and intentionally removed artwork remain independent.
 
 ✅ **Shipped** - The Blacksmith Keyboard Workshop now uses a forge-bench layout inspired by the camp's pixel-art workshop: a dedicated title plaque, collection rail, central transparent 3D keyboard bench, and a parchment-style Inspector. Existing keyboard editing, testing, saving, and equipping controls remain available within the new layout.
+
+✅ **Shipped** - The Blacksmith Workshop rail now uses clean button plates extracted from the supplied reference art: brown is the baseline for section, size, part, key-group, and preset controls, while the isolated violet plate is used for hover, focus, pressed, and selected states. Reference modal surrounds and baked dropdown arrows are excluded so live labels, icons, and chevrons remain accessible UI elements.
+
+✅ **Shipped** - The Blacksmith selector panel and every nested control group now span the full available sidebar width. Its redundant My Keyboard title bar has been removed, while Back to Camp sits outside the sidebar in the shared interior toolbar and preserves the existing focus-return ref.
+
+✅ **Shipped** - Blacksmith sidebar buttons now use larger touch targets, labels, icons, chevrons, padding, and row spacing across section headers, keyboard sizes, parts, key groups, and presets.
+
+✅ **Shipped** - The Blacksmith footer now includes extracted pixel-art Save, Delete, and More buttons. Save persists the current build, Delete requires confirmation before replacing it with a fresh build, and More exposes Equip Keyboard and Export JSON without removing the primary camera, typing, and history controls.
 
 ✅ **Shipped** - Keyboard Workshop Test Typing keeps high-frequency keypress state separate from the persisted editor store and applies it directly to 3D refs, so keydown and keyup no longer cause React component renders. Keycap travel and RGB flare use a near-instant attack with a softer release, switch stems update only when their own pressed state changes, and scene lighting reads the current held-key count inside the render loop. A single low-latency audio context is reused across presses, browser defaults and duplicate/auto-repeat events are suppressed, and held keys are released on blur or mode exit for an immediate, reliable preview.
 
@@ -387,11 +438,24 @@ Planned features and high-potential additions to expand the game.
 ### 🗺 Adventure Node Pixel UI Polish
 ✅ **Shipped** - Adventure node cards were polished for clearer stage states and rewards, and tab button labels stay contained inside their pixel button plates on compact layouts.
 
+### 🗺 Quest World Scrolling
+✅ **Shipped** - The desktop Quest map now scrolls inside its viewport-sized content area, so every themed world and its stages remain reachable while the shared HUD stays fixed in place.
+
 ### 🧭 HUD Layout Polish
 ✅ **Shipped** - The top HUD now uses a single-row desktop layout with a wider main navigation strip, shorter nav button labels, and a redesigned profile card with a framed pet tile, level badge, HP-style progress bar, darker outline treatment, no dropdown button, a simplified utility area focused on coins plus notifications, larger spacing before the main page content, and a wider shared content shell for every tab view.
 
 ### 🐾 Pet Room
 ✅ **Shipped** — A dedicated modal to see your active pet larger, interact with it, feed treats, and view evolution progress. All pets you own appear in a row with active-pet highlighting.
+
+### Blacksmith Workshop Hanging Menu
+✅ **Shipped** — The in-camp Blacksmith Workshop now uses a transparent, reference-aligned hanging sidebar with a carved WORKSHOP plaque, iron chains, eleven separate wooden part buttons, a single violet active state, gold pixel icons and diamond markers, visible row gaps, and a purple paw pennant. The standalone Workshop keeps its existing utility sidebar.
+
+### Blacksmith Workshop Footer Toolbar
+✅ **Shipped** — The embedded forge now uses a compact, reference-aligned wooden control rail containing only keyboard-size, vertically stacked part, key-group, and preset buttons. Selecting a part updates its wood-framed parchment Inspector on the right, while the compact action footer stays beneath the central keyboard canvas. The embedded My Keyboard / Blacksmith Workshop / Save and Equip header is removed so the forge opens directly on the editor; the standalone Workshop keeps its original header and separate panels.
+
+✅ **Shipped** — The forge now has a compact wooden footer mounted beneath the central keyboard canvas so the left selector and right Inspector continue uninterrupted to the bottom of the workbench. Its six asset-driven controls use equal proportional slots and scale together responsively; ISO and orthographic FRONT views retain their selected state, RESET restores the straight centered Typing camera and zoom without touching customization, TEST TYPING stays the purple primary action, and history-aware UNDO/REDO stay aligned at the right.
+
+✅ **Shipped** — The embedded forge now keeps a responsive, safe-area-aware margin below the complete workbench, preventing the lowest action bar and Inspector controls from touching or being clipped by the viewport edge.
 
 ---
 

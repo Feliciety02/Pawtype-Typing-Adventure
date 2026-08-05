@@ -1137,10 +1137,88 @@
   animation: nav-sparkle-fly 0.5s ease-out forwards;
   z-index: 10;
 }
-/* View transition animation */
+/* Route and lazy-loading transitions. The shell is keyed by pathname so a
+   navigation gets one clean entrance instead of retaining the first mount. */
 .view-enter {
-  animation: view-fade-in 300ms ease-out both;
+  animation: view-fade-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+.view-stagger > * > * {
+  animation: view-item-enter 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.view-stagger > * > :nth-child(1) {
+  animation-delay: 30ms;
+}
+.view-stagger > * > :nth-child(2) {
+  animation-delay: 65ms;
+}
+.view-stagger > * > :nth-child(3) {
+  animation-delay: 100ms;
+}
+.view-stagger > * > :nth-child(4) {
+  animation-delay: 135ms;
+}
+.view-stagger > * > :nth-child(5) {
+  animation-delay: 170ms;
+}
+.view-stagger > * > :nth-child(n + 6) {
+  animation-delay: 205ms;
+}
+
+.app-loading {
+  display: grid;
+  place-items: center;
+  gap: 0.65rem;
+  min-height: 10rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.app-loading--framed {
+  width: min(100%, 22rem);
+}
+
+.app-loading__mark,
+.app-loading p,
+.app-loading__dots {
+  animation: loading-item-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-loading__mark {
+  font-size: 1.6rem;
+  animation-delay: 30ms;
+}
+
+.app-loading p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-family: var(--font-pixel);
+  font-size: 0.65rem;
+  animation-delay: 75ms;
+}
+
+.app-loading__dots {
+  display: flex;
+  gap: 0.35rem;
+  animation-delay: 120ms;
+}
+
+.app-loading__dots i {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: loading-dot 720ms ease-in-out infinite alternate;
+}
+
+.app-loading__dots i:nth-child(2) {
+  animation-delay: 120ms;
+}
+.app-loading__dots i:nth-child(3) {
+  animation-delay: 240ms;
+}
+
 @keyframes view-fade-in {
   0% {
     opacity: 0;
@@ -1149,6 +1227,52 @@
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes view-item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loading-item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes loading-dot {
+  from {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-enter,
+  .view-stagger > * > *,
+  .app-loading__mark,
+  .app-loading p,
+  .app-loading__dots,
+  .app-loading__dots i {
+    animation: none;
   }
 }
 

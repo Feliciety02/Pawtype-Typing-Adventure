@@ -1,10 +1,11 @@
 "use client"
 import { useState } from "react"
-import { ChevronRight, LayoutGrid, Cpu } from "lucide-react"
+import { ChevronDown, ChevronRight, LayoutGrid } from "lucide-react"
 import { useWorkshopStore } from "../store"
 import type { KeyboardPart, KeyboardLayoutId } from "../types"
 import { PRESETS } from "../defaults"
 import { LAYOUTS, KEYBOARD_MODELS } from "../layout-data"
+import { WorkshopPartIcon } from "./WorkshopPartIcon"
 
 // Future model slots shown as "Coming Soon"
 const COMING_SOON_SLOTS = 2
@@ -40,7 +41,178 @@ const LAYOUT_OPTIONS: { id: KeyboardLayoutId; label: string }[] = [
   { id: "60%", label: "60%" },
 ]
 
-export function PartsSidebar() {
+function WorkshopMenuButton({
+  part,
+  label,
+  active,
+  onSelect,
+}: {
+  part: KeyboardPart
+  label: string
+  active: boolean
+  onSelect: () => void
+}) {
+  return (
+    <li className="blacksmith-sidebar__part-item">
+      <button
+        type="button"
+        className="blacksmith-sidebar__part-button"
+        onClick={onSelect}
+        role="option"
+        aria-selected={active}
+      >
+        <WorkshopPartIcon part={part} />
+        <span className="blacksmith-workshop-menu__label">{label}</span>
+      </button>
+    </li>
+  )
+}
+
+function BlacksmithWorkshopMenu() {
+  const {
+    selectedPart,
+    setSelectedPart,
+    currentBuild,
+    setLayout,
+    selectGroup,
+    applyPreset,
+    keyGroups,
+  } = useWorkshopStore()
+  const [openSections, setOpenSections] = useState({
+    size: true,
+    parts: true,
+    groups: true,
+    presets: false,
+  })
+  const activeKeyIds = new Set(
+    (LAYOUTS[currentBuild.layout] ?? []).map((key) => key.id),
+  )
+  const toggleSection = (section: keyof typeof openSections) => {
+    setOpenSections((current) => ({ ...current, [section]: !current[section] }))
+  }
+  const chooseGroup = (ids: string[]) => {
+    setSelectedPart("keycaps")
+    selectGroup(ids.length ? ids.filter((id) => activeKeyIds.has(id)) : [...activeKeyIds])
+  }
+
+  return (
+    <aside className="blacksmith-workshop-menu" aria-label="Workshop parts">
+      <div className="blacksmith-sidebar__panel">
+        <section className="blacksmith-sidebar__section">
+          <button
+            type="button"
+            className="blacksmith-sidebar__section-toggle"
+            onClick={() => toggleSection("size")}
+            aria-expanded={openSections.size}
+          >
+            <span>1. Keyboard Size</span>
+            <ChevronDown aria-hidden="true" />
+          </button>
+          {openSections.size && (
+            <div className="blacksmith-sidebar__size-grid">
+              {LAYOUT_OPTIONS.map((option) => (
+                <button
+                  type="button"
+                  key={option.id}
+                  onClick={() => setLayout(option.id)}
+                  aria-pressed={currentBuild.layout === option.id}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="blacksmith-sidebar__section">
+          <button
+            type="button"
+            className="blacksmith-sidebar__section-toggle"
+            onClick={() => toggleSection("parts")}
+            aria-expanded={openSections.parts}
+          >
+            <span>2. Customize Part</span>
+            <ChevronDown aria-hidden="true" />
+          </button>
+          {openSections.parts && (
+            <ul className="blacksmith-sidebar__parts-grid" role="listbox" aria-label="Choose a keyboard part">
+              {PARTS.map((part) => (
+                <WorkshopMenuButton
+                  key={part.id}
+                  part={part.id}
+                  label={part.label}
+                  active={selectedPart === part.id}
+                  onSelect={() => setSelectedPart(part.id)}
+                />
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="blacksmith-sidebar__section">
+          <button
+            type="button"
+            className="blacksmith-sidebar__section-toggle"
+            onClick={() => toggleSection("groups")}
+            aria-expanded={openSections.groups}
+          >
+            <span>3. Select Keys</span>
+            <ChevronDown aria-hidden="true" />
+          </button>
+          {openSections.groups && (
+            <div className="blacksmith-sidebar__choice-grid">
+              {QUICK_SELECT_GROUPS.map((group) => (
+                <button type="button" key={group.label} onClick={() => chooseGroup(group.ids)}>
+                  {group.label}
+                </button>
+              ))}
+              {keyGroups.map((group) => (
+                <button type="button" key={group.id} onClick={() => chooseGroup(group.keyIds)}>
+                  {group.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="blacksmith-sidebar__section blacksmith-sidebar__section--presets">
+          <button
+            type="button"
+            className="blacksmith-sidebar__section-toggle"
+            onClick={() => toggleSection("presets")}
+            aria-expanded={openSections.presets}
+          >
+            <span>4. Presets</span>
+            <ChevronDown aria-hidden="true" />
+          </button>
+          {openSections.presets && (
+            <div className="blacksmith-sidebar__preset-list">
+              {PRESETS.map((preset) => (
+                <button type="button" key={preset.id} onClick={() => applyPreset(preset.patch)}>
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    </aside>
+  )
+}
+
+export function PartsSidebar({
+  ornate = false,
+}: {
+  ornate?: boolean
+}) {
+  return ornate ? (
+    <BlacksmithWorkshopMenu />
+  ) : (
+    <LegacyPartsSidebar />
+  )
+}
+
+function LegacyPartsSidebar() {
   const { selectedPart, setSelectedPart, currentBuild, setLayout, selectGroup, applyPreset, keyGroups } = useWorkshopStore()
   const [expanded, setExpanded] = useState<string | null>("parts")
   const activeKeyIds = new Set(

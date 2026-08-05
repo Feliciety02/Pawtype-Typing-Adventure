@@ -16,9 +16,25 @@ import { BuildManager } from "./BuildManager"
 export function PropertiesPanel() {
   const { selectedPart, selectedKeyIds, deselectAll, setSelectedPart } = useWorkshopStore()
 
+  const editor = (
+    <>
+      {selectedPart === "keycaps" && <KeycapEditor />}
+      {selectedPart === "case" && <CaseEditor />}
+      {selectedPart === "frame" && <FrameEditor />}
+      {selectedPart === "plate" && <PlateEditor />}
+      {selectedPart === "switches" && <SwitchEditor />}
+      {selectedPart === "stabilizers" && <StabilizerEditor />}
+      {selectedPart === "knob" && <KnobEditor />}
+      {selectedPart === "badge" && <BadgeEditor />}
+      {selectedPart === "lighting" && <LightingEditor />}
+      {selectedPart === "sound" && <SoundEditor />}
+      {selectedPart === "builds" && <BuildManager />}
+    </>
+  )
+
   return (
     <aside
-      className="flex flex-col h-full overflow-y-auto"
+      className="blacksmith-workshop-properties flex flex-col h-full overflow-y-auto"
       style={{ background: "#1a1208", color: "#e8d5a0" }}
       aria-label="Properties panel"
     >
@@ -55,17 +71,7 @@ export function PropertiesPanel() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {selectedPart === "keycaps" && <KeycapEditor />}
-        {selectedPart === "case" && <CaseEditor />}
-        {selectedPart === "frame" && <FrameEditor />}
-        {selectedPart === "plate" && <PlateEditor />}
-        {selectedPart === "switches" && <SwitchEditor />}
-        {selectedPart === "stabilizers" && <StabilizerEditor />}
-        {selectedPart === "knob" && <KnobEditor />}
-        {selectedPart === "badge" && <BadgeEditor />}
-        {selectedPart === "lighting" && <LightingEditor />}
-        {selectedPart === "sound" && <SoundEditor />}
-        {selectedPart === "builds" && <BuildManager />}
+        {editor}
       </div>
     </aside>
   )

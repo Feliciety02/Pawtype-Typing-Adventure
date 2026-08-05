@@ -122,6 +122,7 @@ type WorkshopState = {
   activeEditorTab: EditorTab
   // Camera
   cameraPreset: CameraPreset
+  cameraResetNonce: number
   // Exploded view
   explodedView: boolean
   explodeAmount: number
@@ -177,6 +178,7 @@ type WorkshopActions = {
   setActiveEditorTab: (tab: EditorTab) => void
   // Camera
   setCameraPreset: (preset: CameraPreset) => void
+  resetCamera: () => void
   // Exploded
   setExplodedView: (enabled: boolean) => void
   setExplodeAmount: (amount: number) => void
@@ -205,7 +207,8 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
       selectedKeyIds: [],
       selectedPart: "keycaps",
       activeEditorTab: "shape",
-      cameraPreset: "isometric",
+      cameraPreset: "typing",
+      cameraResetNonce: 0,
       explodedView: false,
       explodeAmount: 0,
       testTypingMode: false,
@@ -477,6 +480,11 @@ export const useWorkshopStore = create<WorkshopState & WorkshopActions>()(
       setActiveEditorTab: (tab) => set({ activeEditorTab: tab }),
 
       setCameraPreset: (preset) => set({ cameraPreset: preset }),
+
+      resetCamera: () => set((state) => ({
+        cameraPreset: "typing",
+        cameraResetNonce: state.cameraResetNonce + 1,
+      })),
 
       setExplodedView: (enabled) => set({ explodedView: enabled, explodeAmount: enabled ? 1 : 0 }),
 

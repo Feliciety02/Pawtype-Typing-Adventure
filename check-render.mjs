@@ -164,10 +164,10 @@ function buildTopArt() {
 }
 
 const sidePaths = {
-  front: "public/workshop/keycaps/sides/royal-purple/2u/back.png",
-  back: "public/workshop/keycaps/sides/royal-purple/2u/front.png",
-  left: "public/workshop/keycaps/sides/royal-purple/1u/front.png",
-  right: "public/workshop/keycaps/sides/royal-purple/1u/front.png",
+  front: "public/workshop/keycaps/sides/royal-purple/2u/back.webp",
+  back: "public/workshop/keycaps/sides/royal-purple/2u/front.webp",
+  left: "public/workshop/keycaps/sides/royal-purple/1u/front.webp",
+  right: "public/workshop/keycaps/sides/royal-purple/1u/front.webp",
 }
 const texCache = {}
 async function loadSpr(p) {
@@ -242,7 +242,7 @@ async function render() {
 
   // 2. transparent layers: side sprites + top art, painter far->near
   let trans = []
-  const topTex = await loadSpr("public/workshop/keycaps/royal-cream/Backspace.png")
+  const topTex = await loadSpr("public/workshop/keycaps/royal-cream/Backspace.webp")
   const CUSTOM_PATH = process.env.CUSTOM === "1"
   if (CUSTOM_PATH) {
     for (const dir of ["front", "back", "left", "right"]) {

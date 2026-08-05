@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { Header } from "@/components/layout/Header";
 import { useAuth } from "@/hooks/use-auth";
@@ -23,9 +23,7 @@ function AuthLayout() {
   if (isLoading) {
     return (
       <main className="min-h-dvh grid place-items-center px-4">
-        <div className="pixel-card max-w-sm p-6 text-center">
-          <p className="font-pixel text-[0.65rem] text-muted-foreground">Loading save data...</p>
-        </div>
+        <AppLoadingFallback message="Loading save data" framed />
       </main>
     );
   }
@@ -41,18 +39,33 @@ function AuthLayout() {
       <Header />
 
       <div
-        className={`app-view-shell ${isCampView ? "app-view-shell--camp" : ""} ${isAwardsView ? "app-view-shell--awards" : ""} view-enter`}
+        key={pathname}
+        className={`app-view-shell ${isCampView ? "app-view-shell--camp" : ""} ${isAwardsView ? "app-view-shell--awards" : ""} view-enter ${!isCampView && !isAwardsView ? "view-stagger" : ""}`}
       >
-        <Suspense
-          fallback={
-            <div className="text-center font-pixel text-[0.65rem] text-muted-foreground">
-              Loading...
-            </div>
-          }
-        >
+        <Suspense fallback={<AppLoadingFallback message="Loading adventure" />}>
           <Outlet />
         </Suspense>
       </div>
     </main>
+  );
+}
+
+function AppLoadingFallback({ message, framed = false }: { message: string; framed?: boolean }) {
+  return (
+    <div
+      className={`app-loading${framed ? " pixel-card app-loading--framed" : ""}`}
+      role="status"
+      aria-live="polite"
+    >
+      <span className="app-loading__mark" aria-hidden="true">
+        🐾
+      </span>
+      <p>{message}</p>
+      <span className="app-loading__dots" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
+    </div>
   );
 }

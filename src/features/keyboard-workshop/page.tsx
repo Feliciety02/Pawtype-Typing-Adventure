@@ -67,6 +67,7 @@ export default function KeyboardWorkshopPage({
   backButtonRef?: RefObject<HTMLButtonElement | null>
 }) {
   const [mounted, setMounted] = useState(false)
+  const [isViewingKeyboard, setIsViewingKeyboard] = useState(false)
   useTestTyping()
 
   useEffect(() => setMounted(true), [])
@@ -76,16 +77,20 @@ export default function KeyboardWorkshopPage({
       className={`keyboard-workshop ${embedded ? "keyboard-workshop--embedded" : ""} flex flex-col`}
       style={{ background: "#100c06", color: "#e8d5a0" }}
     >
-      {/* Header */}
-      <WorkshopHeader
-        embedded={embedded}
-        onBack={onBack}
-        backButtonRef={backButtonRef}
-      />
+      {!embedded && (
+        <WorkshopHeader
+          onBack={onBack}
+          backButtonRef={backButtonRef}
+        />
+      )}
       {!embedded && <WorkshopOverview />}
       {/* Main workspace */}
-      <div className="workshop-layout flex flex-1 overflow-hidden">
-        <PartsSidebar />
+      <div
+        className={`workshop-layout flex flex-1 overflow-hidden ${isViewingKeyboard ? "workshop-layout--camera-active" : ""}`}
+      >
+        <PartsSidebar
+          ornate={embedded}
+        />
         {/* Left sidebar — parts */}
         {/* Center — 3D viewport */}
         <main className="flex-1 flex flex-col overflow-hidden relative">
@@ -93,7 +98,10 @@ export default function KeyboardWorkshopPage({
             <TestTypingBanner />
             {mounted ? (
               <Suspense fallback={<SceneLoader />}>
-                <KeyboardScene />
+                <KeyboardScene
+                  accountForPanelInsets={embedded}
+                  onViewInteractionChange={setIsViewingKeyboard}
+                />
               </Suspense>
             ) : (
               <SceneLoader />
@@ -101,7 +109,7 @@ export default function KeyboardWorkshopPage({
           </div>
           {/* Bottom toolbar */}
           {!embedded && <QuickSelectionBar />}
-          <WorkshopToolbar />
+          <WorkshopToolbar ornate={embedded} />
         </main>
 
         {/* Right sidebar — properties */}

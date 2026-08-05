@@ -58,22 +58,22 @@ export function WorkshopHeader({
       }`}
       style={{ background: "#3a2a1a", borderColor: "#5a3a20" }}
     >
-      <CampBackButton ref={backButtonRef} onClick={onBack ?? (() => navigate({ to: "/" }))} />
-
-      {!embedded && <div className="h-5 w-px" style={{ background: "#5a3a20" }} />}
-
-      {/* Title */}
-      {!embedded && (
-        <span className="text-sm font-bold tracking-wide hidden sm:inline" style={{ color: "#e8d5a0" }}>
-          Keyboard Workshop
-        </span>
+      {embedded ? (
+        <span className="workshop-header__sidebar-title">My Keyboard</span>
+      ) : (
+        <>
+          <CampBackButton ref={backButtonRef} onClick={onBack ?? (() => navigate({ to: "/" }))} />
+          <div className="h-5 w-px" style={{ background: "#5a3a20" }} />
+          <span className="text-sm font-bold tracking-wide hidden sm:inline" style={{ color: "#e8d5a0" }}>
+            Keyboard Workshop
+          </span>
+          <div className="h-5 w-px hidden sm:block" style={{ background: "#5a3a20" }} />
+        </>
       )}
 
-      {!embedded && <div className="h-5 w-px hidden sm:block" style={{ background: "#5a3a20" }} />}
-
       {/* Build name */}
-      <div className="flex items-center gap-2 flex-1">
-        {editingName ? (
+      <div className="workshop-header__build-name flex items-center gap-2 flex-1">
+        {!embedded && (editingName ? (
           <input
             autoFocus
             className="rounded px-2 py-1 text-sm font-semibold bg-transparent border outline-none w-48"
@@ -95,11 +95,11 @@ export function WorkshopHeader({
             {buildNameDraft}
             {unsavedChanges && <span className="ml-1 text-xs" style={{ color: "#c89040" }}>*</span>}
           </button>
-        )}
+        ))}
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center gap-2">
+      <div className="workshop-header__actions flex items-center gap-2">
         <button
           onClick={handleSave}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-all"

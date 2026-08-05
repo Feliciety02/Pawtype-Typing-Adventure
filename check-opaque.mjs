@@ -159,10 +159,10 @@ function overlapAlpha(a, b) {
 }
 for (const [name, pos] of Object.entries(PRESETS)) {
   cam = setup(pos)
-  const f = await rasterFace("front", "public/workshop/keycaps/sides/royal-purple/2u/back.png")
-  const b = await rasterFace("back", "public/workshop/keycaps/sides/royal-purple/2u/front.png")
-  const l = await rasterFace("left", "public/workshop/keycaps/sides/royal-purple/1u/front.png")
-  const r = await rasterFace("right", "public/workshop/keycaps/sides/royal-purple/1u/front.png")
+  const f = await rasterFace("front", "public/workshop/keycaps/sides/royal-purple/2u/back.webp")
+  const b = await rasterFace("back", "public/workshop/keycaps/sides/royal-purple/2u/front.webp")
+  const l = await rasterFace("left", "public/workshop/keycaps/sides/royal-purple/1u/front.webp")
+  const r = await rasterFace("right", "public/workshop/keycaps/sides/royal-purple/1u/front.webp")
   const res = [
     `front-left:${overlapAlpha(f, l)}`,
     `front-right:${overlapAlpha(f, r)}`,

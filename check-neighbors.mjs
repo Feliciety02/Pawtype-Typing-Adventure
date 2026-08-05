@@ -119,7 +119,7 @@ function facePath(key, direction) {
   const long = token(key.width / U), short = token(key.depth / U)
   const p = direction === "front" || direction === "back" ? long : short
   const orient = direction === "front" ? "back" : direction === "back" ? "front" : "front"
-  return `public/workshop/keycaps/sides/royal-purple/${p}/${orient}.png`
+  return `public/workshop/keycaps/sides/royal-purple/${p}/${orient}.webp`
 }
 async function rasterFaces(key) {
   const perFace = {}

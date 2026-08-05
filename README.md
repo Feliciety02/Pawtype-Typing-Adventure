@@ -173,7 +173,7 @@ Implemented:
 - scrollable multi-world adventure campaigns across all 12 available themes
 - public `node-level` artwork for cafe, forest, ocean, sakura, castle, space, mushroom, and sunflower stage cards
 - automatic alpha-bound alignment for transparent `node-level` PNGs so floating islands share a consistent visible top edge without per-image offsets
-- shared `public/Icons/lock.png` lock overlay for locked adventure nodes and locked settings toggles
+- shared `public/shared/icons/lock.webp` lock overlay for locked adventure nodes and locked settings toggles
 - stage difficulties and target WPM goals
 - local unlock progression
 - stage modal with focused typing challenge

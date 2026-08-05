@@ -2,6 +2,8 @@ import { useEffect, useState, type RefObject } from "react";
 
 import { useThemeMode } from "@/hooks/use-theme-mode";
 import KeyboardWorkshopPage from "@/features/keyboard-workshop/page";
+import { useWorkshopStore } from "@/features/keyboard-workshop/store";
+import { CampBackButton } from "./CampBackButton";
 
 type BlacksmithPageProps = {
   backButtonRef: RefObject<HTMLButtonElement | null>;
@@ -10,6 +12,7 @@ type BlacksmithPageProps = {
 
 export function BlacksmithPage({ backButtonRef, onBack }: BlacksmithPageProps) {
   const { dark } = useThemeMode();
+  const keyboardName = useWorkshopStore((state) => state.currentBuild.name);
   const [nightBackgroundReady, setNightBackgroundReady] = useState(false);
 
   useEffect(() => {
@@ -35,7 +38,21 @@ export function BlacksmithPage({ backButtonRef, onBack }: BlacksmithPageProps) {
       className={`camp-interior-page camp-blacksmith-page ${dark && nightBackgroundReady ? "is-night-background" : ""}`}
       aria-label="Blacksmith Forge"
     >
-      <KeyboardWorkshopPage embedded backButtonRef={backButtonRef} onBack={onBack} />
+      <div className="camp-interior-toolbar camp-blacksmith-toolbar">
+        <CampBackButton ref={backButtonRef} onClick={onBack} />
+        <div className="camp-blacksmith-heading">
+          <img
+            className="camp-blacksmith-heading__plaque"
+            src="/workshop/header/blacksmith-workshop-plaque.webp"
+            alt="Blacksmith Workshop"
+            draggable={false}
+          />
+          <p className="camp-blacksmith-heading__keyboard-name" aria-label={`Keyboard name: ${keyboardName}`}>
+            {keyboardName}
+          </p>
+        </div>
+      </div>
+      <KeyboardWorkshopPage embedded />
     </section>
   );
 }

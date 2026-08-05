@@ -75,7 +75,7 @@ export function AdventureMap() {
     : undefined;
 
   return (
-    <div className="adventure-shell pixel-card p-5 sm:p-6 relative overflow-hidden">
+    <div className="adventure-shell pixel-card p-5 sm:p-6 relative overflow-x-hidden overflow-y-auto">
       <div className="adventure-header">
         <div className="adventure-title-block">
           <div className="adventure-kicker">World Quest</div>

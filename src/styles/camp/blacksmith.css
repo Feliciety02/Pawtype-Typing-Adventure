@@ -1,10 +1,12 @@
 /* --- Blacksmith interior ----------------------------------- */
 .camp-blacksmith-page {
+  --blacksmith-top-gutter: clamp(7.25rem, 10vw, 9rem);
+  --blacksmith-bottom-gutter: max(clamp(0.75rem, 1.5vw, 1.25rem), env(safe-area-inset-bottom));
   display: grid;
-  grid-template-rows: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   box-sizing: border-box;
   overflow: hidden;
-  padding: clamp(6.5rem, 9vw, 8.25rem) var(--camp-header-gutter) 0;
+  padding: var(--blacksmith-top-gutter) var(--camp-header-gutter) var(--blacksmith-bottom-gutter);
   isolation: isolate;
   background: #2d1a16;
   image-rendering: pixelated;
@@ -38,11 +40,77 @@
 .camp-blacksmith-page > * { position: relative; z-index: 1; }
 
 .camp-blacksmith-page .keyboard-workshop--embedded {
-  height: calc(100dvh - clamp(6.5rem, 9vw, 8.25rem));
+  height: 100%;
   min-height: 0;
   align-self: stretch;
+  overflow: visible;
   padding-top: 0;
   background: transparent !important;
+}
+
+.camp-blacksmith-toolbar {
+  position: relative;
+  justify-content: center;
+  min-height: clamp(6.25rem, 9vw, 10rem);
+  margin-bottom: clamp(0.35rem, 0.75vw, 0.65rem);
+}
+
+.camp-blacksmith-toolbar > .camp-back-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.camp-blacksmith-heading {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: min(31.2vw, 492px);
+  min-width: 0;
+  margin-top: clamp(-0.8rem, -0.5vw, -0.25rem);
+  pointer-events: none;
+}
+
+.camp-blacksmith-heading__plaque {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2048 / 710;
+  object-fit: contain;
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+.camp-blacksmith-heading__keyboard-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: min(90%, 34rem);
+  margin: 0;
+  overflow: hidden;
+  color: #ffe2a5;
+  font-family: var(--font-pixel), monospace;
+  font-size: clamp(0.58rem, 0.72vw, 0.78rem);
+  line-height: 1.35;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-shadow: 2px 2px 0 #2a1004, 0 0 8px rgba(255, 191, 79, 0.45);
+  text-transform: uppercase;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .camp-blacksmith-toolbar {
+    min-height: 6.5rem;
+  }
+
+  .camp-blacksmith-heading {
+    width: min(34.8vw, 258px);
+    margin-left: auto;
+  }
 }
 
 /* Leave the forge visible behind the live 3D keyboard; the surrounding
