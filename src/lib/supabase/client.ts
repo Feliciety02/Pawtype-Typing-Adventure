@@ -1,6 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 
-import { getSupabaseBrowserEnv } from "./config";
+import { getSupabaseBrowserEnv, SUPABASE_AUTH_COOKIE_NAME } from "./config";
 import type { Database } from "./types";
 
 let browserClient: ReturnType<typeof createBrowserClient<Database>> | undefined;
@@ -25,8 +25,8 @@ export function getSupabaseBrowserClient() {
         detectSessionInUrl: false,
         flowType: "pkce",
         persistSession: true,
-        storageKey: "pawtype-auth",
       },
+      cookieOptions: { name: SUPABASE_AUTH_COOKIE_NAME },
     });
   }
 

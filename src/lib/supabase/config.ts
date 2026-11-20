@@ -1,3 +1,7 @@
+// Shared by the browser and server clients so both read and write the same
+// session cookie. If they differ, a sign-in on one side is invisible to the other.
+export const SUPABASE_AUTH_COOKIE_NAME = "pawtype-auth";
+
 const PLACEHOLDER_VALUES = new Set(["your-project-url", "your-anon-key"]);
 
 function isConfiguredValue(value: string | undefined) {
