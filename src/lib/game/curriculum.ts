@@ -2122,7 +2122,7 @@ const UNIT_12: Unit = {
       words: [
         "https://pawtype.app",
         "https://example.com/docs",
-        "https://github.com/lovable",
+        "https://github.com/tanstack",
         "https://tanstack.com/router",
         "http://localhost:8080",
         "https://cozy.cabin/blog",
@@ -2133,7 +2133,7 @@ const UNIT_12: Unit = {
         "https://bun.sh",
         "https://npmjs.com",
         "https://cloudflare.com",
-        "https://lovable.dev",
+        "https://example.org/learn",
         "https://typing.paw",
       ],
     },

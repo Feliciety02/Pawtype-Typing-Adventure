@@ -102,7 +102,7 @@ npm ci
 npm run dev
 ```
 
-Open the URL Vite prints (normally **http://localhost:8080**), select **Play**, then **Play Demo**. A local demo does not require environment variables.
+Open the URL Vite prints (normally **http://localhost:8080**), select **Play**, then **Play Demo**. A local demo does not require environment variables or an external editor.
 
 | Command | Purpose |
 | --- | --- |

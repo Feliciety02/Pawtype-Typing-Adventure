@@ -2,6 +2,8 @@ export const FUTURE_DOC = `# Future Addons - Roadmap & Ideas
 
 ## Shipped
 
+✅ **Shipped** - The app now starts and builds with its own Vite, TanStack Start, Tailwind, and Nitro configuration. Local development and Cloudflare builds no longer depend on editor-specific tooling.
+
 ✅ **Shipped** - The Blacksmith Workshop's left selector and right Inspector are now 10% taller, extending upward while keeping their lower edges aligned with the workbench. The live keyboard name also sits 10 percentage points higher on the title plaque.
 
 ✅ **Shipped** - Route changes now remount one optimized entrance transition, with regular page sections appearing in short staggered steps instead of popping in together. Authentication and lazy-route fallbacks use the same compact paw-and-dots loading sequence, and all entrance/stagger animations are disabled when reduced motion is preferred.
